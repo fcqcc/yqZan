@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine
-from app.routes import couple_router, plan_router, user_router
+from app.routes import couple_router, extra_router, plan_router, user_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -18,6 +18,7 @@ app.add_middleware(
 app.include_router(user_router)
 app.include_router(couple_router)
 app.include_router(plan_router)
+app.include_router(extra_router)
 
 
 @app.get("/health")
