@@ -1,6 +1,7 @@
 <!-- pages/settings/settings.wxml -->
 <scroll-view class="page" scroll-y>
-     4|  <view class="card">
+  <view class="nav-bar"><view class="nav-safe"></view><view class="nav-content"><text class="nav-title">设置</text></view></view>
+  <view class="card">
     <view class="section-title">👤 我的信息</view>
     <view class="info-row"><text>昵称</text><text>{{userInfo.nickname}}</text></view>
     <view class="info-row"><text>邀请码</text><text class="code" bindtap="copyCode">{{userInfo.invite_code}} 📋</text></view>

@@ -1,6 +1,7 @@
 <!-- pages/cards/cards.wxml — 贺卡（毛玻璃网格） -->
 <scroll-view class="page" scroll-y>
-     4|  <view class="page-title">🎉 贺卡</view>
+  <view class="nav-bar"><view class="nav-safe"></view><view class="nav-content"><text class="nav-title">贺卡</text></view></view>
+  <view class="page-title">🎉 贺卡</view>
   <view class="page-subtitle">用精美贺卡记录每一个瞬间</view>
 
   <button class="btn btn-primary" style="margin:0 12px 14px" bindtap="showTemplates">✨ 生成贺卡</button>

@@ -61,8 +61,6 @@ Page({
         current_amount: cur,
         target_amount: tar,
         plan_progress: Math.min(cur / Math.max(tar, 1) * 100, 100),
-        ringDeg: Math.min(cur / Math.max(tar, 1) * 360, 360),
-        plan_pct_text: Math.min(Math.round(cur / Math.max(tar, 1) * 100), 100) + '%',
         nearestAnni: this.findNearestAnni(anniversaries),
         pendingTodos,
         latestNote,

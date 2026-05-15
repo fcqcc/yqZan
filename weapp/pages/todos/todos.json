@@ -1,3 +1,4 @@
 {
-  "navigationBarTitleText": "要做的事"
+  "navigationBarTitleText": "要做的事",
+  "navigationStyle": "custom"
 }

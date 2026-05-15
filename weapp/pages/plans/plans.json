@@ -1,3 +1,4 @@
 {
-  "navigationBarTitleText": "存钱计划"
+  "navigationBarTitleText": "存钱计划",
+  "navigationStyle": "custom"
 }
