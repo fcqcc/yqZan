@@ -1,7 +1,6 @@
 <!-- pages/notes/notes.wxml — 便利贴墙（毛玻璃） -->
 <scroll-view class="page" scroll-y>
-  <view class="nav-bar"><view class="nav-safe"></view><view class="nav-content"><text class="nav-title">便利贴墙</text></view></view>
-  <view class="page-title">💬 便利贴墙</view>
+     4|  <view class="page-title">💬 便利贴墙</view>
   <view class="page-subtitle">给对方留一句温暖的话</view>
 
   <!-- 写便利贴 -->

@@ -15,13 +15,13 @@
   ],
   "window": {
     "navigationBarTitleText": "情侣承诺站",
-    "navigationBarBackgroundColor": "#f8e8ee",
+    "navigationBarBackgroundColor": "#FFF0E3",
     "navigationBarTextStyle": "black",
     "backgroundColor": "#f5f5f5"
   },
   "tabBar": {
-    "color": "#999",
-    "selectedColor": "#9d2d5a",
+    "color": "#8E8A89",
+    "selectedColor": "#D4AF37",
     "list": [
       {
         "pagePath": "pages/home/home",

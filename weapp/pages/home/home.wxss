@@ -1,172 +1,123 @@
-/* 首页 — 新布局 */
-.page { height: 100vh; background: linear-gradient(180deg, var(--bg-start), var(--bg-mid) 40%, var(--bg-end) 100%); }
+/* 首页 v2 */
+.page { min-height: 100vh; padding-bottom: 16px; }
 
-/* ===== 自定义导航 ===== */
-.nav-bar { position: sticky; top: 0; z-index: 50; }
-.nav-safe { height: env(safe-area-inset-top, 44px); }
-.nav-content { padding: 8px 16px 4px; }
-.nav-title { font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: .5px; }
-
-/* ===== 1. 伴侣+等级（紧凑行） ===== */
-.compact-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px 8px;
-}
-.ch-left { flex: 1; }
-.ch-name { font-size: 20px; font-weight: 800; color: var(--text); display: inline; }
-.ch-partner { font-size: 13px; color: var(--text-secondary); margin-left: 6px; }
-.ch-bind { background: rgba(236,64,122,.1); padding: 2px 8px; border-radius: 10px; }
-.ch-days { font-size: 11px; color: var(--text-muted); margin-left: 4px; }
-.ch-level { text-align: center; }
-.ch-lv {
-  background: rgba(236,64,122,.1);
-  padding: 3px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--pink-dark);
-  display: inline-block;
-}
-.ch-lv-bar { width: 48px; height: 3px; background: rgba(233,30,99,.12); border-radius: 2px; margin: 4px auto 0; overflow: hidden; }
-.ch-lv-fill { height: 100%; background: var(--pink-dark); border-radius: 2px; }
-
-/* ===== 2. 存钱卡片（最重要） ===== */
-.money-card {
-  margin: 4px 12px 8px;
-  background: linear-gradient(135deg, #fce4ec 0%, #fff 50%, #fef6f8 100%);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  box-shadow: 0 4px 20px rgba(236,64,122,.1);
-  border: 1px solid rgba(255,255,255,.5);
-  position: relative;
-  overflow: hidden;
-}
-.money-card::before {
-  content: '';
-  position: absolute;
-  top: -40px; right: -30px;
-  width: 120px; height: 120px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(236,64,122,.06) 0%, transparent 70%);
-}
-.money-top { display: flex; justify-content: space-between; align-items: flex-start; }
-.money-info { flex: 1; }
-.money-label { font-size: 12px; color: var(--text-secondary); display: block; }
-.money-amount { font-size: 32px; font-weight: 900; color: var(--pink-dark); display: block; margin-top: 2px; letter-spacing: -1px; }
-.money-target { font-size: 12px; color: var(--text-muted); margin-top: 2px; display: block; }
-.money-icon { font-size: 32px; opacity: .6; }
-.money-bar {
-  height: 8px;
-  background: rgba(236,64,122,.08);
-  border-radius: 4px;
-  margin-top: 14px;
-  overflow: hidden;
-}
-.money-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--pink), var(--pink-dark));
-  border-radius: 4px;
-  transition: width 1s ease;
-}
-.money-pct {
-  font-size: 11px;
-  color: var(--pink-dark);
-  font-weight: 600;
-  margin-top: 4px;
-  display: block;
-  text-align: right;
-}
-
-/* ===== 3. 纪念日 ===== */
-.anni-row {
-  margin: 0 12px 6px;
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  border: var(--glass-border);
-  border-radius: var(--radius);
-  padding: 12px 16px;
+/* ===== 情侣信息头 ===== */
+.profile-header {
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 12px 16px;
+  margin-top: 8px;
 }
-.anni-emoji { font-size: 20px; }
-.anni-info { flex: 1; display: flex; justify-content: space-between; align-items: center; }
-.anni-label { font-size: 12px; color: var(--text-secondary); }
-.anni-days { font-size: 24px; font-weight: 800; color: var(--pink-dark); }
-.anni-unit { font-size: 12px; font-weight: 400; color: var(--text-secondary); margin-left: 2px; }
-.anni-arrow { font-size: 18px; color: var(--text-muted); }
+.ph-avatars { display: flex; align-items: center; gap: 4px; }
+.ph-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink), var(--pink-dark));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 600; color: white;
+}
+.ph-heart { font-size: 14px; margin: 0 2px; }
+.ph-info { flex: 1; }
+.ph-names { display: block; font-size: 18px; font-weight: 600; color: var(--text); }
+.ph-level-badge {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, var(--gold-light), #FFF5E0);
+  font-size: 11px; font-weight: 600;
+  color: #8B7332;
+}
 
-/* ===== 4. 今日待办 ===== */
-.todo-card {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  border: var(--glass-border);
-  border-radius: var(--radius);
-  margin: 0 12px 6px;
-  padding: 14px 16px;
+/* ===== 存款卡片 ===== */
+.save-card { margin: 4px 16px 12px; }
+.save-amount { font-size: 28px; font-weight: 700; color: var(--gold); display: block; margin: 4px 0; }
+.save-ring {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: #FFE4DC;
+  display: flex; align-items: center; justify-content: center;
 }
-.tc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.tc-title { font-size: 13px; font-weight: 700; color: var(--text); }
-.tc-more { font-size: 11px; color: var(--pink-dark); }
-.tc-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
+.save-ring-text {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: var(--gold);
+}
+
+/* ===== 4指标 ===== */
+.indicator-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 16px;
+  margin-bottom: 12px;
+}
+.indicator-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(8px);
+  border: var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 14px 12px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+.indicator-card:active { transform: scale(0.98); }
+.indicator-num { display: block; font-size: 22px; font-weight: 700; color: var(--gold); }
+.indicator-label { display: block; font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+/* ===== 纪念日横幅 ===== */
+.anni-banner {
+  margin: 0 16px 12px;
+  background: linear-gradient(135deg, rgba(255,183,178,0.3), rgba(255,248,240,0.9));
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 0.5px solid rgba(255,255,255,0.5);
+}
+.anni-banner-icon { font-size: 24px; }
+.anni-banner-info { flex: 1; }
+.anni-banner-label { display: block; font-size: 12px; color: var(--text-secondary); }
+.anni-banner-days { font-size: 20px; font-weight: 700; color: var(--pink-dark); margin-top: 1px; }
+.anni-banner-arrow { font-size: 20px; color: var(--text-light); }
+
+/* ===== 今日待办 ===== */
+.tc-item { display: flex; align-items: center; gap: 8px; padding: 5px 0; }
 .tc-check { font-size: 14px; }
 .tc-text { font-size: 13px; color: var(--text); }
 
-/* ===== 5. 便利贴 ===== */
-.note-card {
-  margin: 0 12px 8px;
-  background: linear-gradient(135deg, #fff0f3, #fff);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  display: flex;
+/* ===== 6宫格 ===== */
+.func-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  align-items: flex-start;
-  border: 1px solid rgba(244,143,177,.2);
+  padding: 0 16px;
 }
-.note-pin { font-size: 16px; margin-top: 2px; }
-.note-body { flex: 1; }
-.note-text { font-size: 13px; line-height: 1.6; color: var(--text); font-style: italic; }
-.note-from { font-size: 11px; color: var(--text-muted); display: block; margin-top: 4px; }
-
-/* ===== 6. 快捷入口（紧凑） ===== */
-.quick-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  padding: 0 12px;
+.func-item {
+  display: flex; flex-direction: column;
+  align-items: center;
+  padding: 16px 8px 12px;
+  background: var(--card-bg);
+  backdrop-filter: blur(8px);
+  border: var(--card-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+.func-item:active { transform: scale(0.96); background: rgba(255,248,240,1); }
+.func-icon {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
   margin-bottom: 8px;
 }
-.qr-item {
-  flex: 1;
-  min-width: 30%;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,.3);
-  border-radius: var(--radius-sm);
-  padding: 10px 8px;
-}
-.qr-item:active { background: rgba(255,255,255,.5); }
-.qr-icon { font-size: 16px; }
-.qr-label { font-size: 12px; color: var(--text); font-weight: 500; }
-
-/* ===== 7. 数据详情（底部） ===== */
-.stats-bar {
-  display: flex;
-  align-items: center;
-  background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  border: var(--glass-border);
-  border-radius: var(--radius);
-  margin: 0 12px 8px;
-  padding: 10px 16px;
-  gap: 12px;
-}
-.sb-item { flex: 1; text-align: center; }
-.sb-num { display: block; font-size: 14px; font-weight: 700; color: var(--pink-dark); }
-.sb-label { display: block; font-size: 10px; color: var(--text-secondary); margin-top: 1px; }
-.sb-arrow { font-size: 16px; color: var(--text-muted); }
+.func-pink { background: linear-gradient(135deg, #FFE4DC, #FFB7B2); }
+.func-purple { background: linear-gradient(135deg, #EDE0FF, #C5A3FF); }
+.func-green { background: linear-gradient(135deg, #E8F5E9, #A5D6A7); }
+.func-orange { background: linear-gradient(135deg, #FFF3E0, #FFCC80); }
+.func-gold { background: linear-gradient(135deg, #FFF8E1, #FFD54F); }
+.func-label { font-size: 12px; font-weight: 500; color: var(--text); }
