@@ -1,0 +1,17 @@
+{% extends "admin/base.html" %}
+{% block title %}系统状态{% endblock %}
+{% block subtitle %}服务运行情况一览{% endblock %}
+{% block content %}
+<div class="health-list">
+  {% for name, status in checks %}
+  <div class="health-item">
+    <span>{{ name }}</span>
+    <span>{{ status }}</span>
+  </div>
+  {% endfor %}
+  <div class="health-item">
+    <span>运行时间</span>
+    <span>{{ uptime }}</span>
+  </div>
+</div>
+{% endblock %}

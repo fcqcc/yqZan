@@ -1,0 +1,40 @@
+{% extends "admin/base.html" %}
+{% block title %}用户列表{% endblock %}
+{% block subtitle %}共 {{ total }} 个用户{% endblock %}
+{% block content %}
+<form class="search-bar" method="get">
+  <input type="text" name="q" placeholder="搜索昵称..." value="{{ q }}">
+  <button type="submit">搜索</button>
+</form>
+<table>
+<thead><tr>
+  <th>ID</th><th>昵称</th><th>性别</th><th>邀请码</th><th>伴侣</th><th>情侣状态</th><th>注册时间</th>
+</tr></thead>
+<tbody>
+{% for u in users %}
+<tr>
+  <td>{{ u.id }}</td>
+  <td>{{ u.nickname }}</td>
+  <td>{{ u.gender|default('-') }}</td>
+  <td><code>{{ u.invite_code }}</code></td>
+  <td>{{ u.partner_name }}</td>
+  <td>
+    {% if u.couple_status == 'active' %}
+      <span class="badge badge-active">💑 活跃</span>
+    {% elif u.couple_status == 'archived' %}
+      <span class="badge badge-archived">📦 已归档</span>
+    {% else %}
+      <span class="badge">—</span>
+    {% endif %}
+  </td>
+  <td>{{ u.created_at }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<div class="pagination">
+  {% if page > 1 %}<a href="?page={{ page-1 }}&q={{ q }}">‹ 上一页</a>{% endif %}
+  <span>第 {{ page }} 页 / 共 {{ (total/per_page)|round(0,'ceil')|int }} 页</span>
+  {% if page * per_page < total %}<a href="?page={{ page+1 }}&q={{ q }}">下一页 ›</a>{% endif %}
+</div>
+{% endblock %}

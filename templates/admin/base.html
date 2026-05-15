@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理后台 - {% block title %}首页{% endblock %}</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;display:flex;min-height:100vh;background:#f5f5f5;color:#333}
+
+/* Sidebar */
+.sidebar{width:200px;background:#1a1a2e;color:#fff;padding:20px 0;flex-shrink:0}
+.sidebar h2{font-size:1rem;padding:0 16px 16px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:8px}
+.sidebar a{display:block;padding:10px 16px;color:rgba(255,255,255,.6);text-decoration:none;font-size:.85rem;transition:all .2s}
+.sidebar a:hover,.sidebar a.active{color:#fff;background:rgba(255,255,255,.08)}
+.sidebar .logout{color:#e57373;margin-top:20px}
+.sidebar .logout:hover{color:#ef5350;background:rgba(229,115,115,.1)}
+
+/* Main */
+.main{flex:1;padding:24px;overflow-y:auto}
+.header{margin-bottom:20px}
+.header h1{font-size:1.3rem;color:#1a1a2e}
+.header p{font-size:.8rem;color:#888;margin-top:4px}
+
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+.card{background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card .num{font-size:1.6rem;font-weight:700;color:#9d2d5a}
+.card .label{font-size:.75rem;color:#888;margin-top:4px}
+
+/* Table */
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+th,td{padding:10px 12px;text-align:left;font-size:.82rem;border-bottom:1px solid #eee}
+th{background:#fafafa;color:#666;font-weight:600}
+tr:hover{background:#fafafa}
+
+/* Search */
+.search-bar{margin-bottom:12px;display:flex;gap:8px}
+.search-bar input{padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:.85rem;flex:1;outline:0}
+.search-bar input:focus{border-color:#9d2d5a}
+.search-bar button{padding:8px 16px;background:#9d2d5a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:.85rem}
+
+/* Pagination */
+.pagination{margin-top:12px;display:flex;gap:8px;align-items:center;font-size:.82rem}
+.pagination a{padding:6px 12px;background:#fff;border:1px solid #ddd;border-radius:6px;text-decoration:none;color:#333}
+.pagination a:hover{background:#f0f0f0}
+
+/* Status badges */
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.72rem}
+.badge-active{background:#e8f5e9;color:#2e7d32}
+.badge-archived{background:#fbe9e7;color:#bf360c}
+
+/* Filter bar */
+.filter-bar{display:flex;gap:8px;margin-bottom:12px}
+.filter-bar a{padding:6px 14px;border-radius:16px;font-size:.8rem;text-decoration:none;background:#eee;color:#666}
+.filter-bar a.active{background:#9d2d5a;color:#fff}
+
+/* Health check */
+.health-list{background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.health-item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee;font-size:.85rem}
+.health-item:last-child{border:none}
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <h2>⚙️ 管理后台</h2>
+  <a href="/admin" class="{% if active_page=='dashboard' %}active{% endif %}">📊 概览</a>
+  <a href="/admin/users" class="{% if active_page=='users' %}active{% endif %}">👤 用户列表</a>
+  <a href="/admin/couples" class="{% if active_page=='couples' %}active{% endif %}">💑 情侣空间</a>
+  <a href="/admin/health" class="{% if active_page=='health' %}active{% endif %}">❤️ 系统状态</a>
+  <a href="/admin/logout" class="logout">🚪 退出</a>
+</div>
+<div class="main">
+  <div class="header">
+    <h1>{% block page_title %}{% endblock %}</h1>
+    <p>{% block subtitle %}{% endblock %}</p>
+  </div>
+  {% block content %}{% endblock %}
+</div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+{% block title %}数据概览{% endblock %}
+{% block subtitle %}全系统运营数据一览{% endblock %}
+{% block content %}
+<div class="cards">
+  <div class="card"><div class="num">{{ total_users }}</div><div class="label">总注册用户</div></div>
+  <div class="card"><div class="num">{{ total_couples }}</div><div class="label">活跃情侣</div></div>
+  <div class="card"><div class="num">{{ archived_couples }}</div><div class="label">已归档情侣</div></div>
+  <div class="card"><div class="num">{{ unbound_users }}</div><div class="label">未绑定用户</div></div>
+  <div class="card"><div class="num">{{ new_users_today }}</div><div class="label">今日新增</div></div>
+  <div class="card"><div class="num">{{ total_plans }}</div><div class="label">存钱计划</div></div>
+  <div class="card"><div class="num">{{ total_wishes }}</div><div class="label">心愿承诺</div></div>
+</div>
+{% endblock %}

@@ -3,7 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine, SessionLocal
 from app.models.card import CardTemplate
-from app.routes import card_router, couple_router, extra_router, plan_router, social_router, user_router
+from app.jinja_fix import *  # Must come before other imports that use Jinja2
+from app.routes import admin_router, card_router, couple_router, extra_router, plan_router, social_router, user_router
 
 
 PRESET_TEMPLATES = [
@@ -59,6 +60,7 @@ app.include_router(plan_router)
 app.include_router(extra_router)
 app.include_router(social_router)
 app.include_router(card_router)
+app.include_router(admin_router)
 
 
 @app.get("/health")

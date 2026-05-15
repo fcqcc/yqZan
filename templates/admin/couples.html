@@ -1,0 +1,39 @@
+{% extends "admin/base.html" %}
+{% block title %}情侣空间{% endblock %}
+{% block subtitle %}共 {{ total }} 对情侣{% endblock %}
+{% block content %}
+<div class="filter-bar">
+  <a href="?status_filter=active" class="{% if status_filter=='active' %}active{% endif %}">活跃 ({{ active_count }})</a>
+  <a href="?status_filter=archived" class="{% if status_filter=='archived' %}active{% endif %}">已归档</a>
+  <a href="?status_filter=all">全部</a>
+</div>
+<table>
+<thead><tr>
+  <th>ID</th><th>成员</th><th>状态</th><th>计划</th><th>心愿</th><th>礼物</th><th>创建时间</th>
+</tr></thead>
+<tbody>
+{% for c in couples %}
+<tr>
+  <td>{{ c.id }}</td>
+  <td>{{ c.members }}</td>
+  <td>
+    {% if c.status == 'active' %}
+      <span class="badge badge-active">活跃</span>
+    {% else %}
+      <span class="badge badge-archived">已归档</span>
+    {% endif %}
+  </td>
+  <td>{{ c.plan_count }}</td>
+  <td>{{ c.wish_count }}</td>
+  <td>{{ c.gift_count }}</td>
+  <td>{{ c.created_at }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<div class="pagination">
+  {% if page > 1 %}<a href="?page={{ page-1 }}&status_filter={{ status_filter }}">‹ 上一页</a>{% endif %}
+  <span>第 {{ page }} 页 / 共 {{ (total/per_page)|round(0,'ceil')|int }} 页</span>
+  {% if page * per_page < total %}<a href="?page={{ page+1 }}&status_filter={{ status_filter }}">下一页 ›</a>{% endif %}
+</div>
+{% endblock %}
