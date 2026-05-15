@@ -10,5 +10,8 @@ Page({
     await api.createTodo({ title: this.data.title, scope: this.data.scopeIdx === 0 ? 'together' : 'alone' })
     this.toggleForm(); this.load()
   },
-  async checkin(e) { await api.checkinTodo(e.currentTarget.dataset.id); this.load() }
+  async checkin(e) { await api.checkinTodo(e.currentTarget.dataset.id); this.load() },
+
+  /** 阻止弹层点击冒泡 */
+  catchTap() {}
 })

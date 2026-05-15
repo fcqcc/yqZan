@@ -26,5 +26,8 @@ Page({
       wx.hideLoading(); this.hideTemplates(); this.loadCards()
       wx.showToast({ title: '贺卡已生成' })
     } catch(e) { wx.hideLoading(); wx.showToast({ title: '生成失败', icon: 'none' }) }
-  }
+  },
+
+  /** 阻止弹层点击冒泡 */
+  catchTap() {}
 })

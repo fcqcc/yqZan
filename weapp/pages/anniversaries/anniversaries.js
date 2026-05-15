@@ -22,5 +22,8 @@ Page({
     if (!this.data.title || !this.data.dateVal) return
     await api.createAnniversary({ title: this.data.title, date_val: this.data.dateVal })
     this.toggleForm(); this.load()
-  }
+  },
+
+  /** 阻止弹层点击冒泡 */
+  catchTap() {}
 })

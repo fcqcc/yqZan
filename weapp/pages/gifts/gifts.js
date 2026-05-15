@@ -8,5 +8,8 @@ Page({
     if (!this.data.name) return
     await api.createGift({ name: this.data.name, price: parseFloat(this.data.price) || 0, note: this.data.note })
     this.toggleForm(); this.load()
-  }
+  },
+
+  /** 阻止弹层点击冒泡 */
+  catchTap() {}
 })

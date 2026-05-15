@@ -62,5 +62,8 @@ Page({
       await api.deleteWish(e.currentTarget.dataset.id)
       this.load()
     }
-  }
+  },
+
+  /** 阻止弹层点击冒泡 */
+  catchTap() {}
 })

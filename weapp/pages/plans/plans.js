@@ -324,5 +324,8 @@ Page({
     } catch (err) {
       wx.showToast({ title: '删除失败', icon: 'none' })
     }
-  }
+  },
+
+  /** 阻止弹层点击冒泡 */
+  catchTap() {}
 })
