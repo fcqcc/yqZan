@@ -9,7 +9,7 @@
     </view>
 
     <view wx:if="{{showForm}}" class="overlay" bindtap="toggleForm">
-      <view class="sheet sheet--drawer" catchtap="">
+      <view class="sheet sheet--drawer" catchtap="catchTap">
         <view class="sheet-title">创建存钱计划</view>
         <view class="sheet-body">
           <view class="field">
@@ -35,7 +35,7 @@
     </view>
 
     <view wx:if="{{showDeliver}}" class="overlay" bindtap="closeDeliver">
-      <view class="sheet sheet--drawer" catchtap="">
+      <view class="sheet sheet--drawer" catchtap="catchTap">
         <view class="sheet-title">记一笔</view>
         <view class="sheet-body">
           <view class="field">
@@ -130,7 +130,7 @@
 
   <!-- 完成日：底部滚轮（贴屏幕底） -->
   <view wx:if="{{showDeadlinePicker}}" class="overlay overlay--picker-bottom" catchtap="cancelDeadlinePicker">
-    <view class="deadline-picker-sheet" catchtap="">
+    <view class="deadline-picker-sheet" catchtap="catchTap">
       <view class="deadline-picker-bar">
         <text class="deadline-picker-link" catchtap="cancelDeadlinePicker">取消</text>
         <text class="deadline-picker-title">选择完成日</text>

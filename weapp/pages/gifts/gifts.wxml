@@ -3,7 +3,7 @@
   <view class="page-subtitle">记下送出的每一份心意</view>
   <button class="btn btn-primary" style="margin:0 12px 12px" bindtap="toggleForm">➕ 记录</button>
   <view wx:if="{{showForm}}" class="overlay" bindtap="toggleForm">
-    <view class="sheet" catchtap="">
+    <view class="sheet" catchtap="catchTap">
       <view class="sheet-title">记录礼物</view>
       <input class="input" placeholder="礼物名称" model:value="{{name}}" />
       <input class="input" type="digit" placeholder="价格（可选）" model:value="{{price}}" style="margin-top:8px" />

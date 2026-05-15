@@ -7,7 +7,7 @@
 
   <!-- 模板选择弹层 -->
   <view wx:if="{{showTpl}}" class="overlay" bindtap="hideTemplates">
-    <view class="sheet" catchtap="">
+    <view class="sheet" catchtap="catchTap">
       <view class="sheet-title">选择模板</view>
       <scroll-view scroll-y style="max-height:400px">
         <view wx:for="{{templates}}" wx:key="id" class="tpl-item" bindtap="generate" data-id="{{item.id}}">

@@ -5,7 +5,7 @@
   <button class="btn btn-wish btn-block" style="margin:0 12px 12px" bindtap="toggleForm">➕ 许下心愿</button>
 
   <view wx:if="{{showForm}}" class="overlay" bindtap="toggleForm">
-    <view class="sheet" catchtap="">
+    <view class="sheet" catchtap="catchTap">
       <view class="sheet-title">许下心愿</view>
       <input class="input" placeholder="心愿名称" model:value="{{title}}" />
       <input class="input" placeholder="描述（可选）" model:value="{{description}}" style="margin-top:8px" />

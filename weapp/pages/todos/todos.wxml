@@ -3,7 +3,7 @@
   <view class="page-subtitle">一起做 & 自己做</view>
   <button class="btn btn-todo" style="margin:0 12px 12px" bindtap="toggleForm">➕ 添加</button>
   <view wx:if="{{showForm}}" class="overlay" bindtap="toggleForm">
-    <view class="sheet" catchtap="">
+    <view class="sheet" catchtap="catchTap">
       <view class="sheet-title">添加事项</view>
       <input class="input" placeholder="事项名称" model:value="{{title}}" />
       <picker mode="selector" range="{{scopes}}" bindchange="onScopeChange" value="{{scopeIdx}}">
