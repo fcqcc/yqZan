@@ -1,0 +1,24 @@
+<scroll-view class="page" scroll-y>
+  <view class="page-title">🎉 贺卡</view>
+  <view class="page-subtitle">生成精美贺卡，记录每一刻</view>
+  <button class="btn btn-primary" style="margin:0 12px 12px" bindtap="showTemplates">🎨 选择模板生成</button>
+  <view wx:if="{{showTpl}}" class="overlay" bindtap="hideTemplates">
+    <view class="sheet" catchtap=""><catch-data>
+      <view class="sheet-title">选择模板</view>
+      <scroll-view scroll-y style="max-height:400px">
+        <view wx:for="{{templates}}" wx:key="id" class="tpl-item" bindtap="generate" data-id="{{item.id}}" data-name="{{item.name}}">
+          <view style="font-weight:600">{{item.name}}</view>
+          <view style="font-size:12px;color:#999;margin-top:2px">{{item.description}}</view>
+        </view>
+      </scroll-view>
+      <button class="btn btn-outline btn-block" style="margin-top:8px" bindtap="hideTemplates">取消</button>
+    </catch-data></view>
+  </view>
+  <view wx:for="{{cards}}" wx:key="id" class="card">
+    <view style="display:flex;justify-content:space-between;align-items:center">
+      <view><view style="font-weight:600">{{item.title}}</view><view style="font-size:12px;color:#999;margin-top:2px">{{item.type}}</view></view>
+      <view style="font-size:12px;color:#999">{{item.created_at.slice(0,10)}}</view>
+    </view>
+  </view>
+  <view wx:if="{{!cards.length && !showTpl}}" class="empty">还没有贺卡，点击上方生成</view>
+</scroll-view>

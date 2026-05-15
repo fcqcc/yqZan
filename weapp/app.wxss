@@ -1,0 +1,2 @@
+/* app.wxss - 全局样式 */
+@import "utils/common.wxss";

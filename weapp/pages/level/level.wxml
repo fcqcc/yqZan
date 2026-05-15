@@ -1,0 +1,19 @@
+<scroll-view class="page" scroll-y>
+  <view class="page-title">⭐ 情侣等级</view>
+  <view class="card" style="text-align:center;padding:24px">
+    <view style="font-size:48px;font-weight:900;color:#9d2d5a">Lv{{level}}</view>
+    <view class="progress-bar" style="margin:12px 0"><view class="progress-fill" style="width:{{progress_pct}}%"></view></view>
+    <view style="font-size:13px;color:#666">{{current_exp}} / {{next_level_exp}} ({{progress_pct}}%)</view>
+  </view>
+  <view class="card">
+    <view class="section-title">📋 最近经验记录</view>
+    <view wx:for="{{logs}}" wx:key="id" class="list-item">
+      <view class="list-info">
+        <view class="list-sub">{{item.reason}}</view>
+        <view class="list-sub" style="font-size:11px">{{item.created_at.slice(0,16)}}</view>
+      </view>
+      <text style="color:#2e7d32;font-weight:700">+{{item.amount}}</text>
+    </view>
+    <view wx:if="{{!logs.length}}" class="empty">暂无记录</view>
+  </view>
+</scroll-view>

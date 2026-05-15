@@ -1,0 +1,48 @@
+/* pages/home/home.wxss */
+.page { height: 100vh; }
+.hero {
+  background: linear-gradient(160deg, #221018, #9d2d5a, #c75b82);
+  padding: 24px 16px 20px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.hero-name { font-size: 22px; font-weight: 900; display: block; }
+.hero-partner { font-size: 13px; opacity: .8; margin-top: 4px; display: block; }
+.hero-level { text-align: center; }
+.lv-badge {
+  background: rgba(255,255,255,.2);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.lv-bar { width: 60px; height: 4px; background: rgba(255,255,255,.2); border-radius: 2px; margin: 6px auto; overflow: hidden; }
+.lv-fill { height: 100%; background: #ffd54f; border-radius: 2px; }
+.lv-exp { font-size: 10px; opacity: .6; }
+
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  padding: 8px 12px;
+  background: #fff;
+  margin: 8px 12px;
+  border-radius: 12px;
+}
+.quick-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 4px;
+  font-size: 20px;
+}
+.quick-item text { font-size: 11px; color: #666; margin-top: 4px; }
+
+.section-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+
+.countdown { text-align: center; padding: 10px 0; }
+.cd-days { font-size: 36px; font-weight: 900; color: #9d2d5a; }
+.cd-unit { font-size: 14px; color: #999; margin-left: 4px; }
+.cd-title { display: block; font-size: 14px; margin-top: 4px; }

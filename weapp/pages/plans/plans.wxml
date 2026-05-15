@@ -1,0 +1,39 @@
+<!-- pages/plans/plans.wxml -->
+<scroll-view class="page" scroll-y>
+  <view class="page-title">💰 存钱计划</view>
+  <view class="page-subtitle">设定目标，一笔笔存，一步步靠近</view>
+  <button class="btn btn-primary" style="margin:0 12px 12px" bindtap="toggleForm">➕ 新计划</button>
+
+  <view wx:if="{{showForm}}" class="overlay" bindtap="toggleForm">
+    <view class="sheet" catchtap=""><catch-data>
+      <view class="sheet-title">创建存钱计划</view>
+      <input class="input" placeholder="名称（如：五年百万）" model:value="{{title}}" />
+      <input class="input" type="digit" placeholder="目标金额（元）" model:value="{{target}}" style="margin-top:8px" />
+      <button class="btn btn-primary btn-block" style="margin-top:12px" bindtap="create">创建</button>
+      <button class="btn btn-outline btn-block" style="margin-top:6px" bindtap="toggleForm">取消</button>
+    </catch-data></view>
+  </view>
+
+  <view wx:if="{{showDeliver}}" class="overlay" bindtap="closeDeliver">
+    <view class="sheet" catchtap=""><catch-data>
+      <view class="sheet-title">记录一笔</view>
+      <input class="input" type="digit" placeholder="金额" model:value="{{amount}}" />
+      <input class="input" placeholder="备注（可选）" model:value="{{note}}" style="margin-top:8px" />
+      <button class="btn btn-primary btn-block" style="margin-top:12px" bindtap="doDeliver">提交</button>
+      <button class="btn btn-outline btn-block" style="margin-top:6px" bindtap="closeDeliver">取消</button>
+    </catch-data></view>
+  </view>
+
+  <view wx:for="{{plans}}" wx:key="id" class="card">
+    <view class="list-item">
+      <view class="list-info">
+        <view class="list-title">{{item.title}} {{item.done?'✅':''}}</view>
+        <view class="list-sub">¥{{item.current_amount.toLocaleString()}} / ¥{{item.target_amount.toLocaleString()}}</view>
+      </view>
+      <button class="btn btn-sm btn-primary" bindtap="openDeliver" data-id="{{item.id}}" wx:if="{{!item.done}}">存</button>
+      <button class="btn btn-sm btn-danger" bindtap="del" data-id="{{item.id}}">删</button>
+    </view>
+    <view class="progress-bar" style="margin-top:8px"><view class="progress-fill" style="width:{{item.current_amount/item.target_amount*100}}%"></view></view>
+  </view>
+  <view wx:if="{{!plans.length}}" class="empty">还没有存钱计划</view>
+</scroll-view>

@@ -1,0 +1,5 @@
+page{padding-bottom:40px}
+.info-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:14px}
+.info-row:last-child{border:none}
+.code{color:#9d2d5a;font-weight:600}
+.btn-block{width:100%;margin-top:8px}

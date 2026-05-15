@@ -1,0 +1,25 @@
+<scroll-view class="page" scroll-y>
+  <view class="page-title">📋 要做的事</view>
+  <view class="page-subtitle">一起做 & 自己做</view>
+  <button class="btn btn-primary" style="margin:0 12px 12px" bindtap="toggleForm">➕ 添加</button>
+  <view wx:if="{{showForm}}" class="overlay" bindtap="toggleForm">
+    <view class="sheet" catchtap=""><catch-data>
+      <view class="sheet-title">添加事项</view>
+      <input class="input" placeholder="事项名称" model:value="{{title}}" />
+      <picker mode="selector" range="{{scopes}}" bindchange="onScopeChange" value="{{scopeIdx}}">
+        <view class="input" style="margin-top:8px">{{scopes[scopeIdx]}}</view>
+      </picker>
+      <button class="btn btn-primary btn-block" style="margin-top:12px" bindtap="create">确定</button>
+    </catch-data></view>
+  </view>
+  <view wx:for="{{todos}}" wx:key="id" class="card">
+    <view class="list-item">
+      <view class="list-info">
+        <view class="list-title">{{item.title}}</view>
+        <view class="list-sub">{{item.scope}} · {{item.type}}</view>
+      </view>
+      <button class="btn btn-sm {{item.done?'btn-outline':'btn-primary'}}" bindtap="checkin" data-id="{{item.id}}">{{item.done?'✅ 完成':'打卡'}}</button>
+    </view>
+  </view>
+  <view wx:if="{{!todos.length}}" class="empty">还没有事项</view>
+</scroll-view>

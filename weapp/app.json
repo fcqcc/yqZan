@@ -1,0 +1,55 @@
+     1|{
+     2|  "pages": [
+     3|    "pages/login/login",
+     4|    "pages/home/home",
+     5|    "pages/plans/plans",
+     6|    "pages/wishes/wishes",
+     7|    "pages/todos/todos",
+    "pages/tasks/tasks",
+     8|    "pages/anniversaries/anniversaries",
+     9|    "pages/gifts/gifts",
+    10|    "pages/notes/notes",
+    11|    "pages/cards/cards",
+    12|    "pages/level/level",
+    13|    "pages/settings/settings"
+    14|  ],
+    15|  "window": {
+    16|    "navigationBarTitleText": "情侣承诺站",
+    17|    "navigationBarBackgroundColor": "#9d2d5a",
+    18|    "navigationBarTextStyle": "white",
+    19|    "backgroundColor": "#f5f5f5"
+    20|  },
+    21|  "tabBar": {
+    22|    "color": "#999",
+    23|    "selectedColor": "#9d2d5a",
+    24|    "list": [
+    25|      {
+    26|        "pagePath": "pages/home/home",
+    27|        "text": "首页",
+    28|        "iconPath": "images/home.png",
+    29|        "selectedIconPath": "images/home_active.png"
+    30|      },
+    31|      {
+    32|        "pagePath": "pages/notes/notes",
+    33|        "text": "便利贴",
+    34|        "iconPath": "images/note.png",
+    35|        "selectedIconPath": "images/note_active.png"
+    36|      },
+    37|      {
+    38|        "pagePath": "pages/cards/cards",
+    39|        "text": "贺卡",
+    40|        "iconPath": "images/card.png",
+    41|        "selectedIconPath": "images/card_active.png"
+    42|      },
+    43|      {
+    44|        "pagePath": "pages/settings/settings",
+    45|        "text": "我的",
+    46|        "iconPath": "images/me.png",
+    47|        "selectedIconPath": "images/me_active.png"
+    48|      }
+    49|    ]
+    50|  },
+    51|  "style": "v2",
+    52|  "sitemapLocation": "sitemap.json"
+    53|}
+    54|

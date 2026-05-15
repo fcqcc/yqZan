@@ -1,0 +1,24 @@
+<!-- pages/settings/settings.wxml -->
+<scroll-view class="page" scroll-y>
+  <view class="card">
+    <view class="section-title">👤 我的信息</view>
+    <view class="info-row"><text>昵称</text><text>{{userInfo.nickname}}</text></view>
+    <view class="info-row"><text>邀请码</text><text class="code" bindtap="copyCode">{{userInfo.invite_code}} 📋</text></view>
+    <view class="info-row" wx:if="{{partner}}"><text>伴侣</text><text>{{partner.nickname}}</text></view>
+  </view>
+
+  <view wx:if="{{!partner}}" class="card">
+    <view class="section-title">💑 绑定伴侣</view>
+    <input class="input" placeholder="输入伴侣的邀请码" model:value="{{inviteCode}}" />
+    <button class="btn btn-primary btn-block" style="margin-top:10px" bindtap="handleBind">绑定</button>
+  </view>
+
+  <view wx:if="{{partner}}" class="card">
+    <view class="section-title">⚙️ 操作</view>
+    <button class="btn btn-danger btn-block" bindtap="handleUnbind">解绑伴侣</button>
+  </view>
+
+  <view class="card">
+    <button class="btn btn-outline btn-block" bindtap="handleLogout">退出登录</button>
+  </view>
+</scroll-view>

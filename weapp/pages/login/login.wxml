@@ -1,0 +1,23 @@
+<!-- pages/login/login.wxml -->
+<view class="login-page">
+  <view class="login-card">
+    <view class="logo">💑</view>
+    <view class="app-name">情侣承诺站</view>
+    <view class="app-desc">记录承诺 · 一起成长</view>
+
+    <view class="form">
+      <input class="input" placeholder="昵称" model:value="{{nickname}}" />
+      <input class="input" password placeholder="密码" model:value="{{password}}" style="margin-top:10px" />
+    </view>
+
+    <button class="btn btn-primary login-btn" bindtap="handleLogin" loading="{{loading}}">
+      {{mode === 'login' ? '登录' : '注册'}}
+    </button>
+
+    <view class="switch" bindtap="switchMode">
+      {{mode === 'login' ? '没有账号？去注册' : '已有账号？去登录'}}
+    </view>
+
+    <view wx:if="{{error}}" class="error">{{error}}</view>
+  </view>
+</view>

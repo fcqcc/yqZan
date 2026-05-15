@@ -1,0 +1,49 @@
+<!-- pages/home/home.wxml -->
+<scroll-view class="page" scroll-y>
+  <!-- 头部 -->
+  <view class="hero">
+    <view class="hero-info">
+      <text class="hero-name">{{userInfo.nickname}}</text>
+      <text wx:if="{{partner}}" class="hero-partner">💑 {{partner.nickname}}</text>
+      <text wx:else class="hero-partner" bindtap="goBind">➕ 绑定伴侣</text>
+    </view>
+    <view class="hero-level" bindtap="go" data-url="/pages/level/level">
+      <text class="lv-badge">Lv{{level}}</text>
+      <view class="lv-bar"><view class="lv-fill" style="width:{{progress_pct}}%"></view></view>
+      <text class="lv-exp">{{current_level_exp}}/{{next_level_exp}}</text>
+    </view>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="quick-grid">
+    <view class="quick-item" bindtap="go" data-url="/pages/plans/plans">💰<text>存钱</text></view>
+    <view class="quick-item" bindtap="go" data-url="/pages/wishes/wishes">🔮<text>心愿</text></view>
+    <view class="quick-item" bindtap="go" data-url="/pages/todos/todos">📋<text>要做</text></view>
+    <view class="quick-item" bindtap="go" data-url="/pages/anniversaries/anniversaries">📅<text>纪念日</text></view>
+    <view class="quick-item" bindtap="go" data-url="/pages/gifts/gifts">🎁<text>礼物</text></view>
+    <view class="quick-item" bindtap="go" data-url="/pages/notes/notes">💬<text>便利贴</text></view>
+    <view class="quick-item" bindtap="go" data-url="/pages/cards/cards">🎉<text>贺卡</text></view>
+    <view class="quick-item" bindtap="go" data-url="/pages/settings/settings">⚙️<text>设置</text></view>
+  </view>
+
+  <!-- 数据概览 -->
+  <view class="card">
+    <view class="section-title">📊 概览</view>
+    <view class="stat-grid">
+      <view class="stat-item"><view class="stat-num">{{stats.total_delivered|money}}</view><view class="stat-label">已存(¥)</view></view>
+      <view class="stat-item"><view class="stat-num">{{stats.plan_count}}</view><view class="stat-label">计划</view></view>
+      <view class="stat-item"><view class="stat-num">{{stats.done_todos}}</view><view class="stat-label">完成</view></view>
+      <view class="stat-item"><view class="stat-num">{{stats.anni_count}}</view><view class="stat-label">纪念日</view></view>
+    </view>
+  </view>
+
+  <!-- 最近纪念日 -->
+  <view wx:if="{{nearestAnni}}" class="card">
+    <view class="section-title">⏰ 最近纪念日</view>
+    <view class="countdown">
+      <text class="cd-days">{{nearestAnni.days}}</text>
+      <text class="cd-unit">天后</text>
+      <text class="cd-title">{{nearestAnni.title}}</text>
+    </view>
+  </view>
+</scroll-view>
