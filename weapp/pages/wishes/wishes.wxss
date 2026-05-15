@@ -1,0 +1,11 @@
+/* pages/wishes/wishes.wxss */
+.wish-card__body {
+  padding-right: 40px;
+}
+
+.wish-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}

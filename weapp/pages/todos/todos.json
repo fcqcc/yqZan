@@ -1,4 +1,4 @@
 {
   "navigationBarTitleText": "要做的事",
-  "navigationStyle": "custom"
+  "behaviors": ["../../behaviors/theme-behavior"]
 }

@@ -1,4 +1,4 @@
 {
   "navigationBarTitleText": "情侣等级",
-  "navigationStyle": "custom"
+  "behaviors": ["../../behaviors/theme-behavior"]
 }

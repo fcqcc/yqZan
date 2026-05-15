@@ -1,1 +1,5 @@
-{ "navigationBarTitleText": "登录", "navigationStyle": "custom" }
+{
+  "navigationBarTitleText": "登录",
+  "navigationStyle": "custom",
+  "behaviors": ["../../behaviors/theme-behavior"]
+}

@@ -1,4 +1,5 @@
 {
   "navigationBarTitleText": "便利贴",
-  "navigationStyle": "custom"
+  "usingComponents": {},
+  "behaviors": ["../../behaviors/theme-behavior"]
 }

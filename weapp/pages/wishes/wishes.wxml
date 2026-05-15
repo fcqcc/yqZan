@@ -2,27 +2,39 @@
 <scroll-view class="page" scroll-y>
   <view class="page-title">🔮 心愿承诺</view>
   <view class="page-subtitle">许下的心愿，一个一个实现</view>
-  <button class="btn btn-wish" style="margin:0 12px 12px" bindtap="toggleForm">➕ 许下心愿</button>
+  <button class="btn btn-wish btn-block" style="margin:0 12px 12px" bindtap="toggleForm">➕ 许下心愿</button>
 
   <view wx:if="{{showForm}}" class="overlay" bindtap="toggleForm">
     <view class="sheet" catchtap="">
       <view class="sheet-title">许下心愿</view>
       <input class="input" placeholder="心愿名称" model:value="{{title}}" />
       <input class="input" placeholder="描述（可选）" model:value="{{description}}" style="margin-top:8px" />
-      <button class="btn btn-primary btn-block" style="margin-top:12px" bindtap="create">确定</button>
-      <button class="btn btn-outline btn-block" style="margin-top:6px" bindtap="toggleForm">取消</button>
+      <view class="sheet-actions-inline">
+        <button class="btn btn-outline" bindtap="toggleForm">取消</button>
+        <button class="btn btn-primary" bindtap="create">确定</button>
+      </view>
     </view>
   </view>
 
-  <view wx:for="{{wishes}}" wx:key="id" class="card">
-    <view class="list-item">
+  <view wx:for="{{wishes}}" wx:key="id" class="card wish-card">
+    <view
+      class="card-close-hit"
+      catchtap="del"
+      data-id="{{item.id}}"
+      hover-class="card-close-hit--press"
+      hover-stay-time="60"
+    >×</view>
+    <view class="list-item wish-card__body">
       <view class="list-info">
         <view class="list-title">{{item.title}}</view>
         <view wx:if="{{item.description}}" class="list-sub">{{item.description}}</view>
-        <view class="tag tag-{{item.status}}" style="margin-top:4px">{{item.status}}</view>
+        <view class="tag tag-{{item.status}}" style="margin-top:4px">{{item.statusLabel}}</view>
       </view>
-      <button class="btn btn-sm btn-outline" bindtap="updateStatus" data-id="{{item.id}}" data-status="{{item.status}}">推进</button>
-      <button class="btn btn-sm btn-danger" bindtap="del" data-id="{{item.id}}">删</button>
+      <view class="wish-actions">
+        <button class="btn btn-sm btn-primary" catchtap="updateStatus" data-id="{{item.id}}" data-status="{{item.status}}">
+          {{item.nextActionLabel}}
+        </button>
+      </view>
     </view>
   </view>
   <view wx:if="{{!wishes.length}}" class="empty">还没有心愿，许下第一个吧</view>

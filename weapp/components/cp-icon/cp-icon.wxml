@@ -1,0 +1,3 @@
+<view class="cp-icon" style="width:{{size}}rpx;height:{{size}}rpx">
+  <image class="cp-icon__img" src="{{iconSrc}}" mode="aspectFit" />
+</view>

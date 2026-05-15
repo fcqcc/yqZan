@@ -1,33 +1,32 @@
-<!-- pages/notes/notes.wxml — 便利贴墙（毛玻璃） -->
+<!-- pages/notes/notes.wxml — 单列便签 + 贴上动效 -->
 <scroll-view class="page" scroll-y>
-  <view class="nav-bar"><view class="nav-safe"></view><view class="nav-content"><text class="nav-title">便利贴墙</text></view></view>
-  <view class="page-title">💬 便利贴墙</view>
+  <view class="page-title">便利贴墙</view>
   <view class="page-subtitle">给对方留一句温暖的话</view>
 
-  <!-- 写便利贴 -->
-  <view class="note-input-card">
-    <textarea class="note-input" placeholder="想对Ta说什么..." model:value="{{content}}" maxlength="200" auto-height />
-    <view class="note-input-actions">
-      <text class="note-count">{{content.length}}/200</text>
-      <button class="btn btn-primary btn-sm" bindtap="send">💕 贴上去</button>
+  <view class="oak-input-board">
+    <textarea class="oak-input" placeholder="想对 Ta 说什么…" model:value="{{content}}" maxlength="200" auto-height />
+    <view class="oak-input-bar">
+      <text class="oak-count">{{content ? content.length : 0}}/200</text>
+      <button class="btn btn-primary btn-sm oak-send" bindtap="send">贴上</button>
     </view>
   </view>
 
-  <!-- 便利贴墙 -->
-  <view class="note-wall">
-    <view wx:for="{{notes}}" wx:key="id" class="note-item">
-      <view class="note-pin"></view>
-      <view class="note-body" style="background:{{item.color}}">
-        <view class="note-content">{{item.content}}</view>
-        <view class="note-footer">
-          <text class="note-author">{{item.user_id === userInfo.id ? '我' : 'Ta'}}</text>
-          <text class="note-time">{{item.created_at.slice(5,10)}}</text>
-          <view class="note-like" bindtap="like" data-id="{{item.id}}">
-            <text>{{item.liked ? '❤️' : '🤍'}}</text>
-            <text wx:if="{{item.likes}}">{{item.likes}}</text>
+  <view class="oak-list">
+    <view wx:for="{{notes}}" wx:key="id" class="oak-row {{stickId === item.id ? 'oak-row--stick' : ''}}">
+      <view class="oak-row-pin" />
+      <view class="oak-row-paper" style="background:{{item.paper}}">
+        <view class="oak-row-text">{{item.content}}</view>
+        <view class="oak-row-meta">
+          <text class="oak-author">{{item.user_id === userInfo.id ? '我' : 'Ta'}}</text>
+          <text class="oak-date">{{item.dateShort}}</text>
+          <view class="oak-like" catchtap="like" data-id="{{item.id}}">
+            <text>{{item.liked ? '❤' : '♡'}}</text>
+            <text wx:if="{{item.likes}}" class="oak-like-num">{{item.likes}}</text>
           </view>
         </view>
       </view>
     </view>
   </view>
+
+  <view wx:if="{{!notes || notes.length === 0}}" class="oak-empty">还没有便利贴，写第一条吧</view>
 </scroll-view>

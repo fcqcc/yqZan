@@ -1,0 +1,201 @@
+/* 等级页 — 高质感徽章 + 星尘点缀 */
+.page-level {
+  position: relative;
+}
+
+.card.lv-showcase {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 32px 20px 28px;
+  background: linear-gradient(155deg, #ffffff 0%, #fff5fb 40%, #ffe0ef 100%);
+  border: 1px solid #ffd6e8;
+  box-shadow:
+    0 12px 32px rgba(214, 92, 138, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.lv-aurora {
+  position: absolute;
+  inset: -40% -20%;
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255, 213, 79, 0.18), transparent 55%),
+    radial-gradient(ellipse 60% 45% at 80% 100%, rgba(236, 64, 122, 0.12), transparent 50%),
+    radial-gradient(ellipse 50% 40% at 10% 90%, rgba(171, 71, 188, 0.1), transparent 50%);
+  pointer-events: none;
+  opacity: 0.95;
+}
+
+.lv-orbit {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 0 1px rgba(255, 182, 193, 0.15), inset 0 0 40px rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+  animation: lv-orbit-spin 28s linear infinite;
+}
+
+@keyframes lv-orbit-spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.lv-dot {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 10px rgba(255, 224, 178, 0.9), 0 0 4px rgba(236, 64, 122, 0.35);
+  pointer-events: none;
+  animation: lv-twinkle 3.2s ease-in-out infinite;
+}
+
+.lv-dot--1 {
+  top: 14%;
+  left: 12%;
+  animation-delay: 0s;
+}
+.lv-dot--2 {
+  top: 22%;
+  right: 14%;
+  animation-delay: 0.4s;
+}
+.lv-dot--3 {
+  bottom: 28%;
+  left: 10%;
+  animation-delay: 0.8s;
+}
+.lv-dot--4 {
+  bottom: 18%;
+  right: 12%;
+  animation-delay: 1.2s;
+}
+.lv-dot--5 {
+  top: 48%;
+  left: 6%;
+  animation-delay: 0.2s;
+}
+.lv-dot--6 {
+  top: 38%;
+  right: 8%;
+  animation-delay: 1.6s;
+}
+.lv-dot--7 {
+  bottom: 42%;
+  right: 20%;
+  animation-delay: 0.6s;
+}
+.lv-dot--8 {
+  top: 62%;
+  left: 22%;
+  animation-delay: 1s;
+}
+
+@keyframes lv-twinkle {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.lv-crown-row {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 4px 12px rgba(157, 45, 90, 0.2));
+}
+
+.lv-label {
+  position: relative;
+  z-index: 2;
+  font-size: 10px;
+  letter-spacing: 6px;
+  color: rgba(141, 110, 99, 0.75);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.lv-rank-line {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 18px;
+}
+
+.lv-prefix {
+  font-size: 22px;
+  font-weight: 800;
+  color: #ad1457;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 12px rgba(236, 64, 122, 0.25);
+}
+
+.lv-num-hero {
+  font-size: 64px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -3px;
+  background: linear-gradient(168deg, #fff8e1 0%, #ffd54f 22%, #f48fb1 48%, #c2185b 72%, #880e4f 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 4px 14px rgba(194, 24, 91, 0.25));
+}
+
+.lv-progress {
+  position: relative;
+  z-index: 2;
+  height: 10px;
+  margin: 0 auto;
+  max-width: 260px;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(62, 39, 35, 0.08);
+}
+
+.lv-progress-fill {
+  background: linear-gradient(90deg, #fce4ec, #ec407a 40%, #c2185b 100%);
+  box-shadow: 0 0 16px rgba(236, 64, 122, 0.45);
+}
+
+.lv-exp-meta {
+  position: relative;
+  z-index: 2;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+}
+
+.level-hero-lv {
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--gold);
+}
+
+.level-hero-sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+}

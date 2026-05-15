@@ -1,4 +1,7 @@
 {
-  "navigationBarTitleText": "设置",
-  "navigationStyle": "custom"
+  "navigationBarTitleText": "我的",
+  "usingComponents": {
+    "cp-icon": "/components/cp-icon/cp-icon"
+  },
+  "behaviors": ["../../behaviors/theme-behavior"]
 }

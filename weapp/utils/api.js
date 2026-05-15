@@ -42,7 +42,10 @@ const unbindPartner = () => request('/api/unbind', 'POST')
 const getPlans = () => request('/api/plans')
 const createPlan = (data) => request('/api/plans', 'POST', data)
 const deletePlan = (id) => request('/api/plans/' + id, 'DELETE')
-const deliverPlan = (id, amount, note) => request('/api/plans/' + id + '/deliver', 'POST', { amount, note })
+const deliverPlan = (id, amount, note, extra = {}) =>
+  request('/api/plans/' + id + '/deliver', 'POST', { amount, note, ...extra })
+/** 存入明细（后端需实现 GET /api/plans/:id/deliveries；失败时前端展示空列表） */
+const getPlanDeliveries = (id) => request('/api/plans/' + id + '/deliveries')
 
 // ===== 心愿 =====
 const getWishes = () => request('/api/wishes')
@@ -92,7 +95,7 @@ const deleteTask = (id) => request('/api/tasks/' + id, 'DELETE')
 
 module.exports = {
   register, login, getMe, getPartner, bindPartner, unbindPartner,
-  getPlans, createPlan, deletePlan, deliverPlan,
+  getPlans, createPlan, deletePlan, deliverPlan, getPlanDeliveries,
   getWishes, createWish, updateWish, deleteWish,
   getTodos, createTodo, checkinTodo, deleteTodo,
   getAnniversaries, createAnniversary, deleteAnniversary,

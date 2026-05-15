@@ -1,87 +1,180 @@
-/* 便利贴墙 — 毛玻璃 */
-page { background: linear-gradient(180deg, #fce4ec, #f3e5f5); }
+/* 便利贴 — 亮色背景 · 单列一行一条 · 新贴「贴上」动效 */
 
-/* 写便利贴区域 */
-.note-input-card {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: var(--glass-border);
-  border-radius: var(--radius);
-  margin: 4px 12px 12px;
-  padding: 14px;
-  box-shadow: var(--glass-shadow);
-}
-.note-input {
-  width: 100%;
-  min-height: 60px;
-  font-size: 14px;
-  border: none;
+.page {
+  height: 100vh;
   background: transparent;
-  color: var(--text);
-  line-height: 1.6;
-}
-.note-input-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid rgba(255,255,255,.4);
-}
-.note-count { font-size: 11px; color: var(--text-muted); }
-
-/* 便利贴墙 — 双列瀑布流 */
-.note-wall {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  padding: 0 12px 20px;
 }
 
-.note-item {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  break-inside: avoid;
+/* 书写区：与全局粉主题一致的卡片 */
+.oak-input-board {
+  margin: 4px 12px 14px;
+  padding: 14px;
+  border-radius: var(--radius-md, 16px);
+  background: var(--card-bg, #ffffff);
+  border: var(--card-border, 1px solid #ffd6e8);
+  box-shadow: var(--shadow-md, 0 8px 24px rgba(214, 92, 138, 0.12));
 }
 
-/* 图钉 */
-.note-pin {
-  position: absolute;
-  top: -4px;
-  left: 50%;
-  margin-left: -5px;
-  width: 10px;
-  height: 10px;
-  background: radial-gradient(circle at 3px 3px, #fff, #bbb);
-  border-radius: 50%;
-  box-shadow: 0 1px 2px rgba(0,0,0,.15);
-  z-index: 2;
+.oak-input {
+  width: 100%;
+  min-height: 64px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text, #3d2c38);
+  background: var(--cream, #fff5f9);
+  border: 1px solid rgba(214, 92, 138, 0.22);
+  border-radius: var(--radius-sm, 10px);
+  padding: 10px 12px;
+  box-sizing: border-box;
 }
 
-/* 便利贴本体 */
-.note-body {
-  border-radius: 16px;
-  padding: 18px 14px 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.06);
-  position: relative;
-  border: 1px solid rgba(255,255,255,.6);
-}
-.note-content {
-  font-size: 13px;
-  line-height: 1.7;
-  color: var(--text);
-  word-break: break-all;
-}
-.note-footer {
+.oak-input-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 10px;
-  font-size: 11px;
-  opacity: .7;
 }
-.note-author { font-weight: 600; }
-.note-time { color: var(--text-secondary); }
-.note-like { display: flex; align-items: center; gap: 2px; }
+
+.oak-count {
+  font-size: 11px;
+  color: var(--text-secondary, #8a6a7a);
+}
+
+.oak-send {
+  box-shadow: var(--shadow-sm, 0 2px 10px rgba(214, 92, 138, 0.1));
+}
+
+/* 单列：每条占满一行 */
+.oak-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 12px 28px;
+}
+
+.oak-row {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+}
+
+/* 小图钉 */
+.oak-row-pin {
+  flex-shrink: 0;
+  width: 14px;
+  margin-top: 10px;
+  position: relative;
+}
+.oak-row-pin::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff8fc, #e8a8c4 55%, #c97a9e);
+  box-shadow: 0 1px 3px rgba(214, 92, 138, 0.35);
+}
+
+/* 纸条：占满剩余宽度 */
+.oak-row-paper {
+  flex: 1;
+  min-width: 0;
+  border-radius: 8px;
+  padding: 12px 14px 10px;
+  border: 1px solid rgba(214, 92, 138, 0.18);
+  box-shadow:
+    0 2px 8px rgba(214, 92, 138, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+.oak-row-text {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text, #3d2c38);
+  word-break: break-all;
+}
+
+.oak-row-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(214, 92, 138, 0.22);
+  font-size: 11px;
+  color: var(--text-secondary, #8a6a7a);
+}
+
+.oak-author {
+  font-weight: 700;
+}
+
+.oak-date {
+  flex: 1;
+  text-align: center;
+  opacity: 0.85;
+}
+
+.oak-like {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 0;
+}
+
+.oak-like-num {
+  font-weight: 600;
+}
+
+.oak-empty {
+  text-align: center;
+  padding: 32px 20px 48px;
+  font-size: 13px;
+  color: var(--text-muted, #b89aa8);
+}
+
+/* 刚贴上的纸条：从上方落下 + 轻弹 + 阴影加深一瞬 */
+@keyframes note-stick-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-28px) scale(0.88) rotate(-2.5deg);
+    box-shadow: 0 12px 28px rgba(214, 92, 138, 0.08);
+  }
+  58% {
+    opacity: 1;
+    transform: translateY(3px) scale(1.02) rotate(0.8deg);
+    box-shadow: 0 6px 18px rgba(214, 92, 138, 0.22);
+  }
+  78% {
+    transform: translateY(-2px) scale(0.995) rotate(-0.3deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0);
+    box-shadow:
+      0 2px 8px rgba(214, 92, 138, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  }
+}
+
+.oak-row--stick .oak-row-paper {
+  animation: note-stick-in 0.58s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transform-origin: 50% 0%;
+}
+
+.oak-row--stick .oak-row-pin::before {
+  animation: pin-drop 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) 0.06s both;
+}
+
+@keyframes pin-drop {
+  0% {
+    transform: translateY(-10px) scale(0.6);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}

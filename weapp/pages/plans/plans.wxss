@@ -1,6 +1,295 @@
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:flex-end;justify-content:center}
-.sheet{background:#fff;border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:500px}
-.sheet-title{font-size:16px;font-weight:700;margin-bottom:14px;text-align:center}
-.btn-block{width:100%}
-.deliveries{margin-top:8px;border-top:1px solid #f0f0f0;padding-top:6px}
-.del-item{display:flex;justify-content:space-between;font-size:12px;color:#666;padding:3px 0}
+/* pages/plans/plans.wxss — 存钱计划 */
+
+.plans-wrap {
+  min-height: 100vh;
+  position: relative;
+}
+
+.page--scroll {
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+.plans-cta {
+  padding: 0 12px 12px;
+}
+
+.plan-card {
+  margin-bottom: 14px;
+  padding-top: 6px;
+}
+
+.plan-head {
+  padding-right: 40px;
+}
+
+.plan-head-main {
+  min-width: 0;
+}
+
+.plan-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.plan-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.plan-done-tag {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--pink-dark);
+  background: rgba(214, 92, 138, 0.14);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.plan-amount-row {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.plan-amount {
+  font-weight: 800;
+  color: var(--pink-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-slash {
+  margin: 0 4px;
+  opacity: 0.5;
+}
+
+.plan-target {
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-deadline {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.plan-chevron {
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.2;
+}
+
+.plan-foot-btn-wrap {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 14px;
+}
+
+.plan-expand-panel {
+  margin-top: 8px;
+  border: 1px solid rgba(42, 36, 38, 0.1);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.65);
+  overflow: hidden;
+}
+
+.plan-expand-panel--after-progress {
+  margin-top: 14px;
+}
+
+.plan-expand-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+  background: rgba(255, 248, 252, 0.9);
+}
+
+.plan-expand-bar:active .plan-chevron {
+  color: var(--pink-dark);
+}
+
+.plan-detail--in-panel {
+  margin-top: 0;
+  padding-top: 10px;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-bottom: 8px;
+  border-top: 1px solid rgba(42, 36, 38, 0.08);
+}
+
+.deliver-datetime-row {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.deliver-date-cell,
+.deliver-time-cell {
+  flex: 1;
+  min-width: 0;
+}
+
+.field-tag-optional {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-left: 4px;
+}
+
+.field-sublabel {
+  display: block;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.plan-progress {
+  margin-top: 12px;
+}
+
+.plan-detail {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.plan-detail-loading,
+.plan-detail-empty {
+  font-size: 13px;
+  color: var(--text-light);
+  padding: 8px 0;
+}
+
+.deliver-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(42, 36, 38, 0.06);
+}
+
+.deliver-row:last-child {
+  border-bottom: none;
+}
+
+.deliver-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.deliver-amt {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--pink-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+.deliver-note {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text);
+  word-break: break-all;
+}
+
+.deliver-note.muted {
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.deliver-time {
+  font-size: 11px;
+  color: var(--text-light);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.sheet--drawer {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.sheet-body {
+  padding-bottom: 8px;
+}
+
+.field-hint {
+  font-size: 12px;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+.input-picker {
+  display: flex;
+  align-items: center;
+  min-height: var(--input-min-height);
+}
+
+/* 完成日：贴底滚轮 */
+.overlay--picker-bottom {
+  z-index: 200;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(61, 44, 56, 0.45);
+}
+
+.deadline-picker-sheet {
+  width: 100%;
+  max-width: 500px;
+  background: #fffafc;
+  border-radius: 20px 20px 0 0;
+  border-top: 1px solid #ffd6e8;
+  box-shadow: 0 -8px 28px rgba(214, 92, 138, 0.15);
+  padding-bottom: calc(12px + constant(safe-area-inset-bottom));
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+.deadline-picker-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid rgba(214, 92, 138, 0.12);
+}
+
+.deadline-picker-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.deadline-picker-link {
+  font-size: 15px;
+  color: var(--text-secondary);
+  padding: 4px 8px;
+}
+
+.deadline-picker-link--strong {
+  color: var(--pink-dark);
+  font-weight: 600;
+}
+
+.deadline-picker-view {
+  width: 100%;
+  height: 220px;
+}
+
+.deadline-picker-item {
+  line-height: 44px;
+  text-align: center;
+  font-size: 16px;
+  color: var(--text);
+}
+
+.deadline-picker-footer {
+  padding: 12px 16px 0;
+}

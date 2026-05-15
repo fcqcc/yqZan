@@ -1,4 +1,4 @@
 {
   "navigationBarTitleText": "心愿承诺",
-  "navigationStyle": "custom"
+  "behaviors": ["../../behaviors/theme-behavior"]
 }

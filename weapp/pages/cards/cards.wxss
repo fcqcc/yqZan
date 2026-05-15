@@ -1,4 +1,4 @@
-/* 贺卡页 — 毛玻璃卡片网格 */
+/* 贺卡页 — 实色卡片网格 */
 .page { padding-bottom: 24px; }
 
 .card-grid {
@@ -8,13 +8,11 @@
   padding: 0 12px;
 }
 .card-item {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: var(--glass-border);
+  background: #ffffff;
+  border: 1px solid #ffd6e8;
   border-radius: var(--radius);
   padding: 16px 12px;
-  box-shadow: var(--glass-shadow);
+  box-shadow: var(--shadow-sm);
   text-align: center;
 }
 .card-item:active { transform: scale(.96); }

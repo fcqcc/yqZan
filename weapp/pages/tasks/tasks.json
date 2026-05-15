@@ -1,4 +1,4 @@
 {
   "navigationBarTitleText": "情侣任务",
-  "navigationStyle": "custom"
+  "behaviors": ["../../behaviors/theme-behavior"]
 }

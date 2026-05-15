@@ -9,7 +9,10 @@
       <picker mode="selector" range="{{scopes}}" bindchange="onScopeChange" value="{{scopeIdx}}">
         <view class="input" style="margin-top:8px">{{scopes[scopeIdx]}}</view>
       </picker>
-      <button class="btn btn-primary btn-block" style="margin-top:12px" bindtap="create">确定</button>
+      <view class="sheet-actions-inline">
+        <button class="btn btn-outline" bindtap="toggleForm">取消</button>
+        <button class="btn btn-primary" bindtap="create">确定</button>
+      </view>
     </view>
   </view>
   <view wx:for="{{todos}}" wx:key="id" class="card">

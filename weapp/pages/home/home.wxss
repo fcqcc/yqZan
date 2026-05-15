@@ -1,5 +1,5 @@
 /* 首页 — 新布局 */
-.page { height: 100vh; background: linear-gradient(180deg, var(--bg-start), var(--bg-mid) 40%, var(--bg-end) 100%); }
+.page { height: 100vh; background: transparent; }
 
 /* ===== 自定义导航 ===== */
 .nav-bar { position: sticky; top: 0; z-index: 50; }
@@ -17,11 +17,11 @@
 .ch-left { flex: 1; }
 .ch-name { font-size: 20px; font-weight: 800; color: var(--text); display: inline; }
 .ch-partner { font-size: 13px; color: var(--text-secondary); margin-left: 6px; }
-.ch-bind { background: rgba(236,64,122,.1); padding: 2px 8px; border-radius: 10px; }
+.ch-bind { background: rgba(214, 92, 138, 0.12); padding: 2px 8px; border-radius: 10px; }
 .ch-days { font-size: 11px; color: var(--text-muted); margin-left: 4px; }
 .ch-level { text-align: center; }
 .ch-lv {
-  background: rgba(236,64,122,.1);
+  background: rgba(214, 92, 138, 0.12);
   padding: 3px 12px;
   border-radius: 12px;
   font-size: 12px;
@@ -29,17 +29,17 @@
   color: var(--pink-dark);
   display: inline-block;
 }
-.ch-lv-bar { width: 48px; height: 3px; background: rgba(233,30,99,.12); border-radius: 2px; margin: 4px auto 0; overflow: hidden; }
+.ch-lv-bar { width: 48px; height: 3px; background: rgba(214, 92, 138, 0.2); border-radius: 2px; margin: 4px auto 0; overflow: hidden; }
 .ch-lv-fill { height: 100%; background: var(--pink-dark); border-radius: 2px; }
 
 /* ===== 2. 存钱卡片（最重要） ===== */
 .money-card {
   margin: 4px 12px 8px;
-  background: linear-gradient(135deg, #fce4ec 0%, #fff 50%, #fef6f8 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #fff8fc 55%, #ffe8f2 100%);
   border-radius: var(--radius-lg);
   padding: 20px;
-  box-shadow: 0 4px 20px rgba(236,64,122,.1);
-  border: 1px solid rgba(255,255,255,.5);
+  box-shadow: 0 8px 24px rgba(214, 92, 138, 0.12);
+  border: 1px solid #ffd6e8;
   position: relative;
   overflow: hidden;
 }
@@ -49,7 +49,7 @@
   top: -40px; right: -30px;
   width: 120px; height: 120px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(236,64,122,.06) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(214, 92, 138, 0.08) 0%, transparent 70%);
 }
 .money-top { display: flex; justify-content: space-between; align-items: flex-start; }
 .money-info { flex: 1; }
@@ -59,7 +59,7 @@
 .money-icon { font-size: 32px; opacity: .6; }
 .money-bar {
   height: 8px;
-  background: rgba(236,64,122,.08);
+  background: rgba(214, 92, 138, 0.15);
   border-radius: 4px;
   margin-top: 14px;
   overflow: hidden;
@@ -83,13 +83,13 @@
 .anni-row {
   margin: 0 12px 6px;
   background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
   border: var(--glass-border);
   border-radius: var(--radius);
   padding: 12px 16px;
   display: flex;
   align-items: center;
   gap: 12px;
+  box-shadow: var(--shadow-sm);
 }
 .anni-emoji { font-size: 20px; }
 .anni-info { flex: 1; display: flex; justify-content: space-between; align-items: center; }
@@ -101,11 +101,11 @@
 /* ===== 4. 今日待办 ===== */
 .todo-card {
   background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
   border: var(--glass-border);
   border-radius: var(--radius);
   margin: 0 12px 6px;
   padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
 }
 .tc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .tc-title { font-size: 13px; font-weight: 700; color: var(--text); }
@@ -137,34 +137,44 @@
   gap: 4px;
   padding: 0 12px;
   margin-bottom: 8px;
+  box-sizing: border-box;
 }
+/* 每行 3 个：3 列 + 2 个 gap(4px) */
 .qr-item {
-  flex: 1;
-  min-width: 30%;
+  flex: 0 0 calc((100% - 8px) / 3);
+  width: calc((100% - 8px) / 3);
+  max-width: calc((100% - 8px) / 3);
+  box-sizing: border-box;
   display: flex;
   align-items: center;
-  gap: 6px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,.3);
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid #ffd6e8;
   border-radius: var(--radius-sm);
-  padding: 10px 8px;
+  padding: 10px 6px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
 }
-.qr-item:active { background: rgba(255,255,255,.5); }
-.qr-icon { font-size: 16px; }
-.qr-label { font-size: 12px; color: var(--text); font-weight: 500; }
+.qr-item:active { background: #fff5fb; }
+.qr-icon-img {
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+  display: block;
+  pointer-events: none;
+}
 
 /* ===== 7. 数据详情（底部） ===== */
 .stats-bar {
   display: flex;
   align-items: center;
   background: var(--glass-bg);
-  backdrop-filter: blur(8px);
   border: var(--glass-border);
   border-radius: var(--radius);
   margin: 0 12px 8px;
   padding: 10px 16px;
   gap: 12px;
+  box-shadow: var(--shadow-sm);
 }
 .sb-item { flex: 1; text-align: center; }
 .sb-num { display: block; font-size: 14px; font-weight: 700; color: var(--pink-dark); }

@@ -1,25 +1,112 @@
 <!-- pages/settings/settings.wxml -->
-<scroll-view class="page" scroll-y>
-  <view class="nav-bar"><view class="nav-safe"></view><view class="nav-content"><text class="nav-title">设置</text></view></view>
-  <view class="card">
-    <view class="section-title">👤 我的信息</view>
-    <view class="info-row"><text>昵称</text><text>{{userInfo.nickname}}</text></view>
-    <view class="info-row"><text>邀请码</text><text class="code" bindtap="copyCode">{{userInfo.invite_code}} 📋</text></view>
-    <view class="info-row" wx:if="{{partner}}"><text>伴侣</text><text>{{partner.nickname}}</text></view>
-  </view>
+<view class="app-root app-theme-{{uiTheme}}">
+  <scroll-view class="page-scroll" scroll-y show-scrollbar="{{false}}">
+    <view class="page-inner">
+      <view class="couple-card glass-card">
+        <view class="avatar-group">
+          <image wx:if="{{myAvatar}}" class="avatar" src="{{myAvatar}}" mode="aspectFill" />
+          <view wx:else class="avatar avatar-ph">{{myInitial}}</view>
+          <block wx:if="{{partner}}">
+            <image wx:if="{{partnerAvatar}}" class="avatar partner" src="{{partnerAvatar}}" mode="aspectFill" />
+            <view wx:else class="avatar partner avatar-ph">{{partnerInitial}}</view>
+          </block>
+          <view wx:else class="avatar partner avatar-slot">
+            <cp-icon name="heart-line" size="40" />
+          </view>
+        </view>
+        <view class="couple-info">
+          <text class="couple-name">{{coupleTitle}}</text>
+          <view class="couple-slogan-wrap">
+            <text class="couple-slogan">记录属于你们的小日常</text>
+          </view>
+        </view>
+        <view class="level-badge">
+          <text class="level-text">Lv.{{level}}</text>
+          <progress
+            class="level-progress"
+            percent="{{expPercent}}"
+            stroke-width="4"
+            activeColor="{{progressActive}}"
+            backgroundColor="{{progressBg}}"
+            border-radius="10"
+            active
+          />
+        </view>
+      </view>
 
-  <view wx:if="{{!partner}}" class="card">
-    <view class="section-title">💑 绑定伴侣</view>
-    <input class="input" placeholder="输入伴侣的邀请码" model:value="{{inviteCode}}" />
-    <button class="btn btn-primary btn-block" style="margin-top:10px" bindtap="handleBind">绑定</button>
-  </view>
+      <view class="info-card glass-card" wx:if="{{userInfo}}">
+        <view class="info-item">
+          <text class="info-label">昵称</text>
+          <view class="info-right">
+            <text class="info-value">{{userInfo.nickname}}</text>
+            <view class="icon-hit" catchtap="editNickname">
+              <cp-icon name="pencil" size="36" />
+            </view>
+          </view>
+        </view>
+        <view class="divider" />
+        <view class="info-item">
+          <text class="info-label">邀请码</text>
+          <view class="info-right">
+            <text class="info-value code">{{userInfo.invite_code}}</text>
+            <view class="icon-hit" catchtap="copyInviteCode">
+              <cp-icon name="copy" size="36" />
+            </view>
+          </view>
+        </view>
+        <view class="divider" />
+        <view class="info-item">
+          <text class="info-label">伴侣</text>
+          <view class="info-right">
+            <text class="info-value">{{partnerLine}}</text>
+            <view class="icon-hit" catchtap="viewPartner">
+              <cp-icon name="users" size="36" />
+            </view>
+          </view>
+        </view>
+      </view>
 
-  <view wx:if="{{partner}}" class="card">
-    <view class="section-title">⚙️ 操作</view>
-    <button class="btn btn-danger btn-block" bindtap="handleUnbind">解绑伴侣</button>
-  </view>
+      <view wx:if="{{!partner}}" class="bind-card glass-card">
+        <view class="bind-title">绑定伴侣</view>
+        <input class="input bind-input" placeholder="输入对方的邀请码" model:value="{{inviteCodeInput}}" />
+        <button class="bind-btn" bindtap="handleBind">绑定</button>
+      </view>
 
-  <view class="card">
-    <button class="btn btn-outline btn-block" bindtap="handleLogout">退出登录</button>
-  </view>
-</scroll-view>
+      <view class="menu-list glass-card">
+        <view class="menu-item" bindtap="goToAchievements" hover-class="menu-item-hover" hover-stay-time="70">
+          <view class="menu-left">
+            <view class="menu-icon-wrap"><cp-icon name="trophy" size="40" /></view>
+            <text class="menu-title">情侣等级</text>
+          </view>
+          <text class="menu-chevron">›</text>
+        </view>
+        <view class="menu-item" bindtap="goToGiftBox" hover-class="menu-item-hover" hover-stay-time="70">
+          <view class="menu-left">
+            <view class="menu-icon-wrap"><cp-icon name="gift" size="40" /></view>
+            <text class="menu-title">礼物记录</text>
+          </view>
+          <text class="menu-chevron">›</text>
+        </view>
+        <view class="menu-item" bindtap="goToWallet" hover-class="menu-item-hover" hover-stay-time="70">
+          <view class="menu-left">
+            <view class="menu-icon-wrap"><cp-icon name="wallet" size="40" /></view>
+            <text class="menu-title">存钱计划</text>
+          </view>
+          <text class="menu-chevron">›</text>
+        </view>
+        <view class="menu-item menu-item-last" bindtap="goToAbout" hover-class="menu-item-hover" hover-stay-time="70">
+          <view class="menu-left">
+            <view class="menu-icon-wrap"><cp-icon name="gear" size="40" /></view>
+            <text class="menu-title">关于</text>
+          </view>
+          <text class="menu-chevron">›</text>
+        </view>
+      </view>
+
+      <view class="danger-actions">
+        <button wx:if="{{partner}}" class="danger-btn unbind" bindtap="unbindPartner">解绑伴侣</button>
+        <button class="danger-btn logout" bindtap="logout">退出登录</button>
+      </view>
+    </view>
+  </scroll-view>
+</view>

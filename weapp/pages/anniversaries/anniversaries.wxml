@@ -9,7 +9,10 @@
       <picker mode="date" bindchange="onDateChange">
         <view class="input" style="margin-top:8px">{{dateVal || '选择日期'}}</view>
       </picker>
-      <button class="btn btn-primary btn-block" style="margin-top:12px" bindtap="create">确定</button>
+      <view class="sheet-actions-inline">
+        <button class="btn btn-outline" bindtap="toggleForm">取消</button>
+        <button class="btn btn-primary" bindtap="create">确定</button>
+      </view>
     </view>
   </view>
   <view wx:for="{{anniversaries}}" wx:key="id" class="card" style="display:flex;justify-content:space-between;align-items:center">

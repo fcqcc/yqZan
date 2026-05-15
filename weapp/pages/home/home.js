@@ -9,6 +9,7 @@ function fmtMoney(n) {
 
 Page({
   data: {
+    tabBarIndex: 0,
     userInfo: null, partner: null,
     level: 1, current_exp: 0, next_level_exp: 1, progress_pct: 0,
     delivered_text: '¥0', target_text: '¥0',

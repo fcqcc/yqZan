@@ -15,13 +15,14 @@
   ],
   "window": {
     "navigationBarTitleText": "情侣承诺站",
-    "navigationBarBackgroundColor": "#f8e8ee",
+    "navigationBarBackgroundColor": "#FFECF4",
     "navigationBarTextStyle": "black",
-    "backgroundColor": "#f5f5f5"
+    "backgroundColor": "#FFF5FB"
   },
   "tabBar": {
-    "color": "#999",
-    "selectedColor": "#9d2d5a",
+    "custom": true,
+    "color": "#8A6A7A",
+    "selectedColor": "#D65C8A",
     "list": [
       {
         "pagePath": "pages/home/home",
@@ -34,12 +35,6 @@
         "text": "便利贴",
         "iconPath": "images/tab_note.png",
         "selectedIconPath": "images/tab_note_active.png"
-      },
-      {
-        "pagePath": "pages/cards/cards",
-        "text": "贺卡",
-        "iconPath": "images/tab_card.png",
-        "selectedIconPath": "images/tab_card_active.png"
       },
       {
         "pagePath": "pages/settings/settings",

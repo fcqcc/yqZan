@@ -1,44 +1,70 @@
 const api = require('../../utils/api')
 
-const NOTE_COLORS = [
-  'linear-gradient(135deg,#fce4ec,#f8bbd0)',
-  'linear-gradient(135deg,#fff3e0,#ffccbc)',
-  'linear-gradient(135deg,#e8f5e9,#c8e6c9)',
-  'linear-gradient(135deg,#e3f2fd,#bbdefb)',
-  'linear-gradient(135deg,#f3e5f5,#e1bee7)',
-  'linear-gradient(135deg,#fff8e1,#fff9c4)',
+const PAPER_TINTS = [
+  '#faf6ef',
+  '#f7f2e8',
+  '#fcf9f3',
+  '#f5efe4',
+  '#faf8f2',
+  '#f0ebe3'
 ]
 
+function mapNote(n, i) {
+  const created = n.created_at != null ? String(n.created_at) : ''
+  let dateShort = '--'
+  if (created.length >= 10) dateShort = created.slice(5, 10)
+  else if (created.length > 0) dateShort = created
+  return {
+    ...n,
+    paper: PAPER_TINTS[i % PAPER_TINTS.length],
+    dateShort
+  }
+}
+
 Page({
-  data: { notes: [], content: '', userInfo: null, maxLength: 200 },
+  data: { tabBarIndex: 1, notes: [], content: '', userInfo: {}, maxLength: 200, stickId: null },
 
   onShow() {
     this.setData({ userInfo: wx.getStorageSync('userInfo') || {} })
     this.load()
   },
 
+  async fetchNotes() {
+    const r = await api.getNotes()
+    return (r.notes || []).map(mapNote)
+  },
+
   async load() {
     try {
-      const r = await api.getNotes()
-      const notes = (r.notes || []).map((n, i) => ({
-        ...n,
-        color: NOTE_COLORS[i % NOTE_COLORS.length]
-      }))
+      const notes = await this.fetchNotes()
       this.setData({ notes })
-    } catch(e) {}
+    } catch (e) {}
   },
 
   async send() {
     const content = this.data.content.trim()
     if (!content) return
+    const oldIds = new Set((this.data.notes || []).map((n) => String(n.id)))
     wx.showLoading({ title: '贴上去...' })
     try {
       await api.createNote(content)
+      const notes = await this.fetchNotes()
+      const newest = notes.find((n) => !oldIds.has(String(n.id)))
       wx.hideLoading()
-      this.setData({ content: '' })
+      if (this._stickTimer) clearTimeout(this._stickTimer)
+      this._stickTimer = null
+      this.setData({ content: '', notes, stickId: newest ? newest.id : null })
+      this._stickTimer = setTimeout(() => {
+        this.setData({ stickId: null })
+        this._stickTimer = null
+      }, 620)
+      try {
+        wx.vibrateShort({ type: 'light' })
+      } catch (e) {}
       wx.showToast({ title: '已贴上 💕', icon: 'none' })
-      this.load()
-    } catch(e) { wx.hideLoading() }
+    } catch (e) {
+      wx.hideLoading()
+    }
   },
 
   async like(e) {
