@@ -253,7 +253,7 @@ def admin_health(request: Request, db: Session = Depends(get_db)):
     checks.append(("磁盘", disk_status))
 
     # 运行时间
-    uptime_seconds = time.time() - __import__("os").popen("date +%s").read().strip().__int__()
+    uptime_seconds = time.time() - int(__import__("os").popen("date +%s").read().strip())
     uptime_hours = int(uptime_seconds) // 3600
     uptime_status = f"✅ {uptime_hours}h"
 
