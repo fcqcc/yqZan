@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models.social import Level, LevelLog, Note
+from app.models.social import Level, LevelLog, Note, Task, TaskEvent
 from app.models.user import User
 from app.schemas.social import (
     AwardExpRequest,
@@ -14,6 +14,10 @@ from app.schemas.social import (
     NoteCreate,
     NoteListResponse,
     NoteResponse,
+    TaskCreate,
+    TaskEventAccept,
+    TaskEventResponse,
+    TaskResponse,
 )
 from app.services.auth import get_current_user
 
@@ -230,5 +234,210 @@ def delete_note(
     if note.user_id != user.id:
         raise HTTPException(403, "只能删除自己的留言")
     db.delete(note)
+    db.commit()
+    return {"ok": True}
+
+
+# ===================== 情侣任务 =====================
+
+def _get_couple_id(user):
+    if not user.couple_id:
+        raise HTTPException(400, "未绑定伴侣")
+    return user.couple_id
+
+
+def _add_exp(couple_id, amount, reason, db):
+    """添加经验并检查升级"""
+    from app.models.social import Level as Lvl, LevelLog as LvlLog
+    level = db.query(Lvl).filter(Lvl.couple_id == couple_id).first()
+    if not level:
+        level = Lvl(couple_id=couple_id)
+        db.add(level)
+        db.flush()
+    
+    old_lvl = level.level
+    level.current_exp += amount
+    level.total_exp_earned += amount
+    
+    # 重新计算等级
+    thresholds = [0]
+    for n in range(2, 100):
+        thresholds.append(int(20 * (n ** 1.8)))
+    
+    new_lvl = 1
+    for i, t in enumerate(thresholds, 1):
+        if level.total_exp_earned >= t:
+            new_lvl = i
+    
+    if new_lvl > old_lvl:
+        level.pending_levelups += new_lvl - old_lvl
+    level.level = new_lvl
+    level.updated_at = datetime.now()
+    
+    db.add(LvlLog(couple_id=couple_id, amount=amount, reason=reason))
+    db.commit()
+    return level
+
+
+@router.get("/tasks", response_model=list[TaskResponse])
+def list_tasks(
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    cid = _get_couple_id(user)
+    tasks = (
+        db.query(Task)
+        .filter(Task.couple_id == cid)
+        .order_by(Task.created_at.desc())
+        .all()
+    )
+    return tasks
+
+
+@router.get("/tasks/events", response_model=list[TaskEventResponse])
+def list_task_events(
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """列出可接取的官方事件任务"""
+    cid = _get_couple_id(user)
+    events = db.query(TaskEvent).filter(TaskEvent.active == True).all()
+    
+    # 过滤已接取的
+    accepted = db.query(Task.event_code).filter(
+        Task.couple_id == cid,
+        Task.type == "event",
+        Task.event_code.isnot(None),
+    ).all()
+    accepted_codes = {a[0] for a in accepted if a[0]}
+    
+    result = []
+    for e in events:
+        if e.event_code not in accepted_codes:
+            result.append(e)
+    return result
+
+
+@router.post("/tasks")
+def create_task(
+    req: TaskCreate,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """给伴侣指派任务"""
+    cid = _get_couple_id(user)
+    
+    # 验证被指派者是伴侣
+    assignee = db.query(User).filter(
+        User.id == req.assignee_id,
+        User.couple_id == cid,
+        User.id != user.id,
+    ).first()
+    if not assignee:
+        raise HTTPException(400, "只能给伴侣指派任务")
+    
+    task = Task(
+        couple_id=cid,
+        assigner_id=user.id,
+        assignee_id=req.assignee_id,
+        type="personal",
+        category=req.category,
+        title=req.title,
+        note=req.note,
+        deadline=req.deadline,
+        exp_reward=5,
+    )
+    db.add(task)
+    db.commit()
+    db.refresh(task)
+    return {"ok": True, "task_id": task.id}
+
+
+@router.post("/tasks/accept")
+def accept_task_event(
+    req: TaskEventAccept,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """接取官方事件任务"""
+    cid = _get_couple_id(user)
+    
+    event = db.query(TaskEvent).filter(
+        TaskEvent.event_code == req.event_code,
+        TaskEvent.active == True,
+    ).first()
+    if not event:
+        raise HTTPException(404, "事件任务不存在")
+    
+    # 检查是否已接取
+    existing = db.query(Task).filter(
+        Task.couple_id == cid,
+        Task.type == "event",
+        Task.event_code == req.event_code,
+    ).first()
+    if existing:
+        raise HTTPException(400, "已接取此事件任务")
+    
+    # 找伴侣
+    partner = db.query(User).filter(
+        User.couple_id == cid,
+        User.id != user.id,
+    ).first()
+    partner_id = partner.id if partner else user.id
+    
+    task = Task(
+        couple_id=cid,
+        assigner_id=user.id,
+        assignee_id=partner_id,
+        type="event",
+        event_code=event.event_code,
+        category=event.category,
+        title=event.title,
+        note=event.description,
+        exp_reward=event.exp_reward,
+        status="accepted",
+    )
+    db.add(task)
+    db.commit()
+    db.refresh(task)
+    return {"ok": True, "task_id": task.id}
+
+
+@router.post("/tasks/{task_id}/verify")
+def verify_task(
+    task_id: int,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """完成验收任务（发布者验收）"""
+    cid = _get_couple_id(user)
+    task = db.query(Task).filter(Task.id == task_id, Task.couple_id == cid).first()
+    if not task:
+        raise HTTPException(404, "任务不存在")
+    if task.assigner_id != user.id:
+        raise HTTPException(403, "只有发布者可以验收")
+    if task.status == "verified":
+        raise HTTPException(400, "任务已验收")
+    
+    task.status = "verified"
+    
+    # 加经验
+    _add_exp(cid, task.exp_reward, f"完成任务：{task.title}", db)
+    
+    db.commit()
+    return {"ok": True, "exp_reward": task.exp_reward}
+
+
+@router.delete("/tasks/{task_id}")
+def delete_task(
+    task_id: int,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    cid = _get_couple_id(user)
+    task = db.query(Task).filter(Task.id == task_id, Task.couple_id == cid).first()
+    if not task:
+        raise HTTPException(404, "任务不存在")
+    db.delete(task)
     db.commit()
     return {"ok": True}

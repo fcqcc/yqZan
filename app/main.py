@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine, SessionLocal
 from app.models.card import CardTemplate
+from app.models.social import TaskEvent
 from app.jinja_fix import *  # Must come before other imports that use Jinja2
 from app.routes import admin_router, card_router, couple_router, extra_router, plan_router, social_router, user_router
 
@@ -28,6 +29,21 @@ PRESET_TEMPLATES = [
      "min_level": 1, "sort_order": 21},
 ]
 
+TASK_EVENTS = [
+    {"event_code": "heart_photo", "title": "比心合照", "description": "一起拍一张比心合照，记录你们的甜蜜时刻",
+     "exp_reward": 80, "category": "romance", "icon": "📸"},
+    {"event_code": "cook_together", "title": "一起做饭", "description": "一起做一顿饭，从买菜到洗碗全程合作",
+     "exp_reward": 50, "category": "life", "icon": "🍳"},
+    {"event_code": "sunrise_date", "title": "一起看日出", "description": "早起一起看一次日出，拍照留念",
+     "exp_reward": 60, "category": "romance", "icon": "🌅"},
+    {"event_code": "workout_week", "title": "一起运动一周", "description": "连续7天一起运动，互相督促",
+     "exp_reward": 100, "category": "sport", "icon": "💪"},
+    {"event_code": "letter_to_you", "title": "写一封情书", "description": "手写一封情书送给对方，拍照上传",
+     "exp_reward": 70, "category": "romance", "icon": "💌"},
+    {"event_code": "study_session", "title": "一起学习3小时", "description": "一起专注学习/工作3小时，互相监督",
+     "exp_reward": 40, "category": "study", "icon": "📚"},
+]
+
 
 app = FastAPI(title="Couple Promise API", version="0.1.0")
 
@@ -43,6 +59,17 @@ def startup():
                 db.add(CardTemplate(**t))
             db.commit()
             print("✅ 预置贺卡模板已写入")
+    finally:
+        db.close()
+
+    # seed task events
+    db = SessionLocal()
+    try:
+        if db.query(TaskEvent).count() == 0:
+            for e in TASK_EVENTS:
+                db.add(TaskEvent(**e))
+            db.commit()
+            print("✅ 任务事件已写入")
     finally:
         db.close()
 

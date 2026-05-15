@@ -55,3 +55,48 @@ class NoteResponse(BaseModel):
 
 class NoteListResponse(BaseModel):
     notes: List[NoteResponse]
+
+
+# === Task ===
+
+class TaskCreate(BaseModel):
+    assignee_id: int
+    title: str = Field(min_length=1, max_length=128)
+    note: str = ""
+    category: str = "life"
+    deadline: str = ""
+
+
+class TaskEventAccept(BaseModel):
+    event_code: str = Field(min_length=1)
+
+
+class TaskResponse(BaseModel):
+    id: int
+    assigner_id: int
+    assignee_id: int
+    type: str
+    category: str
+    title: str
+    note: str
+    status: str
+    exp_reward: int
+    deadline: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class TaskEventResponse(BaseModel):
+    id: int
+    event_code: str
+    title: str
+    description: str
+    exp_reward: int
+    category: str
+    icon: str
+    active: bool
+
+    class Config:
+        from_attributes = True
