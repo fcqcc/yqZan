@@ -1,1 +1,4 @@
-{"navigationBarTitleText":"贺卡"}
+{
+  "navigationBarTitleText": "贺卡",
+  "navigationStyle": "custom"
+}

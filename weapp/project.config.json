@@ -1,8 +1,6 @@
 {
   "description": "情侣承诺站 - 微信小程序",
-  "packOptions": {
-    "ignore": []
-  },
+  "packOptions": { "ignore": [] },
   "setting": {
     "urlCheck": false,
     "es6": true,
@@ -10,7 +8,7 @@
     "minified": true
   },
   "compileType": "miniprogram",
-  "libVersion": "3.16.0",
+  "libVersion": "3.3.4",
   "appid": "YOUR_APPID_HERE",
   "projectname": "couple-promise-app",
   "condition": {}

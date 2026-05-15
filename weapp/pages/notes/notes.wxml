@@ -1,15 +1,33 @@
+<!-- pages/notes/notes.wxml — 便利贴墙（毛玻璃） -->
 <scroll-view class="page" scroll-y>
+  <view class="nav-bar"><view class="nav-safe"></view><view class="nav-content"><text class="nav-title">便利贴墙</text></view></view>
   <view class="page-title">💬 便利贴墙</view>
-  <view class="page-subtitle">给对方留言</view>
-  <view class="write-box">
-    <input class="input" placeholder="写点什么..." model:value="{{content}}" />
-    <button class="btn btn-sm btn-primary" bindtap="send">发送</button>
+  <view class="page-subtitle">给对方留一句温暖的话</view>
+
+  <!-- 写便利贴 -->
+  <view class="note-input-card">
+    <textarea class="note-input" placeholder="想对Ta说什么..." model:value="{{content}}" maxlength="200" auto-height />
+    <view class="note-input-actions">
+      <text class="note-count">{{content.length}}/200</text>
+      <button class="btn btn-primary btn-sm" bindtap="send">💕 贴上去</button>
+    </view>
   </view>
-  <view wx:for="{{notes}}" wx:key="id" class="card">
-    <view style="font-size:14px;line-height:1.6">{{item.content}}</view>
-    <view style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:#999">
-      <text>{{item.user_id === userInfo.id ? '我' : 'Ta'}} · {{item.created_at.slice(0,10)}}</text>
-      <view bindtap="like" data-id="{{item.id}}" style="color:#e91e63">{{item.liked ? '❤️' : '🤍'}} {{item.likes}}</view>
+
+  <!-- 便利贴墙 -->
+  <view class="note-wall">
+    <view wx:for="{{notes}}" wx:key="id" class="note-item">
+      <view class="note-pin"></view>
+      <view class="note-body" style="background:{{item.color}}">
+        <view class="note-content">{{item.content}}</view>
+        <view class="note-footer">
+          <text class="note-author">{{item.user_id === userInfo.id ? '我' : 'Ta'}}</text>
+          <text class="note-time">{{item.created_at.slice(5,10)}}</text>
+          <view class="note-like" bindtap="like" data-id="{{item.id}}">
+            <text>{{item.liked ? '❤️' : '🤍'}}</text>
+            <text wx:if="{{item.likes}}">{{item.likes}}</text>
+          </view>
+        </view>
+      </view>
     </view>
   </view>
 </scroll-view>

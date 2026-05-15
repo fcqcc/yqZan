@@ -1,1 +1,4 @@
-{"navigationBarTitleText":"心愿承诺"}
+{
+  "navigationBarTitleText": "心愿承诺",
+  "navigationStyle": "custom"
+}

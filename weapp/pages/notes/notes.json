@@ -1,1 +1,4 @@
-{"navigationBarTitleText":"便利贴"}
+{
+  "navigationBarTitleText": "便利贴",
+  "navigationStyle": "custom"
+}

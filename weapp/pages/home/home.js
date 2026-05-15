@@ -1,16 +1,22 @@
 // pages/home/home.js
 const api = require('../../utils/api')
 
+function fmtMoney(n) {
+  if (n >= 100000000) return '¥' + (n/100000000).toFixed(1) + '亿'
+  if (n >= 10000) return '¥' + (n/10000).toFixed(1) + '万'
+  return '¥' + n.toLocaleString()
+}
+
 Page({
   data: {
-    userInfo: null,
-    partner: null,
-    level: 0,
-    plans: [],
-    wishes: [],
-    anniversaries: [],
+    userInfo: null, partner: null,
+    level: 1, current_exp: 0, next_level_exp: 1, progress_pct: 0,
+    delivered_text: '¥0', target_text: '¥0',
+    current_amount: 0, target_amount: 0, plan_progress: 0,
     nearestAnni: null,
-    stats: { plan_count: 0, done_plans: 0, wish_count: 0, anni_count: 0 }
+    pendingTodos: [],
+    latestNote: null,
+    plan_count: 0, anni_count: 0, gift_count: 0, together_days: 0
   },
 
   onShow() {
@@ -22,31 +28,48 @@ Page({
 
   async loadData() {
     try {
-      const [plans, wishes, anniversaries, level, snapshot, partner] = await Promise.all([
+      const [plans, anniversaries, level, snapshot, partner, todos, notes] = await Promise.all([
         api.getPlans().catch(() => []),
-        api.getWishes().catch(() => []),
         api.getAnniversaries().catch(() => []),
-        api.getLevel().catch(() => ({ level: 1, progress_pct: 0 })),
+        api.getLevel().catch(() => ({ level: 1, progress_pct: 0, current_exp: 0, next_level_exp: 1 })),
         api.getCardSnapshot().catch(() => ({})),
-        api.getPartner().catch(() => null)
+        api.getPartner().catch(() => null),
+        api.getTodos().catch(() => []),
+        api.getNotes().catch(() => ({ notes: [] }))
       ])
 
+      // 存钱进度 - 取第一个未完成的计划
+      const activePlan = plans.find(p => !p.done) || plans[0]
+      const cur = activePlan ? activePlan.current_amount || 0 : 0
+      const tar = activePlan ? activePlan.target_amount || 1 : 1
+
+      // 今日待办 - 未完成的事项
+      const pendingTodos = todos.filter(t => !t.done).slice(0, 3)
+
+      // 最新便利贴
+      const noteList = notes.notes || []
+      const latestNote = noteList.length > 0 ? noteList[0] : null
+
       this.setData({
-        plans, wishes, anniversaries, partner,
+        partner,
         level: level.level || 1,
-        progress_pct: level.progress_pct || 0,
-        current_level_exp: level.current_exp || 0,
+        current_exp: level.current_exp || 0,
         next_level_exp: level.next_level_exp || 1,
-        stats: {
-          plan_count: plans.length || 0,
-          total_delivered: snapshot.total_delivered || 0,
-          done_todos: snapshot.done_todos || 0,
-          wish_rate: snapshot.wish_rate || 0,
-          anni_count: anniversaries.length || 0
-        },
-        nearestAnni: this.findNearestAnni(anniversaries)
+        progress_pct: level.progress_pct || 0,
+        delivered_text: fmtMoney(snapshot.total_delivered || cur),
+        target_text: fmtMoney(snapshot.total_target || tar),
+        current_amount: cur,
+        target_amount: tar,
+        plan_progress: Math.min(cur / Math.max(tar, 1) * 100, 100),
+        nearestAnni: this.findNearestAnni(anniversaries),
+        pendingTodos,
+        latestNote,
+        plan_count: plans.length,
+        anni_count: anniversaries.length,
+        gift_count: snapshot.gift_count || 0,
+        together_days: snapshot.together_days || 0
       })
-    } catch (e) { console.error(e) }
+    } catch(e) { console.error(e) }
   },
 
   findNearestAnni(anniversaries) {
@@ -64,5 +87,6 @@ Page({
   },
 
   go(e) { wx.navigateTo({ url: e.currentTarget.dataset.url }) },
-  goBind() { wx.navigateTo({ url: '/pages/settings/settings' }) }
+  goTab(e) { wx.switchTab({ url: e.currentTarget.dataset.url }) },
+  goBind() { wx.switchTab({ url: '/pages/settings/settings' }) }
 })

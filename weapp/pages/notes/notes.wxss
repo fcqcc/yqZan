@@ -1,0 +1,87 @@
+/* 便利贴墙 — 毛玻璃 */
+page { background: linear-gradient(180deg, #fce4ec, #f3e5f5); }
+
+/* 写便利贴区域 */
+.note-input-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: var(--radius);
+  margin: 4px 12px 12px;
+  padding: 14px;
+  box-shadow: var(--glass-shadow);
+}
+.note-input {
+  width: 100%;
+  min-height: 60px;
+  font-size: 14px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  line-height: 1.6;
+}
+.note-input-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,.4);
+}
+.note-count { font-size: 11px; color: var(--text-muted); }
+
+/* 便利贴墙 — 双列瀑布流 */
+.note-wall {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0 12px 20px;
+}
+
+.note-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  break-inside: avoid;
+}
+
+/* 图钉 */
+.note-pin {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  margin-left: -5px;
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle at 3px 3px, #fff, #bbb);
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0,0,0,.15);
+  z-index: 2;
+}
+
+/* 便利贴本体 */
+.note-body {
+  border-radius: 16px;
+  padding: 18px 14px 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  position: relative;
+  border: 1px solid rgba(255,255,255,.6);
+}
+.note-content {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text);
+  word-break: break-all;
+}
+.note-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 11px;
+  opacity: .7;
+}
+.note-author { font-weight: 600; }
+.note-time { color: var(--text-secondary); }
+.note-like { display: flex; align-items: center; gap: 2px; }

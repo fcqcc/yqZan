@@ -1,49 +1,87 @@
-<!-- pages/home/home.wxml -->
+<!-- pages/home/home.wxml — 新布局 -->
 <scroll-view class="page" scroll-y>
-  <!-- 头部 -->
-  <view class="hero">
-    <view class="hero-info">
-      <text class="hero-name">{{userInfo.nickname}}</text>
-      <text wx:if="{{partner}}" class="hero-partner">💑 {{partner.nickname}}</text>
-      <text wx:else class="hero-partner" bindtap="goBind">➕ 绑定伴侣</text>
+  <!-- 自定义导航 -->
+  <view class="nav-bar"><view class="nav-safe"></view><view class="nav-content"><text class="nav-title">情侣承诺站</text></view></view>
+
+  <!-- ===== 1. 伴侣+等级（紧凑行） ===== -->
+  <view class="compact-header">
+    <view class="ch-left">
+      <text class="ch-name">{{userInfo.nickname}}</text>
+      <text wx:if="{{partner}}" class="ch-partner">💑 {{partner.nickname}}</text>
+      <text wx:else class="ch-partner ch-bind" bindtap="goBind">➕ 绑定伴侣</text>
+      <text class="ch-days" wx:if="{{together_days}}">· 第{{together_days}}天</text>
     </view>
-    <view class="hero-level" bindtap="go" data-url="/pages/level/level">
-      <text class="lv-badge">Lv{{level}}</text>
-      <view class="lv-bar"><view class="lv-fill" style="width:{{progress_pct}}%"></view></view>
-      <text class="lv-exp">{{current_level_exp}}/{{next_level_exp}}</text>
+    <view class="ch-level" bindtap="go" data-url="/pages/level/level">
+      <text class="ch-lv">Lv{{level}}</text>
+      <view class="ch-lv-bar"><view class="ch-lv-fill" style="width:{{progress_pct}}%"></view></view>
     </view>
   </view>
 
-  <!-- 快捷入口 -->
-  <view class="quick-grid">
-    <view class="quick-item" bindtap="go" data-url="/pages/plans/plans">💰<text>存钱</text></view>
-    <view class="quick-item" bindtap="go" data-url="/pages/wishes/wishes">🔮<text>心愿</text></view>
-    <view class="quick-item" bindtap="go" data-url="/pages/todos/todos">📋<text>要做</text></view>
-    <view class="quick-item" bindtap="go" data-url="/pages/anniversaries/anniversaries">📅<text>纪念日</text></view>
-    <view class="quick-item" bindtap="go" data-url="/pages/gifts/gifts">🎁<text>礼物</text></view>
-    <view class="quick-item" bindtap="go" data-url="/pages/notes/notes">💬<text>便利贴</text></view>
-    <view class="quick-item" bindtap="go" data-url="/pages/cards/cards">🎉<text>贺卡</text></view>
-    <view class="quick-item" bindtap="go" data-url="/pages/settings/settings">⚙️<text>设置</text></view>
+  <!-- ===== 2. 存钱进度（最重要·大卡片） ===== -->
+  <view class="money-card" bindtap="go" data-url="/pages/plans/plans">
+    <view class="money-top">
+      <view class="money-info">
+        <text class="money-label">已存金额</text>
+        <text class="money-amount">{{delivered_text}}</text>
+        <text class="money-target">目标 {{target_text}}</text>
+      </view>
+      <view class="money-icon">💰</view>
+    </view>
+    <view class="money-bar">
+      <view class="money-bar-fill" style="width:{{plan_progress}}%"></view>
+    </view>
+    <text class="money-pct">{{plan_progress.toFixed(1)}}%</text>
   </view>
 
-  <!-- 数据概览 -->
-  <view class="card">
-    <view class="section-title">📊 概览</view>
-    <view class="stat-grid">
-      <view class="stat-item"><view class="stat-num">{{stats.total_delivered|money}}</view><view class="stat-label">已存(¥)</view></view>
-      <view class="stat-item"><view class="stat-num">{{stats.plan_count}}</view><view class="stat-label">计划</view></view>
-      <view class="stat-item"><view class="stat-num">{{stats.done_todos}}</view><view class="stat-label">完成</view></view>
-      <view class="stat-item"><view class="stat-num">{{stats.anni_count}}</view><view class="stat-label">纪念日</view></view>
+  <!-- ===== 3. 纪念日倒计时 ===== -->
+  <view wx:if="{{nearestAnni}}" class="anni-row" bindtap="go" data-url="/pages/anniversaries/anniversaries">
+    <text class="anni-emoji">⏰</text>
+    <view class="anni-info">
+      <text class="anni-label">距离{{nearestAnni.title}}</text>
+      <text class="anni-days">{{nearestAnni.days}}<text class="anni-unit">天</text></text>
+    </view>
+    <text class="anni-arrow">›</text>
+  </view>
+
+  <!-- ===== 4. 今日待办 ===== -->
+  <view wx:if="{{pendingTodos.length}}" class="todo-card">
+    <view class="tc-header">
+      <text class="tc-title">✅ 今天要做</text>
+      <text class="tc-more" bindtap="go" data-url="/pages/todos/todos">全部 ›</text>
+    </view>
+    <view wx:for="{{pendingTodos}}" wx:key="id" class="tc-item">
+      <text class="tc-check">⬜</text>
+      <text class="tc-text">{{item.title}}</text>
     </view>
   </view>
 
-  <!-- 最近纪念日 -->
-  <view wx:if="{{nearestAnni}}" class="card">
-    <view class="section-title">⏰ 最近纪念日</view>
-    <view class="countdown">
-      <text class="cd-days">{{nearestAnni.days}}</text>
-      <text class="cd-unit">天后</text>
-      <text class="cd-title">{{nearestAnni.title}}</text>
+  <!-- ===== 5. 最新便利贴 ===== -->
+  <view wx:if="{{latestNote}}" class="note-card" bindtap="goTab" data-url="/pages/notes/notes">
+    <text class="note-pin">📌</text>
+    <view class="note-body">
+      <text class="note-text">"{{latestNote.content}}"</text>
+      <text class="note-from">— 来自 {{latestNote.user_id === userInfo.id ? '我' : 'Ta'}}</text>
     </view>
   </view>
+
+  <!-- ===== 6. 快捷入口（紧凑） ===== -->
+  <view class="quick-row">
+    <view class="qr-item" bindtap="go" data-url="/pages/plans/plans"><text class="qr-icon">💰</text><text class="qr-label">存钱</text></view>
+    <view class="qr-item" bindtap="go" data-url="/pages/wishes/wishes"><text class="qr-icon">🔮</text><text class="qr-label">心愿</text></view>
+    <view class="qr-item" bindtap="go" data-url="/pages/todos/todos"><text class="qr-icon">📋</text><text class="qr-label">要做</text></view>
+    <view class="qr-item" bindtap="go" data-url="/pages/tasks/tasks"><text class="qr-icon">🎯</text><text class="qr-label">任务</text></view>
+    <view class="qr-item" bindtap="go" data-url="/pages/anniversaries/anniversaries"><text class="qr-icon">📅</text><text class="qr-label">纪念日</text></view>
+    <view class="qr-item" bindtap="go" data-url="/pages/gifts/gifts"><text class="qr-icon">🎁</text><text class="qr-label">礼物</text></view>
+  </view>
+
+  <!-- ===== 7. 数据详情（底部） ===== -->
+  <view class="stats-bar" bindtap="go" data-url="/pages/level/level">
+    <view class="sb-item"><text class="sb-num">{{plan_count}}</text><text class="sb-label">计划</text></view>
+    <view class="sb-item"><text class="sb-num">{{anni_count}}</text><text class="sb-label">纪念日</text></view>
+    <view class="sb-item"><text class="sb-num">{{gift_count}}</text><text class="sb-label">礼物</text></view>
+    <view class="sb-item"><text class="sb-num">{{together_days}}天</text><text class="sb-label">相伴</text></view>
+    <text class="sb-arrow">›</text>
+  </view>
+
+  <view class="safe-bottom"></view>
 </scroll-view>

@@ -15,8 +15,8 @@
   ],
   "window": {
     "navigationBarTitleText": "情侣承诺站",
-    "navigationBarBackgroundColor": "#9d2d5a",
-    "navigationBarTextStyle": "white",
+    "navigationBarBackgroundColor": "#f8e8ee",
+    "navigationBarTextStyle": "black",
     "backgroundColor": "#f5f5f5"
   },
   "tabBar": {
@@ -26,26 +26,26 @@
       {
         "pagePath": "pages/home/home",
         "text": "首页",
-        "iconPath": "images/home.png",
-        "selectedIconPath": "images/home_active.png"
+        "iconPath": "images/tab_home.png",
+        "selectedIconPath": "images/tab_home_active.png"
       },
       {
         "pagePath": "pages/notes/notes",
         "text": "便利贴",
-        "iconPath": "images/note.png",
-        "selectedIconPath": "images/note_active.png"
+        "iconPath": "images/tab_note.png",
+        "selectedIconPath": "images/tab_note_active.png"
       },
       {
         "pagePath": "pages/cards/cards",
         "text": "贺卡",
-        "iconPath": "images/card.png",
-        "selectedIconPath": "images/card_active.png"
+        "iconPath": "images/tab_card.png",
+        "selectedIconPath": "images/tab_card_active.png"
       },
       {
         "pagePath": "pages/settings/settings",
         "text": "我的",
-        "iconPath": "images/me.png",
-        "selectedIconPath": "images/me_active.png"
+        "iconPath": "images/tab_me.png",
+        "selectedIconPath": "images/tab_me_active.png"
       }
     ]
   },

@@ -14,7 +14,6 @@ function request(url, method = 'GET', data = {}) {
       header,
       success(res) {
         if (res.statusCode === 401) {
-          // token过期，跳转登录
           wx.removeStorageSync('token')
           wx.removeStorageSync('userInfo')
           wx.reLaunch({ url: '/pages/login/login' })
@@ -26,9 +25,7 @@ function request(url, method = 'GET', data = {}) {
           resolve(res.data)
         }
       },
-      fail(err) {
-        reject(err)
-      }
+      fail(err) { reject(err) }
     })
   })
 }
@@ -85,7 +82,6 @@ const getCardSnapshot = () => request('/api/card/snapshot')
 const generateCard = (data) => request('/api/card/generate', 'POST', data)
 const getCards = () => request('/api/cards')
 
-
 // ===== 任务 =====
 const getTasks = () => request('/api/tasks')
 const getTaskEvents = () => request('/api/tasks/events')
@@ -103,6 +99,6 @@ module.exports = {
   getGifts, createGift, deleteGift,
   getNotes, createNote, likeNote, deleteNote,
   getLevel, getLevelLogs,
-  getCardTemplates, getCardSnapshot, generateCard, getTasks, getTaskEvents, createTask, acceptTaskEvent, verifyTask, deleteTask,
-  getCards
+  getCardTemplates, getCardSnapshot, generateCard, getCards,
+  getTasks, getTaskEvents, createTask, acceptTaskEvent, verifyTask, deleteTask
 }

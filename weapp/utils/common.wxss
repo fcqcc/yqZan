@@ -1,147 +1,226 @@
-/* 通用样式库 */
+/* 毛玻璃质感风 — 情侣小程序 */
 page {
-  --primary: #9d2d5a;
-  --gold: #c9a227;
-  --bg: #f5f5f5;
-  --card: #ffffff;
-  --text: #333;
-  --text-light: #999;
-  --danger: #d4380d;
-  --success: #2e7d32;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
+  /* 主色 — 加深版 */
+  --pink: #ec407a;
+  --pink-dark: #c2185b;
+  --pink-light: #fce4ec;
+  --pink-glass: rgba(236,64,122,.08);
+  
+  --purple: #ab47bc;
+  --purple-glass: rgba(171,71,188,.08);
+  --mint: #66bb6a;
+  --mint-glass: rgba(102,187,106,.08);
+  --peach: #ff8a65;
+  --peach-glass: rgba(255,138,101,.08);
+  --gold: #ffca28;
+  --gold-glass: rgba(255,202,40,.08);
+  
+  /* 背景 — 渐变底 */
+  --bg-start: #fce4ec;
+  --bg-mid: #f8e8ee;
+  --bg-end: #f3e5f5;
+  
+  /* 毛玻璃 */
+  --glass-bg: rgba(255,255,255,.55);
+  --glass-border: 1px solid rgba(255,255,255,.4);
+  --glass-shadow: 0 4px 20px rgba(233,30,99,.08);
+  --glass-blur: blur(16px);
+  
+  --text: #3e2723;
+  --text-secondary: #8d6e63;
+  --text-muted: #bcaaa4;
+  
+  --radius-sm: 12px;
+  --radius: 20px;
+  --radius-lg: 28px;
+  --radius-pill: 999px;
+  
+  font-family: -apple-system, 'PingFang SC', sans-serif;
+  background: linear-gradient(180deg, var(--bg-start), var(--bg-mid) 40%, var(--bg-end) 100%);
+  background-attachment: fixed;
   color: var(--text);
   font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
 }
 
-/* 卡片 */
+/* 毛玻璃卡片 */
 .card {
-  background: var(--card);
-  border-radius: 12px;
-  padding: 16px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: var(--radius);
+  padding: 18px 16px;
   margin: 8px 12px;
-  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  box-shadow: var(--glass-shadow);
 }
 
-/* 按钮 */
+/* 按钮 — 毛玻璃 */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 10px 24px;
+  border-radius: var(--radius-pill);
   font-size: 14px;
+  font-weight: 600;
   border: none;
   transition: all .2s;
 }
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary), #c75b82);
+  background: linear-gradient(135deg, var(--pink), var(--pink-dark));
   color: #fff;
+  box-shadow: 0 4px 16px rgba(233,30,99,.25);
 }
-.btn-primary:active { opacity: .8; }
+.btn-primary:active { transform: scale(.96); }
 .btn-outline {
-  background: transparent;
-  border: 1px solid var(--primary);
-  color: var(--primary);
+  background: var(--pink-glass);
+  border: 1.5px solid var(--pink);
+  color: var(--pink-dark);
+  backdrop-filter: blur(8px);
 }
-.btn-danger {
-  background: var(--danger);
-  color: #fff;
-}
+.btn-outline:active { background: rgba(236,64,122,.15); }
 .btn-sm {
-  padding: 6px 12px;
+  padding: 5px 14px;
   font-size: 12px;
+  border-radius: var(--radius-pill);
 }
+.btn-block { width: 100%; }
 
-/* 输入框 */
+/* 模块专属按钮色 — 毛玻璃质感 */
+.btn-money { background: linear-gradient(135deg, #ec407a, #c2185b); color: #fff; }
+.btn-wish { background: linear-gradient(135deg, #ab47bc, #7e57c2); color: #fff; }
+.btn-todo { background: linear-gradient(135deg, #66bb6a, #43a047); color: #fff; }
+.btn-task { background: linear-gradient(135deg, #ff8a65, #e64a19); color: #fff; }
+.btn-anni { background: linear-gradient(135deg, #ef5350, #c62828); color: #fff; }
+.btn-gift { background: linear-gradient(135deg, #ffca28, #ff8f00); color: #fff; }
+.btn-note { background: linear-gradient(135deg, #f48fb1, #ec407a); color: #fff; }
+
+/* 毛玻璃浅色按钮 */
+.btn-glass {
+  background: rgba(255,255,255,.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,.4);
+  color: var(--text);
+  box-shadow: var(--glass-shadow);
+}
+.btn-glass:active { background: rgba(255,255,255,.5); transform: scale(.97); }
+
+/* 输入框 — 毛玻璃 */
 .input {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 10px 12px;
+  background: rgba(255,255,255,.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.4);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
   font-size: 14px;
   width: 100%;
   box-sizing: border-box;
-  background: #fff;
+  color: var(--text);
+  transition: all .2s;
 }
+.input:focus {
+  border-color: var(--pink);
+  background: rgba(255,255,255,.7);
+  box-shadow: 0 0 0 3px rgba(236,64,122,.12);
+}
+.input::placeholder { color: var(--text-muted); }
 
-/* 标题 */
+/* 页面标题 */
 .page-title {
   font-size: 20px;
   font-weight: 700;
-  padding: 16px 12px 8px;
+  padding: 14px 16px 2px;
+  color: var(--text);
 }
 .page-subtitle {
-  font-size: 13px;
-  color: var(--text-light);
-  padding: 0 12px 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 0 16px 10px;
 }
 
-/* 进度条 */
+/* 进度条 — 毛玻璃 */
 .progress-bar {
   height: 6px;
-  background: #f0f0f0;
-  border-radius: 3px;
+  background: rgba(236,64,122,.1);
+  border-radius: var(--radius-pill);
   overflow: hidden;
 }
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--gold), var(--primary));
-  border-radius: 3px;
-  transition: width .5s;
+  background: linear-gradient(90deg, var(--pink), var(--pink-dark));
+  border-radius: var(--radius-pill);
 }
 
-/* 统计网格 */
-.stat-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
+/* 统计格 */
+.stat-grid { display: flex; flex-wrap: wrap; gap: 6px; }
 .stat-item {
-  flex: 1;
-  min-width: 80px;
-  background: #fafafa;
-  border-radius: 8px;
-  padding: 10px;
-  text-align: center;
+  flex: 1; min-width: 60px;
+  background: var(--pink-glass);
+  backdrop-filter: blur(4px);
+  border-radius: var(--radius-sm);
+  padding: 10px 6px; text-align: center;
 }
-.stat-num {
-  font-size: 20px;
-  font-weight: 900;
-  color: var(--primary);
-}
-.stat-label {
-  font-size: 11px;
-  color: var(--text-light);
-  margin-top: 2px;
-}
-
-/* 空状态 */
-.empty {
-  text-align: center;
-  padding: 40px 0;
-  color: var(--text-light);
-  font-size: 14px;
-}
+.stat-num { font-size: 20px; font-weight: 800; color: var(--pink-dark); }
+.stat-label { font-size: 11px; color: var(--text-secondary); margin-top: 1px; }
 
 /* 标签 */
 .tag {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 11px;
+  display: inline-block; padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 11px; font-weight: 600;
 }
-.tag-active { background: #e8f5e9; color: #2e7d32; }
-.tag-done { background: #e3f2fd; color: #1565c0; }
-.tag-pending { background: #fff3e0; color: #e65100; }
+.tag-active { background: rgba(236,64,122,.12); color: var(--pink-dark); }
+.tag-done { background: rgba(102,187,106,.15); color: #2e7d32; }
+.tag-pending { background: rgba(255,143,0,.12); color: #e65100; }
 
 /* 列表项 */
 .list-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid #f0f0f0;
+  display: flex; align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,.4);
 }
 .list-item:last-child { border: none; }
-.list-info { flex: 1; }
-.list-title { font-weight: 600; font-size: 14px; }
-.list-sub { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+.list-info { flex: 1; min-width: 0; }
+.list-title { font-weight: 600; font-size: 14px; color: var(--text); }
+.list-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+/* 空状态 */
+.empty { text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px; }
+
+/* 弹层 */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(62,39,35,.25);
+  z-index: 100;
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.sheet {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 20px 16px 30px;
+  width: 100%;
+  max-width: 500px;
+  border-top: var(--glass-border);
+}
+.sheet-title {
+  font-size: 16px; font-weight: 700;
+  text-align: center; color: var(--text);
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,.4);
+  margin-bottom: 14px;
+}
+
+/* 自定义导航栏 */
+.nav-bar { position: sticky; top: 0; z-index: 50; background: transparent; }
+.nav-safe { height: env(safe-area-inset-top, 44px); }
+.nav-content {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 16px 12px;
+}
+.nav-title { font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: .5px; }

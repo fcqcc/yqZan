@@ -1,0 +1,32 @@
+/* 贺卡页 — 毛玻璃卡片网格 */
+.page { padding-bottom: 24px; }
+
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0 12px;
+}
+.card-item {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: var(--radius);
+  padding: 16px 12px;
+  box-shadow: var(--glass-shadow);
+  text-align: center;
+}
+.card-item:active { transform: scale(.96); }
+.card-emoji { font-size: 28px; display: block; margin-bottom: 6px; }
+.card-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.card-date { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+.card-badge {
+  display: inline-block;
+  font-size: 10px;
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--pink-glass);
+  color: var(--pink-dark);
+  margin-top: 4px;
+}

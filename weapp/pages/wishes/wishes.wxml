@@ -2,16 +2,16 @@
 <scroll-view class="page" scroll-y>
   <view class="page-title">🔮 心愿承诺</view>
   <view class="page-subtitle">许下的心愿，一个一个实现</view>
-  <button class="btn btn-primary" style="margin:0 12px 12px" bindtap="toggleForm">➕ 许下心愿</button>
+  <button class="btn btn-wish" style="margin:0 12px 12px" bindtap="toggleForm">➕ 许下心愿</button>
 
   <view wx:if="{{showForm}}" class="overlay" bindtap="toggleForm">
-    <view class="sheet" catchtap=""><catch-data>
+    <view class="sheet" catchtap="">
       <view class="sheet-title">许下心愿</view>
       <input class="input" placeholder="心愿名称" model:value="{{title}}" />
       <input class="input" placeholder="描述（可选）" model:value="{{description}}" style="margin-top:8px" />
       <button class="btn btn-primary btn-block" style="margin-top:12px" bindtap="create">确定</button>
       <button class="btn btn-outline btn-block" style="margin-top:6px" bindtap="toggleForm">取消</button>
-    </catch-data></view>
+    </view>
   </view>
 
   <view wx:for="{{wishes}}" wx:key="id" class="card">
