@@ -83,8 +83,7 @@ const getLevelLogs = () => request('/api/level/logs')
 const getCardTemplates = () => request('/api/card/templates')
 const getCardSnapshot = () => request('/api/card/snapshot')
 const generateCard = (data) => request('/api/card/generate', 'POST', data)
-const getTasks, getTaskEvents, createTask, acceptTaskEvent, verifyTask, deleteTask,
-  getCards = () => request('/api/cards')
+const getCards = () => request('/api/cards')
 
 
 // ===== 任务 =====
