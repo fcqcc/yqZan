@@ -622,14 +622,44 @@ function reachHand(){
 }
 
 function showFortune(cookie){
-  const existing=document.querySelector('.cookie-reveal')
-  if(existing)return
-  const text=cookie.querySelector('.particles')?.textContent || FORTUNES[0].text
-  // 找对应的 fortune
-  const allTexts=FORTUNES.map(f=>f.text)
-  const idx=cookie.parentElement.innerHTML.indexOf('🥠') // rough
-  // Just pick random
+  if(cookie.dataset.eating==='true')return
+  cookie.dataset.eating='true'
+  
+  // 记录原来显示的签文
   const f=FORTUNES[Math.floor(Math.random()*FORTUNES.length)]
+  const bites=[
+    {x:30,y:20},{x:70,y:25},{x:20,y:65},{x:75,y:70},{x:45,y:20},{x:50,y:75}
+  ]
+  let biteIdx=0
+  
+  function takeBite(){
+    if(biteIdx>=bites.length){
+      // 吃完，显示纸条
+      cookie.style.transform='scale(0) rotate(180deg)'
+      cookie.style.opacity='0'
+      cookie.style.transition='all .4s ease'
+      setTimeout(()=>{
+        cookie.remove()
+        showFortunePaper(f)
+      },500)
+      return
+    }
+    const b=bites[biteIdx]
+    const mark=document.createElement('div')
+    mark.className='cookie-bite-mark'
+    mark.textContent='🦷'
+    mark.style.left=b.x+'%'
+    mark.style.top=b.y+'%'
+    cookie.appendChild(mark)
+    // 摇摆
+    cookie.style.transform=`rotate(${(biteIdx%2===0?1:-1)*8}deg) scale(${1-biteIdx*0.06})`
+    biteIdx++
+    setTimeout(takeBite,350)
+  }
+  takeBite()
+}
+
+function showFortunePaper(f){
   const reveal=document.createElement('div')
   reveal.className='cookie-reveal'
   reveal.innerHTML=`
