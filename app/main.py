@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.database import Base, engine, SessionLocal
 from app.models.card import CardTemplate
@@ -72,6 +73,10 @@ def startup():
             print("✅ 任务事件已写入")
     finally:
         db.close()
+
+
+# 静态页面
+app.mount("/fortune", StaticFiles(directory="weapp/fortune", html=True), name="fortune")
 
 
 app.add_middleware(

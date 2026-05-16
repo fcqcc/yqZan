@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>恋爱占卜屋</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'PingFang SC','Microsoft YaHei',sans-serif;
+  background:linear-gradient(160deg,#FFF0E3 0%,#FFE4DC 40%,#FFF5F0 100%);
+  min-height:100vh;
+  color:#3E3A39;
+  overflow-x:hidden;
+}
+/* ===== 顶部导航 ===== */
+.nav{
+  display:flex;
+  justify-content:center;
+  gap:6px;
+  padding:16px 12px 8px;
+  position:sticky;top:0;z-index:100;
+  background:rgba(255,240,227,.85);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+}
+.nav-btn{
+  flex:1;max-width:120px;
+  padding:8px 4px;
+  border:none;border-radius:20px;
+  font-size:13px;font-weight:600;
+  background:rgba(255,255,255,.5);
+  color:#8E8A89;
+  transition:all .2s;
+  cursor:pointer;
+  text-align:center;
+}
+.nav-btn.active{
+  background:linear-gradient(135deg,#FFB7B2,#E89088);
+  color:#fff;
+  box-shadow:0 2px 8px rgba(255,183,178,.4);
+}
+/* ===== 页面容器 ===== */
+.page{display:none;padding:16px;max-width:420px;margin:0 auto;min-height:80vh}
+.page.active{display:flex;flex-direction:column;align-items:center}
+
+/* ==============================
+   1. 答案之书
+   ============================== */
+.book-scene{
+  position:relative;
+  width:200px;height:260px;
+  margin:20px auto;
+  cursor:pointer;
+  perspective:600px;
+}
+.book{
+  width:100%;height:100%;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform .6s ease;
+}
+.book-cover{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,#c0392b,#8e44ad);
+  border-radius:8px 20px 20px 8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:60px;
+  box-shadow:4px 4px 20px rgba(0,0,0,.15);
+  backface-visibility:hidden;
+}
+.book-cover::after{
+  content:'';position:absolute;
+  top:10%;bottom:10%;left:10px;
+  width:4px;
+  background:linear-gradient(180deg,transparent,rgba(255,255,255,.2),transparent);
+  border-radius:2px;
+}
+.book-spine{
+  position:absolute;left:0;top:0;bottom:0;
+  width:12px;
+  background:linear-gradient(90deg,#8B4513,#A0522D);
+  border-radius:4px 0 0 4px;
+}
+.book.shake{
+  animation:bookShake .8s ease-in-out;
+}
+@keyframes bookShake{
+  0%,100%{transform:rotate(-5deg)}
+  15%{transform:rotate(15deg) translateY(-10px)}
+  30%{transform:rotate(-10deg) translateY(-20px)}
+  45%{transform:rotate(20deg) translateY(-30px)}
+  60%{transform:rotate(-8deg) translateY(-15px)}
+  75%{transform:rotate(10deg) translateY(-5px)}
+  90%{transform:rotate(-3deg) translateY(0)}
+}
+
+/* 掉落的纸条 */
+.paper-drop{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  display:flex;align-items:center;justify-content:center;
+  z-index:200;
+  animation:fadeIn .3s ease;
+}
+.paper-sheet{
+  width:280px;
+  background:linear-gradient(180deg,#fef5e7 0%,#fdebd0 50%,#fef5e7 100%);
+  border-radius:4px;
+  padding:32px 24px;
+  box-shadow:0 8px 40px rgba(0,0,0,.15),inset 0 0 30px rgba(139,69,19,.05);
+  position:relative;
+  animation:paperFall .5s cubic-bezier(.36,.07,.19,.97);
+  transform-origin:top center;
+}
+.paper-sheet::before{
+  content:'';position:absolute;
+  top:0;left:20px;right:20px;
+  height:6px;
+  background:linear-gradient(90deg,transparent,rgba(139,69,19,.08),transparent);
+  border-radius:0 0 3px 3px;
+}
+.paper-sheet::after{
+  content:'';position:absolute;
+  bottom:0;left:0;right:0;height:20px;
+  background:linear-gradient(0deg,#fdebd0,transparent);
+}
+.paper-question{
+  font-size:13px;color:#8E8A89;
+  text-align:center;margin-bottom:16px;
+  padding-bottom:12px;
+  border-bottom:1px dashed rgba(139,69,19,.15);
+}
+.paper-text{
+  font-family:'ZCOOL KuaiLe','Ma Shan Zheng',cursive;
+  font-size:26px;line-height:1.5;
+  text-align:center;color:#5D4037;
+  margin:8px 0;
+}
+.paper-close{
+  display:block;margin:16px auto 0;
+  padding:6px 20px;
+  border:none;border-radius:20px;
+  background:rgba(139,69,19,.1);
+  color:#5D4037;
+  font-size:13px;cursor:pointer;
+}
+@keyframes paperFall{
+  0%{transform:translateY(-120px) rotate(-5deg) scale(.8);opacity:0}
+  60%{transform:translateY(10px) rotate(2deg) scale(1.02);opacity:1}
+  100%{transform:translateY(0) rotate(0) scale(1)}
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.input-area{margin-top:8px;width:100%}
+.ques-input{
+  width:100%;padding:10px 14px;
+  border:1px solid rgba(255,183,178,.3);
+  border-radius:16px;
+  font-size:14px;background:rgba(255,255,255,.5);
+  color:#3E3A39;text-align:center;
+  backdrop-filter:blur(8px);
+}
+.ques-input::placeholder{color:#B5B0AE}
+.ques-input:focus{outline:none;border-color:#FFB7B2}
+.hint-text{font-size:12px;color:#B5B0AE;margin-top:6px;text-align:center}
+
+/* ==============================
+   2. 幸运饼干
+   ============================== */
+.bag-scene{
+  position:relative;
+  width:200px;height:240px;
+  margin:20px auto;
+  cursor:pointer;
+}
+.bag{
+  width:100%;height:100%;
+  position:relative;
+}
+.bag-body{
+  position:absolute;
+  bottom:0;left:20px;right:20px;
+  height:180px;
+  background:linear-gradient(135deg,#D4A574,#B8860B);
+  border-radius:40px 40px 20px 20px;
+  box-shadow:0 4px 20px rgba(184,134,11,.2);
+}
+.bag-body::before{
+  content:'';position:absolute;
+  top:-30px;left:-10px;right:-10px;
+  height:40px;
+  background:linear-gradient(135deg,#C49A6C,#A07030);
+  border-radius:50%;
+  box-shadow:0 -4px 10px rgba(0,0,0,.05);
+}
+.bag-body::after{
+  content:'';position:absolute;
+  top:-15px;left:50%;transform:translateX(-50%);
+  width:10px;height:20px;
+  background:#5D4037;
+  border-radius:0 0 5px 5px;
+}
+.bag-label{
+  position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  color:#fff;font-size:16px;font-weight:700;
+  text-shadow:0 1px 3px rgba(0,0,0,.2);
+  text-align:center;z-index:1;
+}
+.bag-label small{display:block;font-size:11px;font-weight:400;opacity:.7;margin-top:4px}
+
+/* 掏饼干的手 */
+.hand-reach{
+  position:absolute;
+  top:-20px;left:50%;transform:translateX(-50%);
+  font-size:40px;opacity:0;
+  pointer-events:none;
+  z-index:10;
+}
+.hand-reach.active{
+  animation:handIn .6s ease forwards;
+}
+@keyframes handIn{
+  0%{opacity:0;transform:translateX(-50%) rotate(180deg) translateY(-40px)}
+  40%{opacity:1;transform:translateX(-50%) rotate(0) translateY(20px)}
+  70%{transform:translateX(-50%) rotate(-10deg) translateY(60px)}
+  100%{opacity:0;transform:translateX(-50%) rotate(0) translateY(80px)}
+}
+
+/* 饼干网格 */
+.cookie-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:16px;
+  width:100%;
+}
+.cookie{
+  position:relative;
+  aspect-ratio:1;
+  background:linear-gradient(135deg,#F5DEB3,#D2B48C);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;
+  cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  transition:transform .2s;
+  overflow:visible;
+}
+.cookie:active{transform:scale(.9)}
+.cookie.easy{box-shadow:0 0 12px rgba(46,125,50,.3),0 0 24px rgba(46,125,50,.15)}
+.cookie.medium{box-shadow:0 0 12px rgba(255,193,7,.3),0 0 24px rgba(255,193,7,.15)}
+.cookie.hard{box-shadow:0 0 12px rgba(211,47,47,.3),0 0 24px rgba(211,47,47,.15)}
+
+/* 粒子特效 */
+.particles{
+  position:absolute;inset:-10px;
+  pointer-events:none;
+}
+.particle{
+  position:absolute;
+  width:4px;height:4px;
+  border-radius:50%;
+  animation:particleFly 1.2s ease-out infinite;
+}
+.cookie.easy .particle{background:#4CAF50}
+.cookie.medium .particle{background:#FFC107}
+.cookie.hard .particle{background:#F44336}
+
+@keyframes particleFly{
+  0%{opacity:1;transform:translate(0,0) scale(1)}
+  100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}
+}
+
+/* 饼干捏碎展示文字 */
+.cookie-reveal{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  display:flex;align-items:center;justify-content:center;
+  z-index:200;
+  animation:fadeIn .3s ease;
+}
+.cookie-crumb{
+  width:260px;
+  background:linear-gradient(180deg,#fef5e7,#fdebd0);
+  border-radius:20px;
+  padding:32px 24px;
+  text-align:center;
+  box-shadow:0 8px 40px rgba(0,0,0,.15);
+  position:relative;
+}
+.cookie-crumb::before{
+  content:'🥠';position:absolute;
+  top:-20px;left:50%;transform:translateX(-50%);
+  font-size:32px;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.1));
+}
+.cookie-crumb-text{
+  font-size:22px;line-height:1.5;
+  font-weight:600;
+  margin:12px 0 4px;
+}
+.cookie-crumb-sub{
+  font-size:12px;color:#8E8A89;margin-bottom:16px;
+}
+.cookie-crumb-close{
+  padding:6px 20px;border:none;border-radius:20px;
+  background:rgba(255,183,178,.3);color:#3E3A39;
+  font-size:13px;cursor:pointer;
+}
+
+/* ==============================
+   3. 塔罗牌
+   ============================== */
+.tarot-deck{
+  position:relative;
+  width:180px;height:260px;
+  margin:30px auto;
+  cursor:pointer;
+}
+.tarot-deck-inner{
+  width:100%;height:100%;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform .5s ease;
+}
+.tarot-deck-inner.dealing{animation:deckDeal .8s ease forwards}
+@keyframes deckDeal{
+  0%{transform:translateY(0) scale(1)}
+  50%{transform:translateY(-30px) scale(1.05)}
+  100%{transform:translateY(0) scale(.8);opacity:0;pointer-events:none}
+}
+.tarot-card-back{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,#4A148C,#7B1FA2);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;
+  box-shadow:0 4px 20px rgba(74,20,140,.2);
+  border:2px solid rgba(255,215,0,.3);
+  backface-visibility:hidden;
+}
+.tarot-card-back::before{
+  content:'';position:absolute;
+  inset:6px;
+  border:1px solid rgba(255,215,0,.15);
+  border-radius:8px;
+}
+.tarot-deck-label{
+  position:absolute;
+  bottom:-30px;left:50%;transform:translateX(-50%);
+  font-size:12px;color:#8E8A89;
+  white-space:nowrap;
+}
+
+/* 散落的牌 */
+.tarot-spread{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:6px;
+  margin:16px 0;
+  width:100%;
+}
+.tarot-spread-card{
+  width:90px;height:140px;
+  cursor:pointer;
+  perspective:600px;
+  animation:cardFlyIn .5s ease forwards;
+  opacity:0;
+}
+.tarot-spread-card:nth-child(1){animation-delay:.1s}
+.tarot-spread-card:nth-child(2){animation-delay:.25s}
+.tarot-spread-card:nth-child(3){animation-delay:.4s}
+.tarot-spread-card:nth-child(4){animation-delay:.15s}
+.tarot-spread-card:nth-child(5){animation-delay:.3s}
+.tarot-spread-card:nth-child(6){animation-delay:.45s}
+.tarot-spread-card:nth-child(7){animation-delay:.2s}
+.tarot-spread-card:nth-child(8){animation-delay:.35s}
+.tarot-spread-card:nth-child(9){animation-delay:.5s}
+
+@keyframes cardFlyIn{
+  0%{opacity:0;transform:translateY(40px) rotate(20deg) scale(.6)}
+  100%{opacity:1;transform:translateY(0) rotate(var(--rot,0deg)) scale(1)}
+}
+
+.tarot-spread-card .card-inner{
+  position:relative;width:100%;height:100%;
+  transition:transform .6s ease;
+  transform-style:preserve-3d;
+}
+.tarot-spread-card.flipped .card-inner{transform:rotateY(180deg)}
+.tarot-spread-card .card-face{
+  position:absolute;inset:0;
+  border-radius:8px;
+  backface-visibility:hidden;
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;
+}
+.tarot-spread-card .card-back{
+  background:linear-gradient(135deg,#4A148C,#7B1FA2);
+  border:1px solid rgba(255,215,0,.2);
+}
+.tarot-spread-card .card-front{
+  background:linear-gradient(180deg,#fff8e1,#fff3cd);
+  transform:rotateY(180deg);
+  flex-direction:column;
+  gap:4px;
+  padding:8px;
+  text-align:center;
+  font-size:12px;
+  color:#5D4037;
+}
+.tarot-spread-card .card-front .ct{font-size:20px;display:block}
+.tarot-spread-card .card-front .cn{font-size:10px;color:#8E8A89;display:block}
+.tarot-spread-card .card-front .mp{font-size:9px;color:#B5B0AE;margin-top:2px}
+
+/* 塔罗解读弹窗 */
+.tarot-reading{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  display:flex;align-items:center;justify-content:center;
+  z-index:200;
+  animation:fadeIn .3s ease;
+}
+.tarot-reading-card{
+  width:300px;
+  background:rgba(255,248,240,.95);
+  backdrop-filter:blur(16px);
+  border-radius:24px;
+  padding:28px 20px;
+  text-align:center;
+  box-shadow:0 8px 40px rgba(0,0,0,.1);
+}
+.tarot-reading-card .rt{font-size:32px;display:block;margin-bottom:8px}
+.tarot-reading-card .rn{font-size:20px;font-weight:700;color:#4A148C;margin-bottom:4px}
+.tarot-reading-card .rm{font-size:13px;color:#8E8A89;margin-bottom:12px;line-height:1.6}
+.tarot-reading-card button{
+  padding:6px 20px;border:none;border-radius:20px;
+  background:linear-gradient(135deg,#FFB7B2,#E89088);
+  color:#fff;font-size:13px;cursor:pointer;
+}
+
+/* 已选标识 */
+.tarot-spread-card.selected::after{
+  content:'✓';position:absolute;
+  top:-6px;right:-6px;
+  width:20px;height:20px;
+  background:#D4AF37;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:#fff;
+  z-index:10;
+}
+
+.pick-hint{
+  font-size:13px;color:#8E8A89;
+  text-align:center;margin:8px 0;
+}
+.reset-btn{
+  margin-top:12px;
+  padding:8px 24px;border:none;border-radius:20px;
+  background:rgba(255,255,255,.5);
+  color:#3E3A39;font-size:13px;cursor:pointer;
+  backdrop-filter:blur(8px);
+}
+</style>
+</head>
+<body>
+
+<!-- 导航 -->
+<div class="nav">
+  <button class="nav-btn active" onclick="switchTab(0)">📖 答案之书</button>
+  <button class="nav-btn" onclick="switchTab(1)">🥠 幸运饼干</button>
+  <button class="nav-btn" onclick="switchTab(2)">🔮 塔罗牌</button>
+</div>
+
+<!-- ===== 1. 答案之书 ===== -->
+<div class="page active" id="page0">
+  <div class="input-area">
+    <input class="ques-input" id="questionInput" placeholder="心里想一个问题…（可不填）" maxlength="50">
+    <div class="hint-text">默念问题，点击书本翻开答案</div>
+  </div>
+  <div class="book-scene" onclick="shakeBook()">
+    <div class="book" id="book">
+      <div class="book-spine"></div>
+      <div class="book-cover">📖</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 2. 幸运饼干 ===== -->
+<div class="page" id="page1">
+  <div class="bag-scene" onclick="reachHand()">
+    <div class="bag">
+      <div class="bag-body"></div>
+      <div class="bag-label">幸运饼干袋<small>点我掏一个</small></div>
+    </div>
+    <div class="hand-reach" id="hand">🤚</div>
+  </div>
+  <div class="cookie-grid" id="cookieGrid"></div>
+</div>
+
+<!-- ===== 3. 塔罗牌 ===== -->
+<div class="page" id="page2">
+  <div class="tarot-deck" onclick="dealTarot()">
+    <div class="tarot-deck-inner" id="tarotDeck">
+      <div class="tarot-card-back">🔮</div>
+    </div>
+    <div class="tarot-deck-label">点击发牌</div>
+  </div>
+  <div class="pick-hint" id="pickHint">点击牌堆，选择3张塔罗牌</div>
+  <div class="tarot-spread" id="tarotSpread"></div>
+</div>
+
+<script>
+// =========================================
+// 答案池（共用）
+// =========================================
+const ANSWERS = [
+  {text:'是的',type:'easy'},
+  {text:'大胆去做',type:'easy'},
+  {text:'时机成熟',type:'easy'},
+  {text:'当然可以',type:'easy'},
+  {text:'完全没问题',type:'easy'},
+  {text:'去吧',type:'easy'},
+  {text:'相信你的直觉',type:'easy'},
+  {text:'一切皆有可能',type:'easy'},
+  {text:'答案就在你心里',type:'easy'},
+  {text:'再等等',type:'medium'},
+  {text:'也许吧',type:'medium'},
+  {text:'看你的心',type:'medium'},
+  {text:'别急',type:'medium'},
+  {text:'换一个角度想想',type:'medium'},
+  {text:'需要更多耐心',type:'medium'},
+  {text:'不要',type:'hard'},
+  {text:'放下吧',type:'hard'},
+  {text:'现在不是时候',type:'hard'},
+  {text:'算了吧',type:'hard'},
+  {text:'停下来想想',type:'hard'},
+  {text:'问问TA的意见',type:'easy'},
+  {text:'相信自己',type:'easy'},
+  {text:'放手去做',type:'easy'},
+  {text:'前路漫漫但值得',type:'medium'},
+  {text:'不要犹豫',type:'easy'},
+  {text:'倾听内心的声音',type:'medium'},
+  {text:'未来会告诉你答案',type:'medium'},
+  {text:'别想太多',type:'easy'},
+  {text:'现在就是时候',type:'easy'},
+  {text:'也许再努力一点',type:'medium'},
+]
+
+const FORTUNES = [
+  {text:'今天会有好事发生',type:'easy'},
+  {text:'你比想象中更强大',type:'easy'},
+  {text:'爱情就在你身边',type:'easy'},
+  {text:'保持微笑',type:'easy'},
+  {text:'好运正在路上',type:'easy'},
+  {text:'做一个善良的人',type:'easy'},
+  {text:'今天适合表白',type:'easy'},
+  {text:'你值得被爱',type:'medium'},
+  {text:'学会放下',type:'medium'},
+  {text:'耐心等待',type:'medium'},
+  {text:'不要害怕变化',type:'medium'},
+  {text:'一切都会变好的',type:'easy'},
+  {text:'今天说一句我爱你',type:'easy'},
+  {text:'给对方一个拥抱',type:'easy'},
+  {text:'缘分天注定',type:'medium'},
+  {text:'明天会更好',type:'easy'},
+]
+
+const TAROT = [
+  {name:'愚者',meaning:'新的开始，保持天真勇敢',icon:'🌱'},
+  {name:'魔术师',meaning:'你有无限潜能',icon:'✨'},
+  {name:'女祭司',meaning:'倾听内心直觉',icon:'🌙'},
+  {name:'皇后',meaning:'收获丰盛与美好',icon:'👑'},
+  {name:'皇帝',meaning:'建立秩序与规则',icon:'🏛️'},
+  {name:'恋人',meaning:'选择与结合',icon:'💑'},
+  {name:'战车',meaning:'坚持就会胜利',icon:'⚔️'},
+  {name:'力量',meaning:'用温柔战胜一切',icon:'🦁'},
+  {name:'隐士',meaning:'寻找内心智慧',icon:'🏮'},
+  {name:'命运之轮',meaning:'命运正在转动',icon:'🎡'},
+  {name:'正义',meaning:'因果报应',icon:'⚖️'},
+  {name:'倒吊人',meaning:'换个角度看问题',icon:'🪢'},
+  {name:'死神',meaning:'结束即新生',icon:'💀'},
+  {name:'节制',meaning:'找到平衡点',icon:'⚗️'},
+  {name:'恶魔',meaning:'面对你的欲望',icon:'😈'},
+  {name:'高塔',meaning:'打破旧有结构',icon:'🗼'},
+  {name:'星星',meaning:'充满希望',icon:'⭐'},
+  {name:'月亮',meaning:'面对内心的恐惧',icon:'🌙'},
+  {name:'太阳',meaning:'成功的喜悦',icon:'☀️'},
+  {name:'审判',meaning:'重新觉醒',icon:'📯'},
+  {name:'世界',meaning:'圆满完成',icon:'🌍'},
+]
+
+let tarotPicked = []
+
+// ===== Tab切换 =====
+function switchTab(i){
+  document.querySelectorAll('.nav-btn').forEach((b,j)=>b.classList.toggle('active',j===i))
+  document.querySelectorAll('.page').forEach((p,j)=>p.classList.toggle('active',j===i))
+}
+
+// ===== 1. 答案之书 =====
+function shakeBook(){
+  const book=document.getElementById('book')
+  if(book.classList.contains('shake'))return
+  const existing=document.querySelector('.paper-drop')
+  if(existing)existing.remove()
+  book.classList.add('shake')
+  setTimeout(()=>{
+    book.classList.remove('shake')
+    showAnswer()
+  },900)
+}
+
+function showAnswer(){
+  const q=document.getElementById('questionInput').value.trim()
+  const a=ANSWERS[Math.floor(Math.random()*ANSWERS.length)]
+  const drop=document.createElement('div')
+  drop.className='paper-drop'
+  drop.onclick=(e)=>{if(e.target===drop)drop.remove()}
+  drop.innerHTML=`
+    <div class="paper-sheet">
+      ${q?`<div class="paper-question">${q}</div>`:''}
+      <div class="paper-text">${a.text}</div>
+      <button class="paper-close" onclick="this.closest('.paper-drop').remove()">谢谢答案</button>
+    </div>`
+  document.body.appendChild(drop)
+}
+
+// ===== 2. 幸运饼干 =====
+function reachHand(){
+  const grid=document.getElementById('cookieGrid')
+  if(grid.children.length>0)return
+  const hand=document.getElementById('hand')
+  hand.className='hand-reach active'
+  setTimeout(()=>{
+    hand.className='hand-reach'
+    const f=randomItems(FORTUNES,9)
+    grid.innerHTML=f.map((item,i)=>`
+      <div class="cookie ${item.type}" onclick="showFortune(this,${i})">
+        <div class="particles">
+          ${Array.from({length:6},(_,j)=>`<div class="particle" style="--tx:${(Math.random()-.5)*40}px;--ty:${(Math.random()-.5)*40}px;animation-delay:${j*.1}s;left:${20+Math.random()*60}%;top:${20+Math.random()*60}%"></div>`).join('')}
+        </div>
+        🥠
+      </div>
+    `).join('')
+  },700)
+}
+
+function showFortence(cookie,i){
+  const existing=document.querySelector('.cookie-reveal')
+  if(existing)existing.remove()
+  const f=FORTUNES[i%FORTUNES.length]
+  const reveal=document.createElement('div')
+  reveal.className='cookie-reveal'
+  reveal.innerHTML=`
+    <div class="cookie-crumb">
+      <div class="cookie-crumb-text">${f.text}</div>
+      <div class="cookie-crumb-sub">${f.type==='easy'?'✨ 好运':'🍀 平常心'}</div>
+      <button class="cookie-crumb-close" onclick="this.closest('.cookie-reveal').remove()">收下</button>
+    </div>`
+  document.body.appendChild(reveal)
+}
+
+function showFortune(cookie, idx) {
+  const existing = document.querySelector('.cookie-reveal')
+  if (existing) existing.remove()
+  const f = FORTUNES[idx % FORTUNES.length]
+  const reveal = document.createElement('div')
+  reveal.className = 'cookie-reveal'
+  reveal.innerHTML = `
+    <div class="cookie-crumb">
+      <div class="cookie-crumb-text">${f.text}</div>
+      <div class="cookie-crumb-sub">${f.type === 'easy' ? '✨ 好运' : '🍀 平常心'}</div>
+      <button class="cookie-crumb-close" onclick="this.closest('.cookie-reveal').remove()">收下</button>
+    </div>`
+  document.body.appendChild(reveal)
+}
+
+// ===== 3. 塔罗牌 =====
+function dealTarot(){
+  const deck=document.getElementById('tarotDeck')
+  const spread=document.getElementById('tarotSpread')
+  if(spread.children.length>0)return
+  deck.classList.add('dealing')
+  setTimeout(()=>{
+    deck.style.display='none'
+    document.getElementById('pickHint').textContent='选3张你心仪的牌，点击翻开'
+    const cards=randomItems(TAROT,9)
+    spread.innerHTML=cards.map((c,i)=>`
+      <div class="tarot-spread-card" data-idx="${i}" onclick="pickTarot(this,${i})"
+        style="--rot:${(Math.random()-.5)*20}deg">
+        <div class="card-inner">
+          <div class="card-face card-back"></div>
+          <div class="card-face card-front">
+            <span class="ct">${c.icon}</span>
+            <span class="cn">${c.name}</span>
+            <span class="mp">${c.meaning}</span>
+          </div>
+        </div>
+      </div>
+    `).join('')
+  },800)
+}
+
+function pickTarot(el,idx){
+  if(tarotPicked.length>=3 && !el.classList.contains('selected'))return
+  if(el.classList.contains('flipped'))return
+  el.classList.add('flipped','selected')
+  tarotPicked.push(idx)
+  document.getElementById('pickHint').textContent=`已选 ${tarotPicked.length}/3`
+  if(tarotPicked.length===3){
+    setTimeout(showReading,500)
+  }
+}
+
+function showReading(){
+  const items=tarotPicked.map(i=>TAROT[i%TAROT.length])
+  const meanings={
+    0:'代表你的过去',
+    1:'代表你的现在',
+    2:'代表你的未来'
+  }
+  const overlay=document.createElement('div')
+  overlay.className='tarot-reading'
+  overlay.innerHTML=`
+    <div class="tarot-reading-card">
+      ${items.map((c,i)=>`
+        <div style="margin-bottom:12px">
+          <span class="rt">${c.icon}</span>
+          <div class="rn">${c.name}</div>
+          <div class="rm">${meanings[i]}：${c.meaning}</div>
+        </div>
+        ${i<2?'<div style="border-bottom:1px solid rgba(0,0,0,.06);margin-bottom:12px"></div>':''}
+      `).join('')}
+      <button onclick="resetTarot()">重新占卜</button>
+    </div>`
+  document.body.appendChild(overlay)
+}
+
+function resetTarot(){
+  document.querySelector('.tarot-reading')?.remove()
+  document.querySelectorAll('.tarot-spread-card').forEach(e=>e.remove())
+  document.getElementById('tarotDeck').style.display=''
+  document.getElementById('tarotDeck').classList.remove('dealing')
+  document.getElementById('pickHint').textContent='点击牌堆，选择3张塔罗牌'
+  tarotPicked=[]
+}
+
+function randomItems(arr,n){
+  const copy=[...arr],result=[]
+  for(let i=0;i<n;i++){
+    const idx=Math.floor(Math.random()*copy.length)
+    result.push(copy.splice(idx,1)[0])
+  }
+  return result
+}
+</script>
+</body>
+</html>
