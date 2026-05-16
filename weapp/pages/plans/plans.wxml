@@ -84,9 +84,9 @@
             <text wx:elif="{{item.remaining_days != null}}" class="plan-badge-plan-tag plan-badge-limit">剩余{{item.remaining_days}}天</text>
           </view>
           <view class="plan-amount-row">
-            <text class="plan-amount">¥{{item.current_amount}}</text>
+            <text class="plan-amount">¥{{item._curText}}</text>
             <text class="plan-slash">/</text>
-            <text class="plan-target">¥{{item.target_amount}}</text>
+            <text class="plan-target">¥{{item._tarText}}</text>
           </view>
           <view wx:if="{{item.deadline_date}}" class="plan-deadline">
             目标完成日：{{item.deadline_date}}

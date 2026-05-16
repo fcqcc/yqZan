@@ -1,6 +1,15 @@
 // pages/plans/plans.js
-const api = require('../../utils/api')
-const appConfig = require('../../utils/config')
+let api = require('../../utils/api')
+let appConfig = require('../../utils/config')
+
+function fmtNum(n) {
+  if (n == null || isNaN(n)) return '0'
+  try {
+    return Number(n).toLocaleString()
+  } catch(e) {
+    return String(n)
+  }
+}
 
 function pad2(n) {
   return (n < 10 ? '0' : '') + n
@@ -46,7 +55,9 @@ function wrapPlan(p) {
     deliveries,
     deliveriesLoaded: hasEmbed,
     deliveriesLoading: false,
-    progressPct: Math.min(100, (cur / tar) * 100)
+    progressPct: Math.min(100, (cur / tar) * 100),
+    _curText: fmtNum(cur),
+    _tarText: fmtNum(tar)
   }
 }
 
@@ -305,11 +316,19 @@ Page({
     }
     wx.showLoading({ title: '提交中' })
     try {
-      await api.deliverPlan(planId, parseFloat(amount), note || '', extra)
+      const res = await api.deliverPlan(planId, parseFloat(amount), note || '', extra)
       wx.hideLoading()
       this.closeDeliver()
       await this.load()
-      wx.showToast({ title: '已记录', icon: 'success' })
+      if (res && res.done) {
+        wx.showModal({
+          title: '🎉 目标达成！',
+          content: '太棒了！你们的目标已经完成！一起庆祝吧 🥳',
+          confirmText: '耶！'
+        })
+      } else {
+        wx.showToast({ title: '已记录', icon: 'success' })
+      }
     } catch (e) {
       wx.hideLoading()
       wx.showToast({ title: (e && e.detail) || '提交失败', icon: 'none' })
