@@ -92,7 +92,9 @@ Page({
     amount: '',
     note: '',
     deliverCompleteDate: '',
-    deliverCompleteTime: ''
+    deliverCompleteTime: '',
+    showCongratulate: false,
+    congratulateTitle: ''
   },
 
   onShow() {
@@ -321,10 +323,9 @@ Page({
       this.closeDeliver()
       await this.load()
       if (res && res.done) {
-        wx.showModal({
-          title: '🎉 目标达成！',
-          content: '太棒了！你们的目标已经完成！一起庆祝吧 🥳',
-          confirmText: '耶！'
+        this.setData({
+          showCongratulate: true,
+          congratulateTitle: this.data.plans.find(p => p.id === planId)?.title || ''
         })
       } else {
         wx.showToast({ title: '已记录', icon: 'success' })
@@ -361,18 +362,21 @@ Page({
       try {
         const ns = JSON.parse(p.notify_status)
         if (ns[uid] === 'unread') {
-          wx.showModal({
-            title: '🎉 目标达成！',
-            content: `「${p.title}」已完成！共同努力的结果 💪`,
-            confirmText: '太好了！',
-            success: async () => {
-              try { await api.congratulatePlan(p.id); this.load() } catch(e) {}
-            }
+          this.setData({
+            showCongratulate: true,
+            congratulateTitle: p.title
           })
+          // 自动标记已读
+          api.congratulatePlan(p.id).catch(() => {})
           return
         }
       } catch(e) {}
     }
+  },
+
+  closeCongratulate() {
+    this.setData({ showCongratulate: false })
+    this.load()
   },
 
   /** 阻止弹层点击冒泡 */

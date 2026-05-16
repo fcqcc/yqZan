@@ -160,4 +160,14 @@
       </view>
     </view>
   </view>
+
+  <!-- ===== 自定义祝贺弹窗 ===== -->
+  <view wx:if="{{showCongratulate}}" class="overlay" bindtap="closeCongratulate">
+    <view class="congrats-sheet" catchtap="catchTap">
+      <view class="congrats-icon">🎉</view>
+      <view class="congrats-title">目标达成！</view>
+      <view class="congrats-text">「{{congratulateTitle}}」已完成！\n一起庆祝吧 🥳</view>
+      <button class="btn btn-primary congrats-btn" catchtap="closeCongratulate">耶！</button>
+    </view>
+  </view>
 </view>

@@ -293,3 +293,19 @@
 .deadline-picker-footer {
   padding: 12px 16px 0;
 }
+
+/* 自定义祝贺弹窗 */
+.congrats-sheet {
+  background: rgba(255, 248, 240, 0.95);
+  backdrop-filter: blur(16px);
+  border-radius: 24px;
+  padding: 32px 24px 20px;
+  width: 280px;
+  text-align: center;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06);
+  border: 0.5px solid rgba(255,255,255,0.5);
+}
+.congrats-icon { font-size: 48px; display: block; margin-bottom: 8px; }
+.congrats-title { font-size: 20px; font-weight: 700; color: #3E3A39; margin-bottom: 8px; }
+.congrats-text { font-size: 14px; color: #8E8A89; line-height: 1.6; margin-bottom: 20px; white-space: pre-line; }
+.congrats-btn { width: 100%; }
