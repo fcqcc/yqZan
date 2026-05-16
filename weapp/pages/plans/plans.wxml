@@ -80,6 +80,8 @@
           <view class="plan-title-row">
             <text class="plan-title">{{item.title}}</text>
             <text wx:if="{{item.done}}" class="plan-done-tag">已完成</text>
+            <text wx:elif="{{item.unlimited}}" class="plan-badge-plan-tag">不限时</text>
+            <text wx:elif="{{item.remaining_days != null}}" class="plan-badge-plan-tag plan-badge-limit">剩余{{item.remaining_days}}天</text>
           </view>
           <view class="plan-amount-row">
             <text class="plan-amount">¥{{item.current_amount}}</text>

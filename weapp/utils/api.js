@@ -93,6 +93,9 @@ const acceptTaskEvent = (eventCode) => request('/api/tasks/accept', 'POST', { ev
 const verifyTask = (id) => request('/api/tasks/' + id + '/verify', 'POST')
 const deleteTask = (id) => request('/api/tasks/' + id, 'DELETE')
 
+// ===== 计划完成祝贺 =====
+const congratulatePlan = (id) => request('/api/plans/' + id + '/congratulate', 'POST')
+
 module.exports = {
   register, login, getMe, getPartner, bindPartner, unbindPartner,
   getPlans, createPlan, deletePlan, deliverPlan, getPlanDeliveries,
@@ -102,6 +105,7 @@ module.exports = {
   getGifts, createGift, deleteGift,
   getNotes, createNote, likeNote, deleteNote,
   getLevel, getLevelLogs,
-  getCardTemplates, getCardSnapshot, generateCard, getCards,
-  getTasks, getTaskEvents, createTask, acceptTaskEvent, verifyTask, deleteTask
+   getCardTemplates, getCardSnapshot, generateCard, getCards,
+   getTasks, getTaskEvents, createTask, acceptTaskEvent, verifyTask, deleteTask,
+   congratulatePlan
 }

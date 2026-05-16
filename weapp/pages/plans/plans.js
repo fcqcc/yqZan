@@ -94,6 +94,7 @@ Page({
       const list = Array.isArray(raw) ? raw : []
       const plans = list.map(wrapPlan)
       this.setData({ plans })
+      this.checkCongratulate(plans)
     } catch (e) {
       this.setData({ plans: [] })
     }
@@ -185,8 +186,12 @@ Page({
       wx.showToast({ title: '目标金额须大于 0', icon: 'none' })
       return
     }
-    const payload = { title, target_amount }
-    if (deadlineDate) payload.deadline_date = deadlineDate
+    const payload = { title, target_amount, unlimited: false }
+    if (deadlineDate) {
+      payload.deadline_date = deadlineDate
+    } else {
+      payload.unlimited = true
+    }
     wx.showLoading({ title: '创建中' })
     try {
       await api.createPlan(payload)
@@ -323,6 +328,31 @@ Page({
       this.load()
     } catch (err) {
       wx.showToast({ title: '删除失败', icon: 'none' })
+    }
+  },
+
+  /** 检查未读的完成祝贺 */
+  checkCongratulate(plans) {
+    const userInfo = wx.getStorageSync('userInfo') || {}
+    const uid = String(userInfo.id)
+    if (!uid) return
+    for (const p of plans) {
+      if (!p.done) continue
+      if (!p.notify_status) continue
+      try {
+        const ns = JSON.parse(p.notify_status)
+        if (ns[uid] === 'unread') {
+          wx.showModal({
+            title: '🎉 目标达成！',
+            content: `「${p.title}」已完成！共同努力的结果 💪`,
+            confirmText: '太好了！',
+            success: async () => {
+              try { await api.congratulatePlan(p.id); this.load() } catch(e) {}
+            }
+          })
+          return
+        }
+      } catch(e) {}
     }
   },
 
