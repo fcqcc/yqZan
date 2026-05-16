@@ -1,4 +1,5 @@
-from datetime import datetime
+import json
+from datetime import date, datetime
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -27,6 +28,36 @@ def get_couple_id(user: User) -> int:
     return user.couple_id
 
 
+def calc_remaining_days(end_date: str) -> int | None:
+    if not end_date:
+        return None
+    try:
+        end = date.fromisoformat(end_date)
+        delta = (end - date.today()).days
+        return max(delta, 0)
+    except ValueError:
+        return None
+
+
+def build_plan_response(plan: Plan, db: Session) -> PlanResponse:
+    deliveries = db.query(Delivery).filter(Delivery.plan_id == plan.id).order_by(Delivery.created_at.desc()).all()
+    remaining = None if plan.unlimited else calc_remaining_days(plan.end_date)
+    return PlanResponse(
+        id=plan.id,
+        title=plan.title,
+        target_amount=plan.target_amount,
+        current_amount=plan.current_amount,
+        start_date=plan.start_date,
+        end_date=plan.end_date,
+        unlimited=plan.unlimited,
+        done=plan.done,
+        notify_status=plan.notify_status or "",
+        remaining_days=remaining,
+        created_at=plan.created_at,
+        deliveries=[DeliveryResponse.model_validate(d) for d in deliveries],
+    )
+
+
 # ===================== 存钱计划 =====================
 
 
@@ -37,16 +68,20 @@ def list_plans(
 ):
     cid = get_couple_id(user)
     plans = db.query(Plan).filter(Plan.couple_id == cid).order_by(Plan.created_at.desc()).all()
-    result = []
-    for p in plans:
-        deliveries = db.query(Delivery).filter(Delivery.plan_id == p.id).order_by(Delivery.created_at.desc()).all()
-        result.append(PlanResponse(
-            id=p.id, title=p.title, target_amount=p.target_amount,
-            current_amount=p.current_amount, start_date=p.start_date,
-            end_date=p.end_date, done=p.done, created_at=p.created_at,
-            deliveries=[DeliveryResponse.model_validate(d) for d in deliveries],
-        ))
-    return result
+    return [build_plan_response(p, db) for p in plans]
+
+
+@router.get("/plans/{plan_id}", response_model=PlanResponse)
+def get_plan(
+    plan_id: int,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    cid = get_couple_id(user)
+    plan = db.query(Plan).filter(Plan.id == plan_id, Plan.couple_id == cid).first()
+    if not plan:
+        raise HTTPException(404, "计划不存在")
+    return build_plan_response(plan, db)
 
 
 @router.post("/plans")
@@ -58,13 +93,77 @@ def create_plan(
     cid = get_couple_id(user)
     plan = Plan(
         couple_id=cid, title=req.title,
-        target_amount=req.target_amount, start_date=req.start_date,
+        target_amount=req.target_amount,
+        start_date=req.start_date,
         end_date=req.end_date,
+        unlimited=req.unlimited,
     )
     db.add(plan)
     db.commit()
     db.refresh(plan)
     return {"ok": True, "plan_id": plan.id}
+
+
+@router.post("/plans/{plan_id}/deliver")
+def deliver_plan(
+    plan_id: int,
+    req: DeliverRequest,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """存钱交付，自动检测完成并设置通知状态"""
+    cid = get_couple_id(user)
+    plan = db.query(Plan).filter(Plan.id == plan_id, Plan.couple_id == cid).first()
+    if not plan:
+        raise HTTPException(404, "计划不存在")
+    if plan.done:
+        raise HTTPException(400, "计划已完成")
+
+    plan.current_amount += req.amount
+    db.add(Delivery(plan_id=plan_id, amount=req.amount, note=req.note))
+
+    # 检测是否达成目标
+    if plan.current_amount >= plan.target_amount:
+        plan.done = True
+        # 设置通知：自己已读，对方未读
+        notify = {str(user.id): "read"}
+        # 找伴侣
+        partner = db.query(User).filter(
+            User.couple_id == cid, User.id != user.id
+        ).first()
+        if partner:
+            notify[str(partner.id)] = "unread"
+        plan.notify_status = json.dumps(notify, ensure_ascii=False)
+
+    db.commit()
+    return {"ok": True, "current_amount": plan.current_amount, "done": plan.done}
+
+
+@router.post("/plans/{plan_id}/congratulate")
+def congratulate_plan(
+    plan_id: int,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """标记计划完成的祝贺通知为已读"""
+    cid = get_couple_id(user)
+    plan = db.query(Plan).filter(Plan.id == plan_id, Plan.couple_id == cid).first()
+    if not plan:
+        raise HTTPException(404, "计划不存在")
+    if not plan.done:
+        raise HTTPException(400, "计划尚未完成")
+
+    # 更新当前用户的通知状态为已读
+    notify = {}
+    if plan.notify_status:
+        try:
+            notify = json.loads(plan.notify_status)
+        except json.JSONDecodeError:
+            notify = {}
+    notify[str(user.id)] = "read"
+    plan.notify_status = json.dumps(notify, ensure_ascii=False)
+    db.commit()
+    return {"ok": True}
 
 
 @router.put("/plans/{plan_id}")
@@ -98,99 +197,6 @@ def delete_plan(
     plan = db.query(Plan).filter(Plan.id == plan_id, Plan.couple_id == cid).first()
     if not plan:
         raise HTTPException(404, "计划不存在")
-    db.query(Delivery).filter(Delivery.plan_id == plan_id).delete()
     db.delete(plan)
-    db.commit()
-    return {"ok": True}
-
-
-@router.post("/plans/{plan_id}/deliver")
-def deliver_plan(
-    plan_id: int,
-    req: DeliverRequest,
-    user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    cid = get_couple_id(user)
-    plan = db.query(Plan).filter(Plan.id == plan_id, Plan.couple_id == cid).first()
-    if not plan:
-        raise HTTPException(404, "计划不存在")
-    if plan.done:
-        raise HTTPException(400, "计划已完成，不可继续交付")
-
-    plan.current_amount += req.amount
-    if plan.current_amount >= plan.target_amount:
-        plan.done = True
-
-    delivery = Delivery(plan_id=plan_id, amount=req.amount, note=req.note)
-    db.add(delivery)
-    db.commit()
-    return {"ok": True, "current_amount": plan.current_amount, "done": plan.done}
-
-
-# ===================== 心愿承诺 =====================
-
-
-@router.get("/wishes", response_model=list[WishResponse])
-def list_wishes(
-    user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    cid = get_couple_id(user)
-    wishes = db.query(Wish).filter(Wish.couple_id == cid).order_by(Wish.created_at.desc()).all()
-    return wishes
-
-
-@router.post("/wishes")
-def create_wish(
-    req: WishCreate,
-    user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    cid = get_couple_id(user)
-    wish = Wish(
-        couple_id=cid, user_id=user.id,
-        title=req.title, description=req.description, image_url=req.image_url,
-    )
-    db.add(wish)
-    db.commit()
-    db.refresh(wish)
-    return {"ok": True, "wish_id": wish.id}
-
-
-@router.put("/wishes/{wish_id}")
-def update_wish(
-    wish_id: int,
-    req: WishUpdate,
-    user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    cid = get_couple_id(user)
-    wish = db.query(Wish).filter(Wish.id == wish_id, Wish.couple_id == cid).first()
-    if not wish:
-        raise HTTPException(404, "心愿不存在")
-    if req.status is not None:
-        wish.status = req.status
-    if req.description is not None:
-        wish.description = req.description
-    if req.image_url is not None:
-        wish.image_url = req.image_url
-    if req.fulfilled_date is not None:
-        wish.fulfilled_date = req.fulfilled_date
-    db.commit()
-    return {"ok": True, "status": wish.status}
-
-
-@router.delete("/wishes/{wish_id}")
-def delete_wish(
-    wish_id: int,
-    user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    cid = get_couple_id(user)
-    wish = db.query(Wish).filter(Wish.id == wish_id, Wish.couple_id == cid).first()
-    if not wish:
-        raise HTTPException(404, "心愿不存在")
-    db.delete(wish)
     db.commit()
     return {"ok": True}

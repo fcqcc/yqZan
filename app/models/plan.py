@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Boolean, Text
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text
 
 from app.database import Base
 
@@ -15,7 +15,9 @@ class Plan(Base):
     current_amount = Column(Float, default=0)
     start_date = Column(String(10), default="")
     end_date = Column(String(10), default="")
+    unlimited = Column(Boolean, default=False)
     done = Column(Boolean, default=False)
+    notify_status = Column(Text, default="")  # JSON: {"user_X": "unread|read", "user_Y": "unread|read"}
     created_at = Column(DateTime, default=datetime.now)
 
 

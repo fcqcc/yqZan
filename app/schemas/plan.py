@@ -11,6 +11,7 @@ class PlanCreate(BaseModel):
     target_amount: float = Field(gt=0)
     start_date: str = ""
     end_date: str = ""
+    unlimited: bool = False
 
 
 class PlanUpdate(BaseModel):
@@ -41,8 +42,11 @@ class PlanResponse(BaseModel):
     current_amount: float
     start_date: str
     end_date: str
+    unlimited: bool = False
     done: bool
     deliveries: List[DeliveryResponse] = []
+    notify_status: str = ""
+    remaining_days: Optional[int] = None
     created_at: datetime
 
     class Config:
