@@ -1,5 +1,6 @@
 // app.js
-// baseUrl：开发者工具可用 localhost；真机预览请改为电脑局域网 IP；上线须 https 合法域名。
+// baseUrl：开发者工具可用 localhost；真机预览须改为电脑局域网 IP（如 http://192.168.1.3:5000），否则请求会超时。
+// 上线须 https 合法域名。
 const theme = require('./utils/theme')
 
 App({

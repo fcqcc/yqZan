@@ -161,13 +161,42 @@
     </view>
   </view>
 
-  <!-- ===== 自定义祝贺弹窗 ===== -->
-  <view wx:if="{{showCongratulate}}" class="overlay" bindtap="closeCongratulate">
-    <view class="congrats-sheet" catchtap="catchTap">
-      <view class="congrats-icon">🎉</view>
-      <view class="congrats-title">目标达成！</view>
-      <view class="congrats-text">「{{congratulateTitle}}」已完成！\n一起庆祝吧 🥳</view>
-      <button class="btn btn-primary congrats-btn" catchtap="closeCongratulate">耶！</button>
+  <!-- 目标达成：图腾特效（点击屏幕任意处关闭） -->
+  <view
+    wx:if="{{showTotemCelebrate}}"
+    class="totem-overlay"
+    bindtap="closeTotemCelebrate"
+    catchtouchmove="noop"
+  >
+    <view class="totem-vignette"></view>
+    <view class="totem-flash"></view>
+    <view class="totem-sunburst">
+      <view wx:for="{{[0,1,2,3,4,5,6,7]}}" wx:key="*this" class="totem-ray" style="transform: rotate({{item * 45}}deg);"></view>
     </view>
+    <view class="totem-particles">
+      <view
+        wx:for="{{totemParticles}}"
+        wx:key="id"
+        class="totem-particle totem-p--{{item.dir}} {{item.square ? 'totem-particle--sq' : ''}}"
+        style="animation-delay: {{item.delay}}s; animation-duration: {{item.dur}}s; width: {{item.size}}px; height: {{item.size}}px; background-color: {{item.color}};"
+      ></view>
+    </view>
+    <view class="totem-center">
+      <view class="totem-card-wrap">
+        <view class="totem-card-glow"></view>
+        <view class="totem-card">
+          <text class="totem-emoji">🏆</text>
+          <text class="totem-head">目标达成！</text>
+          <text class="totem-title">{{totemPlan.title}}</text>
+          <view class="totem-amt-row">
+            <text class="totem-amt">¥{{totemPlan._curText}}</text>
+            <text class="totem-slash">/</text>
+            <text class="totem-target">¥{{totemPlan._tarText}}</text>
+          </view>
+          <text class="totem-sub">像图腾护佑一样，你们一起守住了这份约定 ✨</text>
+        </view>
+      </view>
+    </view>
+    <text class="totem-tap-hint">点击屏幕任意处继续</text>
   </view>
 </view>

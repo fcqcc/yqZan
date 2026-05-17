@@ -6,7 +6,8 @@
   <button class="btn btn-primary" style="margin:0 12px 14px" bindtap="showTemplates">✨ 生成贺卡</button>
 
   <!-- 模板选择弹层 -->
-  <view wx:if="{{showTpl}}" class="overlay" bindtap="hideTemplates">
+  <view wx:if="{{showTpl}}" class="overlay">
+    <view class="overlay-dismiss" bindtap="hideTemplates" />
     <view class="sheet" catchtap="catchTap">
       <view class="sheet-title">选择模板</view>
       <scroll-view scroll-y style="max-height:400px">

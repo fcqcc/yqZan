@@ -75,6 +75,28 @@ function formatWhen(s) {
   return str.slice(0, 10)
 }
 
+/** 礼花粒子（MC 图腾感） */
+function buildTotemParticles(count = 44, idOffset = 0) {
+  const colors = [
+    '#ffeb3b', '#ffc107', '#ff9800', '#ff7043', '#fff59d', '#ffffff',
+    '#f48fb1', '#ce93d8', '#80deea', '#b9f6ca'
+  ]
+  const dirs = 12
+  const list = []
+  for (let i = 0; i < count; i++) {
+    list.push({
+      id: idOffset + i,
+      dir: (i + 3) % dirs,
+      delay: (Math.random() * 0.18).toFixed(3),
+      dur: (0.85 + Math.random() * 0.45).toFixed(2),
+      size: Math.round(4 + Math.random() * 7),
+      color: colors[i % colors.length],
+      square: Math.random() > 0.35
+    })
+  }
+  return list
+}
+
 Page({
   data: {
     plans: [],
@@ -93,12 +115,22 @@ Page({
     note: '',
     deliverCompleteDate: '',
     deliverCompleteTime: '',
-    showCongratulate: false,
-    congratulateTitle: ''
+    showTotemCelebrate: false,
+    totemPlan: null,
+    totemParticles: [],
+    totemCloseAction: 'none',
+    totemPlanId: null
   },
 
   onShow() {
     this.load()
+  },
+
+  onUnload() {
+    if (this._totemBurstTimer) {
+      clearTimeout(this._totemBurstTimer)
+      this._totemBurstTimer = null
+    }
   },
 
   async load() {
@@ -323,10 +355,16 @@ Page({
       this.closeDeliver()
       await this.load()
       if (res && res.done) {
-        this.setData({
-          showCongratulate: true,
-          congratulateTitle: this.data.plans.find(p => p.id === planId)?.title || ''
-        })
+        const donePlan = this.data.plans.find((x) => String(x.id) === String(planId))
+        this.openTotemCelebrate(
+          donePlan || {
+            id: planId,
+            title: '存钱计划',
+            _curText: fmtNum(amount),
+            _tarText: '—'
+          },
+          { closeAction: 'none' }
+        )
       } else {
         wx.showToast({ title: '已记录', icon: 'success' })
       }
@@ -362,21 +400,59 @@ Page({
       try {
         const ns = JSON.parse(p.notify_status)
         if (ns[uid] === 'unread') {
-          this.setData({
-            showCongratulate: true,
-            congratulateTitle: p.title
-          })
-          // 自动标记已读
-          api.congratulatePlan(p.id).catch(() => {})
+          this.openTotemCelebrate(p, { closeAction: 'congratulate' })
           return
         }
       } catch(e) {}
     }
   },
 
-  closeCongratulate() {
-    this.setData({ showCongratulate: false })
-    this.load()
+  noop() {},
+
+  openTotemCelebrate(plan, opts = {}) {
+    if (!plan) return
+    if (this._totemBurstTimer) {
+      clearTimeout(this._totemBurstTimer)
+      this._totemBurstTimer = null
+    }
+    const totemPlan = {
+      title: plan.title || '计划',
+      _curText: plan._curText != null ? plan._curText : fmtNum(plan.current_amount),
+      _tarText: plan._tarText != null ? plan._tarText : fmtNum(plan.target_amount)
+    }
+    this.setData({
+      showTotemCelebrate: true,
+      totemPlan,
+      totemParticles: buildTotemParticles(44, 0),
+      totemCloseAction: opts.closeAction || 'none',
+      totemPlanId: plan.id
+    })
+    this._totemBurstTimer = setTimeout(() => {
+      this._totemBurstTimer = null
+      if (!this.data.showTotemCelebrate) return
+      this.setData({ totemParticles: buildTotemParticles(40, 1000) })
+    }, 620)
+  },
+
+  async closeTotemCelebrate() {
+    if (this._totemBurstTimer) {
+      clearTimeout(this._totemBurstTimer)
+      this._totemBurstTimer = null
+    }
+    const { totemCloseAction, totemPlanId } = this.data
+    this.setData({
+      showTotemCelebrate: false,
+      totemPlan: null,
+      totemParticles: [],
+      totemCloseAction: 'none',
+      totemPlanId: null
+    })
+    if (totemCloseAction === 'congratulate' && totemPlanId) {
+      try {
+        await api.congratulatePlan(totemPlanId)
+      } catch (e) {}
+      this.load()
+    }
   },
 
   /** 阻止弹层点击冒泡 */

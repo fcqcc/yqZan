@@ -274,16 +274,27 @@ page {
   font-size: 14px;
 }
 
+/* 底部表单弹层：勿在整块 overlay 上 bindtap 关闭——input/picker 等原生区会触摸穿透，误点遮罩。
+   用 overlay-dismiss（flex:1，仅占表单上方）承接「点空白关闭」。 */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(61, 44, 56, 0.38);
   z-index: 100;
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+}
+.overlay-dismiss {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  align-self: stretch;
+  background: rgba(61, 44, 56, 0.38);
 }
 .sheet {
+  flex-shrink: 0;
+  align-self: center;
   background: #fffafc;
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   padding: 20px 16px 30px;

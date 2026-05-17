@@ -583,23 +583,10 @@ function showAnswer(){
   drop.innerHTML=`
     <div class="paper-sheet">
       ${q?`<div class="paper-question">${q}</div>`:''}
-      <div class="paper-text" id="answerText"></div>
-      <button class="paper-close" id="answerClose" style="display:none" onclick="this.closest('.paper-drop').remove()">谢谢答案</button>
+      <div class="paper-text">${a.text}</div>
+      <button class="paper-close" onclick="this.closest('.paper-drop').remove()">谢谢答案</button>
     </div>`
   document.body.appendChild(drop)
-  // 逐字出现
-  const el=document.getElementById('answerText')
-  const text=a.text
-  let i=0
-  const timer=setInterval(()=>{
-    if(i<text.length){
-      el.textContent+=text[i]
-      i++
-    }else{
-      clearInterval(timer)
-      document.getElementById('answerClose').style.display='block'
-    }
-  },100)
 }
 
 // ===== 2. 幸运饼干 =====
@@ -622,44 +609,14 @@ function reachHand(){
 }
 
 function showFortune(cookie){
-  if(cookie.dataset.eating==='true')return
-  cookie.dataset.eating='true'
-  
-  // 记录原来显示的签文
+  const existing=document.querySelector('.cookie-reveal')
+  if(existing)return
+  const text=cookie.querySelector('.particles')?.textContent || FORTUNES[0].text
+  // 找对应的 fortune
+  const allTexts=FORTUNES.map(f=>f.text)
+  const idx=cookie.parentElement.innerHTML.indexOf('🥠') // rough
+  // Just pick random
   const f=FORTUNES[Math.floor(Math.random()*FORTUNES.length)]
-  const bites=[
-    {x:30,y:20},{x:70,y:25},{x:20,y:65},{x:75,y:70},{x:45,y:20},{x:50,y:75}
-  ]
-  let biteIdx=0
-  
-  function takeBite(){
-    if(biteIdx>=bites.length){
-      // 吃完，显示纸条
-      cookie.style.transform='scale(0) rotate(180deg)'
-      cookie.style.opacity='0'
-      cookie.style.transition='all .4s ease'
-      setTimeout(()=>{
-        cookie.remove()
-        showFortunePaper(f)
-      },500)
-      return
-    }
-    const b=bites[biteIdx]
-    const mark=document.createElement('div')
-    mark.className='cookie-bite-mark'
-    mark.textContent='🦷'
-    mark.style.left=b.x+'%'
-    mark.style.top=b.y+'%'
-    cookie.appendChild(mark)
-    // 摇摆
-    cookie.style.transform=`rotate(${(biteIdx%2===0?1:-1)*8}deg) scale(${1-biteIdx*0.06})`
-    biteIdx++
-    setTimeout(takeBite,350)
-  }
-  takeBite()
-}
-
-function showFortunePaper(f){
   const reveal=document.createElement('div')
   reveal.className='cookie-reveal'
   reveal.innerHTML=`

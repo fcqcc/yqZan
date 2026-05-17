@@ -4,7 +4,8 @@
   <view class="page-subtitle">许下的心愿，一个一个实现</view>
   <button class="btn btn-wish btn-block" style="margin:0 12px 12px" bindtap="toggleForm">➕ 许下心愿</button>
 
-  <view wx:if="{{showForm}}" class="overlay" bindtap="toggleForm">
+  <view wx:if="{{showForm}}" class="overlay">
+    <view class="overlay-dismiss" bindtap="toggleForm" />
     <view class="sheet" catchtap="catchTap">
       <view class="sheet-title">许下心愿</view>
       <input class="input" placeholder="心愿名称" model:value="{{title}}" />

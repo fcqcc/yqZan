@@ -294,18 +294,475 @@
   padding: 12px 16px 0;
 }
 
-/* 自定义祝贺弹窗 */
-.congrats-sheet {
-  background: rgba(255, 248, 240, 0.95);
-  backdrop-filter: blur(16px);
-  border-radius: 24px;
-  padding: 32px 24px 20px;
-  width: 280px;
-  text-align: center;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06);
-  border: 0.5px solid rgba(255,255,255,0.5);
+/* ========== 目标达成：MC 不死图腾风格庆祝（点屏关闭） ========== */
+.totem-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 350;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-.congrats-icon { font-size: 48px; display: block; margin-bottom: 8px; }
-.congrats-title { font-size: 20px; font-weight: 700; color: #3E3A39; margin-bottom: 8px; }
-.congrats-text { font-size: 14px; color: #8E8A89; line-height: 1.6; margin-bottom: 20px; white-space: pre-line; }
-.congrats-btn { width: 100%; }
+
+.totem-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 85% 70% at 50% 45%,
+    rgba(255, 213, 79, 0.45) 0%,
+    rgba(255, 152, 0, 0.22) 35%,
+    rgba(40, 20, 50, 0.88) 100%
+  );
+  animation: totem-vignette-pulse 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes totem-vignette-pulse {
+  from {
+    filter: brightness(1);
+    opacity: 0.92;
+  }
+  to {
+    filter: brightness(1.12);
+    opacity: 1;
+  }
+}
+
+.totem-flash {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 230, 0);
+  animation: totem-screen-flash 0.9s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes totem-screen-flash {
+  0% {
+    background: rgba(255, 255, 255, 0.92);
+  }
+  18% {
+    background: rgba(255, 235, 120, 0.55);
+  }
+  45% {
+    background: rgba(255, 183, 77, 0.2);
+  }
+  100% {
+    background: rgba(255, 183, 77, 0);
+  }
+}
+
+.totem-sunburst {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 600rpx;
+  height: 600rpx;
+  margin-left: -300rpx;
+  margin-top: -300rpx;
+  animation: totem-rays-spin 4s linear infinite;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+@keyframes totem-rays-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.totem-ray {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4rpx;
+  height: 50%;
+  margin-left: -2rpx;
+  margin-top: -50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 248, 200, 0.95) 0%,
+    rgba(255, 193, 7, 0.35) 45%,
+    transparent 100%
+  );
+  transform-origin: 50% 100%;
+}
+
+.totem-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.totem-particle {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  opacity: 0;
+  border-radius: 50%;
+  animation-timing-function: cubic-bezier(0.12, 0.85, 0.18, 1);
+  animation-fill-mode: forwards;
+  box-shadow: 0 0 6rpx rgba(255, 255, 200, 0.8);
+}
+
+.totem-particle--sq {
+  border-radius: 2px;
+}
+
+.totem-p--0 {
+  animation-name: totem-burst-0;
+}
+.totem-p--1 {
+  animation-name: totem-burst-1;
+}
+.totem-p--2 {
+  animation-name: totem-burst-2;
+}
+.totem-p--3 {
+  animation-name: totem-burst-3;
+}
+.totem-p--4 {
+  animation-name: totem-burst-4;
+}
+.totem-p--5 {
+  animation-name: totem-burst-5;
+}
+.totem-p--6 {
+  animation-name: totem-burst-6;
+}
+.totem-p--7 {
+  animation-name: totem-burst-7;
+}
+.totem-p--8 {
+  animation-name: totem-burst-8;
+}
+.totem-p--9 {
+  animation-name: totem-burst-9;
+}
+.totem-p--10 {
+  animation-name: totem-burst-10;
+}
+.totem-p--11 {
+  animation-name: totem-burst-11;
+}
+
+@keyframes totem-burst-0 {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35) rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(0, -280rpx) scale(0.9) rotate(680deg);
+  }
+}
+@keyframes totem-burst-1 {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35) rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(150rpx, -240rpx) scale(0.9) rotate(640deg);
+  }
+}
+@keyframes totem-burst-2 {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35) rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(260rpx, -120rpx) scale(0.9) rotate(720deg);
+  }
+}
+@keyframes totem-burst-3 {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35) rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(280rpx, 40rpx) scale(0.9) rotate(660deg);
+  }
+}
+@keyframes totem-burst-4 {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35) rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(200rpx, 200rpx) scale(0.9) rotate(700deg);
+  }
+}
+@keyframes totem-burst-5 {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35) rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(0, 260rpx) scale(0.9) rotate(680deg);
+  }
+}
+@keyframes totem-burst-6 {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35) rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(-200rpx, 200rpx) scale(0.9) rotate(720deg);
+  }
+}
+@keyframes totem-burst-7 {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35) rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(-280rpx, 40rpx) scale(0.9) rotate(640deg);
+  }
+}
+@keyframes totem-burst-8 {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35) rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(-260rpx, -120rpx) scale(0.9) rotate(700deg);
+  }
+}
+@keyframes totem-burst-9 {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35) rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(-150rpx, -240rpx) scale(0.9) rotate(660deg);
+  }
+}
+@keyframes totem-burst-10 {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35) rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(100rpx, 80rpx) scale(0.9) rotate(620deg);
+  }
+}
+@keyframes totem-burst-11 {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35) rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(-100rpx, 80rpx) scale(0.9) rotate(740deg);
+  }
+}
+
+.totem-center {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 28rpx;
+  box-sizing: border-box;
+  flex: 1;
+  justify-content: center;
+  min-height: 0;
+}
+
+.totem-card-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 560rpx;
+  animation: totem-card-entrance 1.35s cubic-bezier(0.22, 1.15, 0.32, 1) forwards;
+}
+
+@keyframes totem-card-entrance {
+  0% {
+    transform: scale(0.35) rotate(-28deg);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  55% {
+    transform: scale(1.08) rotate(12deg);
+  }
+  72% {
+    transform: scale(0.96) rotate(-8deg);
+  }
+  88% {
+    transform: scale(1.02) rotate(4deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.totem-card-glow {
+  position: absolute;
+  inset: -24rpx;
+  border-radius: 28rpx;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 235, 120, 0.75) 0%,
+    rgba(255, 193, 7, 0.25) 45%,
+    transparent 70%
+  );
+  animation: totem-glow-pulse 0.65s ease-in-out infinite alternate;
+  z-index: 0;
+  pointer-events: none;
+}
+
+@keyframes totem-glow-pulse {
+  from {
+    transform: scale(0.96);
+    opacity: 0.75;
+  }
+  to {
+    transform: scale(1.04);
+    opacity: 1;
+  }
+}
+
+.totem-card {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(165deg, #fffef5 0%, #fff8e1 40%, #ffecb3 100%);
+  border: 3rpx solid rgba(255, 193, 7, 0.85);
+  border-radius: 24rpx;
+  padding: 36rpx 32rpx 32rpx;
+  box-shadow:
+    0 0 0 1rpx rgba(255, 255, 255, 0.6) inset,
+    0 20rpx 60rpx rgba(255, 152, 0, 0.35),
+    0 8rpx 24rpx rgba(80, 40, 20, 0.2);
+  text-align: center;
+  animation: totem-card-float 2.2s ease-in-out infinite alternate;
+}
+
+@keyframes totem-card-float {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-12rpx);
+  }
+}
+
+.totem-emoji {
+  display: block;
+  font-size: 64rpx;
+  line-height: 1.2;
+  margin-bottom: 8rpx;
+  filter: drop-shadow(0 4rpx 8rpx rgba(255, 152, 0, 0.45));
+}
+
+.totem-head {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #e65100;
+  letter-spacing: 2rpx;
+  text-shadow: 0 2rpx 0 rgba(255, 255, 255, 0.8);
+}
+
+.totem-title {
+  display: block;
+  margin-top: 16rpx;
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #4e342e;
+  line-height: 1.35;
+}
+
+.totem-amt-row {
+  margin-top: 20rpx;
+  font-size: 30rpx;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.totem-amt {
+  color: #d65c8a;
+}
+
+.totem-slash {
+  margin: 0 8rpx;
+  color: #8d6e63;
+  font-weight: 600;
+}
+
+.totem-target {
+  color: #6d4c41;
+}
+
+.totem-sub {
+  display: block;
+  margin-top: 20rpx;
+  font-size: 24rpx;
+  color: #795548;
+  line-height: 1.5;
+}
+
+.totem-tap-hint {
+  position: relative;
+  z-index: 3;
+  flex-shrink: 0;
+  padding: 20rpx 32rpx calc(28rpx + constant(safe-area-inset-bottom));
+  padding-bottom: calc(28rpx + env(safe-area-inset-bottom));
+  font-size: 24rpx;
+  color: rgba(255, 248, 220, 0.85);
+  text-align: center;
+  letter-spacing: 1rpx;
+}
