@@ -110,8 +110,8 @@ const drawSingle = () => request('/api/gacha/draw', 'POST')
 const drawTen = () => request('/api/gacha/draw10', 'POST')
 
 // ===== 背包 =====
-const getInventory = () => request('/api/inventory')
-const useItem = (inventoryId) => request('/api/inventory/use', 'POST', { inventory_id: inventoryId })
+const getInventory = () => request('/api/pets/inventory')
+const useItem = (inventoryId) => request('/api/pets/inventory/use', 'POST', { inventory_id: inventoryId })
 const getBestiary = () => request('/api/pets/bestiary')
 
 module.exports = {
