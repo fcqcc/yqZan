@@ -61,19 +61,22 @@ Page({
       const res = await api.drawTen()
       // 返回格式: { items: [{ name, rarity, desc }...], tickets }
       const items = res.items || []
-      const summary = this.buildSummary(items)
-
-      this.setData({
-        tenResults: items,
-        summaryList: summary,
-        tickets: res.tickets || this.data.tickets - 9  // 10抽返1张 = 净消耗9
-      })
-
-      // 显示第一个 SSR+ > SSR > SR > R > N
-      const highlight = this.findHighlight(items)
+      const itemsWithClass = items.map(i => ({
+        ...i,
+        rarity: (i.rarity || 'N').toUpperCase(),
+        rarityClass: (i.rarity || 'N').toUpperCase() === 'SSR+' ? 'SSRP' : (i.rarity || 'N').toUpperCase()
+      }))
+      const summary = this.buildSummary(itemsWithClass)
+      const highlight = this.findHighlight(itemsWithClass)
       if (highlight) {
         this.showResult(highlight)
       }
+
+      this.setData({
+        tenResults: itemsWithClass,
+        summaryList: summary,
+        tickets: res.tickets || this.data.tickets - 9
+      })
     } catch (e) {
       console.error('十连失败', e)
       wx.showToast({ title: '抽卡失败，请重试', icon: 'none' })
@@ -94,7 +97,7 @@ Page({
 
     this.setData({
       showResult: true,
-      currentResult: { ...item, rarity },
+      currentResult: { ...item, rarity, rarityClass: rarity === 'SSR+' ? 'SSRP' : rarity },
       resultAnimClass: animClass
     })
   },

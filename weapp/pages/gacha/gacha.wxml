@@ -56,7 +56,7 @@
       <view 
         wx:for="{{tenResults}}" 
         wx:key="index" 
-        class="ten-item ten-item-{{item.rarity}}"
+        class="ten-item ten-item-{{item.rarityClass || item.rarity}}"
         data-index="{{index}}"
         bindtap="onShowItemDetail"
       >
@@ -107,7 +107,7 @@
         <text wx:elif="{{currentResult.rarity === 'SSR'}}">🟡</text>
         <text wx:else>💎</text>
       </view>
-      <text class="result-rarity result-rarity-{{currentResult.rarity}}">{{currentResult.rarity}}{{currentResult.rarity === 'SSR+' ? '+' : ''}}</text>
+      <text class="result-rarity result-rarity-{{currentResult.rarityClass || currentResult.rarity}}">{{currentResult.rarity}}{{currentResult.rarity === 'SSR+' ? '+' : ''}}</text>
       <text class="result-name">{{currentResult.name}}</text>
       <text wx:if="{{currentResult.desc}}" class="result-desc">{{currentResult.desc}}</text>
       <view class="result-btn-area">

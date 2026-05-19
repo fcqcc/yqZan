@@ -196,7 +196,7 @@
 .ten-item-R { border-color: #8ab4f8; background: #f0f6ff; }
 .ten-item-SR { border-color: #ce93d8; background: #faf0ff; }
 .ten-item-SSR { border-color: #ffd54f; background: #fffde7; }
-.ten-item-SSR\+ { border-color: #ffab40; background: #fff3e0; }
+.ten-item-SSRP { border-color: #ffab40; background: #fff3e0; }
 
 .ten-item-icon { font-size: 18px; }
 .ten-item-info { display: flex; align-items: center; gap: 4px; }
@@ -265,7 +265,7 @@
   box-shadow: 0 0 30px rgba(255, 213, 79, 0.30), 0 16px 48px rgba(61, 44, 56, 0.20);
 }
 .result-card-SSR,
-.result-card-SSR\+ {
+.result-card-SSRP {
   animation: resultGoldFlash 0.7s ease;
   background: linear-gradient(135deg, #fff3e0, #ffffff, #fff3e0);
   border: 2px solid #ffab40;
@@ -301,7 +301,7 @@
 .result-rarity-R { color: #4d8cf0; }
 .result-rarity-SR { color: #9c27b0; }
 .result-rarity-SSR { color: #ff8f00; }
-.result-rarity-SSR\+ { color: #e65100; text-shadow: 0 0 10px rgba(230, 81, 0, 0.3); }
+.result-rarity-SSRP { color: #e65100; text-shadow: 0 0 10px rgba(230, 81, 0, 0.3); }
 .result-name {
   font-size: 18px;
   font-weight: 800;
