@@ -25,5 +25,26 @@ Page({
   },
 
   /** 阻止弹层点击冒泡 */
-  catchTap() {}
+  catchTap() {},
+
+  /** 一键导入节日 */
+  async importHolidays() {
+    wx.showModal({
+      title: '导入节日',
+      content: '一键导入2026年所有情侣节日？\n（已存在的不会重复添加）',
+      success: async (res) => {
+        if (!res.confirm) return
+        wx.showLoading({ title: '导入中' })
+        try {
+          const result = await api.importHolidays()
+          wx.hideLoading()
+          wx.showToast({ title: `导入成功 ✨ 新增${result.imported}个节日`, icon: 'none' })
+          this.load()
+        } catch (e) {
+          wx.hideLoading()
+          wx.showToast({ title: '导入失败', icon: 'none' })
+        }
+      }
+    })
+  },
 })

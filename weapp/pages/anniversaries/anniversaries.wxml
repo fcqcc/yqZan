@@ -1,7 +1,10 @@
 <scroll-view class="page" scroll-y>
   <view class="page-title">📅 纪念日</view>
   <view class="page-subtitle">重要的日子，一个都不能忘</view>
-  <button class="btn btn-primary" style="margin:0 12px 12px" bindtap="toggleForm">➕ 添加</button>
+  <view class="anni-actions">
+    <button class="btn btn-primary" bindtap="toggleForm">➕ 添加</button>
+    <button class="btn btn-outline" bindtap="importHolidays">📆 导入节日</button>
+  </view>
   <view wx:if="{{showForm}}" class="overlay">
     <view class="overlay-dismiss" bindtap="toggleForm" />
     <view class="sheet" catchtap="catchTap">

@@ -59,7 +59,7 @@ const createTodo = (data) => request('/api/todos', 'POST', data)
 const checkinTodo = (id) => request('/api/todos/' + id + '/checkin', 'POST')
 const deleteTodo = (id) => request('/api/todos/' + id, 'DELETE')
 
-// ===== 纪念日 =====
+const importHolidays = () => request('/api/anniversaries/import-holidays', 'POST')
 const getAnniversaries = () => request('/api/anniversaries')
 const createAnniversary = (data) => request('/api/anniversaries', 'POST', data)
 const deleteAnniversary = (id) => request('/api/anniversaries/' + id, 'DELETE')
@@ -128,7 +128,7 @@ module.exports = {
   getPlans, createPlan, deletePlan, deliverPlan, getPlanDeliveries,
   getWishes, createWish, updateWish, deleteWish,
   getTodos, createTodo, checkinTodo, deleteTodo,
-  getAnniversaries, createAnniversary, deleteAnniversary,
+  getAnniversaries, createAnniversary, deleteAnniversary, importHolidays,
   getGifts, createGift, deleteGift,
   getNotes, createNote, likeNote, deleteNote,
   getLevel, getLevelLogs,

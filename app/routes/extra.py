@@ -228,6 +228,47 @@ def delete_anniversary(
     return {"ok": True}
 
 
+# ── 一键导入节日 ──
+
+COUPLE_HOLIDAYS_2026 = [
+    ("元旦", "2026-01-01"),
+    ("情人节", "2026-02-14"),
+    ("白色情人节", "2026-03-14"),
+    ("520网络情人节", "2026-05-20"),
+    ("521网络情人节", "2026-05-21"),
+    ("七夕节", "2026-08-19"),
+    ("平安夜", "2026-12-24"),
+    ("圣诞节", "2026-12-25"),
+    ("跨年夜", "2026-12-31"),
+]
+
+
+@router.post("/anniversaries/import-holidays")
+def import_holidays(
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """一键导入2026年情侣节日"""
+    cid = get_couple_id(user)
+    existing_titles = {
+        a.title for a in db.query(Anniversary).filter(Anniversary.couple_id == cid).all()
+    }
+    imported = 0
+    skipped = 0
+    for title, date_val in COUPLE_HOLIDAYS_2026:
+        if title in existing_titles:
+            skipped += 1
+            continue
+        db.add(Anniversary(
+            couple_id=cid,
+            title=title,
+            date_val=date_val,
+        ))
+        imported += 1
+    db.commit()
+    return {"ok": True, "imported": imported, "skipped": skipped}
+
+
 # ===================== 礼物记录 =====================
 
 
