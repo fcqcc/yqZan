@@ -76,12 +76,4 @@ Page({
       this.load()
     } catch (e) { wx.showToast({ title: '删除失败', icon: 'none' }) }
   },
-
-  async stamp(e) {
-    const id = e.currentTarget.dataset.id
-    try {
-      await api.stampNote(id)
-      this.load()
-    } catch (e) {}
-  },
 })

@@ -151,29 +151,6 @@
 }
 .oak-del:active { color: var(--pink-dark); border-color: var(--pink-dark); background: #fff5fb; }
 
-/* 😊 笑脸印章（右上内） */
-.oak-stamp {
-  position: absolute;
-  top: 2px;
-  right: 32px;
-  font-size: 24px;
-  opacity: 0.7;
-  z-index: 1;
-}
-
-/* 对方留言底部的盖章区 */
-.oak-stamp-area {
-  margin-top: 6px;
-  padding-top: 6px;
-  border-top: 1px dashed rgba(92, 138, 214, 0.22);
-  text-align: center;
-}
-.oak-stamp-hint {
-  font-size: 11px;
-  color: rgba(92, 138, 214, 0.6);
-}
-.oak-stamp-area:active .oak-stamp-hint { color: #5c8ad6; }
-
 .oak-empty {
   text-align: center;
   padding: 32px 20px 48px;

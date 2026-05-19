@@ -17,8 +17,6 @@
       <view class="oak-row-paper {{item.isMine ? 'oak-mine' : 'oak-theirs'}}">
         <!-- ✕ 删除（自己的留言才显示） -->
         <text wx:if="{{item.isMine}}" class="oak-del" catchtap="del" data-id="{{item.id}}">✕</text>
-        <!-- 笑脸印章 -->
-        <text wx:if="{{item.stamped}}" class="oak-stamp">😊</text>
         <view class="oak-row-text">{{item.content}}</view>
         <view class="oak-row-meta">
           <text class="oak-author">{{item.isMine ? '我' : 'Ta'}}</text>
@@ -27,10 +25,6 @@
             <text>{{item.liked ? '❤' : '♡'}}</text>
             <text wx:if="{{item.likes}}" class="oak-like-num">{{item.likes}}</text>
           </view>
-        </view>
-        <!-- 点击对方留言盖章 -->
-        <view wx:if="{{!item.isMine}}" class="oak-stamp-area" bindtap="stamp" data-id="{{item.id}}">
-          <text class="oak-stamp-hint">{{item.stamped ? '取消笑脸' : '😊'}}</text>
         </view>
       </view>
     </view>
