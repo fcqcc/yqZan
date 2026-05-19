@@ -109,10 +109,26 @@
 
     <!-- 成就图鉴 -->
     <block wx:if="{{pokedexTab === 'achievements'}}">
+      <!-- 分类子TAB -->
+      <scroll-view class="cat-scroll" scroll-x show-scrollbar="{{false}}">
+        <view class="cat-bar">
+          <view
+            wx:for="{{achCategories}}"
+            wx:key="*this"
+            class="cat-item {{achTab === item ? 'cat-item--active' : ''}}"
+            bindtap="switchAchTab"
+            data-cat="{{item}}"
+          >{{item}}</view>
+        </view>
+      </scroll-view>
       <view class="section-card">
         <text class="section-sub">共 {{achievements.length}} 项，已解锁 {{achievementsUnlocked}} 项</text>
-        <view class="ach-grid">
-          <view wx:for="{{achievements}}" wx:key="id" class="ach-cell {{item.unlocked ? (item.hidden ? 'ach-cell--hidden-unlocked' : 'ach-cell--unlocked') : 'ach-cell--locked'}}">
+        <view wx:if="{{filteredAch.length === 0}}" class="empty" style="padding:20px 0">
+          <text class="empty-icon">🏆</text>
+          <text>该分类暂无成就</text>
+        </view>
+        <view wx:else class="ach-grid">
+          <view wx:for="{{filteredAch}}" wx:key="id" class="ach-cell {{item.unlocked ? (item.hidden ? 'ach-cell--hidden-unlocked' : 'ach-cell--unlocked') : 'ach-cell--locked'}}">
             <view class="ach-cell-top">
               <text class="ach-icon">{{item.unlocked ? (item.hidden ? '🌟' : '🏆') : '🔒'}}</text>
               <text wx:if="{{item.unlocked && !item.hidden}}" class="ach-reward">{{item.reward_type === 'shards' ? '💎' : '🎟️'}}+{{item.reward_amount}}</text>

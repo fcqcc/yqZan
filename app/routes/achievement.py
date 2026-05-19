@@ -136,10 +136,14 @@ def check_and_unlock(couple_id: int, db: Session):
 
     # 逐一检查
     checks = {
+        "streak_3": continuous >= 3,
+        "streak_5": continuous >= 5,
         "streak_7": continuous >= 7,
+        "streak_10": continuous >= 10,
         "streak_14": continuous >= 14,
         "streak_21": continuous >= 21,
         "streak_30": continuous >= 30,
+        "streak_45": continuous >= 45,
         "streak_60": continuous >= 60,
         "streak_100": continuous >= 100,
         "saving_100": total_delivered >= 100,

@@ -2,6 +2,7 @@
 const api = require('../../utils/api')
 
 const CATEGORIES = ['全部', '消耗品', '卡牌', '进化道具', '配饰', '背景']
+const ACH_CATEGORIES = ['全部', '打卡', '存钱', '宠物', '抽卡', '隐藏']
 
 Page({
   data: {
@@ -17,8 +18,11 @@ Page({
     itemsList: [],
     petsObtained: 0, petsTotal: 0,
     itemsObtained: 0, itemsTotal: 0,
-    // 成就数据
+    // 成就
+    achCategories: ACH_CATEGORIES,
+    achTab: '全部',
     achievements: [],
+    filteredAch: [],
     achievementsUnlocked: 0,
   },
 
@@ -60,6 +64,8 @@ Page({
       const petsList = (bestiary.pets || []).sort(sortByRarity)
       const itemsList = (bestiary.items || []).sort(sortByRarity)
 
+      const filteredAch = this.filterAch(achievements, this.data.achTab)
+
       this.setData({
         items: marked,
         filteredItems: filtered,
@@ -71,6 +77,7 @@ Page({
         itemsObtained: itemsList.filter(i => i.obtained).length,
         itemsTotal: itemsList.length,
         achievements,
+        filteredAch,
         achievementsUnlocked: achievements.filter(a => a.unlocked).length,
       })
     } catch (e) { console.error('load backpack error:', e) }
@@ -92,11 +99,22 @@ Page({
     this.setData({ pokedexTab: e.currentTarget.dataset.tab })
   },
 
+  switchAchTab(e) {
+    const cat = e.currentTarget.dataset.cat
+    const filteredAch = this.filterAch(this.data.achievements, cat)
+    this.setData({ achTab: cat, filteredAch })
+  },
+
   // ===== 辅助 =====
 
   filterByCategory(items, cat) {
     if (!cat || cat === '全部') return items
     return items.filter(i => (i.type_display || '') === cat)
+  },
+
+  filterAch(achievements, cat) {
+    if (!cat || cat === '全部') return achievements
+    return achievements.filter(a => (a.category || '') === cat)
   },
 
   // ===== 使用物品 =====
