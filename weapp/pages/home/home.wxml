@@ -81,6 +81,10 @@
       <text class="qr-emoji">🎒</text>
       <text class="qr-label">背包</text>
     </view>
+    <view class="qr-item" catchtap="go" data-url="/pages/notes/notes">
+      <text class="qr-emoji">💌</text>
+      <text class="qr-label">留言</text>
+    </view>
     <view class="qr-item" catchtap="go" data-url="/pages/gifts/gifts">
       <text class="qr-emoji">🎁</text>
       <text class="qr-label">礼物</text>

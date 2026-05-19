@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "便利贴",
+  "navigationBarTitleText": "留言板",
   "usingComponents": {},
   "behaviors": ["../../behaviors/theme-behavior"]
 }

@@ -9,6 +9,7 @@
     "pages/backpack/backpack",
     "pages/level/level",
     "pages/gacha/gacha",
+    "pages/notes/notes",
     "pages/settings/settings"
   ],
   "window": {

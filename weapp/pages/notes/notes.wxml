@@ -1,7 +1,7 @@
 <!-- pages/notes/notes.wxml — 单列便签 + 贴上动效 -->
 <scroll-view class="page" scroll-y>
-  <view class="page-title">便利贴墙</view>
-  <view class="page-subtitle">给对方留一句温暖的话</view>
+  <view class="page-title">💌 留言板</view>
+  <view class="page-subtitle">给对方留一句心里话</view>
 
   <view class="oak-input-board">
     <textarea class="oak-input" placeholder="想对 Ta 说什么…" model:value="{{content}}" maxlength="200" auto-height />
