@@ -1,0 +1,70 @@
+<!-- pages/backpack/backpack.wxml — 背包 & 图鉴 -->
+<scroll-view class="page" scroll-y>
+  <!-- ===== TAB 切换 ===== -->
+  <view class="tab-bar">
+    <view
+      class="tab-item {{tab === 'backpack' ? 'tab-item--active' : ''}}"
+      bindtap="switchTab"
+      data-tab="backpack"
+    >🎒 背包</view>
+    <view
+      class="tab-item {{tab === 'pokedex' ? 'tab-item--active' : ''}}"
+      bindtap="switchTab"
+      data-tab="pokedex"
+    >📖 图鉴</view>
+  </view>
+
+  <!-- ============================ 背包 TAB ============================ -->
+  <block wx:if="{{tab === 'backpack'}}">
+    <!-- 背包为空 -->
+    <view wx:if="{{!items || items.length === 0}}" class="empty">
+      <text class="empty-icon">🎒</text>
+      <text>背包空空如也~</text>
+      <text class="empty-sub">完成计划获得各种道具吧！</text>
+    </view>
+
+    <!-- 按类型分组 -->
+    <block wx:for="{{groupedItems}}" wx:key="type">
+      <view class="section-card" wx:if="{{item.list.length > 0}}">
+        <view class="group-header">
+          <text class="section-label">{{typeIcon(item.type)}} {{typeName(item.type)}}</text>
+          <text class="group-count">{{item.list.length}} 件</text>
+        </view>
+        <view class="item-grid">
+          <view
+            wx:for="{{item.list}}"
+            wx:key="inventory_id"
+            class="item-cell {{item.usable ? 'item-cell--usable' : ''}}"
+            bindtap="onUseItem"
+            data-id="{{item.inventory_id}}"
+            data-name="{{item.name}}"
+          >
+            <text class="item-cell-icon">{{item.emoji || item.icon || '📦'}}</text>
+            <text class="item-cell-name">{{item.name}}</text>
+            <text wx:if="{{item.count > 1}}" class="item-cell-count">×{{item.count}}</text>
+            <text wx:if="{{item.usable}}" class="item-cell-use">使用</text>
+          </view>
+        </view>
+      </view>
+    </block>
+  </block>
+
+  <!-- ============================ 图鉴 TAB ============================ -->
+  <block wx:if="{{tab === 'pokedex'}}">
+    <view class="section-card">
+      <text class="section-label">🐾 全宠物图鉴</text>
+      <text class="section-sub">共 {{pokedex.length}} 种，已获得 {{obtainedCount}} 种</text>
+      <view class="pokedex-grid">
+        <view
+          wx:for="{{pokedex}}"
+          wx:key="id"
+          class="pokedex-cell {{item.obtained ? '' : 'pokedex-cell--unknown'}}"
+        >
+          <text class="pokedex-cell-icon">{{item.obtained ? (item.emoji || '🐱') : '❓'}}</text>
+          <text class="pokedex-cell-name">{{item.obtained ? (item.name || '未知') : '???'}}</text>
+          <view wx:if="{{item.obtained}}" class="pokedex-cell-badge">已获得</view>
+        </view>
+      </view>
+    </view>
+  </block>
+</scroll-view>

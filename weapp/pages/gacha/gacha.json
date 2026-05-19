@@ -1,0 +1,5 @@
+{
+  "navigationBarTitleText": "扭蛋机",
+  "usingComponents": {},
+  "behaviors": ["../../behaviors/theme-behavior"]
+}

@@ -1,0 +1,4 @@
+{
+  "navigationBarTitleText": "背包 & 图鉴",
+  "behaviors": ["../../behaviors/theme-behavior"]
+}

@@ -1,0 +1,4 @@
+{
+  "navigationBarTitleText": "宠物管理",
+  "behaviors": ["../../behaviors/theme-behavior"]
+}

@@ -80,6 +80,10 @@ def bind_partner(
     # 更新两人指向共享 Couple
     user.couple_id = shared.id
     partner.couple_id = shared.id
+
+    # 🎟️ 首次绑定奖励 5 张
+    shared.draw_tickets = (shared.draw_tickets or 0) + 5
+
     db.commit()
 
     return {"ok": True, "couple_id": shared.id, "partner": partner.nickname}

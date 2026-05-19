@@ -1,0 +1,69 @@
+<!-- pages/pets/pets.wxml — 宠物管理 -->
+<scroll-view class="page" scroll-y>
+  <!-- ===== 当前活跃宠物（大号展示） ===== -->
+  <view class="active-card" wx:if="{{activePet}}">
+    <view class="active-emoji">{{activePet.emoji}}</view>
+    <view class="active-info">
+      <text class="active-name">{{activePet.name}}</text>
+      <text class="active-form">{{activePet.formName || formLabel(activePet.form)}}</text>
+    </view>
+    <view class="active-intimacy">
+      <view class="intimacy-label">亲密度</view>
+      <view class="intimacy-bar">
+        <view class="intimacy-fill" style="width:{{intimacyPct}}%"></view>
+      </view>
+      <text class="intimacy-text">{{activePet.intimacy}} / {{activePet.intimacy_max}}</text>
+    </view>
+    <view class="active-actions">
+      <button class="btn btn-sm btn-outline" bindtap="onFeed">🍼 喂食</button>
+      <button class="btn btn-sm btn-primary" wx:if="{{canEvolve}}" bindtap="onEvolve">✨ 进化</button>
+    </view>
+  </view>
+
+  <!-- ===== 形态切换（已解锁的形态） ===== -->
+  <view class="section-card" wx:if="{{forms.length > 1}}">
+    <text class="section-label">🎭 形态切换</text>
+    <view class="form-list">
+      <view
+        wx:for="{{forms}}"
+        wx:key="form"
+        class="form-chip {{item.form === activePet.form ? 'form-chip--active' : ''}} {{!item.unlocked ? 'form-chip--locked' : ''}}"
+        bindtap="onSwitchForm"
+        data-form="{{item.form}}"
+      >
+        <text class="form-chip-icon">{{item.emoji}}</text>
+        <text class="form-chip-name">{{item.name || formLabel(item.form)}}</text>
+        <text wx:if="{{!item.unlocked}}" class="form-chip-lock">🔒</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 全部宠物列表 ===== -->
+  <view class="section-card">
+    <text class="section-label">🐾 我的宠物</text>
+    <view class="pet-list">
+      <view
+        wx:for="{{pets}}"
+        wx:key="id"
+        class="pet-item {{item.active ? 'pet-item--active' : ''}}"
+        bindtap="onSwitchPet"
+        data-id="{{item.id}}"
+      >
+        <text class="pet-emoji">{{item.emoji || '🐱'}}</text>
+        <view class="pet-info">
+          <text class="pet-name">{{item.name || '未知宠物'}}</text>
+          <text class="pet-form-sub">{{item.formName || formLabel(item.form)}}</text>
+        </view>
+        <view wx:if="{{item.active}}" class="pet-badge">当前</view>
+        <view wx:else class="pet-switch-hint">切换 ›</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 空状态 ===== -->
+  <view wx:if="{{!pets || pets.length === 0}}" class="empty">
+    <text class="empty-icon">🐣</text>
+    <text>还没有宠物哦~</text>
+    <text class="empty-sub">去抽卡获取宠物吧！</text>
+  </view>
+</scroll-view>

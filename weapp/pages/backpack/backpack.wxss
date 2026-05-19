@@ -1,0 +1,138 @@
+/* pages/backpack/backpack.wxss — 背包 & 图鉴 */
+.page { height: 100vh; background: transparent; }
+
+/* ===== TAB 切换栏 ===== */
+.tab-bar {
+  display: flex;
+  margin: 8px 12px;
+  background: #ffffff;
+  border: 1px solid #ffd6e8;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(214, 92, 138, 0.08);
+}
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all 0.15s ease;
+  position: relative;
+}
+.tab-item:active { opacity: 0.7; }
+.tab-item--active {
+  color: var(--pink-dark);
+  background: rgba(214, 92, 138, 0.08);
+}
+.tab-item--active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: var(--pink-dark);
+  border-radius: 1px;
+}
+
+/* ===== 类型分组卡片 ===== */
+.section-card {
+  margin: 0 12px 8px;
+  background: #ffffff;
+  border: 1px solid #ffd6e8;
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: 0 2px 10px rgba(214, 92, 138, 0.1);
+}
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.section-label { font-size: 13px; font-weight: 700; color: var(--text); }
+.section-sub { font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 10px; }
+.group-count { font-size: 11px; color: var(--text-muted); }
+
+/* ===== 物品网格 ===== */
+.item-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.item-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 4px;
+  border-radius: var(--radius-sm);
+  background: #fff8fc;
+  border: 1px solid rgba(214, 92, 138, 0.12);
+  transition: all 0.12s ease;
+  position: relative;
+}
+.item-cell:active { transform: scale(0.95); }
+.item-cell--usable { border-color: rgba(214, 92, 138, 0.35); }
+.item-cell-icon { font-size: 26px; display: block; }
+.item-cell-name { font-size: 10px; color: var(--text); text-align: center; line-height: 1.2; }
+.item-cell-count {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--pink-dark);
+  background: rgba(214, 92, 138, 0.12);
+  padding: 1px 5px;
+  border-radius: var(--radius-pill);
+  min-width: 16px;
+  text-align: center;
+}
+.item-cell-use {
+  font-size: 9px;
+  color: #fff;
+  background: var(--pink-dark);
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  margin-top: 2px;
+}
+
+/* ===== 图鉴网格 ===== */
+.pokedex-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.pokedex-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 12px 4px;
+  border-radius: var(--radius-sm);
+  background: #fff8fc;
+  border: 1px solid rgba(214, 92, 138, 0.12);
+}
+.pokedex-cell--unknown {
+  background: #f5eef2;
+  border-color: rgba(214, 92, 138, 0.08);
+  opacity: 0.7;
+}
+.pokedex-cell-icon { font-size: 28px; display: block; }
+.pokedex-cell-name { font-size: 10px; color: var(--text); text-align: center; line-height: 1.2; }
+.pokedex-cell-badge {
+  font-size: 9px;
+  color: var(--pink-dark);
+  font-weight: 600;
+  background: rgba(214, 92, 138, 0.1);
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+}
+
+/* ===== 空状态 ===== */
+.empty { text-align: center; padding: 40px 16px; color: var(--text-light); font-size: 14px; }
+.empty-icon { font-size: 40px; display: block; margin-bottom: 8px; }
+.empty-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; display: block; }

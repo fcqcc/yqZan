@@ -127,6 +127,23 @@ def deliver_plan(
     plan.current_amount += req.amount
     db.add(Delivery(plan_id=plan_id, amount=req.amount, note=req.note))
 
+    # 🎟️ 存钱奖励抽卡券（每日上限 3 张）
+    today = datetime.now().date()
+    today_count = (
+        db.query(Delivery)
+        .join(Plan, Delivery.plan_id == Plan.id)
+        .filter(
+            Plan.couple_id == cid,
+            Delivery.created_at >= today.strftime("%Y-%m-%d"),
+        )
+        .count()
+    )
+    if today_count <= 3:
+        from app.models.couple import Couple
+        couple = db.query(Couple).filter(Couple.id == cid).first()
+        if couple:
+            couple.draw_tickets = (couple.draw_tickets or 0) + 1
+
     # 检测是否达成目标
     if plan.current_amount >= plan.target_amount:
         plan.done = True
@@ -139,6 +156,11 @@ def deliver_plan(
         if partner:
             notify[str(partner.id)] = "unread"
         plan.notify_status = json.dumps(notify, ensure_ascii=False)
+        # 🎟️ 目标达成奖励 10 张
+        from app.models.couple import Couple
+        couple = db.query(Couple).filter(Couple.id == cid).first()
+        if couple:
+            couple.draw_tickets = (couple.draw_tickets or 0) + 10
 
     db.commit()
     return {"ok": True, "current_amount": plan.current_amount, "done": plan.done}

@@ -7,6 +7,23 @@ function fmtMoney(n) {
   return '¥' + n.toLocaleString()
 }
 
+// ---------- 宠物辅助 ----------
+const PET_EMOJI_MAP = [
+  { max: 2, emoji: '🥚', anim: 'pet-sleep', name: '小蛋蛋', desc: '刚刚孵化的小家伙，需要你的关爱才能长大……' },
+  { max: 4, emoji: '🐣', anim: 'pet-walk-slow', name: '小绒球', desc: '已经开始摇摇晃晃地走动了！' },
+  { max: 6, emoji: '🐰', anim: 'pet-walk', name: '蹦蹦', desc: '活泼好动，每天都在成长～' },
+  { max: 8, emoji: '🦊', anim: 'pet-excited', name: '小灵狐', desc: '充满灵性，和你越来越亲密了！' },
+  { max: 10, emoji: '🦄', anim: 'pet-magic', name: '梦幻独角兽', desc: '你们的爱情已经升华到最美好的境界 ✨' }
+]
+
+function getPetConfig(intimacy) {
+  const lv = Math.min(Math.max(intimacy || 0, 0), 10)
+  for (const cfg of PET_EMOJI_MAP) {
+    if (lv <= cfg.max) return cfg
+  }
+  return PET_EMOJI_MAP[PET_EMOJI_MAP.length - 1]
+}
+
 function wrapPlan(p) {
   const cur = Number(p.current_amount) || 0
   const tar = Math.max(Number(p.target_amount) || 1, 1)
@@ -27,7 +44,18 @@ Page({
     current_amount: 0, target_amount: 0, plan_progress: 0,
     nearestAnni: null,
     plans: [],
-    plan_count: 0, anni_count: 0, gift_count: 0, together_days: 0
+    plan_count: 0, anni_count: 0, gift_count: 0, together_days: 0,
+    // 宠物 & 扭蛋
+    pet: null,
+    petEmoji: '🥚',
+    petAnimationClass: 'pet-sleep',
+    petName: '小蛋蛋',
+    intimacyLevel: 0,
+    intimacyPct: 0,
+    petDescription: '刚刚孵化的小家伙，需要你的关爱才能长大……',
+    petId: null,
+    tickets: 0,
+    showPetModal: false
   },
 
   onShow() {
@@ -35,6 +63,7 @@ Page({
     if (!userInfo) { wx.reLaunch({ url: '/pages/login/login' }); return }
     this.setData({ userInfo })
     this.loadData()
+    this.loadPetData()
   },
 
   async loadData() {
@@ -100,5 +129,79 @@ Page({
     }
   },
   goTab(e) { wx.switchTab({ url: e.currentTarget.dataset.url }) },
-  goBind() { wx.switchTab({ url: '/pages/settings/settings' }) }
+  goBind() { wx.switchTab({ url: '/pages/settings/settings' }) },
+
+  // ===== 宠物 & 扭蛋 =====
+
+  async loadPetData() {
+    try {
+      const [petRes, ticketsRes] = await Promise.all([
+        api.getActivePet().catch(() => null),
+        api.getTickets().catch(() => ({ tickets: 0 }))
+      ])
+      this.updatePetUI(petRes)
+      this.setData({ tickets: ticketsRes.tickets || 0 })
+    } catch (e) { console.error('loadPetData', e) }
+  },
+
+  updatePetUI(pet) {
+    if (!pet) {
+      this.setData({
+        pet: null, petId: null,
+        petEmoji: '🥚', petAnimationClass: 'pet-sleep',
+        petName: '小蛋蛋', intimacyLevel: 0, intimacyPct: 0,
+        petDescription: '还没有领养宠物哦～'
+      })
+      return
+    }
+    const intimacy = pet.intimacy_level ?? 0
+    const intimacyNext = pet.intimacy_next ?? 1
+    const pct = Math.min(100, Math.round(((pet.intimacy_exp ?? 0) / Math.max(intimacyNext, 1)) * 100))
+    const cfg = getPetConfig(intimacy)
+    this.setData({
+      pet,
+      petId: pet.id,
+      petEmoji: cfg.emoji,
+      petAnimationClass: cfg.anim,
+      petName: pet.name || cfg.name,
+      intimacyLevel: intimacy,
+      intimacyPct: pct,
+      petDescription: cfg.desc
+    })
+  },
+
+  showPetModal() {
+    this.setData({ showPetModal: true })
+  },
+
+  hidePetModal() {
+    this.setData({ showPetModal: false })
+  },
+
+  stopPropagation() {},
+
+  async feedCurrentPet() {
+    const { petId } = this.data
+    if (!petId) {
+      wx.showToast({ title: '还没有宠物', icon: 'none' })
+      return
+    }
+    try {
+      wx.showLoading({ title: '投喂中…' })
+      const res = await api.feedPet(petId)
+      wx.hideLoading()
+      wx.showToast({ title: '投喂成功 ❤️', icon: 'none' })
+      // 刷新宠物状态
+      this.loadPetData()
+      // 投喂后刷新等级/经验
+      this.loadData()
+    } catch (e) {
+      wx.hideLoading()
+      wx.showToast({ title: e.errMsg || '投喂失败', icon: 'none' })
+    }
+  },
+
+  goGacha() {
+    wx.navigateTo({ url: '/pages/gacha/gacha' })
+  }
 })

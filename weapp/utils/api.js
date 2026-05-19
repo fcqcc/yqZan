@@ -96,6 +96,23 @@ const deleteTask = (id) => request('/api/tasks/' + id, 'DELETE')
 // ===== 计划完成祝贺 =====
 const congratulatePlan = (id) => request('/api/plans/' + id + '/congratulate', 'POST')
 
+// ===== 宠物 =====
+const getActivePet = () => request('/api/pets/active')
+const getPets = () => request('/api/pets')
+const switchPet = (petId) => request('/api/pets/switch', 'POST', { pet_id: petId })
+const switchPetForm = (petId, form) => request('/api/pets/' + petId + '/form', 'POST', { form })
+const feedPet = (petId) => request('/api/pets/' + petId + '/feed', 'POST')
+const evolvePet = (petId, itemId) => request('/api/pets/' + petId + '/evolve', 'POST', { item_id: itemId })
+
+// ===== 抽卡 =====
+const getTickets = () => request('/api/gacha/tickets')
+const drawSingle = () => request('/api/gacha/draw', 'POST')
+const drawTen = () => request('/api/gacha/draw10', 'POST')
+
+// ===== 背包 =====
+const getInventory = () => request('/api/inventory')
+const useItem = (inventoryId) => request('/api/inventory/use', 'POST', { inventory_id: inventoryId })
+
 module.exports = {
   register, login, getMe, getPartner, bindPartner, unbindPartner,
   getPlans, createPlan, deletePlan, deliverPlan, getPlanDeliveries,
@@ -107,5 +124,8 @@ module.exports = {
   getLevel, getLevelLogs,
    getCardTemplates, getCardSnapshot, generateCard, getCards,
    getTasks, getTaskEvents, createTask, acceptTaskEvent, verifyTask, deleteTask,
-   congratulatePlan
+   congratulatePlan,
+  getActivePet, getPets, switchPet, switchPetForm, feedPet, evolvePet,
+  getTickets, drawSingle, drawTen,
+  getInventory, useItem
 }

@@ -5,7 +5,10 @@
     "pages/plans/plans",
     "pages/anniversaries/anniversaries",
     "pages/gifts/gifts",
+    "pages/pets/pets",
+    "pages/backpack/backpack",
     "pages/level/level",
+    "pages/gacha/gacha",
     "pages/settings/settings"
   ],
   "window": {
