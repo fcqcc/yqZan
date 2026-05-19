@@ -39,6 +39,9 @@
   font-size: 11px;
   color: var(--text-secondary);
 }
+.shard-divider { font-size: 13px; color: var(--text-muted); margin: 0 2px; }
+.shard-icon { font-size: 13px; }
+.shard-count { font-size: 15px; font-weight: 700; color: #7c4dff; margin-left: 1px; }
 
 /* ===== 2. 扭蛋机主体 ===== */
 .machine-area {

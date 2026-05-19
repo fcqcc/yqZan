@@ -140,10 +140,34 @@ def _give_item(couple_id: int, item: dict, db: Session):
 
 @router.get("/tickets")
 def get_tickets(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    """获取当前抽卡券数量"""
+    """获取当前抽卡券和积分数量"""
     cid = get_couple_id(user)
     couple = db.query(Couple).filter(Couple.id == cid).first()
-    return {"tickets": couple.draw_tickets if couple else 0}
+    return {
+        "tickets": couple.draw_tickets if couple else 0,
+        "shards": couple.shards if couple else 0,
+    }
+
+
+# 单抽积分价格
+SHARDS_PER_TICKET = 100
+
+
+@router.post("/buy-tickets")
+def buy_tickets(req: dict, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """用积分购买抽卡券"""
+    cid = get_couple_id(user)
+    amount = req.get("amount", 1)
+    if amount not in (1, 10):
+        raise HTTPException(400, "只能购买1张或10张")
+    cost = SHARDS_PER_TICKET * amount
+    couple = db.query(Couple).filter(Couple.id == cid).first()
+    if not couple or (couple.shards or 0) < cost:
+        raise HTTPException(400, f"积分不足，需要{cost}积分（当前{couple.shards if couple else 0}积分）")
+    couple.shards -= cost
+    couple.draw_tickets = (couple.draw_tickets or 0) + amount
+    db.commit()
+    return {"ok": True, "tickets": couple.draw_tickets, "shards": couple.shards}
 
 
 @router.post("/draw")

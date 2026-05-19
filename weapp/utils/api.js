@@ -108,6 +108,7 @@ const evolvePet = (petId, itemId) => request('/api/pets/' + petId + '/evolve', '
 const getTickets = () => request('/api/gacha/tickets')
 const drawSingle = () => request('/api/gacha/draw', 'POST')
 const drawTen = () => request('/api/gacha/draw10', 'POST')
+const buyTickets = (amount) => request('/api/gacha/buy-tickets', 'POST', { amount })
 
 // ===== 背包 =====
 const getInventory = () => request('/api/pets/inventory')
@@ -132,7 +133,7 @@ module.exports = {
    getTasks, getTaskEvents, createTask, acceptTaskEvent, verifyTask, deleteTask,
    congratulatePlan,
   getActivePet, getPets, switchPet, switchPetForm, feedPet, evolvePet,
-  getTickets, drawSingle, drawTen,
+  getTickets, drawSingle, drawTen, buyTickets,
   getInventory, useItem, getBestiary,
   doCheckin, getCheckinStatus, getSpark
 }

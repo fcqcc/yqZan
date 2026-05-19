@@ -9,7 +9,11 @@
     <view class="ticket-bar">
       <text class="ticket-icon">🎟️</text>
       <text class="ticket-count">{{tickets}}</text>
-      <text class="ticket-label">张抽卡券</text>
+      <text class="ticket-label">张</text>
+      <text class="shard-divider">|</text>
+      <text class="shard-icon">💎</text>
+      <text class="shard-count">{{shards}}</text>
+      <text class="ticket-label">积分</text>
       <view class="prob-btn" bindtap="showProb">❓</view>
     </view>
   </view>

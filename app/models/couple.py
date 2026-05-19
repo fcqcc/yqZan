@@ -14,5 +14,6 @@ class Couple(Base):
     spark_count = Column(Integer, default=0)  # 当日火化数
     max_spark_count = Column(Integer, default=0)  # 历史最高火花
     spark_status = Column(String(8), default="active")  # active / gray
+    shards = Column(Integer, default=0)  # 积分
     created_at = Column(DateTime, default=datetime.now)
     archived_at = Column(DateTime, nullable=True)

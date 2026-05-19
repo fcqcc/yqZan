@@ -4,6 +4,7 @@ const api = require('../../utils/api')
 Page({
   data: {
     tickets: 0,
+    shards: 0,
     drawing: false,
     animating: false,
     showResult: false,
@@ -49,7 +50,7 @@ Page({
   async loadTickets() {
     try {
       const res = await api.getTickets()
-      this.setData({ tickets: res.tickets || res.count || 0 })
+      this.setData({ tickets: res.tickets || 0, shards: res.shards || 0 })
     } catch (e) {
       console.error('加载抽卡券失败', e)
     }
@@ -57,7 +58,11 @@ Page({
 
   /** 单抽 */
   async onDrawSingle() {
-    if (this.data.drawing || this.data.tickets < 1) return
+    if (this.data.drawing) return
+    if (this.data.tickets < 1) {
+      this.askBuyTickets(1)
+      return
+    }
     this.setData({ drawing: true, animating: true, tenResults: [] })
 
     try {
@@ -79,7 +84,11 @@ Page({
 
   /** 十连 */
   async onDrawTen() {
-    if (this.data.drawing || this.data.tickets < 10) return
+    if (this.data.drawing) return
+    if (this.data.tickets < 10) {
+      this.askBuyTickets(10)
+      return
+    }
     this.setData({ drawing: true, animating: true })
 
     try {
@@ -171,5 +180,39 @@ Page({
   },
   hideProb() {
     this.setData({ showProbModal: false })
+  },
+
+  /** 积分购买弹窗 */
+  askBuyTickets(amount) {
+    const cost = amount === 10 ? 1000 : 100
+    const shards = this.data.shards
+    if (shards < cost) {
+      wx.showModal({
+        title: '积分不足',
+        content: `需要 ${cost} 积分购买 ${amount} 张抽卡券（当前 ${shards} 积分）\n继续存钱获取积分吧！`,
+        showCancel: false
+      })
+      return
+    }
+    wx.showModal({
+      title: '积分购买',
+      content: `消耗 ${cost} 积分购买 ${amount} 张抽卡券？`,
+      success: async (res) => {
+        if (!res.confirm) return
+        wx.showLoading({ title: '购买中' })
+        try {
+          const result = await api.buyTickets(amount)
+          wx.hideLoading()
+          this.setData({ tickets: result.tickets, shards: result.shards })
+          wx.showToast({ title: `购买成功 ✨`, icon: 'none' })
+          // 购买后自动抽
+          if (amount === 1) this.onDrawSingle()
+          else this.onDrawTen()
+        } catch (e) {
+          wx.hideLoading()
+          wx.showToast({ title: '购买失败', icon: 'none' })
+        }
+      }
+    })
   }
 })
