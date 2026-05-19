@@ -56,6 +56,7 @@ Page({
     petId: null,
     tickets: 0,
     showPetModal: false,
+    feeding: false,
     sparkCount: 0,
     sparkStatus: 'active',
     maxSpark: 0,
@@ -198,11 +199,13 @@ Page({
   stopPropagation() {},
 
   async feedCurrentPet() {
+    if (this.data.feeding) return
     const { petId } = this.data
     if (!petId) {
       wx.showToast({ title: '还没有宠物', icon: 'none' })
       return
     }
+    this.setData({ feeding: true })
     try {
       wx.showLoading({ title: '投喂中…' })
       const res = await api.feedPet(petId)
@@ -210,11 +213,16 @@ Page({
       wx.showToast({ title: '投喂成功 ❤️', icon: 'none' })
       // 刷新宠物状态
       this.loadPetData()
-      // 投喂后刷新等级/经验
       this.loadData()
     } catch (e) {
       wx.hideLoading()
-      wx.showToast({ title: e.errMsg || '投喂失败', icon: 'none' })
+      if (e.errMsg && e.errMsg.includes('429')) {
+        wx.showToast({ title: '宠物刚吃过，等一会儿再喂吧', icon: 'none' })
+      } else {
+        wx.showToast({ title: e.errMsg || '投喂失败', icon: 'none' })
+      }
+    } finally {
+      this.setData({ feeding: false })
     }
   }
 })
