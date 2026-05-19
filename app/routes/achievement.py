@@ -72,7 +72,7 @@ def check_and_unlock(couple_id: int, db: Session):
         AchievementProgress.unlocked == True,
     ).all()}
 
-    # 收集统计数据
+    # 签到次数（累计点击次数）
     from app.models.checkin import Checkin
     from datetime import date, timedelta
     today = date.today()
@@ -90,6 +90,11 @@ def check_and_unlock(couple_id: int, db: Session):
         continuous += 1
         d -= timedelta(days=1)
 
+    # 总签到天数
+    total_checkins = db.query(Checkin).filter(
+        Checkin.couple_id == couple_id,
+    ).count()
+
     # 累计存款
     total_delivered = sum(
         d[0] or 0 for d in
@@ -97,32 +102,43 @@ def check_and_unlock(couple_id: int, db: Session):
         .filter(Plan.couple_id == couple_id).with_entities(Delivery.amount).all()
     )
 
+    # 已完成的目标数
+    done_plans = db.query(Plan).filter(
+        Plan.couple_id == couple_id,
+        Plan.done == True,
+    ).count()
+
     # 宠物数量
     pet_count = db.query(Pet).filter(Pet.couple_id == couple_id).count()
-
-    # 所有宠物类型
     pet_types = {p.pet_type for p in db.query(Pet).filter(Pet.couple_id == couple_id).all()}
 
-    # 所有已解锁形态数
+    # 所有已解锁形态 + 检测传说形态
     total_forms = 0
     max_intimacy = False
+    has_legend = False
     for p in db.query(Pet).filter(Pet.couple_id == couple_id).all():
         import json
         forms = json.loads(p.unlocked_forms) if isinstance(p.unlocked_forms, str) else p.unlocked_forms
         total_forms += len(forms)
         if p.intimacy and p.intimacy >= 100:
             max_intimacy = True
+        if "legend" in forms or any(f.startswith("branch_") and "legend" in f for f in forms):
+            has_legend = True
 
-    # 抽卡次数（从inventory抽到的物品总数 - 粗略估算）
+    # 抽卡次数
     gacha_item_count = db.query(Inventory).filter(
         Inventory.couple_id == couple_id,
     ).count()
 
-    gacha_ssr = db.query(Inventory).filter(
+    # 抽到传说宠物（unicorn / dragon）
+    has_golden = db.query(Inventory).filter(
         Inventory.couple_id == couple_id,
-        Inventory.item_type.in_(["evolution_item"]),
-        Inventory.item_id.in_(["mech_core", "stardust"]),
-    ).count()
+        Inventory.item_type == "pet",
+        Inventory.item_id.in_(["unicorn", "dragon"]),
+    ).count() > 0 or db.query(Pet).filter(
+        Pet.couple_id == couple_id,
+        Pet.pet_type.in_(["unicorn", "dragon"]),
+    ).count() > 0
 
     gacha_ssrp = db.query(Inventory).filter(
         Inventory.couple_id == couple_id,
@@ -146,23 +162,23 @@ def check_and_unlock(couple_id: int, db: Session):
         "streak_45": continuous >= 45,
         "streak_60": continuous >= 60,
         "streak_100": continuous >= 100,
-        "saving_100": total_delivered >= 100,
-        "saving_1000": total_delivered >= 1000,
-        "saving_5000": total_delivered >= 5000,
-        "saving_20000": total_delivered >= 20000,
-        "saving_100000": total_delivered >= 100000,
+        "first_open": total_checkins >= 1,
+        "first_deposit": total_delivered >= 1,
+        "first_goal": done_plans >= 1,
+        "first_bind": True,
         "first_pet": pet_count >= 1,
-        "first_form": total_forms >= 2,  # baby + 至少1个新形态
+        "first_form": total_forms >= 2,
+        "first_evolve": total_forms > len(pet_types),
+        "legend_form": has_legend,
         "max_intimacy": max_intimacy,
         "all_pets": len(pet_types) >= 5,
         "gacha_10": gacha_item_count >= 10,
         "gacha_100": gacha_item_count >= 100,
         "gacha_1000": gacha_item_count >= 1000,
-        "first_ssr": gacha_ssr >= 1,
+        "golden_legend": has_golden,
         "first_ssrp": gacha_ssrp >= 1,
         "all_pets_collected": len(pet_types) >= 5,
-        "first_bind": True,  # 能在couple里说明已绑定（有伴侣）
-        "first_evolve": total_forms > len(pet_types),  # 有分支形态
+        "streak_recover": False,
     }
 
     for aid, condition in checks.items():
