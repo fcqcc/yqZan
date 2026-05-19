@@ -262,18 +262,24 @@ def refresh_forms(user: User = Depends(get_current_user), db: Session = Depends(
 
 @router.get("/inventory", tags=["背包"])
 def get_inventory(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    """获取背包所有物品"""
+    """获取背包所有物品（含名称/图标/分类/描述）"""
     cid = get_couple_id(user)
-    items = db.query(Inventory).filter(Inventory.couple_id == cid, Inventory.quantity > 0).order_by(Inventory.item_type, Inventory.item_id).all()
-    return [
-        {
+    from app.catalog import ITEM_CATALOG
+    rows = db.query(Inventory).filter(Inventory.couple_id == cid, Inventory.quantity > 0).order_by(Inventory.item_type, Inventory.item_id).all()
+    result = []
+    for item in rows:
+        info = ITEM_CATALOG.get(item.item_id, {})
+        result.append({
             "id": item.id,
             "item_type": item.item_type,
             "item_id": item.item_id,
             "quantity": item.quantity,
-        }
-        for item in items
-    ]
+            "name": info.get("name", item.item_id),
+            "icon": info.get("icon", "📦"),
+            "type_display": info.get("type_display", "其他"),
+            "desc": info.get("desc", ""),
+        })
+    return result
 
 
 @router.post("/inventory/use")

@@ -77,11 +77,11 @@ Page({
   groupItems(items) {
     const grouped = {}
     for (const item of items) {
-      const type = item.item_type || 'other'
-      if (!grouped[type]) grouped[type] = { type, list: [] }
+      const type = item.type_display || item.item_type || '其他'
+      if (!grouped[type]) grouped[type] = { type, type_display: type, list: [] }
       grouped[type].list.push(item)
     }
-    const order = ['consumable', 'accessory', 'background', 'evolution_item', 'other']
+    const order = ['消耗品', '卡牌', '进化道具', '配饰', '背景', '其他']
     return order
       .filter(t => grouped[t])
       .map(t => grouped[t])

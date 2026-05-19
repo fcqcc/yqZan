@@ -100,6 +100,73 @@
   margin-top: 2px;
 }
 
+/* ===== 卡片式物品展示 ===== */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.item-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 8px 10px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, #fff5fa, #fff);
+  border: 1px solid #ffd6e8;
+  box-shadow: 0 2px 8px rgba(214, 92, 138, 0.06);
+  position: relative;
+  transition: all 0.12s;
+}
+.item-card:active { transform: scale(0.96); }
+.item-card--usable { border-color: var(--pink-dark); border-width: 1.5px; }
+.item-card-top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.item-card-icon { font-size: 32px; display: block; }
+.item-card-qty {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #fff;
+  background: var(--pink-dark);
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  min-width: 18px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(214, 92, 138, 0.3);
+}
+.item-card-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.3;
+}
+.item-card-desc {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.2;
+  margin-top: 1px;
+}
+.item-card-btn {
+  font-size: 10px;
+  color: #fff;
+  background: var(--pink-dark);
+  padding: 2px 16px;
+  border-radius: var(--radius-pill);
+  margin-top: 4px;
+  font-weight: 600;
+}
+
 /* ===== 图鉴网格 ===== */
 .pokedex-grid {
   display: grid;
