@@ -3,8 +3,8 @@
   <view class="login-page">
     <view class="login-card">
       <view class="logo">💑</view>
-      <view class="app-name">情侣承诺站</view>
-      <view class="app-desc">记录承诺 · 一起成长</view>
+      <view class="app-name">一起攒</view>
+      <view class="app-desc">情侣存钱 · 一起实现</view>
 
       <view class="form">
         <input class="input" placeholder="昵称" model:value="{{nickname}}" />

@@ -7,6 +7,17 @@ function fmtMoney(n) {
   return '¥' + n.toLocaleString()
 }
 
+function wrapPlan(p) {
+  const cur = Number(p.current_amount) || 0
+  const tar = Math.max(Number(p.target_amount) || 1, 1)
+  return {
+    ...p,
+    progressPct: Math.min(100, (cur / tar) * 100),
+    _curText: fmtMoney(cur),
+    _tarText: fmtMoney(tar)
+  }
+}
+
 Page({
   data: {
     tabBarIndex: 0,
@@ -15,8 +26,7 @@ Page({
     delivered_text: '¥0', target_text: '¥0',
     current_amount: 0, target_amount: 0, plan_progress: 0,
     nearestAnni: null,
-    pendingTodos: [],
-    latestNote: null,
+    plans: [],
     plan_count: 0, anni_count: 0, gift_count: 0, together_days: 0
   },
 
@@ -29,43 +39,37 @@ Page({
 
   async loadData() {
     try {
-      const [plans, anniversaries, level, snapshot, partner, todos, notes] = await Promise.all([
+      const [plans, anniversaries, level, snapshot, partner] = await Promise.all([
         api.getPlans().catch(() => []),
         api.getAnniversaries().catch(() => []),
         api.getLevel().catch(() => ({ level: 1, progress_pct: 0, current_exp: 0, next_level_exp: 1 })),
         api.getCardSnapshot().catch(() => ({})),
-        api.getPartner().catch(() => null),
-        api.getTodos().catch(() => []),
-        api.getNotes().catch(() => ({ notes: [] }))
+        api.getPartner().catch(() => null)
       ])
 
-      // 存钱进度 - 取第一个未完成的计划
-      const activePlan = plans.find(p => !p.done) || plans[0]
+      // 存钱进度 - 所有计划汇总
+      const validPlans = Array.isArray(plans) ? plans : []
+      const planList = validPlans.map(wrapPlan)
+      const totalCur = planList.reduce((s, p) => s + (Number(p.current_amount) || 0), 0)
+      const totalTar = planList.reduce((s, p) => s + (Number(p.target_amount) || 0), 0)
+      const activePlan = planList.find(p => !p.done) || planList[0]
       const cur = activePlan ? activePlan.current_amount || 0 : 0
       const tar = activePlan ? activePlan.target_amount || 1 : 1
 
-      // 今日待办 - 未完成的事项
-      const pendingTodos = todos.filter(t => !t.done).slice(0, 3)
-
-      // 最新便利贴
-      const noteList = notes.notes || []
-      const latestNote = noteList.length > 0 ? noteList[0] : null
-
       this.setData({
         partner,
+        plans: planList,
         level: level.level || 1,
         current_exp: level.current_exp || 0,
         next_level_exp: level.next_level_exp || 1,
         progress_pct: level.progress_pct || 0,
-        delivered_text: fmtMoney(snapshot.total_delivered || cur),
-        target_text: fmtMoney(snapshot.total_target || tar),
-        current_amount: cur,
-        target_amount: tar,
-        plan_progress: Math.min(cur / Math.max(tar, 1) * 100, 100),
+        delivered_text: fmtMoney(snapshot.total_delivered || totalCur),
+        target_text: fmtMoney(snapshot.total_target || totalTar),
+        current_amount: totalCur,
+        target_amount: totalTar,
+        plan_progress: Math.min(totalCur / Math.max(totalTar, 1) * 100, 100),
         nearestAnni: this.findNearestAnni(anniversaries),
-        pendingTodos,
-        latestNote,
-        plan_count: plans.length,
+        plan_count: planList.length,
         anni_count: anniversaries.length,
         gift_count: snapshot.gift_count || 0,
         together_days: snapshot.together_days || 0

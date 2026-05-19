@@ -2,7 +2,7 @@
 <view class="plans-wrap">
   <scroll-view class="page page--scroll" scroll-y>
     <view class="page-title">存钱计划</view>
-    <view class="page-subtitle">设定目标，一笔笔存；可标记完成日，点卡片查看明细</view>
+    <view class="page-subtitle">设定目标，一笔笔攒，一起实现</view>
 
     <view class="plans-cta">
       <button class="btn btn-primary btn-block" bindtap="toggleForm">＋ 新计划</button>

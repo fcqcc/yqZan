@@ -3,18 +3,13 @@
     "pages/login/login",
     "pages/home/home",
     "pages/plans/plans",
-    "pages/wishes/wishes",
-    "pages/todos/todos",
-    "pages/tasks/tasks",
     "pages/anniversaries/anniversaries",
     "pages/gifts/gifts",
-    "pages/notes/notes",
-    "pages/cards/cards",
     "pages/level/level",
     "pages/settings/settings"
   ],
   "window": {
-    "navigationBarTitleText": "情侣承诺站",
+    "navigationBarTitleText": "一起攒",
     "navigationBarBackgroundColor": "#FFECF4",
     "navigationBarTextStyle": "black",
     "backgroundColor": "#FFF5FB"
@@ -26,13 +21,13 @@
     "list": [
       {
         "pagePath": "pages/home/home",
-        "text": "首页",
+        "text": "攒钱",
         "iconPath": "images/tab_home.png",
         "selectedIconPath": "images/tab_home_active.png"
       },
       {
-        "pagePath": "pages/notes/notes",
-        "text": "便利贴",
+        "pagePath": "pages/plans/plans",
+        "text": "计划",
         "iconPath": "images/tab_note.png",
         "selectedIconPath": "images/tab_note_active.png"
       },

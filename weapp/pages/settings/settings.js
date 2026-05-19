@@ -136,8 +136,8 @@ Page({
     wx.navigateTo({ url: '/pages/level/level' })
   },
 
-  goToGiftBox() {
-    wx.navigateTo({ url: '/pages/gifts/gifts' })
+  goToAnniversaries() {
+    wx.navigateTo({ url: '/pages/anniversaries/anniversaries' })
   },
 
   goToWallet() {
@@ -146,8 +146,8 @@ Page({
 
   goToAbout() {
     wx.showModal({
-      title: '情侣承诺站',
-      content: '心愿、纪念日与存钱计划，记录两个人的小日常。',
+      title: '一起攒',
+      content: '情侣共同存钱计划，攒下每一份心意。记录目标、追踪进度、一起实现。',
       showCancel: false
     })
   },

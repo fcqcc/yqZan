@@ -1,6 +1,6 @@
-<!-- pages/home/home.wxml — 新布局 -->
+<!-- pages/home/home.wxml — 一起攒 · 首页 -->
 <scroll-view class="page" scroll-y>
-  <!-- ===== 1. 伴侣+等级（紧凑行） ===== -->
+  <!-- ===== 1. 伴侣+等级 ===== -->
   <view class="compact-header">
     <view class="ch-left">
       <text class="ch-name">{{userInfo.nickname}}</text>
@@ -14,23 +14,51 @@
     </view>
   </view>
 
-  <!-- ===== 2. 存钱进度（最重要·大卡片） ===== -->
+  <!-- ===== 2. 攒钱总进度（核心大卡片） ===== -->
   <view class="money-card" bindtap="go" data-url="/pages/plans/plans">
     <view class="money-top">
       <view class="money-info">
-        <text class="money-label">已存金额</text>
+        <text class="money-label">累计已存</text>
         <text class="money-amount">{{delivered_text}}</text>
-        <text class="money-target">目标 {{target_text}}</text>
+        <text wx:if="{{target_text != '¥0'}}" class="money-target">总目标 {{target_text}}</text>
+        <text wx:else class="money-target">先创建一个存钱计划吧 🎯</text>
       </view>
       <view class="money-icon">💰</view>
     </view>
     <view class="money-bar">
       <view class="money-bar-fill" style="width:{{plan_progress}}%"></view>
     </view>
-    <text class="money-pct">{{plan_progress.toFixed(1)}}%</text>
+    <view class="money-footer">
+      <text class="money-pct">{{plan_progress.toFixed(1)}}%</text>
+      <text class="money-plans-count" wx:if="{{plan_count > 0}}">{{plan_count}} 个计划进行中</text>
+    </view>
   </view>
 
-  <!-- ===== 3. 纪念日倒计时 ===== -->
+  <!-- ===== 3. 各计划进度列表 ===== -->
+  <view wx:if="{{plans.length > 0}}" class="plans-mini-list">
+    <view class="pml-header">
+      <text class="pml-title">📋 我的计划</text>
+      <text class="pml-more" bindtap="go" data-url="/pages/plans/plans">全部 ›</text>
+    </view>
+    <view wx:for="{{plans.slice(0,3)}}" wx:key="id" class="pml-item" bindtap="go" data-url="/pages/plans/plans">
+      <view class="pml-top">
+        <text class="pml-name">{{item.title}}</text>
+        <text class="pml-amount">¥{{item._curText}} / ¥{{item._tarText}}</text>
+      </view>
+      <view class="pml-bar">
+        <view class="pml-bar-fill" style="width:{{item.progressPct}}%"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 4. 空状态 ===== -->
+  <view wx:if="{{plans.length === 0}}" class="empty-state" bindtap="go" data-url="/pages/plans/plans">
+    <text class="empty-icon">🐷</text>
+    <text class="empty-text">还没有存钱计划</text>
+    <text class="empty-sub">点我创建一个 →</text>
+  </view>
+
+  <!-- ===== 5. 纪念日倒计时 ===== -->
   <view wx:if="{{nearestAnni}}" class="anni-row" bindtap="go" data-url="/pages/anniversaries/anniversaries">
     <text class="anni-emoji">⏰</text>
     <view class="anni-info">
@@ -40,45 +68,31 @@
     <text class="anni-arrow">›</text>
   </view>
 
-  <!-- ===== 4. 今日待办 ===== -->
-  <view wx:if="{{pendingTodos.length}}" class="todo-card">
-    <view class="tc-header">
-      <text class="tc-title">✅ 今天要做</text>
-      <text class="tc-more" bindtap="go" data-url="/pages/todos/todos">全部 ›</text>
-    </view>
-    <view wx:for="{{pendingTodos}}" wx:key="id" class="tc-item">
-      <text class="tc-check">⬜</text>
-      <text class="tc-text">{{item.title}}</text>
-    </view>
-  </view>
-
-  <!-- ===== 5. 最新便利贴 ===== -->
-  <view wx:if="{{latestNote}}" class="note-card" bindtap="goTab" data-url="/pages/notes/notes">
-    <text class="note-pin">📌</text>
-    <view class="note-body">
-      <text class="note-text">"{{latestNote.content}}"</text>
-      <text class="note-from">— 来自 {{latestNote.user_id === userInfo.id ? '我' : 'Ta'}}</text>
-    </view>
-  </view>
-
-  <!-- ===== 6. 快捷入口（紧凑） ===== -->
+  <!-- ===== 6. 快捷入口 ===== -->
   <view class="quick-row">
-    <view class="qr-item" catchtap="go" data-url="/pages/plans/plans"><image class="qr-icon-img" src="/images/menu-plans.png" mode="aspectFit" /></view>
-    <view class="qr-item" catchtap="go" data-url="/pages/wishes/wishes"><image class="qr-icon-img" src="/images/menu-wishes.png" mode="aspectFit" /></view>
-    <view class="qr-item" catchtap="go" data-url="/pages/todos/todos"><image class="qr-icon-img" src="/images/menu-todos.png" mode="aspectFit" /></view>
-    <view class="qr-item" catchtap="go" data-url="/pages/tasks/tasks"><image class="qr-icon-img" src="/images/menu-tasks.png" mode="aspectFit" /></view>
-    <view class="qr-item" catchtap="go" data-url="/pages/anniversaries/anniversaries"><image class="qr-icon-img" src="/images/menu-anniversaries.png" mode="aspectFit" /></view>
-    <view class="qr-item" catchtap="go" data-url="/pages/gifts/gifts"><image class="qr-icon-img" src="/images/menu-gifts.png" mode="aspectFit" /></view>
+    <view class="qr-item" catchtap="go" data-url="/pages/plans/plans">
+      <text class="qr-emoji">💰</text>
+      <text class="qr-label">计划</text>
+    </view>
+    <view class="qr-item" catchtap="go" data-url="/pages/anniversaries/anniversaries">
+      <text class="qr-emoji">🎉</text>
+      <text class="qr-label">纪念日</text>
+    </view>
+    <view class="qr-item" catchtap="go" data-url="/pages/gifts/gifts">
+      <text class="qr-emoji">🎁</text>
+      <text class="qr-label">礼物</text>
+    </view>
+    <view class="qr-item" catchtap="go" data-url="/pages/level/level">
+      <text class="qr-emoji">🏆</text>
+      <text class="qr-label">等级</text>
+    </view>
   </view>
 
-  <!-- ===== 7. 数据详情（底部） ===== -->
-  <view class="stats-bar" bindtap="go" data-url="/pages/level/level">
+  <!-- ===== 7. 底部数据 ===== -->
+  <view class="stats-bar" bindtap="go" data-url="/pages/plans/plans">
     <view class="sb-item"><text class="sb-num">{{plan_count}}</text><text class="sb-label">计划</text></view>
     <view class="sb-item"><text class="sb-num">{{anni_count}}</text><text class="sb-label">纪念日</text></view>
     <view class="sb-item"><text class="sb-num">{{gift_count}}</text><text class="sb-label">礼物</text></view>
     <view class="sb-item"><text class="sb-num">{{together_days}}天</text><text class="sb-label">相伴</text></view>
-    <text class="sb-arrow">›</text>
   </view>
-
-  <view class="safe-bottom"></view>
 </scroll-view>

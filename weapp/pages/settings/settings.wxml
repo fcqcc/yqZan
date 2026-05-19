@@ -73,20 +73,6 @@
       </view>
 
       <view class="menu-list glass-card">
-        <view class="menu-item" bindtap="goToAchievements" hover-class="menu-item-hover" hover-stay-time="70">
-          <view class="menu-left">
-            <view class="menu-icon-wrap"><cp-icon name="trophy" size="40" /></view>
-            <text class="menu-title">情侣等级</text>
-          </view>
-          <text class="menu-chevron">›</text>
-        </view>
-        <view class="menu-item" bindtap="goToGiftBox" hover-class="menu-item-hover" hover-stay-time="70">
-          <view class="menu-left">
-            <view class="menu-icon-wrap"><cp-icon name="gift" size="40" /></view>
-            <text class="menu-title">礼物记录</text>
-          </view>
-          <text class="menu-chevron">›</text>
-        </view>
         <view class="menu-item" bindtap="goToWallet" hover-class="menu-item-hover" hover-stay-time="70">
           <view class="menu-left">
             <view class="menu-icon-wrap"><cp-icon name="wallet" size="40" /></view>
@@ -94,10 +80,24 @@
           </view>
           <text class="menu-chevron">›</text>
         </view>
+        <view class="menu-item" bindtap="goToAchievements" hover-class="menu-item-hover" hover-stay-time="70">
+          <view class="menu-left">
+            <view class="menu-icon-wrap"><cp-icon name="trophy" size="40" /></view>
+            <text class="menu-title">攒钱等级</text>
+          </view>
+          <text class="menu-chevron">›</text>
+        </view>
+        <view class="menu-item" bindtap="goToAnniversaries" hover-class="menu-item-hover" hover-stay-time="70">
+          <view class="menu-left">
+            <view class="menu-icon-wrap"><cp-icon name="heart" size="40" /></view>
+            <text class="menu-title">纪念日</text>
+          </view>
+          <text class="menu-chevron">›</text>
+        </view>
         <view class="menu-item menu-item-last" bindtap="goToAbout" hover-class="menu-item-hover" hover-stay-time="70">
           <view class="menu-left">
             <view class="menu-icon-wrap"><cp-icon name="gear" size="40" /></view>
-            <text class="menu-title">关于</text>
+            <text class="menu-title">关于一起攒</text>
           </view>
           <text class="menu-chevron">›</text>
         </view>

@@ -1,13 +1,7 @@
-/* 首页 — 新布局 */
+/* 首页 — 一起攒 · 新布局 */
 .page { height: 100vh; background: transparent; }
 
-/* ===== 自定义导航 ===== */
-.nav-bar { position: sticky; top: 0; z-index: 50; }
-.nav-safe { height: env(safe-area-inset-top, 44px); }
-.nav-content { padding: 8px 16px 4px; }
-.nav-title { font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: .5px; }
-
-/* ===== 1. 伴侣+等级（紧凑行） ===== */
+/* ===== 1. 伴侣+等级 ===== */
 .compact-header {
   display: flex;
   justify-content: space-between;
@@ -32,7 +26,7 @@
 .ch-lv-bar { width: 48px; height: 3px; background: rgba(214, 92, 138, 0.2); border-radius: 2px; margin: 4px auto 0; overflow: hidden; }
 .ch-lv-fill { height: 100%; background: var(--pink-dark); border-radius: 2px; }
 
-/* ===== 2. 存钱卡片（最重要） ===== */
+/* ===== 2. 攒钱总进度（核心大卡片） ===== */
 .money-card {
   margin: 4px 12px 8px;
   background: linear-gradient(135deg, #ffffff 0%, #fff8fc 55%, #ffe8f2 100%);
@@ -70,16 +64,72 @@
   border-radius: 4px;
   transition: width 1s ease;
 }
+.money-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
 .money-pct {
   font-size: 11px;
   color: var(--pink-dark);
   font-weight: 600;
-  margin-top: 4px;
-  display: block;
-  text-align: right;
+}
+.money-plans-count {
+  font-size: 10px;
+  color: var(--text-muted);
 }
 
-/* ===== 3. 纪念日 ===== */
+/* ===== 3. 各计划进度列表 ===== */
+.plans-mini-list {
+  margin: 0 12px 6px;
+  background: var(--glass-bg);
+  border: var(--glass-border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  box-shadow: var(--shadow-sm);
+}
+.pml-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.pml-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.pml-more { font-size: 11px; color: var(--pink-dark); }
+.pml-item { margin-bottom: 10px; }
+.pml-item:last-child { margin-bottom: 0; }
+.pml-top { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+.pml-name { color: var(--text); font-weight: 500; }
+.pml-amount { color: var(--pink-dark); font-weight: 600; }
+.pml-bar {
+  height: 5px;
+  background: rgba(214, 92, 138, 0.12);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.pml-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--pink), var(--pink-dark));
+  border-radius: 3px;
+  transition: width .8s ease;
+}
+
+/* ===== 4. 空状态 ===== */
+.empty-state {
+  margin: 0 12px 6px;
+  background: var(--glass-bg);
+  border: var(--glass-border);
+  border-radius: var(--radius);
+  padding: 24px 16px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+.empty-icon { font-size: 36px; display: block; }
+.empty-text { font-size: 14px; color: var(--text-secondary); margin-top: 6px; display: block; }
+.empty-sub { font-size: 12px; color: var(--pink-dark); margin-top: 4px; display: block; }
+
+/* ===== 5. 纪念日 ===== */
 .anni-row {
   margin: 0 12px 6px;
   background: var(--glass-bg);
@@ -98,73 +148,30 @@
 .anni-unit { font-size: 12px; font-weight: 400; color: var(--text-secondary); margin-left: 2px; }
 .anni-arrow { font-size: 18px; color: var(--text-muted); }
 
-/* ===== 4. 今日待办 ===== */
-.todo-card {
-  background: var(--glass-bg);
-  border: var(--glass-border);
-  border-radius: var(--radius);
-  margin: 0 12px 6px;
-  padding: 14px 16px;
-  box-shadow: var(--shadow-sm);
-}
-.tc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.tc-title { font-size: 13px; font-weight: 700; color: var(--text); }
-.tc-more { font-size: 11px; color: var(--pink-dark); }
-.tc-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
-.tc-check { font-size: 14px; }
-.tc-text { font-size: 13px; color: var(--text); }
-
-/* ===== 5. 便利贴 ===== */
-.note-card {
-  margin: 0 12px 8px;
-  background: linear-gradient(135deg, #fff0f3, #fff);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  border: 1px solid rgba(244,143,177,.2);
-}
-.note-pin { font-size: 16px; margin-top: 2px; }
-.note-body { flex: 1; }
-.note-text { font-size: 13px; line-height: 1.6; color: var(--text); font-style: italic; }
-.note-from { font-size: 11px; color: var(--text-muted); display: block; margin-top: 4px; }
-
-/* ===== 6. 快捷入口（紧凑） ===== */
+/* ===== 6. 快捷入口 ===== */
 .quick-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+  gap: 8px;
   padding: 0 12px;
   margin-bottom: 8px;
-  box-sizing: border-box;
 }
-/* 每行 3 个：3 列 + 2 个 gap(4px) */
 .qr-item {
-  flex: 0 0 calc((100% - 8px) / 3);
-  width: calc((100% - 8px) / 3);
-  max-width: calc((100% - 8px) / 3);
-  box-sizing: border-box;
+  flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 4px;
   background: #ffffff;
   border: 1px solid #ffd6e8;
-  border-radius: var(--radius-sm);
-  padding: 10px 6px;
+  border-radius: var(--radius);
+  padding: 12px 6px;
   box-shadow: var(--shadow-sm);
-  overflow: hidden;
 }
 .qr-item:active { background: #fff5fb; }
-.qr-icon-img {
-  width: 96px;
-  height: 96px;
-  flex-shrink: 0;
-  display: block;
-  pointer-events: none;
-}
+.qr-emoji { font-size: 22px; }
+.qr-label { font-size: 11px; color: var(--text-secondary); }
 
-/* ===== 7. 数据详情（底部） ===== */
+/* ===== 7. 底部数据 ===== */
 .stats-bar {
   display: flex;
   align-items: center;
@@ -173,10 +180,9 @@
   border-radius: var(--radius);
   margin: 0 12px 8px;
   padding: 10px 16px;
-  gap: 12px;
+  gap: 0;
   box-shadow: var(--shadow-sm);
 }
 .sb-item { flex: 1; text-align: center; }
 .sb-num { display: block; font-size: 14px; font-weight: 700; color: var(--pink-dark); }
 .sb-label { display: block; font-size: 10px; color: var(--text-secondary); margin-top: 1px; }
-.sb-arrow { font-size: 16px; color: var(--text-muted); }
