@@ -179,7 +179,9 @@ def get_snapshot(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    cid = get_couple_id(user)
+    cid = user.couple_id
+    if not cid:
+        return {"total_delivered": 0, "total_target": 0, "gift_count": 0, "together_days": 0, "plan_count": 0, "anni_count": 0, "wish_count": 0}
     return build_data_snapshot(cid, db)
 
 

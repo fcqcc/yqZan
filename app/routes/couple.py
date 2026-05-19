@@ -63,18 +63,16 @@ def unbind_partner(
     return {"ok": True, "message": "已解绑，数据已归档"}
 
 
-@router.get("/partner", response_model=UserResponse)
+@router.get("/partner", response_model=UserResponse | None)
 def get_partner(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     if not user.couple_id:
-        raise HTTPException(400, "未绑定")
+        return None
     partner = (
         db.query(User)
         .filter(User.couple_id == user.couple_id, User.id != user.id)
         .first()
     )
-    if not partner:
-        raise HTTPException(404, "未找到伴侣")
     return partner

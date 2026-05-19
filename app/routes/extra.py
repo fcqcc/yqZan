@@ -155,7 +155,9 @@ def list_anniversaries(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    cid = get_couple_id(user)
+    cid = user.couple_id
+    if not cid:
+        return []
     return (
         db.query(Anniversary)
         .filter(Anniversary.couple_id == cid)
@@ -234,7 +236,9 @@ def list_gifts(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    cid = get_couple_id(user)
+    cid = user.couple_id
+    if not cid:
+        return []
     return (
         db.query(Gift)
         .filter(Gift.couple_id == cid)

@@ -22,6 +22,9 @@ from app.services.auth import get_current_user
 router = APIRouter(prefix="/api", tags=["存钱 & 心愿"])
 
 
+def get_couple_id_or_none(user: User) -> int | None:
+    return user.couple_id
+
 def get_couple_id(user: User) -> int:
     if not user.couple_id:
         raise HTTPException(400, "未绑定伴侣")
@@ -66,7 +69,9 @@ def list_plans(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    cid = get_couple_id(user)
+    cid = user.couple_id
+    if not cid:
+        return []
     plans = db.query(Plan).filter(Plan.couple_id == cid).order_by(Plan.created_at.desc()).all()
     return [build_plan_response(p, db) for p in plans]
 

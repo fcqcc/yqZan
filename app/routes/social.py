@@ -92,7 +92,9 @@ def get_level(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    cid = get_couple_id(user)
+    cid = user.couple_id
+    if not cid:
+        return LevelResponse(level=1, current_exp=0, total_exp_earned=0, next_level_exp=20, progress_pct=0.0, pending_levelups=0)
     level = get_or_create_level(cid, db)
     lvl, in_level, needed, pct = calc_level(level.total_exp_earned)
     return LevelResponse(
@@ -110,7 +112,9 @@ def get_level_logs(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    cid = get_couple_id(user)
+    cid = user.couple_id
+    if not cid:
+        return []
     return (
         db.query(LevelLog)
         .filter(LevelLog.couple_id == cid)

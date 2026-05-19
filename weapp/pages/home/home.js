@@ -91,7 +91,14 @@ Page({
     return nearest
   },
 
-  go(e) { wx.navigateTo({ url: e.currentTarget.dataset.url }) },
+  go(e) { 
+    const url = e.currentTarget.dataset.url
+    if (url === '/pages/plans/plans') {
+      wx.switchTab({ url })
+    } else {
+      wx.navigateTo({ url })
+    }
+  },
   goTab(e) { wx.switchTab({ url: e.currentTarget.dataset.url }) },
   goBind() { wx.switchTab({ url: '/pages/settings/settings' }) }
 })
