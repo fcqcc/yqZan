@@ -60,14 +60,15 @@ Page({
     }
   },
 
-  /** 切换勾选 */
-  toggleHoliday(e) {
-    const idx = e.currentTarget.dataset.index
-    const item = this.data.holidayList[idx]
-    if (item.disabled) return
-    item.checked = !item.checked
-    const count = this.data.holidayList.filter(i => i.checked && !i.disabled).length
-    this.setData({ holidayList: this.data.holidayList, holidaySelectedCount: count })
+  /** checkbox-group change 事件 */
+  onHolidayCheckChange(e) {
+    const checkedTitles = e.detail.value || []
+    const holidayList = this.data.holidayList.map(h => ({
+      ...h,
+      checked: h.disabled ? h.checked : checkedTitles.includes(h.title),
+    }))
+    const count = holidayList.filter(i => i.checked && !i.disabled).length
+    this.setData({ holidayList, holidaySelectedCount: count })
   },
 
   /** 确认导入勾选的节日 */

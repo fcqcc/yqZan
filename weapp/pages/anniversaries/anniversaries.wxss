@@ -42,20 +42,9 @@
 }
 .holiday-item:active { background: #fff5fb; }
 .holiday-item--disabled { opacity: 0.5; }
-.holiday-check {
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  border: 2px solid #ddd;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px; font-weight: 800;
+.holiday-checkbox {
   flex-shrink: 0;
-}
-.holiday-check--on {
-  background: var(--pink-dark);
-  border-color: var(--pink-dark);
-  color: #fff;
+  transform: scale(0.85);
 }
 .holiday-emoji { font-size: 24px; flex-shrink: 0; }
 .holiday-info { flex: 1; display: flex; flex-direction: column; gap: 1px; }

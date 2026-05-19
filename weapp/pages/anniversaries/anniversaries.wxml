@@ -12,8 +12,8 @@
     <view class="sheet" catchtap="catchTap">
       <view class="sheet-title">添加纪念日</view>
       <input class="input" placeholder="名称（如：在一起）" model:value="{{title}}" />
-      <picker mode="date" bindchange="onDateChange">
-        <view class="input" style="margin-top:8px">{{dateVal || '选择日期'}}</view>
+      <picker mode="date" value="{{dateVal}}" bindchange="onDateChange" style="margin-top:8px">
+        <view class="input">{{dateVal || '选择日期'}}</view>
       </picker>
       <view class="sheet-actions-inline">
         <button class="btn btn-outline" bindtap="toggleForm">取消</button>
@@ -22,7 +22,7 @@
     </view>
   </view>
 
-  <!-- 节日勾选弹窗 -->
+  <!-- 节日勾选弹窗（用 checkbox-group） -->
   <view wx:if="{{showHolidayPicker}}" class="overlay">
     <view class="overlay-dismiss" bindtap="closeHolidayPicker" />
     <view class="holiday-picker" catchtap="catchTap">
@@ -31,26 +31,28 @@
         <text class="holiday-picker-close" bindtap="closeHolidayPicker">✕</text>
       </view>
       <scroll-view scroll-y class="holiday-picker-list">
-        <view
-          wx:for="{{holidayList}}"
-          wx:key="title"
-          class="holiday-item {{item.disabled ? 'holiday-item--disabled' : ''}}"
-          bindtap="toggleHoliday"
-          data-index="{{index}}"
-        >
-          <view class="holiday-check {{item.checked ? 'holiday-check--on' : ''}}">
-            <text wx:if="{{item.checked}}">✓</text>
-          </view>
-          <text class="holiday-emoji">{{item.emoji}}</text>
-          <view class="holiday-info">
-            <text class="holiday-title">{{item.title}}</text>
-            <text class="holiday-date">{{item.date}}</text>
-          </view>
-          <text wx:if="{{item.disabled}}" class="holiday-tag">已存在</text>
-        </view>
+        <checkbox-group bindchange="onHolidayCheckChange">
+          <label
+            wx:for="{{holidayList}}"
+            wx:key="title"
+            class="holiday-item {{item.disabled ? 'holiday-item--disabled' : ''}}"
+          >
+            <checkbox
+              value="{{item.title}}"
+              checked="{{item.checked}}"
+              disabled="{{item.disabled}}"
+              class="holiday-checkbox"
+            />
+            <text class="holiday-emoji">{{item.emoji}}</text>
+            <view class="holiday-info">
+              <text class="holiday-title">{{item.title}}</text>
+              <text class="holiday-date">{{item.date}}</text>
+            </view>
+            <text wx:if="{{item.disabled}}" class="holiday-tag">已存在</text>
+          </label>
+        </checkbox-group>
       </scroll-view>
       <view class="holiday-picker-footer">
-        <text class="holiday-picker-count">已选 {{holidaySelectedCount}} 个节日</text>
         <button class="btn btn-primary" bindtap="confirmImport">确认导入（{{holidaySelectedCount}}）</button>
       </view>
     </view>
