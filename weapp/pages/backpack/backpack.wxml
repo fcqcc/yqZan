@@ -1,53 +1,58 @@
 <!-- pages/backpack/backpack.wxml — 背包 & 图鉴 -->
 <scroll-view class="page" scroll-y>
-  <!-- ===== TAB 切换 ===== -->
+  <!-- ===== 主 TAB 切换 ===== -->
   <view class="tab-bar">
     <view
       class="tab-item {{tab === 'backpack' ? 'tab-item--active' : ''}}"
-      bindtap="switchTab"
-      data-tab="backpack"
+      bindtap="switchTab" data-tab="backpack"
     >🎒 背包</view>
     <view
       class="tab-item {{tab === 'pokedex' ? 'tab-item--active' : ''}}"
-      bindtap="switchTab"
-      data-tab="pokedex"
+      bindtap="switchTab" data-tab="pokedex"
     >📖 图鉴</view>
   </view>
 
   <!-- ============================ 背包 TAB ============================ -->
   <block wx:if="{{tab === 'backpack'}}">
-    <view wx:if="{{!items || items.length === 0}}" class="empty">
+    <!-- 分类子 TAB -->
+    <scroll-view class="cat-scroll" scroll-x show-scrollbar="{{false}}">
+      <view class="cat-bar">
+        <view
+          wx:for="{{categories}}"
+          wx:key="*this"
+          class="cat-item {{backpackTab === item ? 'cat-item--active' : ''}}"
+          bindtap="switchBackpackTab"
+          data-cat="{{item}}"
+        >{{item}}</view>
+      </view>
+    </scroll-view>
+
+    <!-- 空状态 -->
+    <view wx:if="{{filteredItems.length === 0}}" class="empty">
       <text class="empty-icon">🎒</text>
-      <text>背包空空如也~</text>
-      <text class="empty-sub">扭蛋机抽卡获得各种道具！</text>
+      <text>{{backpackTab === '全部' ? '背包空空如也~' : '该分类下没有道具'}}</text>
+      <text class="empty-sub">去扭蛋机抽卡获得各种道具！</text>
     </view>
 
-    <block wx:for="{{groupedItems}}" wx:key="type">
-      <view class="section-card" wx:if="{{item.list.length > 0}}">
-        <view class="group-header">
-          <text class="section-label">{{item.type_display}}</text>
-          <text class="group-count">{{item.list.length}} 件</text>
+    <!-- 卡片网格 -->
+    <view wx:if="{{filteredItems.length > 0}}" class="card-grid">
+      <view
+        wx:for="{{filteredItems}}"
+        wx:key="id"
+        class="item-card {{item.usable ? 'item-card--usable' : ''}}"
+        bindtap="onUseItem"
+        data-id="{{item.id}}"
+        data-name="{{item.name}}"
+      >
+        <view class="item-card-top">
+          <text class="item-card-icon">{{item.icon || '📦'}}</text>
+          <text wx:if="{{item.quantity > 1}}" class="item-card-qty">×{{item.quantity}}</text>
         </view>
-        <view class="card-grid">
-          <view
-            wx:for="{{item.list}}"
-            wx:key="id"
-            class="item-card {{item.usable ? 'item-card--usable' : ''}}"
-            bindtap="onUseItem"
-            data-id="{{item.id}}"
-            data-name="{{item.name}}"
-          >
-            <view class="item-card-top">
-              <text class="item-card-icon">{{item.icon || '📦'}}</text>
-              <text wx:if="{{item.quantity > 1}}" class="item-card-qty">×{{item.quantity}}</text>
-            </view>
-            <text class="item-card-name">{{item.name}}</text>
-            <text class="item-card-desc">{{item.desc}}</text>
-            <view wx:if="{{item.usable}}" class="item-card-btn">使用</view>
-          </view>
-        </view>
+        <text class="item-card-name">{{item.name}}</text>
+        <text class="item-card-desc">{{item.desc}}</text>
+        <view wx:if="{{item.usable}}" class="item-card-btn">使用</view>
       </view>
-    </block>
+    </view>
   </block>
 
   <!-- ============================ 图鉴 TAB ============================ -->
@@ -55,13 +60,11 @@
     <view class="sub-tab-bar">
       <view
         class="sub-tab {{pokedexTab === 'pets' ? 'sub-tab--active' : ''}}"
-        bindtap="switchPokedexTab"
-        data-tab="pets"
+        bindtap="switchPokedexTab" data-tab="pets"
       >🐾 宠物</view>
       <view
         class="sub-tab {{pokedexTab === 'items' ? 'sub-tab--active' : ''}}"
-        bindtap="switchPokedexTab"
-        data-tab="items"
+        bindtap="switchPokedexTab" data-tab="items"
       >🎁 道具</view>
     </view>
 

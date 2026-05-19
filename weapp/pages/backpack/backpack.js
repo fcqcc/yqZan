@@ -1,13 +1,17 @@
 // pages/backpack/backpack.js — 背包 & 图鉴
 const api = require('../../utils/api')
 
+const CATEGORIES = ['全部', '消耗品', '卡牌', '进化道具', '配饰', '背景']
+
 Page({
   data: {
     tab: 'backpack',
+    backpackTab: '全部',
+    categories: CATEGORIES,
     items: [],
-    groupedItems: [],
+    filteredItems: [],
     // 图鉴数据
-    pokedexTab: 'pets',  // pets / items
+    pokedexTab: 'pets',
     petsList: [],
     evolutionsList: [],
     itemsList: [],
@@ -29,33 +33,31 @@ Page({
       const inventory = Array.isArray(inventoryRes) ? inventoryRes : (inventoryRes.items || [])
       const bestiary = bestiaryRes
 
-      // 背包物品
+      // 标记可用物品
       const marked = inventory.map(item => ({
         ...item,
         usable: item.item_type === 'consumable',
       }))
-      const grouped = this.groupItems(marked)
+      const filtered = this.filterByCategory(marked, this.data.backpackTab)
 
-      // 图鉴
-      const petsList = (bestiary.pets || []).sort((a, b) => {
+      // 图鉴数据
+      const sortByRarity = (a, b) => {
         const order = { N: 0, R: 1, SR: 2, SSR: 3, 'SSR+': 4 }
         return (order[a.rarity] || 0) - (order[b.rarity] || 0)
-      })
-      const evolutionsList = bestiary.evolutions || []
-      const itemsList = (bestiary.items || []).sort((a, b) => {
-        const order = { N: 0, R: 1, SR: 2, SSR: 3, 'SSR+': 4 }
-        return (order[a.rarity] || 0) - (order[b.rarity] || 0)
-      })
-
-      const petsObtained = petsList.filter(p => p.obtained).length
-      const itemsObtained = itemsList.filter(i => i.obtained).length
+      }
+      const petsList = (bestiary.pets || []).sort(sortByRarity)
+      const itemsList = (bestiary.items || []).sort(sortByRarity)
 
       this.setData({
         items: marked,
-        groupedItems: grouped,
-        petsList, evolutionsList, itemsList,
-        petsObtained, petsTotal: petsList.length,
-        itemsObtained, itemsTotal: itemsList.length,
+        filteredItems: filtered,
+        petsList,
+        evolutionsList: bestiary.evolutions || [],
+        itemsList,
+        petsObtained: petsList.filter(p => p.obtained).length,
+        petsTotal: petsList.length,
+        itemsObtained: itemsList.filter(i => i.obtained).length,
+        itemsTotal: itemsList.length,
       })
     } catch (e) { console.error('load backpack error:', e) }
   },
@@ -67,36 +69,21 @@ Page({
     this.setData({ tab })
   },
 
+  switchBackpackTab(e) {
+    const cat = e.currentTarget.dataset.cat
+    const filtered = this.filterByCategory(this.data.items, cat)
+    this.setData({ backpackTab: cat, filteredItems: filtered })
+  },
+
   switchPokedexTab(e) {
-    const pokedexTab = e.currentTarget.dataset.tab
-    this.setData({ pokedexTab })
+    this.setData({ pokedexTab: e.currentTarget.dataset.tab })
   },
 
-  // ===== 背包 =====
+  // ===== 辅助 =====
 
-  groupItems(items) {
-    const grouped = {}
-    for (const item of items) {
-      const type = item.type_display || item.item_type || '其他'
-      if (!grouped[type]) grouped[type] = { type, type_display: type, list: [] }
-      grouped[type].list.push(item)
-    }
-    const order = ['消耗品', '卡牌', '进化道具', '配饰', '背景', '其他']
-    return order
-      .filter(t => grouped[t])
-      .map(t => grouped[t])
-      .concat(Object.keys(grouped).filter(k => !order.includes(k)).map(k => grouped[k]))
-  },
-
-  typeName(type) {
-    const map = {
-      consumable: '消耗品',
-      accessory: '配饰',
-      background: '背景',
-      evolution_item: '进化道具',
-      other: '其他',
-    }
-    return map[type] || type
+  filterByCategory(items, cat) {
+    if (!cat || cat === '全部') return items
+    return items.filter(i => (i.type_display || '') === cat)
   },
 
   // ===== 使用物品 =====

@@ -167,6 +167,33 @@
   font-weight: 600;
 }
 
+/* ===== 分类子 TAB 滑动栏 ===== */
+.cat-scroll {
+  margin: 0 12px 8px;
+  white-space: nowrap;
+}
+.cat-bar {
+  display: inline-flex;
+  gap: 6px;
+  padding: 2px 0;
+}
+.cat-item {
+  display: inline-block;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: #fff;
+  border: 1px solid #ffd6e8;
+  border-radius: var(--radius-pill);
+  transition: all 0.12s;
+}
+.cat-item--active {
+  color: #fff;
+  background: var(--pink-dark);
+  border-color: var(--pink-dark);
+}
+
 /* ===== 图鉴网格 ===== */
 .pokedex-grid {
   display: grid;
