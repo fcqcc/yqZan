@@ -70,5 +70,18 @@ Page({
   async like(e) {
     await api.likeNote(e.currentTarget.dataset.id)
     this.load()
-  }
+  },
+
+  async del(e) {
+    const id = e.currentTarget.dataset.id
+    const r = await wx.showModal({ title: '删除', content: '确定删除这条留言？' })
+    if (!r.confirm) return
+    try {
+      await api.deleteNote(id)
+      wx.showToast({ title: '已删除', icon: 'none' })
+      this.load()
+    } catch (e) {
+      wx.showToast({ title: '删除失败', icon: 'none' })
+    }
+  },
 })

@@ -127,6 +127,18 @@
 .oak-like-num {
   font-weight: 600;
 }
+.oak-del {
+  font-size: 11px;
+  color: #ccc;
+  padding: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.oak-del:active { color: var(--pink-dark); background: rgba(214,92,138,0.1); }
 
 .oak-empty {
   text-align: center;

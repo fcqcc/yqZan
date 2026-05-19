@@ -23,6 +23,7 @@
             <text>{{item.liked ? '❤' : '♡'}}</text>
             <text wx:if="{{item.likes}}" class="oak-like-num">{{item.likes}}</text>
           </view>
+          <text class="oak-del" catchtap="del" data-id="{{item.id}}">✕</text>
         </view>
       </view>
     </view>
