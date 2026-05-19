@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.models.couple import Couple
 from app.models.user import User
 from app.schemas.user import (
     LoginRequest,
@@ -40,6 +41,14 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
         invite_code=code,
     )
     db.add(user)
+    db.flush()
+
+    # 自动创建个人 Couple，所有 API 不再因无伴侣报错
+    couple = Couple(status="active")
+    db.add(couple)
+    db.flush()
+    user.couple_id = couple.id
+
     db.commit()
     db.refresh(user)
 
