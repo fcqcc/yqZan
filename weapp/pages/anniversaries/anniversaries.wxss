@@ -6,7 +6,7 @@
 .anni-actions .btn { flex: 1; }
 .card { margin: 0 12px 6px; padding: 14px 16px; background: var(--glass-bg); border-radius: var(--radius); border: var(--glass-border); box-shadow: var(--shadow-sm); }
 .empty { text-align: center; padding: 40px 16px; color: var(--text-light); font-size: 14px; }
-.overlay { position: fixed; inset: 0; background: rgba(214,92,138,0.15); z-index: 50; display: flex; align-items: flex-end; }
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.1); z-index: 50; display: flex; align-items: flex-end; }
 .overlay-dismiss { position: absolute; inset: 0; }
 .sheet { width: 100%; background: #fff; border-radius: 24rpx 24rpx 0 0; padding: 20px; box-sizing: border-box; }
 .sheet-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; }

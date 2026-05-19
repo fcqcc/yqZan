@@ -136,3 +136,15 @@
     <text class="pet-modal-close" bindtap="hidePetModal">✕</text>
   </view>
 </view>
+
+<!-- ===== 成就祝贺弹窗 ===== -->
+<view wx:if="{{showAchModal}}" class="modal-overlay" bindtap="hideAchModal">
+  <view class="ach-popup" catchtap="stopPropagation">
+    <text class="ach-popup-icon">{{achData.hidden ? '🌟' : '🏆'}}</text>
+    <text class="ach-popup-title">成就达成！</text>
+    <text class="ach-popup-name">{{achData.name}}</text>
+    <text class="ach-popup-desc">{{achData.desc}}</text>
+    <text class="ach-popup-reward">获得 {{achData.reward_type}}{{achData.reward_amount}}</text>
+    <button class="btn btn-primary ach-popup-btn" bindtap="hideAchModal">太棒了！</button>
+  </view>
+</view>

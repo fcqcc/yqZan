@@ -57,6 +57,8 @@ Page({
     tickets: 0,
     showPetModal: false,
     feeding: false,
+    showAchModal: false,
+    achData: {},
     sparkCount: 0,
     sparkStatus: 'active',
     maxSpark: 0,
@@ -72,6 +74,8 @@ Page({
     // 自动签到
     api.doCheckin().catch(() => {})
     this.loadSpark()
+    // 检查成就有无新解锁
+    this.checkNewAchievements()
   },
 
   async loadSpark() {
@@ -198,6 +202,31 @@ Page({
 
   stopPropagation() {},
 
+  /** 检查新成就 */
+  async checkNewAchievements() {
+    try {
+      const res = await api.getAchievements()
+      const unlocked = (res.achievements || []).filter(a => a.unlocked && !a.claimed)
+      if (unlocked.length > 0) {
+        const ach = unlocked[0]
+        this.setData({
+          showAchModal: true,
+          achData: {
+            name: ach.name,
+            desc: ach.desc,
+            reward_type: ach.reward_type === 'shards' ? '💎' : '🎟️',
+            reward_amount: ach.reward_amount,
+            hidden: ach.hidden,
+          },
+        })
+      }
+    } catch(e) {}
+  },
+
+  hideAchModal() {
+    this.setData({ showAchModal: false })
+  },
+
   async feedCurrentPet() {
     if (this.data.feeding) return
     const { petId } = this.data
@@ -214,12 +243,16 @@ Page({
       // 刷新宠物状态
       this.loadPetData()
       this.loadData()
+      this.checkNewAchievements()
     } catch (e) {
       wx.hideLoading()
-      if (e.errMsg && e.errMsg.includes('429')) {
-        wx.showToast({ title: '宠物刚吃过，等一会儿再喂吧', icon: 'none' })
+      const errMsg = String(e.errMsg || e.detail || '')
+      if (errMsg.includes('429')) {
+        wx.showToast({ title: '🐷 宠物刚吃过，1分钟后才能再喂哦', icon: 'none', duration: 2000 })
+      } else if (errMsg.includes('404')) {
+        wx.showToast({ title: '宠物不见了？刷新试试', icon: 'none' })
       } else {
-        wx.showToast({ title: e.errMsg || '投喂失败', icon: 'none' })
+        wx.showToast({ title: '投喂失败，稍后重试', icon: 'none' })
       }
     } finally {
       this.setData({ feeding: false })

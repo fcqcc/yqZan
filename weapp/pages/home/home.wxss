@@ -339,7 +339,7 @@
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -434,13 +434,62 @@
 }
 .pet-modal-close {
   position: absolute;
-  top: 12px;
-  right: 16px;
+  top: 8px;
+  right: 12px;
   font-size: 18px;
   color: var(--text-muted);
-  padding: 4px 8px;
-  cursor: pointer;
+  padding: 4px;
 }
+
+/* ===== 成就祝贺弹窗 ===== */
+.ach-popup {
+  width: 75%;
+  max-width: 320px;
+  background: #fff;
+  border-radius: 32rpx;
+  padding: 32px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 16px 48px rgba(214,92,138,0.2);
+  animation: achSlideUp 0.4s ease;
+}
+@keyframes achSlideUp {
+  0% { transform: translateY(40px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+.ach-popup-icon { font-size: 48px; }
+.ach-popup-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.ach-popup-name {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  text-align: center;
+}
+.ach-popup-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+.ach-popup-reward {
+  font-size: 16px;
+  font-weight: 700;
+  color: #7c4dff;
+  background: rgba(124,77,255,0.08);
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  margin-top: 4px;
+}
+.ach-popup-btn {
+  width: 100%;
+  margin-top: 8px;
+}
+
 
 @keyframes fadeIn {
   from { opacity: 0; }
