@@ -183,7 +183,10 @@ Page({
   },
 
   async unbindPartner() {
-    const r = await wx.showModal({ title: '确认解绑？', content: '解绑后数据将归档' })
+    const r = await wx.showModal({
+      title: '确认解绑？',
+      content: '⚠️ 解绑后双方数据分离，各自拥有新存钱空间。\n\n若以后重新绑定，之前的共享数据不会恢复。\n\n确定要解绑吗？',
+    })
     if (!r.confirm) return
     try {
       await api.unbindPartner()

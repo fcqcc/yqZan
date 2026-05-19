@@ -9,15 +9,15 @@ function fmtMoney(n) {
 
 // ---------- 宠物辅助 ----------
 const PET_EMOJI_MAP = [
-  { max: 2, emoji: '🥚', anim: 'pet-sleep', name: '小蛋蛋', desc: '刚刚孵化的小家伙，需要你的关爱才能长大……' },
-  { max: 4, emoji: '🐣', anim: 'pet-walk-slow', name: '小绒球', desc: '已经开始摇摇晃晃地走动了！' },
-  { max: 6, emoji: '🐰', anim: 'pet-walk', name: '蹦蹦', desc: '活泼好动，每天都在成长～' },
-  { max: 8, emoji: '🦊', anim: 'pet-excited', name: '小灵狐', desc: '充满灵性，和你越来越亲密了！' },
-  { max: 10, emoji: '🦄', anim: 'pet-magic', name: '梦幻独角兽', desc: '你们的爱情已经升华到最美好的境界 ✨' }
+  { max: 20, emoji: '🥚', anim: 'pet-sleep', name: '小蛋蛋', desc: '刚刚孵化的小家伙，需要你的关爱才能长大……' },
+  { max: 40, emoji: '🐣', anim: 'pet-walk-slow', name: '小绒球', desc: '已经开始摇摇晃晃地走动了！' },
+  { max: 60, emoji: '🐰', anim: 'pet-walk', name: '蹦蹦', desc: '活泼好动，每天都在成长～' },
+  { max: 80, emoji: '🦊', anim: 'pet-excited', name: '小灵狐', desc: '充满灵性，和你越来越亲密了！' },
+  { max: 100, emoji: '🦄', anim: 'pet-magic', name: '梦幻独角兽', desc: '你们的爱情已经升华到最美好的境界 ✨' }
 ]
 
 function getPetConfig(intimacy) {
-  const lv = Math.min(Math.max(intimacy || 0, 0), 10)
+  const lv = Math.min(Math.max(intimacy || 0, 0), 100)
   for (const cfg of PET_EMOJI_MAP) {
     if (lv <= cfg.max) return cfg
   }
@@ -173,9 +173,7 @@ Page({
       })
       return
     }
-    const intimacy = pet.intimacy_level ?? 0
-    const intimacyNext = pet.intimacy_next ?? 1
-    const pct = Math.min(100, Math.round(((pet.intimacy_exp ?? 0) / Math.max(intimacyNext, 1)) * 100))
+    const intimacy = pet.intimacy ?? 0
     const cfg = getPetConfig(intimacy)
     this.setData({
       pet,
@@ -184,7 +182,7 @@ Page({
       petAnimationClass: cfg.anim,
       petName: pet.name || cfg.name,
       intimacyLevel: intimacy,
-      intimacyPct: pct,
+      intimacyPct: Math.min(100, Math.round(intimacy)),
       petDescription: cfg.desc
     })
   },

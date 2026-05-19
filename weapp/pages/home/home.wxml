@@ -99,7 +99,6 @@
   <view class="stats-bar" bindtap="go" data-url="/pages/plans/plans">
     <view class="sb-item"><text class="sb-num">{{plan_count}}</text><text class="sb-label">计划</text></view>
     <view class="sb-item"><text class="sb-num">{{anni_count}}</text><text class="sb-label">纪念日</text></view>
-    <view class="sb-item"><text class="sb-num">{{gift_count}}</text><text class="sb-label">礼物</text></view>
     <view class="sb-item"><text class="sb-num">{{together_days}}天</text><text class="sb-label">相伴</text></view>
   </view>
 
@@ -108,10 +107,10 @@
     <view class="pet-container {{petAnimationClass}}">
       <text class="pet-emoji">{{petEmoji}}</text>
     </view>
-    <text class="pet-intimacy-text">❤️ 亲密度 Lv{{intimacyLevel}}</text>
-    <text class="pet-tip" wx:if="{{intimacyLevel <= 2}}">多存钱能提升亲密度 🪙</text>
-    <text class="pet-tip" wx:elif="{{intimacyLevel <= 5}}">一起加油存钱吧 💪</text>
-    <text class="pet-tip" wx:elif="{{intimacyLevel <= 8}}">感情越来越好了 💕</text>
+    <text class="pet-intimacy-text">❤️ 亲密度 {{intimacyPct}}%</text>
+    <text class="pet-tip" wx:if="{{intimacyPct <= 20}}">多存钱能提升亲密度 🪙</text>
+    <text class="pet-tip" wx:elif="{{intimacyPct <= 60}}">一起加油存钱吧 💪</text>
+    <text class="pet-tip" wx:elif="{{intimacyPct <= 90}}">感情越来越好了 💕</text>
     <text class="pet-tip" wx:else>幸福满级！🎉</text>
     <text class="pet-click-hint">点我互动 ›</text>
   </view>
@@ -124,7 +123,7 @@
     <text class="pet-modal-name">{{petName}}</text>
     <view class="pet-modal-level-row">
       <text class="pet-modal-level-label">亲密度</text>
-      <text class="pet-modal-level-val">Lv{{intimacyLevel}}</text>
+      <text class="pet-modal-level-val">{{intimacyPct}}%</text>
     </view>
     <view class="pet-modal-bar-wrap">
       <view class="pet-modal-bar">

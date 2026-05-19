@@ -42,7 +42,7 @@ page {
   width: 128rpx;
   height: 128rpx;
   border-radius: 50%;
-  border: 4rpx solid var(--accent);
+  border: 4rpx solid #D65C8A;
   background: rgba(255, 255, 255, 0.95);
   position: absolute;
   left: 0;
@@ -53,7 +53,7 @@ page {
 .avatar.partner {
   left: 48rpx;
   top: 48rpx;
-  border-color: var(--accent-partner);
+  border-color: #C5A3FF;
 }
 
 .avatar-ph {
