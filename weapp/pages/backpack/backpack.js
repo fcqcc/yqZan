@@ -36,7 +36,7 @@ Page({
       // 标记可用物品
       const marked = inventory.map(item => ({
         ...item,
-        usable: item.item_type === 'consumable',
+        usable: item.item_type === 'consumable' && item.item_id !== 'switch_card',
       }))
       const filtered = this.filterByCategory(marked, this.data.backpackTab)
 

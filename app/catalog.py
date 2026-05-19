@@ -2,10 +2,9 @@
 ITEM_CATALOG = {
     # 消耗品
     "fortune_cookie":  {"name": "幸运饼干🍪",         "icon": "🍪", "type_display": "消耗品",  "desc": "打开获得一句运势"},
-    "switch_card":     {"name": "切换卡🔄",           "icon": "🔄", "type_display": "消耗品",  "desc": "随机切换宠物形态"},
+    "switch_card":     {"name": "切换卡🔄",           "icon": "🔄", "type_display": "消耗品",  "desc": "切换宠物时自动消耗"},
     "intimacy_candy":  {"name": "亲密糖果🍬",         "icon": "🍬", "type_display": "消耗品",  "desc": "当前宠物亲密+10"},
-    "streak_protect":  {"name": "免断卡🛡️",          "icon": "🛡️", "type_display": "消耗品",  "desc": "防止打卡中断一次"},
-    "reminder_horn":   {"name": "提醒喇叭📣",         "icon": "📣", "type_display": "消耗品",  "desc": "提醒伴侣存钱"},
+    "spark_card":      {"name": "火花卡🔥",           "icon": "🔥", "type_display": "消耗品",  "desc": "火花断掉时恢复至最高记录"},
     # 卡牌
     "decline_card":    {"name": "我不要😤",           "icon": "😤", "type_display": "卡牌",    "desc": "逃过一次家务指派"},
     "chore_dishes":    {"name": "家务你来做之洗碗🧹", "icon": "🧹", "type_display": "卡牌",    "desc": "指派伴侣洗碗"},
@@ -22,10 +21,6 @@ ITEM_CATALOG = {
     "moon_stone":      {"name": "月光石🌙",          "icon": "🌙", "type_display": "进化道具", "desc": "🦊→月狐🌙"},
     "stardust":        {"name": "星尘🌌",            "icon": "🌟", "type_display": "进化道具", "desc": "🦊→星河狐🌌"},
     "fortune_bell":    {"name": "招财铃🎴",          "icon": "🎴", "type_display": "进化道具", "desc": "🐱→达摩猫🗾"},
-    # 配饰
-    "bow":             {"name": "蝴蝶结🎀",          "icon": "🎀", "type_display": "配饰",    "desc": "给宠物戴蝴蝶结"},
-    "sunglasses":      {"name": "墨镜🕶️",           "icon": "🕶️", "type_display": "配饰",    "desc": "给宠物戴墨镜"},
-    "crown":           {"name": "皇冠👑",            "icon": "👑", "type_display": "配饰",    "desc": "给宠物戴皇冠"},
     # 背景
     "sakura":          {"name": "樱花背景🌸",        "icon": "🌸", "type_display": "背景",    "desc": "宠物区樱花背景"},
     "starry":          {"name": "星光背景🌟",        "icon": "🌟", "type_display": "背景",    "desc": "宠物区星光背景"},

@@ -7,6 +7,9 @@
       <text wx:if="{{partner}}" class="ch-partner">💑 {{partner.nickname}}</text>
       <text wx:else class="ch-partner ch-bind" bindtap="goBind">➕ 绑定伴侣</text>
       <text class="ch-days" wx:if="{{together_days}}">· 第{{together_days}}天</text>
+      <text wx:if="{{sparkCount > 0}}" class="ch-spark">
+        {{sparkStatus === 'gray' ? '🔥' : '🔥'}}{{sparkCount}}天
+      </text>
     </view>
     <view class="ch-level" bindtap="go" data-url="/pages/level/level">
       <text class="ch-lv">Lv{{level}}</text>

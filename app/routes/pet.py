@@ -149,15 +149,37 @@ def switch_pet(req: dict, user: User = Depends(get_current_user), db: Session = 
 
 @router.post("/{pet_id}/form")
 def switch_form(pet_id: int, req: dict, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    """切换宠物形态（必须是已解锁的）"""
+    """切换宠物形态：必须是已解锁的，自动消耗切换卡（有则随机切换，无则自由选）"""
     cid = get_couple_id(user)
     pet = db.query(Pet).filter(Pet.id == pet_id, Pet.couple_id == cid).first()
     if not pet:
         raise HTTPException(404, "宠物不存在")
     form = req.get("form")
     unlocked = json.loads(pet.unlocked_forms) if isinstance(pet.unlocked_forms, str) else pet.unlocked_forms
-    if form not in unlocked:
-        raise HTTPException(400, "该形态未解锁")
+
+    if form == "random":
+        # 随机切换 → 消耗切换卡
+        switch_inv = db.query(Inventory).filter(
+            Inventory.couple_id == cid,
+            Inventory.item_type == "consumable",
+            Inventory.item_id == "switch_card",
+            Inventory.quantity > 0,
+        ).first()
+        if not switch_inv:
+            raise HTTPException(400, "没有切换卡🔄，无法随机切换")
+        switch_inv.quantity -= 1
+        others = [f for f in unlocked if f != pet.current_form]
+        if len(others) > 1:
+            import random
+            form = random.choice(others)
+        elif len(others) == 1:
+            form = others[0]
+        else:
+            raise HTTPException(400, "没有其他可切换的形态")
+    else:
+        if form not in unlocked:
+            raise HTTPException(400, "该形态未解锁")
+
     pet.current_form = form
     db.commit()
     total = calc_total_delivered(cid, db)
@@ -295,28 +317,22 @@ def use_inventory_item(req: dict, user: User = Depends(get_current_user), db: Se
 
     if inv.item_type == "consumable":
         if inv.item_id == "intimacy_candy":
-            # 给当前活跃宠物加亲密
             pet = db.query(Pet).filter(Pet.couple_id == cid, Pet.is_active == True).first()
             if pet:
                 pet.intimacy = min(100, pet.intimacy + 10)
             result["effect"] = "亲密+10"
         elif inv.item_id == "fortune_cookie":
             result["message"] = "打开幸运饼干，获得一句好运势！"
-        elif inv.item_id == "switch_card":
-            # 随机切换当前宠物形态
-            pet = db.query(Pet).filter(Pet.couple_id == cid, Pet.is_active == True).first()
-            if pet:
-                unlocked = json.loads(pet.unlocked_forms) if isinstance(pet.unlocked_forms, str) else pet.unlocked_forms
-                if len(unlocked) > 1:
-                    others = [f for f in unlocked if f != pet.current_form]
-                    import random
-                    new_form = random.choice(others)
-                    pet.current_form = new_form
-                    result["effect"] = f"切换成了{new_form}形态"
-        elif inv.item_id == "streak_protect":
-            result["effect"] = "免断卡已激活！"
-        elif inv.item_id == "reminder_horn":
-            result["effect"] = "提醒已发送给伴侣"
+        elif inv.item_id == "spark_card":
+            from app.models.couple import Couple
+            couple = db.query(Couple).filter(Couple.id == cid).first()
+            if couple and (couple.spark_count or 0) < (couple.max_spark_count or 0):
+                couple.spark_count = couple.max_spark_count
+                couple.spark_status = "active"
+                result["effect"] = f"火花恢复至最高记录 {couple.max_spark_count}🔥"
+            elif couple:
+                result["effect"] = "当前火花已达最高记录，无需使用"
+                inv.quantity += 1  # 不消耗
         elif inv.item_id == "decline_card":
             result["effect"] = "你逃过了一次家务！😤"
         elif inv.item_id == "serve_me":

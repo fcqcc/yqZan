@@ -4,6 +4,7 @@ from app.routes.plan import router as plan_router
 from app.routes.extra import router as extra_router
 from app.routes.social import router as social_router
 from app.routes.card import router as card_router
+from app.routes.checkin import router as checkin_router
 from app.routes.admin import router as admin_router
 from app.routes.pet import router as pet_router
 from app.routes.gacha import router as gacha_router
@@ -11,5 +12,5 @@ from app.routes.gacha import router as gacha_router
 __all__ = [
     "user_router", "couple_router", "plan_router",
     "extra_router", "social_router", "card_router",
-    "admin_router", "pet_router", "gacha_router",
+    "admin_router", "checkin_router", "pet_router", "gacha_router",
 ]

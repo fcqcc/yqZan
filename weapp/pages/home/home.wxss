@@ -13,6 +13,7 @@
 .ch-partner { font-size: 13px; color: var(--text-secondary); margin-left: 6px; }
 .ch-bind { background: rgba(214, 92, 138, 0.12); padding: 2px 8px; border-radius: 10px; }
 .ch-days { font-size: 11px; color: var(--text-muted); margin-left: 4px; }
+.ch-spark { font-size: 11px; color: #ff6b35; margin-left: 4px; font-weight: 700; }
 .ch-level { text-align: center; }
 .ch-lv {
   background: rgba(214, 92, 138, 0.12);

@@ -114,6 +114,11 @@ const getInventory = () => request('/api/pets/inventory')
 const useItem = (inventoryId) => request('/api/pets/inventory/use', 'POST', { inventory_id: inventoryId })
 const getBestiary = () => request('/api/pets/bestiary')
 
+// ===== 签到 =====
+const doCheckin = () => request('/api/checkin', 'POST')
+const getCheckinStatus = () => request('/api/checkin/status')
+const getSpark = () => request('/api/checkin/spark')
+
 module.exports = {
   register, login, getMe, getPartner, bindPartner, unbindPartner,
   getPlans, createPlan, deletePlan, deliverPlan, getPlanDeliveries,
@@ -128,5 +133,6 @@ module.exports = {
    congratulatePlan,
   getActivePet, getPets, switchPet, switchPetForm, feedPet, evolvePet,
   getTickets, drawSingle, drawTen,
-  getInventory, useItem, getBestiary
+  getInventory, useItem, getBestiary,
+  doCheckin, getCheckinStatus, getSpark
 }

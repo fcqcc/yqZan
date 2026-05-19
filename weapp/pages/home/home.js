@@ -55,7 +55,11 @@ Page({
     petDescription: '刚刚孵化的小家伙，需要你的关爱才能长大……',
     petId: null,
     tickets: 0,
-    showPetModal: false
+    showPetModal: false,
+    sparkCount: 0,
+    sparkStatus: 'active',
+    maxSpark: 0,
+    streakDays: 0
   },
 
   onShow() {
@@ -64,6 +68,21 @@ Page({
     this.setData({ userInfo })
     this.loadData()
     this.loadPetData()
+    // 自动签到
+    api.doCheckin().catch(() => {})
+    this.loadSpark()
+  },
+
+  async loadSpark() {
+    try {
+      const s = await api.getSpark()
+      this.setData({
+        sparkCount: s.spark_count || 0,
+        sparkStatus: s.spark_status || 'active',
+        maxSpark: s.max_spark_count || 0,
+        streakDays: s.streak_days || 0,
+      })
+    } catch(e) {}
   },
 
   async loadData() {
