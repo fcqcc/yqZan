@@ -171,10 +171,10 @@ def feed_pet(pet_id: int, user: User = Depends(get_current_user), db: Session = 
     pet = db.query(Pet).filter(Pet.id == pet_id, Pet.couple_id == cid).first()
     if not pet:
         raise HTTPException(404, "宠物不存在")
-    # 亲密度 +3，但5分钟内不能重复喂
+    # 亲密度 +3，但1分钟内不能重复喂
     now = datetime.now()
-    if pet.last_fed_at and (now - pet.last_fed_at) < timedelta(minutes=5):
-        raise HTTPException(429, "宠物刚吃饱，等会儿再喂吧")
+    if pet.last_fed_at and (now - pet.last_fed_at) < timedelta(minutes=1):
+        raise HTTPException(429, "宠物刚吃过，让它消化一会儿吧～")
     pet.intimacy = min(100, pet.intimacy + 3)
     pet.last_fed_at = now
     db.commit()
@@ -311,6 +311,22 @@ def use_inventory_item(req: dict, user: User = Depends(get_current_user), db: Se
             result["effect"] = "免断卡已激活！"
         elif inv.item_id == "reminder_horn":
             result["effect"] = "提醒已发送给伴侣"
+        elif inv.item_id == "decline_card":
+            result["effect"] = "你逃过了一次家务！😤"
+        elif inv.item_id.startswith("chore_"):
+            chore_names = {
+                "chore_dishes": "洗碗🧹",
+                "chore_mop": "拖地🧹",
+                "chore_cook": "做饭🍳",
+                "chore_laundry": "洗衣🧺",
+                "chore_garbage": "倒垃圾🗑️",
+            }
+            name = chore_names.get(inv.item_id, inv.item_id.replace("chore_", ""))
+            partner = db.query(User).filter(
+                User.couple_id == user.couple_id, User.id != user.id
+            ).first()
+            partner_name = partner.nickname if partner else "对方"
+            result["effect"] = f"指派了{partner_name}去做{name}！"
 
         inv.quantity -= 1
         db.commit()
