@@ -17,7 +17,7 @@
         <view class="couple-info">
           <text class="couple-name">{{coupleTitle}}</text>
           <view class="couple-slogan-wrap">
-            <text class="couple-slogan">记录属于你们的小日常</text>
+            <text class="couple-slogan">一起攒，一起实现</text>
           </view>
         </view>
         <view class="level-badge">
@@ -67,9 +67,14 @@
       </view>
 
       <view wx:if="{{!partner}}" class="bind-card glass-card">
-        <view class="bind-title">绑定伴侣</view>
-        <input class="input bind-input" placeholder="输入对方的邀请码" model:value="{{inviteCodeInput}}" />
+        <view class="bind-title">💞 绑定伴侣</view>
+        <view class="bind-desc">输入对方的邀请码，一起攒钱</view>
+        <input class="input bind-input" placeholder="对方的6位邀请码" model:value="{{inviteCodeInput}}" maxlength="6" />
         <button class="bind-btn" bindtap="handleBind">绑定</button>
+      </view>
+      <view wx:else class="bound-tip glass-card">
+        <view class="bound-title">💞 已绑定</view>
+        <text class="bound-name">{{partner.nickname}}</text>
       </view>
 
       <view class="menu-list glass-card">

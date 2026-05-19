@@ -11,36 +11,26 @@ from app.services.auth import get_current_user
 
 router = APIRouter(prefix="/api", tags=["情侣"])
 
-# ===== 数据迁移工具 =====
 
-COUPLE_DATA_MODELS = None  # lazy import
+# ===== 工具函数 =====
 
-def get_couple_data_models():
-    """懒加载所有包含 couple_id 的模型"""
-    global COUPLE_DATA_MODELS
-    if COUPLE_DATA_MODELS is None:
-        from app.models.plan import Plan, Wish
-        from app.models.extra import Anniversary, Gift, ToDo
-        from app.models.social import Level, LevelLog, Note, Task
-        from app.models.card import Card
-        COUPLE_DATA_MODELS = [Plan, Wish, Anniversary, Gift, ToDo, Level, LevelLog, Note, Task, Card]
-    return COUPLE_DATA_MODELS
+def has_partner(db: Session, user: User) -> bool:
+    """检查用户是否已有真实的伴侣（个人 Couple 只有自己=无伴侣）"""
+    if not user.couple_id:
+        return False
+    count = db.query(User).filter(User.couple_id == user.couple_id).count()
+    return count >= 2
 
 
-def migrate_couple_data(db: Session, old_couple_id: int, new_couple_id: int):
-    """将 old_couple 下的所有数据迁移到 new_couple"""
-    for model in get_couple_data_models():
-        db.query(model).filter(model.couple_id == old_couple_id).update(
-            {"couple_id": new_couple_id}
-        )
-
-
-def create_personal_couple(db: Session) -> Couple:
-    """创建个人 Couple"""
-    couple = Couple(status="active")
-    db.add(couple)
-    db.flush()
-    return couple
+def get_partner_user(db: Session, user: User) -> User | None:
+    """返回用户的伴侣，没有则返回 None"""
+    if not user.couple_id:
+        return None
+    return (
+        db.query(User)
+        .filter(User.couple_id == user.couple_id, User.id != user.id)
+        .first()
+    )
 
 
 # ===== 绑定伴侣 =====
@@ -51,32 +41,43 @@ def bind_partner(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    # 自己是否已有伴侣
+    if has_partner(db, user):
+        raise HTTPException(400, "你已绑定伴侣，请先解绑再绑定其他人")
+
+    # 对方是否存在
     partner = db.query(User).filter(User.invite_code == req.invite_code).first()
     if not partner:
         raise HTTPException(404, "邀请码无效")
+
+    # 不能绑定自己
     if partner.id == user.id:
         raise HTTPException(400, "不能绑定自己")
-    if partner.couple_id:
-        # 检查对方是否已有伴侣（couple 里有 2 人）
-        partner_count = db.query(User).filter(User.couple_id == partner.couple_id).count()
-        if partner_count >= 2:
-            raise HTTPException(400, "对方已绑定伴侣")
+
+    # 对方是否已有伴侣
+    if has_partner(db, partner):
+        raise HTTPException(400, "对方已绑定伴侣")
 
     # 创建共享 Couple
     shared = Couple(status="active")
     db.add(shared)
     db.flush()
 
-    # 迁移用户数据到共享 Couple
-    old_user_cid = user.couple_id
-    old_partner_cid = partner.couple_id
+    # 迁移两人个人数据到共享 Couple
+    from app.models.plan import Plan, Wish
+    from app.models.extra import Anniversary, Gift, ToDo
+    from app.models.social import Level, LevelLog, Note, Task
+    from app.models.card import Card
 
-    if old_user_cid:
-        migrate_couple_data(db, old_user_cid, shared.id)
-    if old_partner_cid and old_partner_cid != old_user_cid:
-        migrate_couple_data(db, old_partner_cid, shared.id)
+    DATA_MODELS = [Plan, Wish, Anniversary, Gift, ToDo, Level, LevelLog, Note, Task, Card]
 
-    # 更新两人 couple_id
+    for cid in filter(None, {user.couple_id, partner.couple_id}):
+        for model in DATA_MODELS:
+            db.query(model).filter(model.couple_id == cid).update(
+                {"couple_id": shared.id}
+            )
+
+    # 更新两人指向共享 Couple
     user.couple_id = shared.id
     partner.couple_id = shared.id
     db.commit()
@@ -91,20 +92,19 @@ def unbind_partner(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    if not user.couple_id:
-        raise HTTPException(400, "你还没有绑定")
-
-    # 检查是否真的有伴侣
-    members = db.query(User).filter(User.couple_id == user.couple_id).all()
-    if len(members) < 2:
+    if not has_partner(db, user):
         raise HTTPException(400, "你没有绑定的伴侣")
 
     old_couple_id = user.couple_id
+    members = db.query(User).filter(User.couple_id == old_couple_id).all()
 
     # 每人分到一个新的个人 Couple
+    # 注意：数据不迁移，留在原共享 Couple 中（已归档）
+    # 因为 plans/deliveries 没有 user_id，无法合理拆分给双方
     for member in members:
-        personal = create_personal_couple(db)
-        migrate_couple_data(db, old_couple_id, personal.id)
+        personal = Couple(status="active")
+        db.add(personal)
+        db.flush()
         member.couple_id = personal.id
 
     # 归档旧 Couple
@@ -114,7 +114,7 @@ def unbind_partner(
         old.archived_at = datetime.now()
 
     db.commit()
-    return {"ok": True, "message": "已解绑，数据已拆分"}
+    return {"ok": True, "message": "已解绑，双方各自拥有新的存钱空间"}
 
 
 # ===== 获取伴侣信息 =====
@@ -124,11 +124,4 @@ def get_partner(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    if not user.couple_id:
-        return None
-    partner = (
-        db.query(User)
-        .filter(User.couple_id == user.couple_id, User.id != user.id)
-        .first()
-    )
-    return partner
+    return get_partner_user(db, user)

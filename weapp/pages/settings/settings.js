@@ -153,21 +153,32 @@ Page({
   },
 
   async handleBind() {
-    if (!this.data.inviteCodeInput) {
-      wx.showToast({ title: '请输入邀请码', icon: 'none' })
+    const code = (this.data.inviteCodeInput || '').trim().toUpperCase()
+    if (!code) {
+      wx.showToast({ title: '请输入对方的邀请码', icon: 'none' })
+      return
+    }
+    if (code.length !== 6) {
+      wx.showToast({ title: '邀请码为6位', icon: 'none' })
       return
     }
     wx.showLoading({ title: '绑定中' })
     try {
-      const res = await api.bindPartner(this.data.inviteCodeInput)
+      const res = await api.bindPartner(code)
       wx.hideLoading()
-      wx.showToast({ title: '绑定成功 ' + res.partner, icon: 'success' })
+      wx.showToast({ title: '🎉 绑定成功！', icon: 'none' })
       this.setData({ inviteCodeInput: '' })
       this.loadPartner()
       wx.switchTab({ url: '/pages/home/home' })
     } catch (e) {
       wx.hideLoading()
-      wx.showToast({ title: (e && e.detail) || '绑定失败', icon: 'none' })
+      // 后端返回的 detail 消息
+      const msg = (e && (e.detail || e.message)) || '绑定失败，请检查邀请码'
+      wx.showModal({
+        title: '绑定失败',
+        content: String(msg),
+        showCancel: false
+      })
     }
   },
 

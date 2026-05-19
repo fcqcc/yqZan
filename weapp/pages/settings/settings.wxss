@@ -248,6 +248,32 @@ page {
   border: none;
 }
 
+.bind-desc {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+  margin-bottom: 20rpx;
+}
+
+.bound-tip {
+  border-radius: 44rpx;
+  padding: 32rpx;
+  margin-bottom: 32rpx;
+  text-align: center;
+}
+
+.bound-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 12rpx;
+}
+
+.bound-name {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--pink-dark);
+}
+
 .danger-actions {
   display: flex;
   flex-direction: column;
