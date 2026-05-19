@@ -35,12 +35,6 @@
         "selectedIconPath": "images/tab_note_active.png"
       },
       {
-        "pagePath": "pages/backpack/backpack",
-        "text": "背包",
-        "iconPath": "images/tab_backpack.png",
-        "selectedIconPath": "images/tab_backpack_active.png"
-      },
-      {
         "pagePath": "pages/settings/settings",
         "text": "我的",
         "iconPath": "images/tab_me.png",
