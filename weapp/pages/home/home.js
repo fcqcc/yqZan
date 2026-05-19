@@ -199,9 +199,5 @@ Page({
       wx.hideLoading()
       wx.showToast({ title: e.errMsg || '投喂失败', icon: 'none' })
     }
-  },
-
-  goGacha() {
-    wx.navigateTo({ url: '/pages/gacha/gacha' })
   }
 })

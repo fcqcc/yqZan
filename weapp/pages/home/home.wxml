@@ -70,10 +70,6 @@
 
   <!-- ===== 6. 快捷入口 ===== -->
   <view class="quick-row">
-    <view class="qr-item" catchtap="go" data-url="/pages/plans/plans">
-      <text class="qr-emoji">💰</text>
-      <text class="qr-label">计划</text>
-    </view>
     <view class="qr-item" catchtap="go" data-url="/pages/anniversaries/anniversaries">
       <text class="qr-emoji">🎉</text>
       <text class="qr-label">纪念日</text>
@@ -117,12 +113,6 @@
     <text class="pet-click-hint">点我互动 ›</text>
   </view>
 </scroll-view>
-
-<!-- ===== 扭蛋机入口（右上角浮动） ===== -->
-<view class="gacha-btn" bindtap="goGacha">
-  <text class="gacha-icon">🎰</text>
-  <text class="gacha-badge" wx:if="{{tickets > 0}}">{{tickets}}</text>
-</view>
 
 <!-- ===== 宠物信息弹窗 ===== -->
 <view wx:if="{{showPetModal}}" class="modal-overlay" bindtap="hidePetModal">
