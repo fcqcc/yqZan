@@ -10,6 +10,7 @@
       <text class="ticket-icon">🎟️</text>
       <text class="ticket-count">{{tickets}}</text>
       <text class="ticket-label">张抽卡券</text>
+      <view class="prob-btn" bindtap="showProb">❓</view>
     </view>
   </view>
 
@@ -113,6 +114,22 @@
       <view class="result-btn-area">
         <button class="btn-result" bindtap="onCloseResult">知道了</button>
       </view>
+    </view>
+  </view>
+
+  <!-- ===== 概率详情弹窗 ===== -->
+  <view wx:if="{{showProbModal}}" class="modal-overlay" bindtap="hideProb">
+    <view class="prob-modal" catchtap="catchTap">
+      <view class="prob-modal-title">🎯 抽卡概率公示</view>
+      <view class="prob-list">
+        <view wx:for="{{probList}}" wx:key="id" class="prob-row">
+          <text class="prob-rarity prob-rarity-{{item.rarity}}">{{item.rarity}}</text>
+          <text class="prob-name">{{item.name}}</text>
+          <text class="prob-pct">{{item.pct}}%</text>
+        </view>
+      </view>
+      <view class="prob-modal-footer">抽卡券通过存钱/打卡免费获取，概率公开透明</view>
+      <button class="btn btn-primary prob-close" bindtap="hideProb">知道了</button>
     </view>
   </view>
 

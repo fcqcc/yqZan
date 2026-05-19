@@ -29,10 +29,10 @@
         "selectedIconPath": "images/tab_home_active.png"
       },
       {
-        "pagePath": "pages/plans/plans",
-        "text": "计划",
-        "iconPath": "images/tab_note.png",
-        "selectedIconPath": "images/tab_note_active.png"
+        "pagePath": "pages/backpack/backpack",
+        "text": "背包",
+        "iconPath": "images/tab_backpack.png",
+        "selectedIconPath": "images/tab_backpack_active.png"
       },
       {
         "pagePath": "pages/settings/settings",

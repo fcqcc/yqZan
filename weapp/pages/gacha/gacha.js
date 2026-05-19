@@ -10,7 +10,32 @@ Page({
     currentResult: {},
     resultAnimClass: '',
     tenResults: [],
-    summaryList: []
+    summaryList: [],
+    showProbModal: false,
+    probList: []
+  },
+
+  onLoad() {
+    // 概率数据（硬编码，和后端一致）
+    const probList = [
+      { rarity: 'SSR+', name: '金元宝龙🐉', pct: '0.2' },
+      { rarity: 'SSR', name: '独角兽🦄', pct: '0.8' },
+      { rarity: 'SSR', name: '机械核心⚙️', pct: '1.5' },
+      { rarity: 'SSR', name: '星尘🌌', pct: '1.5' },
+      { rarity: 'SR', name: '招财猫🐱', pct: '4' },
+      { rarity: 'SR', name: '星光背景🌟', pct: '2' },
+      { rarity: 'SR', name: '金元宝🪙/爱心箭🏹/月光石🌙/招财铃🎴/皇冠👑', pct: '各3' },
+      { rarity: 'R', name: '小狐狸🦊', pct: '10' },
+      { rarity: 'R', name: '墨镜🕶️', pct: '5' },
+      { rarity: 'R', name: '樱花背景🌸/免断卡🛡️', pct: '各3' },
+      { rarity: 'R', name: '家务卡/我不要😤', pct: '1-3' },
+      { rarity: 'N', name: '幸运饼干🍪', pct: '16' },
+      { rarity: 'N', name: '切换卡🔄', pct: '12' },
+      { rarity: 'N', name: '亲密糖果🍬', pct: '10' },
+      { rarity: 'N', name: '蝴蝶结🎀', pct: '6' },
+      { rarity: 'N', name: '提醒喇叭📣', pct: '1' },
+    ]
+    this.setData({ probList })
   },
 
   onShow() {
@@ -138,5 +163,13 @@ Page({
   },
 
   preventMove() {},
-  catchTap() {}
+  catchTap() {},
+
+  /** 显示概率弹窗 */
+  showProb() {
+    this.setData({ showProbModal: true })
+  },
+  hideProb() {
+    this.setData({ showProbModal: false })
+  }
 })
