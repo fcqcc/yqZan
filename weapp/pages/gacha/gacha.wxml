@@ -21,7 +21,7 @@
       </view>
       <view class="machine-body">
         <view class="machine-ball {{animating ? 'ball-shake' : ''}}">
-          <text class="ball-icon">{{{animating ? '🌀' : '🎯'}}}</text>
+          <text class="ball-icon">{{animating ? '🌀' : '🎯'}}</text>
         </view>
         <view class="machine-dots">
           <view class="machine-dot"></view>
