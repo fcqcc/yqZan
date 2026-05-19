@@ -389,7 +389,22 @@ def get_bestiary(user: User = Depends(get_current_user), db: Session = Depends(g
     inv_items = db.query(Inventory).filter(Inventory.couple_id == cid).all()
     owned_items = {(i.item_type, i.item_id) for i in inv_items if i.quantity > 0}
 
+    # 所有卡池道具（图鉴用）
+    from app.routes.gacha import GACHA_POOL
+    all_items = []
+    for item_type, item_id, name, rarity, _ in GACHA_POOL:
+        if item_type == "pet":
+            continue  # 宠物在图鉴另一块
+        all_items.append({
+            "item_type": item_type,
+            "item_id": item_id,
+            "name": name,
+            "rarity": rarity,
+            "obtained": (item_type, item_id) in owned_items,
+        })
+
     return {
         "pets": all_pets,
         "evolutions": evo_list,
+        "items": all_items,
     }

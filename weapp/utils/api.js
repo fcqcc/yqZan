@@ -112,6 +112,7 @@ const drawTen = () => request('/api/gacha/draw10', 'POST')
 // ===== 背包 =====
 const getInventory = () => request('/api/inventory')
 const useItem = (inventoryId) => request('/api/inventory/use', 'POST', { inventory_id: inventoryId })
+const getBestiary = () => request('/api/pets/bestiary')
 
 module.exports = {
   register, login, getMe, getPartner, bindPartner, unbindPartner,
@@ -127,5 +128,5 @@ module.exports = {
    congratulatePlan,
   getActivePet, getPets, switchPet, switchPetForm, feedPet, evolvePet,
   getTickets, drawSingle, drawTen,
-  getInventory, useItem
+  getInventory, useItem, getBestiary
 }

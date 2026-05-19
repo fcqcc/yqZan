@@ -136,3 +136,70 @@
 .empty { text-align: center; padding: 40px 16px; color: var(--text-light); font-size: 14px; }
 .empty-icon { font-size: 40px; display: block; margin-bottom: 8px; }
 .empty-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; display: block; }
+
+/* ===== 子TAB ===== */
+.sub-tab-bar {
+  display: flex;
+  margin: 0 12px 8px;
+  gap: 8px;
+}
+.sub-tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: #fff;
+  border: 1px solid #ffd6e8;
+  border-radius: var(--radius-sm);
+}
+.sub-tab--active {
+  color: var(--pink-dark);
+  background: rgba(214, 92, 138, 0.08);
+  border-color: var(--pink-dark);
+}
+
+/* ===== 图鉴网格（改造版） ===== */
+.bestiary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.bestiary-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 4px;
+  border-radius: var(--radius-sm);
+  background: #fff8fc;
+  border: 1px solid rgba(214, 92, 138, 0.12);
+  position: relative;
+}
+.bestiary-cell--unknown {
+  background: #f5eef2;
+  border-color: rgba(214, 92, 138, 0.08);
+  opacity: 0.6;
+}
+.bestiary-cell-rarity {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 2px;
+}
+.bestiary-rarity-N { color: #888; background: #f0f0f0; }
+.bestiary-rarity-R { color: #4d8cf0; background: #f0f6ff; }
+.bestiary-rarity-SR { color: #9c27b0; background: #faf0ff; }
+.bestiary-rarity-SSR { color: #ff8f00; background: #fff8e1; }
+.bestiary-rarity-SSRP { color: #e65100; background: #fff3e0; }
+.bestiary-cell-name { font-size: 11px; color: var(--text); text-align: center; line-height: 1.3; }
+.bestiary-badge {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 10px;
+  color: #2e7d32;
+  font-weight: 700;
+}
