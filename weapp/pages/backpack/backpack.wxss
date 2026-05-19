@@ -298,26 +298,67 @@
   font-weight: 700;
 }
 
-/* ===== 成就网格 ===== */
+/* ===== 成就网格 — 卡片风格（同背包） ===== */
 .ach-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+  gap: 10px;
 }
 .ach-cell {
   display: flex;
   flex-direction: column;
-  padding: 12px;
+  padding: 14px 12px 12px;
   border-radius: var(--radius);
   border: 1px solid #ffd6e8;
-  gap: 4px;
+  gap: 6px;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(214, 92, 138, 0.06);
+  transition: all 0.12s;
 }
-.ach-cell--unlocked { background: linear-gradient(135deg, #fff8fc, #fff); }
-.ach-cell--hidden-unlocked { background: linear-gradient(135deg, #fff8e1, #fff); border-color: #ffd54f; }
-.ach-cell--locked { background: #f5eef2; opacity: 0.65; }
-.ach-cell-top { display: flex; justify-content: space-between; align-items: center; }
-.ach-icon { font-size: 22px; }
-.ach-reward { font-size: 10px; font-weight: 700; color: #7c4dff; }
-.ach-hidden-tag { font-size: 10px; color: var(--text-muted); font-weight: 700; }
-.ach-name { font-size: 13px; font-weight: 700; color: var(--text); }
-.ach-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.3; }
+.ach-cell--unlocked {
+  background: linear-gradient(135deg, #fff5fa, #ffffff);
+  border-color: #f0c0d0;
+}
+.ach-cell--hidden-unlocked {
+  background: linear-gradient(135deg, #fff8e1, #ffffff);
+  border-color: #ffd54f;
+  box-shadow: 0 2px 12px rgba(255, 213, 79, 0.2);
+}
+.ach-cell--locked {
+  background: #f5f0f2;
+  border-color: #e8d0d8;
+  opacity: 0.7;
+}
+.ach-cell-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+.ach-icon { font-size: 26px; display: block; }
+.ach-reward {
+  font-size: 11px; font-weight: 700; color: #7c4dff;
+  background: rgba(124, 77, 255, 0.08);
+  padding: 2px 8px; border-radius: var(--radius-pill);
+}
+.ach-hidden-tag {
+  font-size: 10px; color: var(--text-muted); font-weight: 700;
+  background: #e8e8e8; padding: 2px 8px; border-radius: var(--radius-pill);
+}
+.ach-name { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.ach-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+.ach-cell--unlocked::after,
+.ach-cell--hidden-unlocked::after {
+  content: '✓';
+  position: absolute; top: 4px; right: 4px;
+  font-size: 12px; font-weight: 800;
+  color: #2e7d32;
+  background: rgba(46, 125, 50, 0.1);
+  width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; line-height: 20px;
+}
+.ach-cell--hidden-unlocked::after {
+  color: #e65100;
+  background: rgba(230, 81, 0, 0.1);
+}
