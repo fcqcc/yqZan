@@ -120,6 +120,9 @@ const doCheckin = () => request('/api/checkin', 'POST')
 const getCheckinStatus = () => request('/api/checkin/status')
 const getSpark = () => request('/api/checkin/spark')
 
+// ===== 成就 =====
+const getAchievements = () => request('/api/achievements')
+
 module.exports = {
   register, login, getMe, getPartner, bindPartner, unbindPartner,
   getPlans, createPlan, deletePlan, deliverPlan, getPlanDeliveries,
@@ -135,5 +138,6 @@ module.exports = {
   getActivePet, getPets, switchPet, switchPetForm, feedPet, evolvePet,
   getTickets, drawSingle, drawTen, buyTickets,
   getInventory, useItem, getBestiary,
-  doCheckin, getCheckinStatus, getSpark
+  doCheckin, getCheckinStatus, getSpark,
+  getAchievements
 }

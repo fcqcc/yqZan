@@ -66,6 +66,10 @@
         class="sub-tab {{pokedexTab === 'items' ? 'sub-tab--active' : ''}}"
         bindtap="switchPokedexTab" data-tab="items"
       >🎁 道具</view>
+      <view
+        class="sub-tab {{pokedexTab === 'achievements' ? 'sub-tab--active' : ''}}"
+        bindtap="switchPokedexTab" data-tab="achievements"
+      >🏆 成就</view>
     </view>
 
     <block wx:if="{{pokedexTab === 'pets'}}">
@@ -98,6 +102,24 @@
             <text class="bestiary-cell-rarity bestiary-rarity-{{item.rarity}}">{{item.rarity}}</text>
             <text class="bestiary-cell-name">{{item.obtained ? item.name : '???'}}</text>
             <view wx:if="{{item.obtained}}" class="bestiary-badge">✓</view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 成就图鉴 -->
+    <block wx:if="{{pokedexTab === 'achievements'}}">
+      <view class="section-card">
+        <text class="section-sub">共 {{achievements.length}} 项，已解锁 {{achievementsUnlocked}} 项</text>
+        <view class="ach-grid">
+          <view wx:for="{{achievements}}" wx:key="id" class="ach-cell {{item.unlocked ? (item.hidden ? 'ach-cell--hidden-unlocked' : 'ach-cell--unlocked') : 'ach-cell--locked'}}">
+            <view class="ach-cell-top">
+              <text class="ach-icon">{{item.unlocked ? (item.hidden ? '🌟' : '🏆') : '🔒'}}</text>
+              <text wx:if="{{item.unlocked && !item.hidden}}" class="ach-reward">{{item.reward_type === 'shards' ? '💎' : '🎟️'}}+{{item.reward_amount}}</text>
+              <text wx:if="{{item.hidden && !item.unlocked}}" class="ach-hidden-tag">??</text>
+            </view>
+            <text class="ach-name">{{item.unlocked ? item.name : (item.hidden ? '???' : item.name)}}</text>
+            <text class="ach-desc">{{item.unlocked ? item.desc : (item.hidden ? '达成特定条件解锁' : item.desc)}}</text>
           </view>
         </view>
       </view>

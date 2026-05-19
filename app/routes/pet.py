@@ -379,6 +379,9 @@ def get_bestiary(user: User = Depends(get_current_user), db: Session = Depends(g
     """获取图鉴：所有可获得的物品及当前解锁状态"""
     cid = get_couple_id(user)
 
+    from app.routes.achievement import check_and_unlock
+    check_and_unlock(cid, db)
+
     # 宠物
     my_pets = {p.pet_type for p in db.query(Pet).filter(Pet.couple_id == cid).all()}
     all_pets = [
@@ -429,4 +432,5 @@ def get_bestiary(user: User = Depends(get_current_user), db: Session = Depends(g
         "pets": all_pets,
         "evolutions": evo_list,
         "items": all_items,
+        "achievements": [],
     }

@@ -17,6 +17,9 @@ Page({
     itemsList: [],
     petsObtained: 0, petsTotal: 0,
     itemsObtained: 0, itemsTotal: 0,
+    // 成就数据
+    achievements: [],
+    achievementsUnlocked: 0,
   },
 
   onShow() {
@@ -33,14 +36,23 @@ Page({
       const inventory = Array.isArray(inventoryRes) ? inventoryRes : (inventoryRes.items || [])
       const bestiary = bestiaryRes
 
-      // 标记可用物品
       const marked = inventory.map(item => ({
         ...item,
         usable: item.item_type === 'consumable' && item.item_id !== 'switch_card',
       }))
       const filtered = this.filterByCategory(marked, this.data.backpackTab)
 
-      // 图鉴数据
+      // 成就
+      let achievements = []
+      if (bestiary.achievements && bestiary.achievements.length > 0) {
+        achievements = bestiary.achievements
+      } else {
+        try {
+          const achRes = await api.getAchievements()
+          achievements = achRes.achievements || []
+        } catch(e) {}
+      }
+
       const sortByRarity = (a, b) => {
         const order = { N: 0, R: 1, SR: 2, SSR: 3, 'SSR+': 4 }
         return (order[a.rarity] || 0) - (order[b.rarity] || 0)
@@ -58,6 +70,8 @@ Page({
         petsTotal: petsList.length,
         itemsObtained: itemsList.filter(i => i.obtained).length,
         itemsTotal: itemsList.length,
+        achievements,
+        achievementsUnlocked: achievements.filter(a => a.unlocked).length,
       })
     } catch (e) { console.error('load backpack error:', e) }
   },
@@ -65,8 +79,7 @@ Page({
   // ===== TAB 切换 =====
 
   switchTab(e) {
-    const tab = e.currentTarget.dataset.tab
-    this.setData({ tab })
+    this.setData({ tab: e.currentTarget.dataset.tab })
   },
 
   switchBackpackTab(e) {

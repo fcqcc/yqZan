@@ -6,7 +6,7 @@ from app.database import Base, engine, SessionLocal
 from app.models.card import CardTemplate
 from app.models.social import TaskEvent
 from app.jinja_fix import *  # Must come before other imports that use Jinja2
-from app.routes import admin_router, card_router, checkin_router, couple_router, extra_router, gacha_router, pet_router, plan_router, social_router, user_router
+from app.routes import achievement_router, admin_router, card_router, checkin_router, couple_router, extra_router, gacha_router, pet_router, plan_router, social_router, user_router
 
 
 PRESET_TEMPLATES = [
@@ -93,6 +93,7 @@ app.include_router(extra_router)
 app.include_router(social_router)
 app.include_router(card_router)
 app.include_router(admin_router)
+app.include_router(achievement_router)
 app.include_router(checkin_router)
 app.include_router(pet_router)
 app.include_router(gacha_router)

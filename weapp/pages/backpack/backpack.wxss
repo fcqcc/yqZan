@@ -297,3 +297,27 @@
   color: #2e7d32;
   font-weight: 700;
 }
+
+/* ===== 成就网格 ===== */
+.ach-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.ach-cell {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  border-radius: var(--radius);
+  border: 1px solid #ffd6e8;
+  gap: 4px;
+}
+.ach-cell--unlocked { background: linear-gradient(135deg, #fff8fc, #fff); }
+.ach-cell--hidden-unlocked { background: linear-gradient(135deg, #fff8e1, #fff); border-color: #ffd54f; }
+.ach-cell--locked { background: #f5eef2; opacity: 0.65; }
+.ach-cell-top { display: flex; justify-content: space-between; align-items: center; }
+.ach-icon { font-size: 22px; }
+.ach-reward { font-size: 10px; font-weight: 700; color: #7c4dff; }
+.ach-hidden-tag { font-size: 10px; color: var(--text-muted); font-weight: 700; }
+.ach-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.ach-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.3; }
