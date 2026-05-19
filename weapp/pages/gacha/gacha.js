@@ -19,7 +19,9 @@ Page({
     // 概率数据（硬编码，和后端一致）
     const probList = [
       { rarity: 'SSR+', name: '金元宝龙🐉', pct: '0.2' },
+      { rarity: 'SSR+', name: '原谅我吧🥺', pct: '0.1' },
       { rarity: 'SSR', name: '独角兽🦄', pct: '0.8' },
+      { rarity: 'SSR', name: '为我服务👑', pct: '0.5' },
       { rarity: 'SSR', name: '机械核心⚙️', pct: '1.5' },
       { rarity: 'SSR', name: '星尘🌌', pct: '1.5' },
       { rarity: 'SR', name: '招财猫🐱', pct: '4' },

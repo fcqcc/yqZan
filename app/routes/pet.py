@@ -313,6 +313,20 @@ def use_inventory_item(req: dict, user: User = Depends(get_current_user), db: Se
             result["effect"] = "提醒已发送给伴侣"
         elif inv.item_id == "decline_card":
             result["effect"] = "你逃过了一次家务！😤"
+        elif inv.item_id == "serve_me":
+            partner = db.query(User).filter(
+                User.couple_id == user.couple_id, User.id != user.id
+            ).first()
+            partner_name = partner.nickname if partner else "对方"
+            result["effect"] = f"你命令{partner_name}为你服务，不得拒绝！👑"
+            result["super_rare"] = True
+        elif inv.item_id == "forgive_me":
+            partner = db.query(User).filter(
+                User.couple_id == user.couple_id, User.id != user.id
+            ).first()
+            partner_name = partner.nickname if partner else "对方"
+            result["effect"] = f"你对{partner_name}说：原谅我吧🥺（ta的心已经软了）"
+            result["super_rare"] = True
         elif inv.item_id.startswith("chore_"):
             chore_names = {
                 "chore_dishes": "洗碗🧹",

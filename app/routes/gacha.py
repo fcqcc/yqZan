@@ -49,6 +49,8 @@ GACHA_POOL = [
     ("evolution_item", "stardust", "星尘🌌", "SSR", 1.5),
     ("pet", "unicorn", "独角兽🦄", "SSR", 0.8),
     ("pet", "dragon", "金元宝龙🐉", "SSR+", 0.2),
+    ("consumable", "serve_me", "为我服务👑", "SSR", 0.5),
+    ("consumable", "forgive_me", "原谅我吧🥺", "SSR+", 0.1),
 ]
 
 TOTAL_WEIGHT = sum(w for _, _, _, _, w in GACHA_POOL)
