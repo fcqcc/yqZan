@@ -5,6 +5,8 @@
     <button class="btn btn-primary" bindtap="toggleForm">➕ 添加</button>
     <button class="btn btn-outline" bindtap="importHolidays">📆 导入节日</button>
   </view>
+
+  <!-- 添加表单 -->
   <view wx:if="{{showForm}}" class="overlay">
     <view class="overlay-dismiss" bindtap="toggleForm" />
     <view class="sheet" catchtap="catchTap">
@@ -19,6 +21,42 @@
       </view>
     </view>
   </view>
+
+  <!-- 节日勾选弹窗 -->
+  <view wx:if="{{showHolidayPicker}}" class="overlay">
+    <view class="overlay-dismiss" bindtap="closeHolidayPicker" />
+    <view class="holiday-picker" catchtap="catchTap">
+      <view class="holiday-picker-header">
+        <text class="holiday-picker-title">🎉 选择要导入的节日</text>
+        <text class="holiday-picker-close" bindtap="closeHolidayPicker">✕</text>
+      </view>
+      <scroll-view scroll-y class="holiday-picker-list">
+        <view
+          wx:for="{{holidayList}}"
+          wx:key="title"
+          class="holiday-item {{item.disabled ? 'holiday-item--disabled' : ''}}"
+          bindtap="toggleHoliday"
+          data-index="{{index}}"
+        >
+          <view class="holiday-check {{item.checked ? 'holiday-check--on' : ''}}">
+            <text wx:if="{{item.checked}}">✓</text>
+          </view>
+          <text class="holiday-emoji">{{item.emoji}}</text>
+          <view class="holiday-info">
+            <text class="holiday-title">{{item.title}}</text>
+            <text class="holiday-date">{{item.date}}</text>
+          </view>
+          <text wx:if="{{item.disabled}}" class="holiday-tag">已存在</text>
+        </view>
+      </scroll-view>
+      <view class="holiday-picker-footer">
+        <text class="holiday-picker-count">已选 {{holidaySelectedCount}} 个节日</text>
+        <button class="btn btn-primary" bindtap="confirmImport">确认导入（{{holidaySelectedCount}}）</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 列表 -->
   <view wx:for="{{anniversaries}}" wx:key="id" class="card" style="display:flex;justify-content:space-between;align-items:center">
     <view><view style="font-weight:600">{{item.title}}</view><view style="font-size:12px;color:#999;margin-top:2px">{{item.date_val}}</view></view>
     <view style="text-align:right"><view style="font-size:20px;font-weight:900;color:#9d2d5a">{{item.days}}天</view><view style="font-size:11px;color:#999">倒计时</view></view>
