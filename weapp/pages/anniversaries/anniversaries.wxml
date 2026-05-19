@@ -61,7 +61,10 @@
   <!-- 列表 -->
   <view wx:for="{{anniversaries}}" wx:key="id" class="card" style="display:flex;justify-content:space-between;align-items:center">
     <view><view style="font-weight:600">{{item.title}}</view><view style="font-size:12px;color:#999;margin-top:2px">{{item.date_val}}</view></view>
-    <view style="text-align:right"><view style="font-size:20px;font-weight:900;color:#9d2d5a">{{item.days}}天</view><view style="font-size:11px;color:#999">倒计时</view></view>
+    <view style="display:flex;align-items:center;gap:8px">
+      <view style="text-align:right"><view style="font-size:20px;font-weight:900;color:#9d2d5a">{{item.days}}天</view><view style="font-size:11px;color:#999">倒计时</view></view>
+      <text class="del-btn" bindtap="del" data-id="{{item.id}}" data-title="{{item.title}}">✕</text>
+    </view>
   </view>
   <view wx:if="{{!anniversaries.length}}" class="empty">还没有纪念日</view>
 </scroll-view>

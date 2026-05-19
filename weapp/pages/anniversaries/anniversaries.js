@@ -26,7 +26,18 @@ Page({
     } catch(e) {}
   },
 
-  toggleForm() { this.setData({ showForm: !this.data.showForm, title: '', dateVal: '' }) },
+  toggleForm() {
+    // 打开表单时默认今天日期
+    const today = new Date()
+    const defaultDate = today.getFullYear() + '-' +
+      String(today.getMonth() + 1).padStart(2, '0') + '-' +
+      String(today.getDate()).padStart(2, '0')
+    this.setData({
+      showForm: !this.data.showForm,
+      title: '',
+      dateVal: defaultDate,
+    })
+  },
   onDateChange(e) { this.setData({ dateVal: e.detail.value }) },
 
   async create() {
@@ -34,8 +45,23 @@ Page({
     await api.createAnniversary({ title: this.data.title, date_val: this.data.dateVal })
     this.toggleForm(); this.load()
   },
-
+  /** 阻止弹层点击冒泡 */
   catchTap() {},
+
+  /** 删除纪念日 */
+  async del(e) {
+    const id = e.currentTarget.dataset.id
+    const title = e.currentTarget.dataset.title
+    const r = await wx.showModal({ title: '删除', content: `确定删除「${title}」？` })
+    if (!r.confirm) return
+    try {
+      await api.deleteAnniversary(id)
+      wx.showToast({ title: '已删除', icon: 'none' })
+      this.load()
+    } catch (e) {
+      wx.showToast({ title: '删除失败', icon: 'none' })
+    }
+  },
 
   /** 打开节日选择器 */
   async importHolidays() {
