@@ -27,24 +27,57 @@ Page({
   /** 阻止弹层点击冒泡 */
   catchTap() {},
 
-  /** 一键导入节日 */
+  /** 一键导入节日（带勾选） */
   async importHolidays() {
-    wx.showModal({
-      title: '导入节日',
-      content: '一键导入2026年所有情侣节日？\n（已存在的不会重复添加）',
-      success: async (res) => {
-        if (!res.confirm) return
-        wx.showLoading({ title: '导入中' })
-        try {
-          const result = await api.importHolidays()
-          wx.hideLoading()
-          wx.showToast({ title: `导入成功 ✨ 新增${result.imported}个节日`, icon: 'none' })
-          this.load()
-        } catch (e) {
-          wx.hideLoading()
-          wx.showToast({ title: '导入失败', icon: 'none' })
-        }
+    wx.showLoading({ title: '加载中' })
+    try {
+      const list = await api.getHolidayList()
+      wx.hideLoading()
+
+      const items = list.map(h => ({
+        name: `${h.emoji} ${h.title}（${h.date}）`,
+        checked: !h.existing,
+        disabled: h.existing,
+      }))
+
+      // 微信小程序用 picker 多选不方便，改用模态列表展示
+      if (items.every(i => i.disabled)) {
+        wx.showToast({ title: '所有节日已导入过了', icon: 'none' })
+        return
       }
-    })
+
+      const selected = items.filter(i => !i.disabled).map(i => {
+        // 提取title: "🎊 元旦（2026-01-01）" → "元旦"
+        return i.name.match(/[^ ]+ (.+)（20/)?.[1]?.replace('（）','') || ''
+      }).filter(Boolean)
+
+      if (selected.length === 0) {
+        wx.showToast({ title: '没有可导入的节日', icon: 'none' })
+        return
+      }
+
+      wx.showModal({
+        title: '选择要导入的节日',
+        content: `将添加以下 ${selected.length} 个节日：\n${selected.join('、')}`,
+        cancelText: '取消',
+        confirmText: '确认导入',
+        success: async (res) => {
+          if (!res.confirm) return
+          wx.showLoading({ title: '导入中' })
+          try {
+            const result = await api.importHolidays(selected)
+            wx.hideLoading()
+            wx.showToast({ title: `✅ 成功导入${result.imported}个节日`, icon: 'none' })
+            this.load()
+          } catch (e) {
+            wx.hideLoading()
+            wx.showToast({ title: '导入失败', icon: 'none' })
+          }
+        }
+      })
+    } catch (e) {
+      wx.hideLoading()
+      wx.showToast({ title: '加载失败', icon: 'none' })
+    }
   },
 })
