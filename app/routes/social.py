@@ -175,10 +175,11 @@ def list_notes(
     notes = []
     for n in rows:
         liked = str(user.id) in (n.liked_by or "").split(",")
+        stamped = str(user.id) in (n.stamped_by or "").split(",")
         notes.append(
             NoteResponse(
                 id=n.id, content=n.content, image_url=n.image_url,
-                likes=n.likes, liked=liked, user_id=n.user_id,
+                likes=n.likes, liked=liked, stamped=stamped, user_id=n.user_id,
                 created_at=n.created_at,
             )
         )
@@ -223,6 +224,33 @@ def toggle_like(
     note.liked_by = ",".join(sorted(user_ids, key=int))
     db.commit()
     return {"ok": True, "likes": note.likes, "liked": uid_str in user_ids}
+
+
+@router.post("/notes/{note_id}/stamp")
+def toggle_stamp(
+    note_id: int,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    cid = get_couple_id(user)
+    note = db.query(Note).filter(Note.id == note_id, Note.couple_id == cid).first()
+    if not note:
+        raise HTTPException(404, "留言不存在")
+    if note.user_id == user.id:
+        raise HTTPException(400, "不能给自己的留言盖章")
+
+    user_ids = set(note.stamped_by.split(",")) if note.stamped_by else set()
+    uid_str = str(user.id)
+    if uid_str in user_ids:
+        user_ids.discard(uid_str)
+        stamped = False
+    else:
+        user_ids.add(uid_str)
+        stamped = True
+
+    note.stamped_by = ",".join(sorted(user_ids, key=int))
+    db.commit()
+    return {"ok": True, "stamped": stamped}
 
 
 @router.delete("/notes/{note_id}")

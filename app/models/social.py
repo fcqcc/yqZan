@@ -38,6 +38,7 @@ class Note(Base):
     image_url = Column(String(512), default="")
     likes = Column(Integer, default=0)
     liked_by = Column(Text, default="")  # comma-separated user ids
+    stamped_by = Column(Text, default="")  # comma-separated user ids who stamped
     created_at = Column(DateTime, default=datetime.now)
 
 

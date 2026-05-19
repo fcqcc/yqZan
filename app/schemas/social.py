@@ -46,6 +46,7 @@ class NoteResponse(BaseModel):
     image_url: str
     likes: int
     liked: bool = False
+    stamped: bool = False
     user_id: int
     created_at: datetime
 

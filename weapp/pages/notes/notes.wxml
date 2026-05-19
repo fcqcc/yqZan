@@ -1,4 +1,4 @@
-<!-- pages/notes/notes.wxml — 单列便签 + 贴上动效 -->
+<!-- pages/notes/notes.wxml — 留言板 -->
 <scroll-view class="page" scroll-y>
   <view class="page-title">💌 留言板</view>
   <view class="page-subtitle">给对方留一句心里话</view>
@@ -14,20 +14,27 @@
   <view class="oak-list">
     <view wx:for="{{notes}}" wx:key="id" class="oak-row {{stickId === item.id ? 'oak-row--stick' : ''}}">
       <view class="oak-row-pin" />
-      <view class="oak-row-paper" style="background:{{item.paper}}">
+      <view class="oak-row-paper {{item.isMine ? 'oak-mine' : 'oak-theirs'}}">
+        <!-- ✕ 删除（自己的留言才显示） -->
+        <text wx:if="{{item.isMine}}" class="oak-del" catchtap="del" data-id="{{item.id}}">✕</text>
+        <!-- 笑脸印章 -->
+        <text wx:if="{{item.stamped}}" class="oak-stamp">😊</text>
         <view class="oak-row-text">{{item.content}}</view>
         <view class="oak-row-meta">
-          <text class="oak-author">{{item.user_id === userInfo.id ? '我' : 'Ta'}}</text>
+          <text class="oak-author">{{item.isMine ? '我' : 'Ta'}}</text>
           <text class="oak-date">{{item.dateShort}}</text>
           <view class="oak-like" catchtap="like" data-id="{{item.id}}">
             <text>{{item.liked ? '❤' : '♡'}}</text>
             <text wx:if="{{item.likes}}" class="oak-like-num">{{item.likes}}</text>
           </view>
-          <text class="oak-del" catchtap="del" data-id="{{item.id}}">✕</text>
+        </view>
+        <!-- 点击对方留言盖章 -->
+        <view wx:if="{{!item.isMine}}" class="oak-stamp-area" bindtap="stamp" data-id="{{item.id}}">
+          <text class="oak-stamp-hint">{{item.stamped ? '取消笑脸' : '😊'}}</text>
         </view>
       </view>
     </view>
   </view>
 
-  <view wx:if="{{!notes || notes.length === 0}}" class="oak-empty">还没有便利贴，写第一条吧</view>
+  <view wx:if="{{!notes || notes.length === 0}}" class="oak-empty">还没有留言，写第一条吧</view>
 </scroll-view>

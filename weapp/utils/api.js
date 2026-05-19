@@ -75,6 +75,7 @@ const getNotes = () => request('/api/notes')
 const createNote = (content) => request('/api/notes', 'POST', { content })
 const likeNote = (id) => request('/api/notes/' + id + '/like', 'POST')
 const deleteNote = (id) => request('/api/notes/' + id, 'DELETE')
+const stampNote = (id) => request('/api/notes/' + id + '/stamp', 'POST')
 
 // ===== 等级 =====
 const getLevel = () => request('/api/level')
@@ -131,7 +132,7 @@ module.exports = {
   getTodos, createTodo, checkinTodo, deleteTodo,
   getAnniversaries, createAnniversary, deleteAnniversary, importHolidays, getHolidayList,
   getGifts, createGift, deleteGift,
-  getNotes, createNote, likeNote, deleteNote,
+  getNotes, createNote, likeNote, deleteNote, stampNote,
   getLevel, getLevelLogs,
    getCardTemplates, getCardSnapshot, generateCard, getCards,
    getTasks, getTaskEvents, createTask, acceptTaskEvent, verifyTask, deleteTask,
