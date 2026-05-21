@@ -18,5 +18,9 @@ class Couple(Base):
     gacha_pity = Column(Integer, default=0)  # 距离上次SSR+的抽卡次数（低保计数）
     candy_date = Column(Date, nullable=True)  # 亲密糖果使用日期
     candy_count = Column(Integer, default=0)  # 当日已使用糖果数
+    deposit_exp_date = Column(Date, nullable=True)  # 存款经验日期
+    deposit_exp_count = Column(Integer, default=0)  # 当日存款经验次数
+    goal_exp_date = Column(Date, nullable=True)  # 目标经验日期
+    goal_exp_count = Column(Integer, default=0)  # 当日目标经验次数
     created_at = Column(DateTime, default=datetime.now)
     archived_at = Column(DateTime, nullable=True)

@@ -23,6 +23,9 @@ class Pet(Base):
     last_active_at = Column(Date, nullable=True)
     last_pet_date = Column(Date, nullable=True)  # 上次抚摸日期
     last_walk_date = Column(Date, nullable=True)  # 上次散步日期
+    exp = Column(Integer, default=0)  # 当前经验值
+    level = Column(Integer, default=1)  # 当前等级
+    evolution_ready = Column(Boolean, default=False)  # 是否可进化
 
 
 class Inventory(Base):
@@ -171,7 +174,25 @@ FORM_THRESHOLDS = {
     "legend": 100000,
 }
 
+# ===== 经验值配置 =====
+# 每升一级需要4点经验（恒定）
+EXP_PER_LEVEL = 4
+# 各稀有度最大等级
+MAX_LEVEL = {"SSR": 20, "SR": 15, "R": 10}
+# 每日交互经验上限(互动+存款+目标)
+DAILY_DEPOSIT_EXP_LIMIT = 3  # 每日存款可获经验次数
+DAILY_GOAL_EXP_LIMIT = 2     # 每日达成目标可获经验次数
+
+# 根据等级决定形态: 每5级解锁一阶
+def get_form_by_level(level):
+    if level >= 20: return "legend"
+    if level >= 15: return "deluxe"
+    if level >= 10: return "adult"
+    if level >= 5:  return "teen"
+    return "baby"
+
 EVOLUTION_ITEMS = {
+
     # SSR 进化道具（4阶→传说）
     "star_ribbon":   {"pet": "star_fox", "form": "legend", "form_label": "星河绶带🌀"},
     "bamboo_sword":  {"pet": "bamboo_dragon", "form": "legend", "form_label": "青竹剑🗡️"},

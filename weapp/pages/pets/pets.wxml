@@ -1,9 +1,9 @@
 <!-- pages/pets/pets.wxml — 宠物管理 -->
 <scroll-view class="page" scroll-y>
   <!-- ===== 当前活跃宠物（大号展示） ===== -->
-  <view class="active-card {{petHappyClass}}" wx:if="{{activePet}}" bindtap="onPetTap">
+  <view class="active-card {{petHappyClass}} {{activePet.evolution_ready ? 'evolution-glow' : ''}}" wx:if="{{activePet}}" bindtap="onPetTap">
     <view class="active-emoji">
-      <image wx:if="{{activePet.image_url}}" class="pet-image-lg" src="{{activePet.full_image_url}}" mode="aspectFit"></image>
+      <image wx:if="{{activePet.image_url}}" class="pet-image-lg {{activePet.evolution_ready ? 'evolution-flash' : ''}}" src="{{activePet.full_image_url}}" mode="aspectFit"></image>
       <text wx:else>{{activePet.emoji}}</text>
     </view>
     <view class="active-info">
@@ -19,6 +19,17 @@
         <view class="intimacy-fill" style="width:{{intimacyPct}}%"></view>
       </view>
       <text class="intimacy-text">{{activePet.intimacy}} / 100</text>
+    </view>
+    <!-- 经验/等级条 -->
+    <view class="active-exp" wx:if="{{activePet}}">
+      <view class="exp-label">
+        <text>等级 {{activePet.level}} / {{activePet.max_level}}</text>
+        <text wx:if="{{!activePet.evolution_ready}}" class="exp-num">EXP {{activePet.exp}}/{{activePet.exp_needed}}</text>
+        <text wx:else class="exp-ready">✨ 可进化</text>
+      </view>
+      <view class="exp-bar" wx:if="{{!activePet.evolution_ready}}">
+        <view class="exp-fill" style="width:{{activePet.exp_needed > 0 ? (activePet.exp / activePet.exp_needed * 100) : 0}}%"></view>
+      </view>
     </view>
     <!-- 技能说明 -->
     <view class="active-skills">
@@ -40,6 +51,7 @@
     <view class="active-actions">
       <button class="btn btn-sm btn-outline" bindtap="onFeed">🍼 喂食</button>
       <button class="btn btn-sm btn-primary" wx:if="{{canEvolve}}" bindtap="onEvolve">✨ 进化</button>
+      <button class="btn btn-sm btn-primary evolution-btn" wx:if="{{activePet && activePet.evolution_ready}}" bindtap="onLevelEvolve">🌟 等级进化</button>
     </view>
   </view>
 

@@ -149,3 +149,43 @@
 .rarity-R { color: #4d8cf0; background: #f0f6ff; }
 .rarity-SR { color: #9c27b0; background: #faf0ff; }
 .rarity-SSR { color: #ff8f00; background: #fff8e1; }
+
+/* ===== 经验条 ===== */
+.active-exp { margin-top: 10px; }
+.exp-label { display: flex; justify-content: space-between; align-items: center; font-size: 11px; margin-bottom: 4px; }
+.exp-label text { color: var(--text-secondary); }
+.exp-num { font-weight: 600; color: #7c4dff; }
+.exp-ready { font-weight: 700; color: #ff6b35; animation: expPulse 1s ease-in-out infinite; }
+.exp-bar { height: 6px; background: rgba(124, 77, 255, 0.12); border-radius: 3px; overflow: hidden; }
+.exp-fill { height: 100%; background: linear-gradient(90deg, #7c4dff, #b388ff); border-radius: 3px; transition: width 0.5s ease; }
+
+/* ===== 进化特效 ===== */
+.evolution-glow {
+  animation: evoGlow 1.2s ease-in-out infinite;
+  box-shadow: 0 0 30px rgba(255, 107, 53, 0.3) !important;
+}
+.evolution-flash {
+  animation: evoFlash 0.8s ease-in-out infinite !important;
+}
+@keyframes evoGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 53, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(255, 107, 53, 0.5); }
+}
+@keyframes evoFlash {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  25% { transform: scale(1.08); opacity: 0.9; }
+  50% { transform: scale(0.95); opacity: 0.8; }
+  75% { transform: scale(1.05); opacity: 1; }
+}
+@keyframes expPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.evolution-btn {
+  background: linear-gradient(135deg, #ff6b35, #ff8f00) !important;
+  animation: evoBtnPulse 1.5s ease-in-out infinite;
+}
+@keyframes evoBtnPulse {
+  0%, 100% { box-shadow: 0 2px 10px rgba(255, 107, 53, 0.3); }
+  50% { box-shadow: 0 2px 20px rgba(255, 107, 53, 0.6); }
+}

@@ -11,6 +11,7 @@ from app.models.pet import (
     PET_EMOJI, FORM_NAMES, FORM_THRESHOLDS, EVOLUTION_ITEMS, PET_RARITY,
     PASSIVE_SKILLS, get_passive_reward,
     Pet, Inventory, PetDailyLog, ItemDailyUsage,
+    EXP_PER_LEVEL, MAX_LEVEL, get_form_by_level,
 )
 from app.models.plan import Plan, Delivery
 from app.models.user import User
@@ -86,6 +87,11 @@ def build_pet_response(pet: Pet, total_delivered: float):
         "passive_skill_desc": PASSIVE_SKILLS.get(pet.pet_type, {}).get("desc", ""),
         "image_url": get_pet_image_url(pet.pet_type, pet.current_form),
         "rarity": PET_RARITY.get(pet.pet_type, "N"),
+        "exp": pet.exp,
+        "level": pet.level,
+        "evolution_ready": pet.evolution_ready,
+        "max_level": MAX_LEVEL.get(PET_RARITY.get(pet.pet_type, "N"), 10),
+        "exp_needed": EXP_PER_LEVEL - (pet.exp % EXP_PER_LEVEL) if not pet.evolution_ready else 0,
     }
 
 
@@ -112,6 +118,48 @@ def add_inventory(couple_id: int, item_type: str, item_id: str, quantity: int, d
         existing.quantity += quantity
     else:
         db.add(Inventory(couple_id=couple_id, item_type=item_type, item_id=item_id, quantity=quantity))
+    db.flush()
+
+
+def add_exp_to_active_pet(couple_id: int, amount: int, db: Session):
+    """给情侣的活跃宠物加经验，检测等级进化"""
+    if amount <= 0:
+        return
+    from app.models.pet import EXP_PER_LEVEL, MAX_LEVEL, PET_RARITY
+
+    pet = db.query(Pet).filter(
+        Pet.couple_id == couple_id, Pet.is_active == True
+    ).first()
+    if not pet:
+        return
+
+    # ❌ 进化锁定中，不能再获得经验
+    if pet.evolution_ready:
+        return
+
+    rarity = PET_RARITY.get(pet.pet_type, "R")
+    max_level = MAX_LEVEL.get(rarity, 10)
+
+    # ❌ 已达最大等级
+    if pet.level >= max_level:
+        return
+
+    # ✅ 加经验
+    pet.exp = (pet.exp or 0) + amount
+    old_level = pet.level
+    new_level = min(pet.exp // EXP_PER_LEVEL + 1, max_level)
+    pet.level = new_level
+
+    # 🔔 等级变化时触发检测
+    if old_level != new_level:
+        pet.last_active_at = date.today()
+
+    # ⭐ 检测是否到达进化门槛（每5级，且没到最终级）
+    if pet.level % 5 == 0 and pet.level < max_level:
+        # 升级恰好到5/10/15时立即锁定
+        # 但已经5级了，所以exp刚刚越过门槛，锁定等级
+        pet.evolution_ready = True
+
     db.flush()
 
 
@@ -213,6 +261,7 @@ def feed_pet(pet_id: int, user: User = Depends(get_current_user), db: Session = 
         raise HTTPException(429, "今天已经喂过了，明天再来吧～")
     pet.intimacy = min(100, pet.intimacy + 3)
     pet.last_fed_at = datetime.now()
+    add_exp_to_active_pet(cid, 1, db)
     db.commit()
     total = calc_total_delivered(cid, db)
     return build_pet_response(pet, total)
@@ -230,6 +279,7 @@ def pet_pet(pet_id: int, user: User = Depends(get_current_user), db: Session = D
         raise HTTPException(429, "今天已经抚摸过了，明天再来吧～")
     pet.intimacy = min(100, pet.intimacy + 2)
     pet.last_pet_date = today
+    add_exp_to_active_pet(cid, 1, db)
     db.commit()
     total = calc_total_delivered(cid, db)
     return build_pet_response(pet, total)
@@ -247,6 +297,7 @@ def walk_pet(pet_id: int, user: User = Depends(get_current_user), db: Session = 
         raise HTTPException(429, "今天已经散过步了，明天再来吧～")
     pet.intimacy = min(100, pet.intimacy + 2)
     pet.last_walk_date = today
+    add_exp_to_active_pet(cid, 1, db)
     db.commit()
     total = calc_total_delivered(cid, db)
     return build_pet_response(pet, total)
@@ -301,6 +352,29 @@ def evolve_pet(pet_id: int, req: dict, user: User = Depends(get_current_user), d
         "form_label": evo["form_label"],
         "display_emoji": evo["display_emoji"],
     }
+
+
+# ===== 等级进化（每5级手动确认）=====
+@router.post("/{pet_id}/level-evolve")
+def level_evolve_pet(pet_id: int, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """等级进化：宠物达到每5级时手动确认进化"""
+    cid = get_couple_id(user)
+    pet = db.query(Pet).filter(Pet.id == pet_id, Pet.couple_id == cid).first()
+    if not pet:
+        raise HTTPException(404, "宠物不存在")
+    if not pet.evolution_ready:
+        raise HTTPException(400, "当前不可进化")
+    rarity = PET_RARITY.get(pet.pet_type, "R")
+    new_form = get_form_by_level(pet.level)
+    unlocked = json.loads(pet.unlocked_forms) if isinstance(pet.unlocked_forms, str) else pet.unlocked_forms
+    if new_form not in unlocked:
+        unlocked.append(new_form)
+        pet.unlocked_forms = json.dumps(unlocked)
+    pet.current_form = new_form
+    pet.evolution_ready = False
+    db.commit()
+    total = calc_total_delivered(cid, db)
+    return build_pet_response(pet, total)
 
 
 # ===== 刷新形态（后端定时/手动调用） =====

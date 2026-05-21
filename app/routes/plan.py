@@ -7,6 +7,8 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.couple import Couple
 from app.models.pet import Pet
+from app.models.pet import EXP_PER_LEVEL, MAX_LEVEL, get_form_by_level
+from app.routes.pet import add_exp_to_active_pet
 from app.models.plan import Delivery, Plan, Wish
 from app.models.user import User
 from app.routes.social import add_exp as _add_exp
@@ -149,6 +151,16 @@ def deliver_plan(
         if not active_pet.last_fed_at or (now - active_pet.last_fed_at) >= timedelta(seconds=30):
             active_pet.intimacy = min(100, active_pet.intimacy + 3)
             active_pet.last_fed_at = now
+
+    # 🐾 存款宠物经验（按次数，每日上限3次）
+    if couple:
+        today = date.today()
+        if couple.deposit_exp_date != today:
+            couple.deposit_exp_date = today
+            couple.deposit_exp_count = 0
+        if couple.deposit_exp_count < 3:
+            couple.deposit_exp_count += 1
+            add_exp_to_active_pet(cid, 1, db)
 
     # 🎟️ 存钱奖励抽卡券（每日上限 4 张）
     today = datetime.now().date()

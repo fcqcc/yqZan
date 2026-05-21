@@ -185,7 +185,7 @@
         <image wx:if="{{petImageUrl}}" class="pet-image" src="{{petImageUrl}}" mode="aspectFit"></image>
         <text wx:else class="pet-emoji">{{petEmoji}}</text>
       </view>
-      <text class="pet-intimacy-text">❤️ {{intimacyStageName}} · {{intimacyPct}}%</text>
+      <text class="pet-intimacy-text">❤️ {{intimacyStageName}} · Lv.{{petLevel}} · {{intimacyPct}}%</text>
       <text class="pet-skill-text" wx:if="{{petPassiveSkill}}">🎯 {{petPassiveSkill}}</text>
       <text class="pet-tip" wx:if="{{intimacyPct <= 20}}">多存钱能提升亲密度 🪙</text>
       <text class="pet-tip" wx:elif="{{intimacyPct <= 60}}">一起加油存钱吧 💪</text>

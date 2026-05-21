@@ -227,4 +227,20 @@ Page({
     api.petPet(pet.id).catch(() => {})
     setTimeout(() => { this.setData({ petHappyClass: '' }) }, 600)
   },
+
+  /** 等级进化（每5级手动确认） */
+  async onLevelEvolve() {
+    const pet = this.data.activePet
+    if (!pet || !pet.evolution_ready) return
+    try {
+      wx.showLoading({ title: '🌟 进化中…' })
+      await api.request(`/api/pets/${pet.id}/level-evolve`, 'POST')
+      wx.hideLoading()
+      wx.showToast({ title: '✨ 进化成功！', icon: 'none' })
+      this.load()
+    } catch (e) {
+      wx.hideLoading()
+      wx.showToast({ title: e.detail || e.errMsg || '进化失败', icon: 'none' })
+    }
+  },
 })
