@@ -2,72 +2,54 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models.couple import Couple
 from app.models.user import User
 from app.schemas.user import (
-    LoginRequest,
-    RegisterRequest,
+    SetNicknameRequest,
     TokenResponse,
     UserResponse,
+    WxLoginRequest,
 )
 from app.services.auth import (
     create_access_token,
     get_current_user,
-    hash_password,
-    verify_password,
+    get_or_create_user_by_openid,
+    wx_code_to_openid,
 )
 
 router = APIRouter(prefix="/api", tags=["用户"])
 
 
-@router.post("/register", response_model=TokenResponse)
-def register(req: RegisterRequest, db: Session = Depends(get_db)):
+@router.post("/wx-login", response_model=TokenResponse)
+def wx_login(req: WxLoginRequest, db: Session = Depends(get_db)):
+    """微信登录：code → openid → 查找/创建用户 → 返回 JWT"""
+    openid = wx_code_to_openid(req.code)
+    user = get_or_create_user_by_openid(openid, db)
+    token = create_access_token(user.id)
+    return TokenResponse(access_token=token, user=user)
+
+
+@router.post("/set-nickname", response_model=UserResponse)
+def set_nickname(
+    req: SetNicknameRequest,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """首次进入时设置昵称"""
+    if user.nickname:
+        raise HTTPException(400, "昵称已设置，不可重复设置")
+
+    # 检查昵称是否被占用
     existing = db.query(User).filter(User.nickname == req.nickname).first()
-    if existing:
-        raise HTTPException(400, "昵称已被使用")
+    if existing and existing.id != user.id:
+        raise HTTPException(400, "该昵称已被使用")
 
-    for _ in range(5):
-        code = User.generate_invite_code()
-        if not db.query(User).filter(User.invite_code == code).first():
-            break
-    else:
-        raise HTTPException(500, "邀请码生成失败，请重试")
-
-    user = User(
-        nickname=req.nickname,
-        password_hash=hash_password(req.password),
-        birthday=req.birthday,
-        gender=req.gender,
-        invite_code=code,
-    )
-    db.add(user)
-    db.flush()
-
-    # 自动创建个人 Couple，所有 API 不再因无伴侣报错
-    couple = Couple(status="active")
-    db.add(couple)
-    db.flush()
-    user.couple_id = couple.id
-
+    user.nickname = req.nickname
     db.commit()
     db.refresh(user)
-
-    token = create_access_token(user.id)
-    return TokenResponse(access_token=token, user=user)
-
-
-@router.post("/login", response_model=TokenResponse)
-def login(req: LoginRequest, db: Session = Depends(get_db)):
-    user = db.query(User).filter(
-        (User.nickname == req.user_id) | (User.invite_code == req.user_id)
-    ).first()
-    if not user or not verify_password(req.password, user.password_hash):
-        raise HTTPException(401, "账号或密码错误")
-
-    token = create_access_token(user.id)
-    return TokenResponse(access_token=token, user=user)
+    return user
 
 
 @router.get("/me", response_model=UserResponse)
 def get_me(user: User = Depends(get_current_user)):
+    """获取当前用户信息"""
     return user

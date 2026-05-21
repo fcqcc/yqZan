@@ -67,6 +67,9 @@ def build_pet_response(pet: Pet, total_delivered: float):
     next_form = form_list[current_idx + 1] if current_idx + 1 < len(form_list) else None
     next_form_ready = next_form and total_delivered >= FORM_THRESHOLDS.get(next_form, 999999) and next_form not in unlocked
 
+    # 🔥 判断宠物是否已经道具进化过（分支标记 branch_xxx）
+    has_item_evolved = any(f.startswith('branch_') for f in unlocked)
+
     return {
         "id": pet.id,
         "pet_type": pet.pet_type,
@@ -92,7 +95,8 @@ def build_pet_response(pet: Pet, total_delivered: float):
         "exp": pet.exp % EXP_PER_LEVEL,  # 当前等级内经验
         "exp_total": pet.exp,              # 总经验
         "level": pet.level,
-        "evolution_ready": pet.evolution_ready,
+        "evolution_ready": False if has_item_evolved else pet.evolution_ready,
+        "has_item_evolved": has_item_evolved,
         "max_level": get_current_level_cap(pet),  # 动态上限
         "exp_needed": EXP_PER_LEVEL,  # 每级固定需要4点
     }
@@ -256,12 +260,7 @@ def get_active_pet(user: User = Depends(get_current_user), db: Session = Depends
             pet.is_active = True
             db.commit()
     if not pet:
-        # 初始化默认宠
-        pet = Pet(couple_id=cid, pet_type="pig", is_active=True,
-                  unlocked_forms=json.dumps(["baby"]), current_form="baby")
-        db.add(pet)
-        db.commit()
-        db.refresh(pet)
+        return None
     total = calc_total_delivered(cid, db)
     return build_pet_response(pet, total)
 
@@ -455,6 +454,8 @@ def evolve_pet(pet_id: int, req: dict, user: User = Depends(get_current_user), d
 
     # 形态改为目标形态名（deluxe/legend），不是 branch_xxx
     pet.current_form = target_form
+    # 清除进化就绪标记（最终形态不需要再进化了）
+    pet.evolution_ready = False
 
     from app.catalog import ITEM_CATALOG
     full_name = ITEM_CATALOG.get(item_id, {}).get("name", item_id)

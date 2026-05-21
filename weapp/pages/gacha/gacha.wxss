@@ -127,10 +127,33 @@
 /* ===== 3. 抽卡按钮 ===== */
 .btn-section {
   display: flex;
-  gap: 12px;
+  flex-direction: column;
+  gap: 8px;
   padding: 0 16px;
   margin-bottom: 16px;
 }
+.btn-section > .btn-draw { margin: 0; }
+
+/* 保底进度条 */
+.pity-bar { display: flex; align-items: center; gap: 8px; padding: 0 2px; }
+.pity-text { font-size: 11px; color: var(--text-secondary); flex-shrink: 0; }
+.pity-track { flex: 1; height: 4px; background: rgba(214,92,138,0.12); border-radius: 2px; overflow: hidden; }
+.pity-fill { height: 100%; background: linear-gradient(90deg, #ffd54f, #ffab40); border-radius: 2px; transition: width 0.5s ease; }
+
+/* 积分加注选项 */
+.boost-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(212,160,23,0.08);
+  border: 1px solid rgba(212,160,23,0.2);
+  border-radius: 8px;
+}
+.boost-checkbox { transform: scale(0.8); flex-shrink: 0; }
+.boost-label { font-size: 12px; color: #8b6914; font-weight: 600; }
+
+.btn-actions-row { display: flex; gap: 12px; }
 .btn-draw {
   flex: 1;
   display: flex;

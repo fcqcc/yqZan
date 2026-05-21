@@ -3,8 +3,28 @@
   font-size: 48px;
   margin-bottom: 8px;
 }
-.form {
-  margin-bottom: 16px;
+.app-name {
+  font-size: 22px;
+  font-weight: 600;
+  color: #3D2C3A;
+  margin-bottom: 4px;
+}
+.app-desc {
+  font-size: 13px;
+  color: #8A6A7A;
+  margin-bottom: 28px;
+}
+.wx-login-btn {
+  width: 100%;
+  margin-top: 8px;
+  background: #07C160 !important;
+  color: #fff !important;
+}
+.wx-login-btn::after {
+  border: none;
+}
+.wx-login-btn[loading] {
+  opacity: 0.8;
 }
 .login-btn {
   width: 100%;
@@ -14,4 +34,5 @@
   color: #c62828;
   font-size: 12px;
   margin-top: 8px;
+  text-align: center;
 }

@@ -203,5 +203,5 @@ Page({
     getApp().globalData.token = ''
     getApp().globalData.userInfo = null
     wx.reLaunch({ url: '/pages/login/login' })
-  }
+  },
 })

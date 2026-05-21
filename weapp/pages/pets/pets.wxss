@@ -272,6 +272,34 @@
   50% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
   100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
 }
+
+/* ===== 没绑定伴侣提示 ===== */
+.no-partner-banner {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+}
+.no-partner-icon { font-size: 48px; display: block; margin-bottom: 12px; }
+.no-partner-text { font-size: 14px; display: block; margin-bottom: 16px; }
+.bind-btn-small {
+  display: inline-block;
+  padding: 8px 24px;
+  background: linear-gradient(135deg, var(--pink), var(--pink-dark));
+  color: #fff;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* 首页：没伴侣时的宠物管理链接 */
+.pet-area-no-partner {
+  margin: 0 12px 6px;
+  padding: 16px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #ffd6e8;
+  border-radius: var(--radius);
+}
 .evo-text {
   position: absolute;
   top: 35%; left: 50%;
@@ -290,4 +318,32 @@
   15% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
   50% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
   100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
+}
+
+/* ===== 没绑定伴侣提示 ===== */
+.no-partner-banner {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+}
+.no-partner-icon { font-size: 48px; display: block; margin-bottom: 12px; }
+.no-partner-text { font-size: 14px; display: block; margin-bottom: 16px; }
+.bind-btn-small {
+  display: inline-block;
+  padding: 8px 24px;
+  background: linear-gradient(135deg, var(--pink), var(--pink-dark));
+  color: #fff;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* 首页：没伴侣时的宠物管理链接 */
+.pet-area-no-partner {
+  margin: 0 12px 6px;
+  padding: 16px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #ffd6e8;
+  border-radius: var(--radius);
 }

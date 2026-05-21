@@ -91,6 +91,18 @@ Page({
     this.loadCardTasks()
     // 每日冒险
     this.loadDailyAdventure()
+    // 新用户引导：没有计划且没有宠物时触发
+    this.checkFirstTimeGuide()
+  },
+
+  checkFirstTimeGuide() {
+    const guideDone = wx.getStorageSync('guide_done')
+    if (guideDone) return
+    const { plans, pet } = this.data
+    // 首次：没有已有计划或宠物时显示引导
+    if ((!plans || plans.length === 0) && !pet) {
+      this.setData({ showGuide: true, guideStep: 1 })
+    }
   },
 
   async loadSpark() {
@@ -222,6 +234,20 @@ Page({
   },
   goTab(e) { wx.switchTab({ url: e.currentTarget.dataset.url }) },
   goBind() { wx.switchTab({ url: '/pages/settings/settings' }) },
+
+  // ===== 新用户引导 =====
+
+  nextGuideStep() {
+    const step = this.data.guideStep
+    if (step < 3) {
+      this.setData({ guideStep: step + 1 })
+    }
+  },
+
+  dismissGuide() {
+    this.setData({ showGuide: false, guideStep: 1 })
+    wx.setStorageSync('guide_done', true)
+  },
 
   // ===== 宠物 & 扭蛋 =====
 

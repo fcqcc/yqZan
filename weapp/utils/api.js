@@ -44,8 +44,8 @@ function request(url, method = 'GET', data = {}) {
 }
 
 // ===== 用户 =====
-const register = (data) => request('/api/register', 'POST', data)
-const login = (data) => request('/api/login', 'POST', data)
+const wxLogin = (code) => request('/api/wx-login', 'POST', { code })
+const setNickname = (nickname) => request('/api/set-nickname', 'POST', { nickname })
 const getMe = () => request('/api/me')
 const getPartner = () => request('/api/partner')
 const bindPartner = (inviteCode) => request('/api/bind', 'POST', { invite_code: inviteCode })
@@ -157,7 +157,7 @@ const dismissCardTask = (taskId) => request('/api/card-tasks/' + taskId + '/dism
 const getAchievements = () => request('/api/achievements')
 
 module.exports = {
-  request, register, login, getMe, getPartner, bindPartner, unbindPartner,
+  request, wxLogin, setNickname, getMe, getPartner, bindPartner, unbindPartner,
   getPlans, createPlan, deletePlan, deliverPlan, getPlanDeliveries,
   getWishes, createWish, updateWish, deleteWish,
   getTodos, createTodo, checkinTodo, deleteTodo,

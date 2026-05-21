@@ -5,6 +5,7 @@ from app.models.extra import Anniversary, Gift, ToDo, ToDoCheckin
 from app.models.social import Level, LevelLog, Note, Task, TaskEvent, GameLog
 from app.models.card import Card, CardTemplate
 from app.models.card_task import CardTask
+from app.models.achievement import AchievementProgress
 
 __all__ = [
     "User", "Couple",
@@ -15,4 +16,5 @@ __all__ = [
     "Task", "TaskEvent",
     "CardTask",
     "GameLog",
+    "AchievementProgress",
 ]

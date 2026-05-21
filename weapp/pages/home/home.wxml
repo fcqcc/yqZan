@@ -164,7 +164,7 @@
     </view>
 
     <!-- 8. 宠物展示区域 -->
-    <view class="pet-area" id="petArea">
+    <view wx:if="{{pet}}" class="pet-area" id="petArea">
       <!-- 互动按钮行（宠物头顶平铺） -->
       <view class="interact-row" wx:if="{{pet}}">
         <view class="interact-btn" bindtap="onFeed">

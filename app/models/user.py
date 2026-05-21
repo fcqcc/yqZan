@@ -1,3 +1,4 @@
+import hashlib
 import random
 import string
 from datetime import datetime
@@ -12,10 +13,11 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    nickname = Column(String(32), nullable=False, index=True)
+    openid = Column(String(64), unique=True, index=True, nullable=False)
+    nickname = Column(String(32), nullable=True, index=True)
     birthday = Column(String(10), default="")
     gender = Column(String(6), default="")
-    password_hash = Column(String(128), nullable=False)
+    password_hash = Column(String(128), nullable=True)
     invite_code = Column(String(6), unique=True, index=True, nullable=False)
     couple_id = Column(Integer, ForeignKey("couples.id"), nullable=True, index=True)
     is_admin = Column(Boolean, default=False)
@@ -23,7 +25,12 @@ class User(Base):
 
     couple = relationship("Couple", backref="members", foreign_keys=[couple_id])
 
+    @property
+    def has_nickname(self) -> bool:
+        return bool(self.nickname)
+
     @staticmethod
-    def generate_invite_code() -> str:
-        chars = string.ascii_uppercase + string.digits
-        return "".join(random.choices(chars, k=6))
+    def generate_invite_code(openid: str) -> str:
+        """基于 openid 生成确定性 6 位唯一邀请码"""
+        h = hashlib.md5(openid.encode()).hexdigest().upper()
+        return h[:6]

@@ -70,16 +70,28 @@ Page({
 
       const items = Array.isArray(inventory) ? inventory : (inventory.items || [])
 
-      // 🔥 道具进化：SSR ≥ 15级 + 有进化道具
+      // 判断是否已达到最终形态
+      const isSSR = activePet?.rarity === 'SSR'
+      const isSR = activePet?.rarity === 'SR'
+      const isR = activePet?.rarity === 'R'
+      const curForm = activePet?.current_form || ''
+      const isSSRAtFinal = isSSR && (curForm === 'deluxe' || curForm === 'legend')
+      const isSRAtFinal = isSR && curForm === 'adult'
+      const isRAtFinal = isR && curForm === 'teen'
+      const atFinalForm = isSSRAtFinal || isSRAtFinal || isRAtFinal
+
+      // 🔥 道具进化：SSR ≥ 15级 + 有进化道具 + 未到最终形态
       const canItemEvolve = activePet
-        && activePet.rarity === 'SSR'
+        && isSSR
+        && !atFinalForm
         && activePet.level >= 15
         && items.some(item => item.item_type === 'evolution_item')
 
-      // 🔥 等级进化：evolution_ready，但SSR满15级没有等级进化
+      // 🔥 等级进化：evolution_ready，但SSR满15级没有等级进化，且未到最终形态
       const canLevelEvolve = activePet
         && activePet.evolution_ready
-        && !(activePet.rarity === 'SSR' && activePet.level >= 15)
+        && !atFinalForm
+        && !(isSSR && activePet.level >= 15)
 
       // 当前显示的进化按钮（仅用于兼容旧引用）
       const canEvolve = canItemEvolve

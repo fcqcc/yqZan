@@ -4,16 +4,12 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 
-class RegisterRequest(BaseModel):
+class WxLoginRequest(BaseModel):
+    code: str = Field(min_length=1, description="wx.login() 返回的临时 code")
+
+
+class SetNicknameRequest(BaseModel):
     nickname: str = Field(min_length=1, max_length=32)
-    password: str = Field(min_length=6, max_length=64)
-    birthday: str = ""
-    gender: str = ""
-
-
-class LoginRequest(BaseModel):
-    user_id: str = Field(min_length=1)
-    password: str = Field(min_length=1)
 
 
 class BindRequest(BaseModel):
@@ -22,9 +18,10 @@ class BindRequest(BaseModel):
 
 class UserResponse(BaseModel):
     id: int
-    nickname: str
-    birthday: str
-    gender: str
+    nickname: Optional[str] = None
+    has_nickname: bool = False
+    birthday: str = ""
+    gender: str = ""
     invite_code: str
     couple_id: Optional[int] = None
     created_at: datetime

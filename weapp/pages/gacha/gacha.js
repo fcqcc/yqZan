@@ -13,30 +13,29 @@ Page({
     tenResults: [],
     summaryList: [],
     showProbModal: false,
-    probList: []
+    probList: [],
+    useBoost: false,
+    pityCount: 0,
   },
 
   onLoad() {
-    // 概率数据（硬编码，和后端一致）
-    const probList = [
-      { rarity: 'SSR+', name: '金元宝龙🐉', pct: '0.3' },
-      { rarity: 'SSR+', name: '原谅我吧🥺', pct: '0.2' },
-      { rarity: 'SSR', name: '独角兽🦄', pct: '1' },
-      { rarity: 'SSR', name: '为我服务👑', pct: '0.8' },
-      { rarity: 'SSR', name: '机械核心⚙️', pct: '1.5' },
-      { rarity: 'SSR', name: '星尘🌌', pct: '1.5' },
-      { rarity: 'SR', name: '招财猫🐱', pct: '5' },
-      { rarity: 'SR', name: '火花卡🔥', pct: '5' },
-      { rarity: 'SR', name: '星光背景🌟', pct: '2' },
-      { rarity: 'SR', name: '金元宝🪙/爱心箭🏹/月光石🌙/招财铃🎴', pct: '各4' },
-      { rarity: 'R', name: '小狐狸🦊', pct: '10' },
-      { rarity: 'R', name: '樱花背景🌸', pct: '3' },
-      { rarity: 'R', name: '家务卡/我不要😤', pct: '1.5-3' },
-      { rarity: 'N', name: '幸运饼干🍪', pct: '18' },
-      { rarity: 'N', name: '切换卡🔄', pct: '14' },
-      { rarity: 'N', name: '亲密糖果🍬', pct: '12' },
-    ]
-    this.setData({ probList })
+    this.loadPool()
+  },
+
+  async loadPool() {
+    try {
+      const pool = await api.getGachaPool()
+      this.setData({ probList: pool })
+    } catch (e) {
+      // 降级：后端不可用时用硬编码
+      this.setData({ probList: [
+        { rarity: 'SSR+', name: '金元宝龙🐉/原谅我吧🥺', pct: '0.5' },
+        { rarity: 'SSR', name: '独角兽🦄/为我服务👑/机械核心/星尘', pct: '4.8' },
+        { rarity: 'SR', name: '招财猫🐱/金元宝🪙/月光石🌙...', pct: '17' },
+        { rarity: 'R', name: '小狐狸🦊/家务卡/樱花背景...', pct: '28' },
+        { rarity: 'N', name: '幸运饼干🍪/切换卡🔄/亲密糖果🍬', pct: '44' },
+      ]})
+    }
   },
 
   onShow() {
@@ -50,10 +49,15 @@ Page({
   async loadTickets() {
     try {
       const res = await api.getTickets()
-      this.setData({ tickets: res.tickets || 0, shards: res.shards || 0 })
+      this.setData({ tickets: res.tickets || 0, shards: res.shards || 0, pityCount: res.gacha_pity || 0 })
     } catch (e) {
       console.error('加载抽卡券失败', e)
     }
+  },
+
+  /** 切换积分加注 */
+  toggleBoost() {
+    this.setData({ useBoost: !this.data.useBoost })
   },
 
   /** 单抽 */
@@ -71,8 +75,11 @@ Page({
       const result = res.item || res
       this.showResult(result)
 
-      // 更新券数
-      this.setData({ tickets: res.tickets || this.data.tickets - 1 })
+      // 更新券数和保底
+      this.setData({
+        tickets: res.tickets || this.data.tickets - 1,
+        pityCount: res.pity_count || 0,
+      })
     } catch (e) {
       console.error('单抽失败', e)
       wx.showToast({ title: '抽卡失败，请重试', icon: 'none' })
@@ -92,8 +99,8 @@ Page({
     this.setData({ drawing: true, animating: true })
 
     try {
-      const res = await api.drawTen()
-      // 返回格式: { items: [{ name, rarity, desc }...], tickets }
+      const boost = this.data.useBoost
+      const res = await api.drawTen(boost)
       const items = res.items || []
       const itemsWithClass = items.map(i => ({
         ...i,
@@ -109,7 +116,10 @@ Page({
       this.setData({
         tenResults: itemsWithClass,
         summaryList: summary,
-        tickets: res.tickets || this.data.tickets - 9
+        tickets: res.tickets || this.data.tickets - 9,
+        shards: res.shards_remaining != null ? res.shards_remaining : this.data.shards,
+        pityCount: res.pity_count || 0,
+        useBoost: false,
       })
     } catch (e) {
       console.error('十连失败', e)
@@ -184,33 +194,29 @@ Page({
 
   /** 积分购买弹窗 */
   askBuyTickets(amount) {
+    const label = amount === 1 ? '单抽' : '十连'
     const cost = amount === 10 ? 1000 : 100
     const shards = this.data.shards
-    if (shards < cost) {
-      wx.showModal({
-        title: '积分不足',
-        content: `需要 ${cost} 积分购买 ${amount} 张抽卡券（当前 ${shards} 积分）\n继续存钱获取积分吧！`,
-        showCancel: false
-      })
-      return
-    }
+    const hasEnough = shards >= cost
     wx.showModal({
-      title: '积分购买',
-      content: `消耗 ${cost} 积分购买 ${amount} 张抽卡券？`,
+      title: `抽卡券不足，用积分兑换？`,
+      content: `🎟️ ${amount} 张抽卡券  =  💎 ${cost} 积分\n📊 当前积分：${shards} ${hasEnough ? '' : '（不足）'}`,
+      cancelText: '不了',
+      confirmText: hasEnough ? `兑换并${label}` : '积分不足',
+      confirmColor: hasEnough ? undefined : '#ccc',
       success: async (res) => {
-        if (!res.confirm) return
-        wx.showLoading({ title: '购买中' })
+        if (!res.confirm || !hasEnough) return
+        wx.showLoading({ title: '兑换中' })
         try {
           const result = await api.buyTickets(amount)
           wx.hideLoading()
           this.setData({ tickets: result.tickets, shards: result.shards })
-          wx.showToast({ title: `购买成功 ✨`, icon: 'none' })
-          // 购买后自动抽
+          wx.showToast({ title: `兑换成功 ✨`, icon: 'none' })
           if (amount === 1) this.onDrawSingle()
           else this.onDrawTen()
         } catch (e) {
           wx.hideLoading()
-          wx.showToast({ title: '购买失败', icon: 'none' })
+          wx.showToast({ title: '兑换失败', icon: 'none' })
         }
       }
     })
