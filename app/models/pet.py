@@ -177,7 +177,7 @@ FORM_THRESHOLDS = {
 # ===== 经验值配置 =====
 # 每升一级需要4点经验（恒定）
 EXP_PER_LEVEL = 4
-# 各稀有度最大等级
+# 各稀有度绝对最大等级（不可超过）
 MAX_LEVEL = {"SSR": 20, "SR": 15, "R": 10}
 # 每日交互经验上限(互动+存款+目标)
 DAILY_DEPOSIT_EXP_LIMIT = 3  # 每日存款可获经验次数
@@ -190,6 +190,23 @@ def get_form_by_level(level):
     if level >= 10: return "adult"
     if level >= 5:  return "teen"
     return "baby"
+
+def get_current_level_cap(pet) -> int:
+    """获取当前进化形态下的等级上限（动态递增）
+    
+    每解锁一个基础形态，上限+5：
+    - baby (0次进化): cap=5
+    - teen  (1次进化): cap=10
+    - adult (2次进化): cap=15
+    - deluxe(3次进化): cap=20
+    同时受稀有度绝对上限限制（R:10, SR:15, SSR:20）
+    """
+    import json
+    unlocked = json.loads(pet.unlocked_forms) if isinstance(pet.unlocked_forms, str) else pet.unlocked_forms
+    base_forms = [f for f in ["baby", "teen", "adult", "deluxe", "legend"] if f in unlocked]
+    stage_cap = 5 * len(base_forms)
+    rarity = PET_RARITY.get(pet.pet_type, "R")
+    return min(stage_cap, MAX_LEVEL.get(rarity, 10))
 
 EVOLUTION_ITEMS = {
 

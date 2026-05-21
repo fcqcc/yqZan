@@ -233,19 +233,15 @@ Page({
   async onLevelEvolve() {
     const pet = this.data.activePet
     if (!pet || !pet.evolution_ready) return
-    // 🎆 先播进化动画
+    // 🎆 先播进化动画（5秒）
     this.setData({ showEvoEffect: true })
-    // 等待动画播放
-    await new Promise(r => setTimeout(r, 1200))
+    await new Promise(r => setTimeout(r, 5000))
     this.setData({ showEvoEffect: false })
     try {
-      wx.showLoading({ title: '🌟 进化中…' })
-      const res = await api.request(`/api/pets/${pet.id}/level-evolve`, 'POST')
-      wx.hideLoading()
+      await api.request(`/api/pets/${pet.id}/level-evolve`, 'POST')
       wx.showToast({ title: '✨ 进化成功！', icon: 'none' })
       this.load()
     } catch (e) {
-      wx.hideLoading()
       this.setData({ showEvoEffect: false })
       wx.showToast({ title: e.detail || e.errMsg || '进化失败', icon: 'none' })
     }

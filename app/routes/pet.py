@@ -11,7 +11,7 @@ from app.models.pet import (
     PET_EMOJI, FORM_NAMES, FORM_THRESHOLDS, EVOLUTION_ITEMS, PET_RARITY,
     PASSIVE_SKILLS, get_passive_reward,
     Pet, Inventory, PetDailyLog, ItemDailyUsage,
-    EXP_PER_LEVEL, MAX_LEVEL, get_form_by_level,
+    EXP_PER_LEVEL, MAX_LEVEL, get_form_by_level, get_current_level_cap,
 )
 from app.models.plan import Plan, Delivery
 from app.models.user import User
@@ -91,7 +91,7 @@ def build_pet_response(pet: Pet, total_delivered: float):
         "exp_total": pet.exp,              # 总经验
         "level": pet.level,
         "evolution_ready": pet.evolution_ready,
-        "max_level": MAX_LEVEL.get(PET_RARITY.get(pet.pet_type, "N"), 10),
+        "max_level": get_current_level_cap(pet),  # 动态上限
         "exp_needed": EXP_PER_LEVEL,  # 每级固定需要4点
     }
 
@@ -126,7 +126,7 @@ def add_exp_to_active_pet(couple_id: int, amount: int, db: Session):
     """给情侣的活跃宠物加经验，检测等级进化"""
     if amount <= 0:
         return
-    from app.models.pet import EXP_PER_LEVEL, MAX_LEVEL, PET_RARITY
+    from app.models.pet import EXP_PER_LEVEL, MAX_LEVEL, PET_RARITY, get_current_level_cap
 
     pet = db.query(Pet).filter(
         Pet.couple_id == couple_id, Pet.is_active == True
@@ -139,10 +139,15 @@ def add_exp_to_active_pet(couple_id: int, amount: int, db: Session):
         return
 
     rarity = PET_RARITY.get(pet.pet_type, "R")
-    max_level = MAX_LEVEL.get(rarity, 10)
+    rarity_max = MAX_LEVEL.get(rarity, 10)  # 稀有度绝对上限
+    current_cap = get_current_level_cap(pet)  # 当前形态动态上限
 
-    # ❌ 已达最大等级
-    if pet.level >= max_level:
+    # ❌ 已达当前形态上限
+    if pet.level >= current_cap:
+        # 如果刚好在进化门槛上（每5级），标记进化就绪
+        if pet.level % 5 == 0 and pet.level < rarity_max:
+            pet.evolution_ready = True
+            db.flush()
         return
 
     # ✅ 加经验（用累计总经验法正确计算等级）
@@ -151,21 +156,20 @@ def add_exp_to_active_pet(couple_id: int, amount: int, db: Session):
     exp_at_old = (old_level - 1) * EPL  # 升到当前级已消耗的总经验
     total_exp = exp_at_old + (pet.exp or 0) + amount  # 累积总经验
 
-    new_level = min(total_exp // EPL + 1, max_level)
+    new_level = min(total_exp // EPL + 1, current_cap)
     pet.level = new_level
 
-    if new_level < max_level:
+    if new_level < current_cap:
         pet.exp = total_exp - (new_level - 1) * EPL  # 本级余数
     else:
-        pet.exp = 0  # 满级清零
+        pet.exp = 0  # 到上限清0
 
     # 🔔 等级变化时触发检测
     if old_level != new_level:
         pet.last_active_at = date.today()
 
-    # ⭐ 检测是否到达进化门槛（每5级，且没到最终级）
-    # 只在等级刚好提升到门槛时触发，避免进化后再次锁定
-    if old_level != new_level and pet.level % 5 == 0 and pet.level < max_level:
+    # ⭐ 检测是否到达进化门槛（每5级）
+    if pet.level % 5 == 0 and pet.level <= current_cap and pet.level < rarity_max:
         pet.evolution_ready = True
 
     db.flush()
@@ -492,22 +496,25 @@ def use_inventory_item(req: dict, user: User = Depends(get_current_user), db: Se
         elif inv.item_id == "fortune_cookie":
             result["message"] = "打开幸运饼干，获得一句好运势！"
         elif inv.item_id == "exp_candy":
-            # 经验糖果：给活跃宠物+1000EXP（满级不增加）
-            from app.models.pet import MAX_LEVEL, EXP_PER_LEVEL, PET_RARITY
+            # 经验糖果：给活跃宠物+1000EXP（满级不消耗）
+            from app.models.pet import MAX_LEVEL, EXP_PER_LEVEL, PET_RARITY, get_current_level_cap
             pet = db.query(Pet).filter(Pet.couple_id == cid, Pet.is_active == True).first()
             if not pet:
                 raise HTTPException(400, "没有活跃宠物")
             rarity = PET_RARITY.get(pet.pet_type, "R")
-            max_lv = MAX_LEVEL.get(rarity, 10)
+            max_lv = get_current_level_cap(pet)  # 动态上限
             if pet.level >= max_lv:
-                result["effect"] = "当前宠物已达满级，经验未增加"
+                result["effect"] = "当前宠物已达形态上限，先进化再来使用吧！"
                 inv.quantity += 1  # 不消耗
             else:
                 old_lv = pet.level
-                # 直接把exp加到足够升级为止（模拟1000EXP的效果）
                 add_exp_to_active_pet(cid, 1000, db)
                 new_lv = pet.level
-                result["effect"] = f"活跃宠物经验+1000！等级{old_lv}→{new_lv} 🎉"
+                if new_lv == old_lv:
+                    result["effect"] = "经验已满，先进化再使用糖果吧！"
+                    inv.quantity += 1  # 不消耗
+                else:
+                    result["effect"] = f"活跃宠物经验+1000！等级{old_lv}→{new_lv} 🎉"
             result["_no_limit"] = True  # 不受每日限制
         elif inv.item_id == "spark_card":
             from app.models.couple import Couple

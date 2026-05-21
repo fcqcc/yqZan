@@ -112,7 +112,7 @@
   <view wx:if="{{showEvoEffect}}" class="evo-overlay">
     <view class="evo-flash"></view>
     <view class="evo-particles">
-      <text wx:for="{{8}}" wx:for-index="i" wx:key="i" class="evo-particle p{{i}}">✦</text>
+      <text wx:for="{{16}}" wx:for-index="i" wx:key="i" class="evo-particle p{{i}}">✦</text>
     </view>
     <text class="evo-text">🌟 进化！</text>
   </view>
