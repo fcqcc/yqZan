@@ -145,11 +145,19 @@ def add_exp_to_active_pet(couple_id: int, amount: int, db: Session):
     if pet.level >= max_level:
         return
 
-    # ✅ 加经验
-    pet.exp = (pet.exp or 0) + amount
+    # ✅ 加经验（用累计总经验法正确计算等级）
+    from app.models.pet import EXP_PER_LEVEL as EPL
     old_level = pet.level
-    new_level = min(pet.exp // EXP_PER_LEVEL + 1, max_level)
+    exp_at_old = (old_level - 1) * EPL  # 升到当前级已消耗的总经验
+    total_exp = exp_at_old + (pet.exp or 0) + amount  # 累积总经验
+
+    new_level = min(total_exp // EPL + 1, max_level)
     pet.level = new_level
+
+    if new_level < max_level:
+        pet.exp = total_exp - (new_level - 1) * EPL  # 本级余数
+    else:
+        pet.exp = 0  # 满级清零
 
     # 🔔 等级变化时触发检测
     if old_level != new_level:
