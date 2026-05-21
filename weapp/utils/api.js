@@ -20,7 +20,7 @@ function request(url, method = 'GET', data = {}) {
           return
         }
         if (res.statusCode >= 400) {
-          const err = res.data || {}
+          const err = typeof res.data === 'object' ? (res.data || {}) : { detail: res.data || '' }
           err._statusCode = res.statusCode
           reject(err)
         } else {

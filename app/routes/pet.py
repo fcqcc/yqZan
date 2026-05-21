@@ -81,7 +81,7 @@ def build_pet_response(pet: Pet, total_delivered: float):
                   for i, f in enumerate(["baby", "teen", "adult", "deluxe", "legend"])],
         "accessories": accs,
         "next_form_ready": next_form_ready,
-        "next_form_name": form_labels[current_idx + 1] if next_form else None,
+        "next_form_name": form_labels[current_idx + 1] if next_form and current_idx + 1 < len(form_labels) else None,
         "last_fed_at": pet.last_fed_at.isoformat() if pet.last_fed_at else None,
         "passive_skill": PASSIVE_SKILLS.get(pet.pet_type, {}).get("name", ""),
         "passive_skill_desc": PASSIVE_SKILLS.get(pet.pet_type, {}).get("desc", ""),
