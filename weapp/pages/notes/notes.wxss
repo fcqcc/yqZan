@@ -83,6 +83,7 @@
   min-width: 0;
   border-radius: 8px;
   padding: 12px 14px 10px;
+  background: #ffffff;
   border: 1.5px solid rgba(214, 92, 138, 0.18);
   box-shadow:
     0 2px 8px rgba(214, 92, 138, 0.12),
