@@ -78,7 +78,7 @@ def build_pet_response(pet: Pet, total_delivered: float):
         "is_active": pet.is_active,
         "unlocked_forms": unlocked,
         "forms": [{"form": f, "name": form_labels[i] if i < len(form_labels) else f, "unlocked": f in unlocked}
-                  for i, f in enumerate(["baby", "teen", "adult", "deluxe", "legend"])],
+                  for i, f in enumerate(["baby", "teen", "adult", "deluxe", "legend"]) if i < len(form_labels)],
         "accessories": accs,
         "next_form_ready": next_form_ready,
         "next_form_name": form_labels[current_idx + 1] if next_form and current_idx + 1 < len(form_labels) else None,

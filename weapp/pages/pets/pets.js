@@ -96,7 +96,11 @@ Page({
    */
   buildForms(pets, activePet) {
     if (!pets || pets.length === 0) return []
-    // 直接从 activePet.forms（后端返回的表单列表）取名称和表情
+    // 构建稳定形态列表（固定emoji映射，切换形态时不闪烁）
+    const EMOJI_MAP = {
+      'baby': '🐣', 'teen': '🌟', 'adult': '✨', 'deluxe': '💎', 'legend': '👑'
+    }
+    // 直接从 activePet.forms（后端返回的表单列表）取名称
     if (activePet && activePet.forms && activePet.forms.length > 0) {
       const apiForms = {}
       for (const f of activePet.forms) {
@@ -105,17 +109,10 @@ Page({
       const unlocked = activePet.unlocked_forms || ['baby']
       return unlocked.map(f => {
         const info = apiForms[f] || {}
-        let name = info.name || f
-        let emoji = activePet.emoji || '🐾'
-        // 分支进化形态
-        if (f.startsWith('branch_')) {
-          const itemId = f.replace('branch_', '')
-          if (activePet.forms) {
-            const evo = activePet.forms.find(af => af.form === f)
-            if (evo) name = evo.name
-          }
-        }
-        return { form: f, name, emoji: activePet.emoji || '🐾', unlocked: info.unlocked !== false }
+        const name = info.name || f
+        const isBranch = f.startsWith('branch_')
+        const emoji = isBranch ? '🔀' : (EMOJI_MAP[f] || activePet.emoji || '🐾')
+        return { form: f, name, emoji, unlocked: info.unlocked !== false }
       })
     }
     return pets.map(p => ({
