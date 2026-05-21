@@ -381,24 +381,26 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 72px;
-  height: 72px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   background: linear-gradient(135deg, #ffe4f0 0%, #ffd4e8 100%);
-  box-shadow: 0 4px 12px rgba(214, 92, 138, 0.15);
+  box-shadow: 0 6px 20px rgba(214, 92, 138, 0.18);
   position: relative;
   z-index: 1;
 }
 .pet-emoji {
-  font-size: 36px;
+  font-size: 64px;
   display: block;
   line-height: 1;
   transition: transform 0.3s ease;
 }
 .pet-image {
-  width: 60px;
-  height: 60px;
+  width: 120px;
+  height: 120px;
   display: block;
+  position: relative;
+  z-index: 2;
 }
 .pet-intimacy-text {
   display: block;
@@ -429,35 +431,67 @@
   opacity: 0.6;
 }
 
-/* 互动环绕按钮组 */
-.pet-interact-ring {
-  position: relative;
+/* 互动按钮行（宠物头顶平铺） */
+.interact-row {
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 16px 0 10px;
+  gap: 8px;
+  margin-bottom: 10px;
 }
-.interact-btn {
-  position: absolute;
+.interact-row .interact-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  width: 44px;
+  width: 52px;
   padding: 6px 0;
-  border-radius: 50%;
+  border-radius: 10px;
   background: rgba(255,255,255,0.92);
   border: 1px solid #ffd6e8;
   box-shadow: 0 2px 8px rgba(214,92,138,0.12);
   transition: all 0.12s;
 }
-.interact-btn:active { transform: scale(0.9); }
+.interact-row .interact-btn:active { transform: scale(0.92); }
 .interact-icon { font-size: 18px; }
 .interact-label { font-size: 9px; color: var(--text-muted); font-weight: 600; }
-.interact-pet { top: 0; left: 4px; }
-.interact-walk { top: 0; right: 4px; }
-.interact-play { bottom: 8px; left: -8px; }
-.interact-talk { bottom: 8px; right: -8px; }
+
+/* 喂食饭盆动画 */
+.feed-bowl-wrap {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 44px;
+  height: 44px;
+  z-index: 10;
+  overflow: hidden;
+  pointer-events: none;
+}
+.feed-bowl {
+  font-size: 28px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+.feed-food-cover {
+  position: absolute;
+  bottom: 2px;
+  left: 2px;
+  right: 2px;
+  background: #fef9ff;
+  z-index: 2;
+  transition: height 0.1s linear;
+}
+
+/* 宠物剧烈抖动（喂食动画） */
+.pet-shake .pet-container {
+  animation: violentShake 0.1s ease-in-out 20 !important;
+}
+@keyframes violentShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px) rotate(-4deg); }
+  75% { transform: translateX(6px) rotate(4deg); }
+}
 
 /* ===== 宠物动画 ===== */
 .pet-happy .pet-container {
@@ -474,11 +508,13 @@
 
 /* ===== 宠物动画 ===== */
 /* 睡眠 - 轻微上下浮动 */
-.pet-sleep .pet-emoji {
+.pet-sleep .pet-emoji,
+.pet-sleep .pet-image {
   animation: petBounce 3s ease-in-out infinite;
 }
 /* 通用弹跳动画（所有宠物默认） */
-.pet-bounce .pet-emoji {
+.pet-bounce .pet-emoji,
+.pet-bounce .pet-image {
   animation: petBounce 2s ease-in-out infinite;
 }
 /* 慢走 - 左右慢速移动 */
@@ -497,7 +533,8 @@
 .pet-magic .pet-container {
   animation: petMagic 1.5s ease-in-out infinite;
 }
-.pet-magic .pet-emoji {
+.pet-magic .pet-emoji,
+.pet-magic .pet-image {
   animation: petGlow 1.5s ease-in-out infinite;
 }
 

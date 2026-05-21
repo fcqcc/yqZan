@@ -26,6 +26,7 @@ Page({
     intimacyStageDesc: '',
     petCatalog: null,  // 后端获取的宠物配置
     petHappyClass: '',  // 互动动画class
+    lastInteractTime: 0,  // 防抖时间戳
   },
 
   onShow() {
@@ -212,11 +213,16 @@ Page({
       }
     })
   },
-  /** 点击宠物卡片→跳跃动画+抚摸API */
+  /** 点击宠物卡片→跳跃动画+抚摸API（防抖1秒） */
   onPetTap() {
     const pet = this.data.activePet
     if (!pet) return
-    this.setData({ petHappyClass: 'pet-happy' })
+    const now = Date.now()
+    if (now - this.data.lastInteractTime < 1000) {
+      wx.showToast({ title: '🔄 等一等…', icon: 'none' })
+      return
+    }
+    this.setData({ petHappyClass: 'pet-happy', lastInteractTime: now })
     api.petPet(pet.id).catch(() => {})
     setTimeout(() => { this.setData({ petHappyClass: '' }) }, 600)
   },

@@ -14,6 +14,7 @@
 .active-emoji { font-size: 64px; display: block; margin-bottom: 6px; }
 .pet-image-lg { width: 90px; height: 90px; display: block; margin: 0 auto; }
 .active-info { margin-bottom: 12px; }
+.active-name-row { display: flex; align-items: center; justify-content: center; gap: 8px; }
 .active-name { font-size: 18px; font-weight: 800; color: var(--text); display: block; }
 .active-form { font-size: 13px; color: var(--text-secondary); display: block; margin-top: 2px; }
 
@@ -107,6 +108,7 @@
 .pet-emoji { font-size: 28px; width: 40px; text-align: center; }
 .pet-image-sm { width: 36px; height: 36px; display: block; }
 .pet-info { flex: 1; min-width: 0; }
+.pet-name-row { display: flex; align-items: center; gap: 6px; }
 .pet-name { font-size: 14px; font-weight: 600; color: var(--text); display: block; }
 .pet-form-sub { font-size: 11px; color: var(--text-secondary); display: block; margin-top: 1px; }
 .pet-badge {
@@ -136,3 +138,14 @@
 .empty { text-align: center; padding: 40px 16px; color: var(--text-light); font-size: 14px; }
 .empty-icon { font-size: 40px; display: block; margin-bottom: 8px; }
 .empty-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; display: block; }
+
+/* ===== 稀有度徽章 ===== */
+.rarity-badge {
+  font-size: 9px; font-weight: 700;
+  padding: 1px 6px; border-radius: var(--radius-pill);
+  display: inline-block; line-height: 1.4;
+}
+.rarity-N { color: #888; background: #f0f0f0; }
+.rarity-R { color: #4d8cf0; background: #f0f6ff; }
+.rarity-SR { color: #9c27b0; background: #faf0ff; }
+.rarity-SSR { color: #ff8f00; background: #fff8e1; }

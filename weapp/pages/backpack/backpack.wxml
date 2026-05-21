@@ -10,6 +10,10 @@
       class="tab-item {{tab === 'pokedex' ? 'tab-item--active' : ''}}"
       bindtap="switchTab" data-tab="pokedex"
     >📖 图鉴</view>
+    <view
+      class="tab-item {{tab === 'crystals' ? 'tab-item--active' : ''}}"
+      bindtap="switchTab" data-tab="crystals"
+    >💎 晶石</view>
   </view>
 
   <!-- ============================ 背包 TAB ============================ -->
@@ -75,20 +79,26 @@
     <block wx:if="{{pokedexTab === 'pets'}}">
       <view class="section-card">
         <text class="section-sub">共 {{petsTotal}} 种，已获得 {{petsObtained}} 种</text>
-        <view class="bestiary-grid">
-          <view wx:for="{{petsList}}" wx:key="type" class="bestiary-cell {{item.obtained ? '' : 'bestiary-cell--unknown'}}">
-            <text class="bestiary-cell-rarity bestiary-rarity-{{item.rarity}}">{{item.rarity}}</text>
-            <text class="bestiary-cell-name">{{item.obtained ? item.name : '???'}}</text>
-            <view wx:if="{{item.obtained}}" class="bestiary-badge">✓</view>
+        <view class="card-grid">
+          <view wx:for="{{petsList}}" wx:key="type" class="item-card {{item.obtained ? '' : 'item-card--locked'}}">
+            <view class="item-card-top">
+              <text class="bestiary-cell-rarity bestiary-rarity-{{item.rarity}}">{{item.rarity}}</text>
+              <text wx:if="{{item.obtained}}" class="pokedex-check">✓</text>
+              <text wx:else class="pokedex-check">🔒</text>
+            </view>
+            <text class="item-card-name">{{item.obtained ? item.name : '???'}}</text>
           </view>
         </view>
       </view>
       <view wx:if="{{evolutionsList.length > 0}}" class="section-card">
         <text class="section-label">✨ 进化形态</text>
-        <view class="bestiary-grid">
-          <view wx:for="{{evolutionsList}}" wx:key="item_id" class="bestiary-cell {{item.obtained ? '' : 'bestiary-cell--unknown'}}">
-            <text class="bestiary-cell-name">{{item.obtained ? item.name : '???'}}</text>
-            <view wx:if="{{item.obtained}}" class="bestiary-badge">✓</view>
+        <view class="card-grid">
+          <view wx:for="{{evolutionsList}}" wx:key="item_id" class="item-card {{item.obtained ? '' : 'item-card--locked'}}">
+            <view class="item-card-top">
+              <text wx:if="{{item.obtained}}" class="pokedex-check">✓</text>
+              <text wx:else class="pokedex-check">🔒</text>
+            </view>
+            <text class="item-card-name">{{item.obtained ? item.name : '???'}}</text>
           </view>
         </view>
       </view>
@@ -97,11 +107,14 @@
     <block wx:if="{{pokedexTab === 'items'}}">
       <view class="section-card">
         <text class="section-sub">共 {{itemsTotal}} 种，已获得 {{itemsObtained}} 种</text>
-        <view class="bestiary-grid">
-          <view wx:for="{{itemsList}}" wx:key="item_id" class="bestiary-cell {{item.obtained ? '' : 'bestiary-cell--unknown'}}">
-            <text class="bestiary-cell-rarity bestiary-rarity-{{item.rarity}}">{{item.rarity}}</text>
-            <text class="bestiary-cell-name">{{item.obtained ? item.name : '???'}}</text>
-            <view wx:if="{{item.obtained}}" class="bestiary-badge">✓</view>
+        <view class="card-grid">
+          <view wx:for="{{itemsList}}" wx:key="item_id" class="item-card {{item.obtained ? '' : 'item-card--locked'}}">
+            <view class="item-card-top">
+              <text class="bestiary-cell-rarity bestiary-rarity-{{item.rarity}}">{{item.rarity}}</text>
+              <text wx:if="{{item.obtained}}" class="pokedex-check">✓</text>
+              <text wx:else class="pokedex-check">🔒</text>
+            </view>
+            <text class="item-card-name">{{item.obtained ? item.name : '???'}}</text>
           </view>
         </view>
       </view>

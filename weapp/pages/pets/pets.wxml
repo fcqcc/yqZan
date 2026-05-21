@@ -7,7 +7,10 @@
       <text wx:else>{{activePet.emoji}}</text>
     </view>
     <view class="active-info">
-      <text class="active-name">{{activePet.form_label || activePet.pet_type}}</text>
+      <view class="active-name-row">
+        <text class="active-name">{{activePet.form_label || activePet.pet_type}}</text>
+        <text class="rarity-badge rarity-{{activePet.rarity}}">{{activePet.rarity}}</text>
+      </view>
       <text class="active-form">{{activePet.form_label}}</text>
     </view>
     <view class="active-intimacy">
@@ -74,7 +77,10 @@
           <text wx:else>{{item.emoji || '🐾'}}</text>
         </view>
         <view class="pet-info">
-          <text class="pet-name">{{item.form_label || item.pet_type || '未知宠物'}}</text>
+          <view class="pet-name-row">
+            <text class="pet-name">{{item.form_label || item.pet_type || '未知宠物'}}</text>
+            <text class="rarity-badge rarity-{{item.rarity}}">{{item.rarity}}</text>
+          </view>
           <text class="pet-form-sub">{{item.form_label}}</text>
         </view>
         <view wx:if="{{item.active}}" class="pet-badge">当前</view>
