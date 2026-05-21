@@ -50,6 +50,18 @@ class PetDailyLog(Base):
     created_at = Column(DateTime, default=datetime.now)
 
 
+# 每日道具使用记录（每用户每天限制）
+class ItemDailyUsage(Base):
+    __tablename__ = "item_daily_usage"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    item_id = Column(String(32), nullable=False)
+    use_date = Column(Date, nullable=False, index=True)
+    use_count = Column(Integer, default=1)
+    created_at = Column(DateTime, default=datetime.now)
+
+
 # ===== 宠物稀有度 =====
 PET_RARITY = {
     # SSR (4阶)

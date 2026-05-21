@@ -10,7 +10,7 @@ from app.models.couple import Couple
 from app.models.pet import (
     PET_EMOJI, FORM_NAMES, FORM_THRESHOLDS, EVOLUTION_ITEMS, PET_RARITY,
     PASSIVE_SKILLS, get_passive_reward,
-    Pet, Inventory, PetDailyLog,
+    Pet, Inventory, PetDailyLog, ItemDailyUsage,
 )
 from app.models.plan import Plan, Delivery
 from app.models.user import User
@@ -354,7 +354,8 @@ def get_inventory(user: User = Depends(get_current_user), db: Session = Depends(
 
 @router.post("/inventory/use")
 def use_inventory_item(req: dict, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    """使用消耗品"""
+    """使用消耗品（含每日使用次数限制）"""
+    from datetime import date
     cid = get_couple_id(user)
     inv_id = req.get("inventory_id")
     inv = db.query(Inventory).filter(Inventory.id == inv_id, Inventory.couple_id == cid, Inventory.quantity > 0).first()
@@ -363,12 +364,48 @@ def use_inventory_item(req: dict, user: User = Depends(get_current_user), db: Se
 
     result = {"ok": True}
 
+    # ===== 每日使用限制配置 =====
+    DAILY_LIMITS = {
+        "intimacy_candy": 5,
+        "decline_card": 3,
+        "spark_card": 1,
+        "serve_me": 1,
+        "forgive_me": 1,
+    }
+    CHORE_LIMIT = 3  # 每种家务卡每天限制
+
+    # 检查每日限制（仅对有配置的item生效）
+    today = date.today()
+    limit = None
+    if inv.item_id in DAILY_LIMITS:
+        limit = DAILY_LIMITS[inv.item_id]
+    elif inv.item_id.startswith("chore_"):
+        limit = CHORE_LIMIT
+
+    if limit is not None:
+        usage = db.query(ItemDailyUsage).filter(
+            ItemDailyUsage.user_id == user.id,
+            ItemDailyUsage.item_id == inv.item_id,
+            ItemDailyUsage.use_date == today,
+        ).first()
+        used = usage.use_count if usage else 0
+        if used >= limit:
+            raise HTTPException(429, f"今日已使用{used}次，已达上限{limit}次")
+        if usage:
+            usage.use_count += 1
+        else:
+            db.add(ItemDailyUsage(user_id=user.id, item_id=inv.item_id, use_date=today, use_count=1))
+
     if inv.item_type == "consumable":
         if inv.item_id == "intimacy_candy":
-            pet = db.query(Pet).filter(Pet.couple_id == cid, Pet.is_active == True).first()
-            if pet:
-                pet.intimacy = min(100, pet.intimacy + 10)
-            result["effect"] = "亲密+10"
+            # 所有已拥有宠物 +5 亲密度
+            pets = db.query(Pet).filter(Pet.couple_id == cid).all()
+            affected = 0
+            for pet in pets:
+                if pet.intimacy < 100:
+                    pet.intimacy = min(100, pet.intimacy + 5)
+                    affected += 1
+            result["effect"] = f"所有宠物亲密度+5（{affected}只已增加）😊"
         elif inv.item_id == "fortune_cookie":
             result["message"] = "打开幸运饼干，获得一句好运势！"
         elif inv.item_id == "spark_card":
