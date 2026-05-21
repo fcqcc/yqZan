@@ -148,7 +148,7 @@ Page({
       wx.showToast({ title: '切换成功', icon: 'success' })
       this.load()
     } catch (e) {
-      wx.showToast({ title: e.errMsg || '切换失败', icon: 'none' })
+      wx.showToast({ title: e.detail || e.errMsg || '切换失败', icon: 'none' })
     }
   },
 
@@ -175,7 +175,8 @@ Page({
       wx.showToast({ title: '喂食成功 ❤️', icon: 'success' })
       this.load()
     } catch (e) {
-      wx.showToast({ title: e.errMsg || '喂食失败', icon: 'none' })
+      const msg = e._statusCode === 429 ? (e.detail || '今天已经喂过了') : (e.detail || e.errMsg || '喂食失败')
+      wx.showToast({ title: msg, icon: 'none' })
     }
   },
 
@@ -208,7 +209,7 @@ Page({
           wx.showToast({ title: '进化成功 ✨', icon: 'success' })
           this.load()
         } catch (e) {
-          wx.showToast({ title: e.errMsg || '进化失败', icon: 'none' })
+          wx.showToast({ title: e.detail || e.errMsg || '进化失败', icon: 'none' })
         }
       }
     })

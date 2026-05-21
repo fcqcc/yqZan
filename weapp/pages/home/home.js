@@ -308,7 +308,11 @@ Page({
     }, 800)
     try {
       await api.petPet(petId)
-    } catch (e) { /* 静默，日限由后端处理 */ }
+    } catch (e) {
+      if (e._statusCode === 429) {
+        wx.showToast({ title: e.detail || '今天已经抚摸过了~', icon: 'none' })
+      }
+    }
   },
 
   /** 喂食按钮：剧烈抖动+饭盆emoji→调用喂食API（动画先于接口） */
@@ -331,9 +335,8 @@ Page({
       this.loadPetData()
       this.loadData()
     } catch (e) {
-      const msg = ((e && e.detail) || e.errMsg || '').toLowerCase()
-      if (msg.includes('429') || msg.includes('喂过') || msg.includes('明天')) {
-        wx.showToast({ title: '🐷 小宠物吃饱了，明天再来吧~', icon: 'none' })
+      if (e._statusCode === 429) {
+        wx.showToast({ title: e.detail || '🐷 小宠物吃饱了，明天再来吧~', icon: 'none' })
       } else {
         wx.showToast({ title: e.detail || e.errMsg || '喂食失败', icon: 'none' })
       }
@@ -359,9 +362,8 @@ Page({
       wx.showToast({ title: '🚶 散步成功 +2 ❤️', icon: 'none' })
       this.loadPetData()
     } catch (e) {
-      const msg = ((e && e.detail) || e.errMsg || '').toLowerCase()
-      if (msg.includes('429') || msg.includes('散步')) {
-        wx.showToast({ title: '🚶 今天已经散过步了~', icon: 'none' })
+      if (e._statusCode === 429) {
+        wx.showToast({ title: e.detail || '🚶 今天已经散过步了~', icon: 'none' })
       }
     }
   },
@@ -411,9 +413,8 @@ Page({
       this.loadData()
     } catch (e) {
       wx.hideLoading()
-      const msg = ((e && e.detail) || e.errMsg || '').toLowerCase()
-      if (msg.includes('429') || msg.includes('喂过') || msg.includes('消化') || msg.includes('明天')) {
-        wx.showToast({ title: '🐷 小宠物吃饱了，明天再来吧~', icon: 'none' })
+      if (e._statusCode === 429) {
+        wx.showToast({ title: e.detail || '🐷 小宠物吃饱了，明天再来吧~', icon: 'none' })
       } else {
         wx.showToast({ title: e.detail || e.errMsg || '投喂失败', icon: 'none' })
       }

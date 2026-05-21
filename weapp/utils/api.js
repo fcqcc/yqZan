@@ -20,7 +20,9 @@ function request(url, method = 'GET', data = {}) {
           return
         }
         if (res.statusCode >= 400) {
-          reject(res.data)
+          const err = res.data || {}
+          err._statusCode = res.statusCode
+          reject(err)
         } else {
           resolve(res.data)
         }

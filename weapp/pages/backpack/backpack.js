@@ -144,7 +144,8 @@ Page({
           wx.showToast({ title: msg, icon: 'none', duration: 2000 })
           this.load()
         } catch (e) {
-          wx.showToast({ title: e.errMsg || '使用失败', icon: 'none' })
+          const msg = e._statusCode === 429 ? (e.detail || '已达使用上限') : (e.detail || e.errMsg || '使用失败')
+          wx.showToast({ title: msg, icon: 'none' })
         }
       },
     })
