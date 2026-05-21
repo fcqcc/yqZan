@@ -153,6 +153,10 @@ def use_card(req: dict, user: User = Depends(get_current_user), db: Session = De
         db.add(task)
         db.commit()
         db.refresh(task)
+        from app.routes.pet import _log_game_action
+        _log_game_action(cid, "card_use", item_id,
+                         f"使用{card_name}：命令{partner.nickname if partner else '对方'}服务",
+                         db, item_name=card_name)
         return {
             "ok": True,
             "effect": f"你命令{partner.nickname}为你服务，不得拒绝！👑",
@@ -175,6 +179,10 @@ def use_card(req: dict, user: User = Depends(get_current_user), db: Session = De
         db.add(task)
         db.commit()
         db.refresh(task)
+        from app.routes.pet import _log_game_action
+        _log_game_action(cid, "card_use", item_id,
+                         f"使用{card_name}：等待{partner.nickname if partner else '对方'}原谅",
+                         db, item_name=card_name)
         return {
             "ok": True,
             "effect": f"你使用了「{card_name}」，等待{partner.nickname}的原谅中…",
@@ -205,6 +213,10 @@ def use_card(req: dict, user: User = Depends(get_current_user), db: Session = De
     db.add(task)
     db.commit()
     db.refresh(task)
+    from app.routes.pet import _log_game_action
+    _log_game_action(cid, "card_use", item_id,
+                     f"使用{card_name}：指派{partner.nickname if partner else '对方'}去做",
+                     db, item_name=card_name)
 
     return {
         "ok": True,

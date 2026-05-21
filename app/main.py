@@ -1,4 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
@@ -47,6 +49,31 @@ TASK_EVENTS = [
 
 
 app = FastAPI(title="Couple Promise API", version="0.1.0")
+
+
+# ===== 统一错误处理 =====
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """422 参数验证 → 提取第一条可读错误"""
+    errors = exc.errors()
+    if errors:
+        first = errors[0]
+        msg = first.get("msg", "")
+        loc = ".".join(str(x) for x in first.get("loc", [])) if first.get("loc") else ""
+        detail = f"参数错误: {msg}" if not loc else f"参数 {loc}: {msg}"
+    else:
+        detail = "请求参数错误"
+    return JSONResponse(status_code=422, content={"detail": detail})
+
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    """500 未知错误 → 不暴露内部细节"""
+    import traceback
+    print(f"[500] {type(exc).__name__}: {exc}")
+    traceback.print_exc()
+    return JSONResponse(status_code=500, content={"detail": "服务器内部错误，请稍后重试"})
 
 
 @app.on_event("startup")

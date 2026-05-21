@@ -75,3 +75,16 @@ class Task(Base):
     deadline = Column(String(10), default="")
     created_at = Column(DateTime, default=datetime.now)
 
+
+class GameLog(Base):
+    """游戏行为日志：进化/抽卡/道具使用/系统赠送/卡牌使用"""
+    __tablename__ = "game_logs"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    couple_id = Column(Integer, ForeignKey("couples.id"), nullable=False, index=True)
+    action_type = Column(String(20), nullable=False)  # evolution / gacha / item_use / system_grant / card_use
+    item_id = Column(String(32), default="")
+    item_name = Column(String(64), default="")
+    details = Column(Text, default="")  # JSON 详情
+    created_at = Column(DateTime, default=datetime.now)
+

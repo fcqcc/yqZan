@@ -68,12 +68,21 @@ Page({
       // 构建形态列表（从所有宠物中提取已解锁的形态）
       const forms = this.buildForms(pets, activePet)
 
-      // 判断是否可以进化：仅 SSR 且当前形态为 adult（第三形态）
       const items = Array.isArray(inventory) ? inventory : (inventory.items || [])
-      const canEvolve = activePet
+
+      // 🔥 道具进化：SSR ≥ 15级 + 有进化道具
+      const canItemEvolve = activePet
         && activePet.rarity === 'SSR'
-        && activePet.form === 'adult'
+        && activePet.level >= 15
         && items.some(item => item.item_type === 'evolution_item')
+
+      // 🔥 等级进化：evolution_ready，但SSR满15级没有等级进化
+      const canLevelEvolve = activePet
+        && activePet.evolution_ready
+        && !(activePet.rarity === 'SSR' && activePet.level >= 15)
+
+      // 当前显示的进化按钮（仅用于兼容旧引用）
+      const canEvolve = canItemEvolve
 
       // 计算亲密度阶段
       let stageName = '初识'
@@ -86,7 +95,7 @@ Page({
         else if (lvl === 'love') { stageName = '挚爱💕'; stageDesc = '心意相通，默契无间！' }
       }
 
-      this.setData({ pets, activePet, intimacyPct, forms, canEvolve, inventory: items, intimacyStageName: stageName, intimacyStageDesc: stageDesc })
+      this.setData({ pets, activePet, intimacyPct, forms, canEvolve, canItemEvolve, canLevelEvolve, inventory: items, intimacyStageName: stageName, intimacyStageDesc: stageDesc })
     } catch (e) { console.error('load pets error:', e) }
   },
 
@@ -170,7 +179,7 @@ Page({
     }
   },
 
-  /** 进化宠物 */
+  /** 进化宠物 + 粒子特效 */
   async onEvolve() {
     const pet = this.data.activePet
     if (!pet) return
@@ -194,11 +203,16 @@ Page({
       content: `消耗 1 个「${evolveItem.name || '进化道具'}」，进化 ${pet.form_label || '宠物'}？`,
       success: async (res) => {
         if (!res.confirm) return
+        // 🎆 先播进化动画
+        this.setData({ showEvoEffect: true })
+        await new Promise(r => setTimeout(r, 3000))
+        this.setData({ showEvoEffect: false })
         try {
           await api.evolvePet(pet.id, evolveItem.item_id)
-          wx.showToast({ title: '进化成功 ✨', icon: 'success' })
+          wx.showToast({ title: '✨ 进化成功！', icon: 'none' })
           this.load()
         } catch (e) {
+          this.setData({ showEvoEffect: false })
           wx.showToast({ title: e.detail || e.errMsg || '进化失败', icon: 'none' })
         }
       }

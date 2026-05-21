@@ -40,18 +40,28 @@
 
   <!-- ===== 抽卡按钮 ===== -->
   <view class="btn-section">
-    <button class="btn-draw btn-draw-single {{drawing ? 'btn-disabled' : ''}}" 
-            disabled="{{drawing || tickets < 1}}" 
-            bindtap="onDrawSingle">
-      <text class="btn-label">单抽</text>
-      <text class="btn-cost">消耗 1 张券</text>
-    </button>
-    <button class="btn-draw btn-draw-ten {{drawing ? 'btn-disabled' : ''}}" 
-            disabled="{{drawing || tickets < 10}}" 
-            bindtap="onDrawTen">
-      <text class="btn-label">十连抽</text>
-      <text class="btn-cost">消耗 10 张 · 返还 1 张</text>
-    </button>
+    <view wx:if="{{pityCount > 0}}" class="pity-bar">
+      <text class="pity-text">保底进度：{{pityCount}}/60</text>
+      <view class="pity-track"><view class="pity-fill" style="width:{{pityCount / 60 * 100 > 100 ? 100 : pityCount / 60 * 100}}%"></view></view>
+    </view>
+    <label wx:if="{{shards >= 50}}" class="boost-option">
+      <checkbox class="boost-checkbox" checked="{{useBoost}}" bindchange="toggleBoost" />
+      <text class="boost-label">积分加注 💎+50<text style="font-size:10px;color:var(--text-muted)"> SSR概率↑</text></text>
+    </label>
+    <view class="btn-actions-row">
+      <button class="btn-draw btn-draw-single {{drawing ? 'btn-disabled' : ''}}" 
+              disabled="{{drawing || tickets < 1}}" 
+              bindtap="onDrawSingle">
+        <text class="btn-label">单抽</text>
+        <text class="btn-cost">消耗 1 张券</text>
+      </button>
+      <button class="btn-draw btn-draw-ten {{drawing ? 'btn-disabled' : ''}}" 
+              disabled="{{drawing || tickets < 10}}" 
+              bindtap="onDrawTen">
+        <text class="btn-label">十连抽</text>
+        <text class="btn-cost">消耗 10 张 · 返还 1 张</text>
+      </button>
+    </view>
   </view>
 
   <!-- ===== 十连结果列表 ===== -->

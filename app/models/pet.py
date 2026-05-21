@@ -150,7 +150,7 @@ PET_EMOJI = {
 }
 
 FORM_NAMES = {
-    # SSR (4阶)
+    # SSR (4阶：baby/teen/adult/final)
     "star_fox":    ["星绒狐", "星辉狐", "星云狐", "星河神狐"],
     "bamboo_dragon":["嫩芽龙", "青竹龙", "竹灵龙", "九节神竹龙"],
     "wave_cat":    ["浪花喵", "潮汐喵", "珊瑚喵", "海神喵"],
@@ -210,9 +210,9 @@ def get_current_level_cap(pet) -> int:
 
 EVOLUTION_ITEMS = {
 
-    # SSR 进化道具（4阶→传说）
-    "star_ribbon":   {"pet": "star_fox", "form": "legend", "form_label": "星河绶带🌀"},
-    "bamboo_sword":  {"pet": "bamboo_dragon", "form": "legend", "form_label": "青竹剑🗡️"},
-    "sea_crown":     {"pet": "wave_cat", "form": "legend", "form_label": "神海王冠👑"},
-    "rainbow_cape":  {"pet": "honey_bear", "form": "deluxe", "form_label": "彩虹披风🎂"},
+    # SSR 进化道具（4阶→最终形态）
+    "star_ribbon":   {"pet": "star_fox", "form": "deluxe", "form_label": "星河绶带🌀", "display_emoji": "🌀"},
+    "bamboo_sword":  {"pet": "bamboo_dragon", "form": "deluxe", "form_label": "青竹剑🗡️", "display_emoji": "🗡️"},
+    "sea_crown":     {"pet": "wave_cat", "form": "deluxe", "form_label": "神海王冠👑", "display_emoji": "👑"},
+    "rainbow_cape":  {"pet": "honey_bear", "form": "deluxe", "form_label": "彩虹披风🎂", "display_emoji": "🎂"},
 }

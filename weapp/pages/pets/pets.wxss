@@ -12,7 +12,7 @@
   text-align: center;
 }
 .active-emoji { font-size: 64px; display: block; margin-bottom: 6px; }
-.pet-image-lg { width: 90px; height: 90px; display: block; margin: 0 auto; }
+.pet-image-lg { width: 160px; height: 160px; display: block; margin: 0 auto; }
 .active-info { margin-bottom: 12px; }
 .active-name-row { display: flex; align-items: center; justify-content: center; gap: 8px; }
 .active-name { font-size: 18px; font-weight: 800; color: var(--text); display: block; }
@@ -105,8 +105,8 @@
 }
 .pet-item:last-child { border-bottom: none; }
 .pet-item--active { background: rgba(214, 92, 138, 0.04); margin: 0 -16px; padding: 10px 16px; border-radius: var(--radius-sm); }
-.pet-emoji { font-size: 28px; width: 40px; text-align: center; }
-.pet-image-sm { width: 36px; height: 36px; display: block; }
+.pet-emoji { font-size: 28px; width: 50px; text-align: center; }
+.pet-image-sm { width: 48px; height: 48px; display: block; }
 .pet-info { flex: 1; min-width: 0; }
 .pet-name-row { display: flex; align-items: center; gap: 6px; }
 .pet-name { font-size: 14px; font-weight: 600; color: var(--text); display: block; }

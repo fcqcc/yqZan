@@ -49,9 +49,8 @@
       </view>
     </view>
     <view class="active-actions">
-      <button class="btn btn-sm btn-outline" bindtap="onFeed">🍼 喂食</button>
-      <button class="btn btn-sm btn-primary" wx:if="{{canEvolve}}" bindtap="onEvolve">✨ 进化</button>
-      <button class="btn btn-sm btn-primary evolution-btn" wx:if="{{activePet && activePet.evolution_ready && !canEvolve}}" bindtap="onLevelEvolve">🌟 等级进化</button>
+      <button class="btn btn-sm btn-primary" wx:if="{{canItemEvolve}}" bindtap="onEvolve">✨ 道具进化</button>
+      <button class="btn btn-sm btn-primary evolution-btn" wx:if="{{canLevelEvolve}}" bindtap="onLevelEvolve">🌟 等级进化</button>
     </view>
   </view>
 

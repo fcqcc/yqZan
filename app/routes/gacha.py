@@ -168,25 +168,27 @@ def _give_item(couple_id: int, item: dict, db: Session):
             )
             db.add(pet)
             db.flush()
+            # 日志：抽到新宠物
+            from app.routes.pet import _log_game_action
+            _log_game_action(couple_id, "gacha", item_id,
+                             f"抽到新宠物：{item.get('name', item_id)}",
+                             db, item_name=item.get("name", item_id))
             return {"pet_id": pet.id, "already_owned": False}
     else:
-        existing = db.query(Inventory).filter(
-            Inventory.couple_id == couple_id,
-            Inventory.item_type == item_type,
-            Inventory.item_id == item_id,
-        ).first()
-        if existing:
-            existing.quantity += 1
+        # 走 add_inventory 统一处理（包含进化道具限1 / 自动转晶石）
+        from app.routes.pet import add_inventory, _log_game_action
+        result = add_inventory(couple_id, item_type, item_id, 1, db)
+        # 日志
+        name = item.get("name", item_id)
+        if result and result.get("converted"):
+            _log_game_action(couple_id, "system_grant", item_id,
+                             f"获取{name}→{result.get('crystals')}晶石💎(重复)",
+                             db, item_name=name)
         else:
-            inv = Inventory(
-                couple_id=couple_id,
-                item_type=item_type,
-                item_id=item_id,
-                quantity=1,
-            )
-            db.add(inv)
-            db.flush()
-        return {"already_owned": False}
+            _log_game_action(couple_id, "gacha", item_id,
+                             f"抽到：{name}",
+                             db, item_name=name)
+        return result or {"already_owned": False}
 
 
 def _update_pity(couple_id: int, item: dict, db: Session):
@@ -205,7 +207,9 @@ def _get_pity_multiplier(couple_id: int, db: Session) -> float:
     if not couple:
         return 1.0
     pity = couple.gacha_pity or 0
-    if pity >= 30:
+    if pity >= 60:
+        return 3.0  # 硬保底：极高概率出SSR
+    if pity >= 40:
         return 2.0
     if pity >= 20:
         return 1.5

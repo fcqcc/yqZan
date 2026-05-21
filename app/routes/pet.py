@@ -53,6 +53,8 @@ def calc_total_delivered(couple_id: int, db: Session) -> float:
 def build_pet_response(pet: Pet, total_delivered: float):
     """构建宠物完整响应"""
     unlocked = json.loads(pet.unlocked_forms) if isinstance(pet.unlocked_forms, str) else pet.unlocked_forms
+    # 🔥 过滤掉内部 branch_xxx 标记，不暴露给前端
+    unlocked_display = [f for f in unlocked if not f.startswith('branch_')]
     accs = json.loads(pet.accessories) if isinstance(pet.accessories, str) else pet.accessories
     form_emoji = PET_EMOJI.get(pet.pet_type, {}).get(pet.current_form, "🐷")
     form_labels = FORM_NAMES.get(pet.pet_type, [])
@@ -76,9 +78,9 @@ def build_pet_response(pet: Pet, total_delivered: float):
         "intimacy_max": 100,
         "intimacy_level": get_intimacy_level(pet.intimacy),
         "is_active": pet.is_active,
-        "unlocked_forms": unlocked,
-        "forms": [{"form": f, "name": form_labels[i] if i < len(form_labels) else f, "unlocked": f in unlocked}
-                  for i, f in enumerate(["baby", "teen", "adult", "deluxe", "legend"]) if i < len(form_labels)],
+        "unlocked_forms": unlocked_display,
+        "forms": [{"form": f, "name": form_labels[i] if i < len(form_labels) else f, "unlocked": f in unlocked_display}
+                  for i, f in enumerate(["baby", "teen", "adult", "deluxe", "legend"])],
         "accessories": accs,
         "next_form_ready": next_form_ready,
         "next_form_name": form_labels[current_idx + 1] if next_form and current_idx + 1 < len(form_labels) else None,
@@ -97,8 +99,18 @@ def build_pet_response(pet: Pet, total_delivered: float):
 
 
 def get_pet_image_url(pet_type: str, form: str) -> str:
-    """生成宠物图片 URL"""
-    return f"/assets/pets/{pet_type}_{form or 'baby'}.png"
+    """生成宠物图片 URL（找不到时降级到最高可用形态）"""
+    import os
+    BASE = os.path.join(os.path.dirname(__file__), "..", "..", "assets", "pets")
+    # 按形态优先级降级查找
+    FORM_FALLBACK = ["legend", "deluxe", "adult", "teen", "baby"]
+    start = FORM_FALLBACK.index(form) if form in FORM_FALLBACK else len(FORM_FALLBACK) - 1
+    for f in FORM_FALLBACK[start:]:
+        path = f"{pet_type}_{f}.png"
+        if os.path.exists(os.path.join(BASE, path)):
+            return f"/assets/pets/{path}"
+    # 兜底
+    return f"/assets/pets/{pet_type}_baby.png"
 
 
 def get_intimacy_level(intimacy: int) -> str:
@@ -109,7 +121,39 @@ def get_intimacy_level(intimacy: int) -> str:
 
 
 def add_inventory(couple_id: int, item_type: str, item_id: str, quantity: int, db: Session):
-    """向背包添加物品"""
+    """向背包添加物品（进化道具限1个，超出自动转晶石）"""
+    # 进化道具检查：已拥有 或 宠物已解锁对应分支 → 转晶石
+    from app.models.pet import EVOLUTION_ITEMS, Pet
+    if item_type == "evolution_item" and item_id in EVOLUTION_ITEMS:
+        existing = db.query(Inventory).filter(
+            Inventory.couple_id == couple_id,
+            Inventory.item_type == item_type,
+            Inventory.item_id == item_id,
+            Inventory.quantity > 0,
+        ).first()
+        if existing:
+            # 已有此道具 → 转晶石
+            from app.routes.gacha import _add_crystals, CRYSTAL_PER_RARITY
+            amt = CRYSTAL_PER_RARITY.get("SSR", 35)
+            _add_crystals(couple_id, amt, db)
+            _log_game_action(couple_id, "system_grant", item_id,
+                             f"进化道具已拥有，自动转化{amt}晶石💎", db)
+            return {"converted": True, "crystals": amt, "message": f"进化道具已拥有，转化为{amt}晶石💎"}
+        # 检查宠物是否已解锁该分支
+        evo = EVOLUTION_ITEMS[item_id]
+        branch_tag = f"branch_{item_id}"
+        pet_has_branch = db.query(Pet).filter(
+            Pet.couple_id == couple_id,
+            Pet.pet_type == evo["pet"],
+        ).filter(Pet.unlocked_forms.contains(branch_tag)).first()
+        if pet_has_branch:
+            from app.routes.gacha import _add_crystals, CRYSTAL_PER_RARITY
+            amt = CRYSTAL_PER_RARITY.get("SSR", 35)
+            _add_crystals(couple_id, amt, db)
+            _log_game_action(couple_id, "system_grant", item_id,
+                             f"宠物最终形态已解锁，自动转化{amt}晶石💎", db)
+            return {"converted": True, "crystals": amt, "message": f"宠物已达最终形态，道具转化为{amt}晶石💎"}
+
     existing = db.query(Inventory).filter(
         Inventory.couple_id == couple_id,
         Inventory.item_type == item_type,
@@ -119,6 +163,22 @@ def add_inventory(couple_id: int, item_type: str, item_id: str, quantity: int, d
         existing.quantity += quantity
     else:
         db.add(Inventory(couple_id=couple_id, item_type=item_type, item_id=item_id, quantity=quantity))
+    db.flush()
+
+
+def _log_game_action(couple_id: int, action_type: str, item_id: str, details: str, db: Session, item_name: str = ""):
+    """记录游戏行为日志"""
+    from app.models.social import GameLog
+    from datetime import datetime
+    log = GameLog(
+        couple_id=couple_id,
+        action_type=action_type,
+        item_id=item_id,
+        item_name=item_name,
+        details=details,
+        created_at=datetime.now(),
+    )
+    db.add(log)
     db.flush()
 
 
@@ -341,29 +401,77 @@ def evolve_pet(pet_id: int, req: dict, user: User = Depends(get_current_user), d
     if pet.pet_type != evo["pet"]:
         raise HTTPException(400, f"该道具不能用于{pet.pet_type}")
 
-    # 检查是否已解锁该分支（防止重复使用）
+    # ❗等级验证：必须到达当前形态满级附近（避免在10级adult形态误用）
+    from app.models.pet import get_current_level_cap
+    current_cap = get_current_level_cap(pet)
+    if pet.level < current_cap - 1:
+        raise HTTPException(400, f"等级不足！当前形态满级 {current_cap}，至少需要 {current_cap - 1} 级才能进化")
+
+    # ❗形态验证：进化道具的目标形态的前一位必须是当前形态
+    # SSR≥15级跳过此检查（直接进化到目标形态）
+    rarity = PET_RARITY.get(pet.pet_type, "R")
+    FORM_ORDER = ["baby", "teen", "adult", "deluxe", "legend"]
+    target_form = evo.get("form", "")
+    if target_form in FORM_ORDER and not (rarity == "SSR" and pet.level >= 15):
+        target_idx = FORM_ORDER.index(target_form)
+        required_form = FORM_ORDER[target_idx - 1] if target_idx > 0 else None
+        if required_form and pet.current_form != required_form:
+            raise HTTPException(400, f"当前形态「{pet.current_form}」不支持进化，需要切换到「{required_form}」形态")
+
+    # 检查是否已解锁该分支
     unlocked = json.loads(pet.unlocked_forms) if isinstance(pet.unlocked_forms, str) else pet.unlocked_forms
     branch_tag = f"branch_{item_id}"
     if branch_tag in unlocked:
-        raise HTTPException(400, "该分支已解锁")
+        # 🔄 分支已存在 → 消耗道具转化为晶石（SSR级35晶石）
+        inv.quantity -= 1
+        from app.routes.gacha import _add_crystals, CRYSTAL_PER_RARITY
+        crystal_amt = CRYSTAL_PER_RARITY.get("SSR", 35)
+        _add_crystals(cid, crystal_amt, db)
+        evo_name = evo.get("form_label", item_id)
+        from app.catalog import ITEM_CATALOG
+        full_name = ITEM_CATALOG.get(item_id, {}).get("name", item_id)
+        _log_game_action(cid, "evolution", item_id,
+                         f"分支已存在，{full_name}→{crystal_amt}晶石💎",
+                         db, item_name=full_name)
+        # 🔥 先构建返回数据再提交
+        result = {
+            "ok": True,
+            "converted": True,
+            "crystals": crystal_amt,
+            "message": f"分支已存在，{evo_name}转化为{crystal_amt}晶石💎",
+        }
+        db.commit()
+        return result
 
     # 消耗道具
     inv.quantity -= 1
 
-    # 解锁分支形态（用特殊tag存储）
+    # 解锁分支形态（用特殊tag存储，仅用于防重复检测）
     unlocked.append(branch_tag)
+    # 同时把目标形态也加入已解锁，用于等级上限计算
+    if target_form not in unlocked:
+        unlocked.append(target_form)
     pet.unlocked_forms = json.dumps(unlocked)
 
-    # 分支形态使用对应的 emoji 展示
-    pet.current_form = branch_tag
-    db.commit()
+    # 形态改为目标形态名（deluxe/legend），不是 branch_xxx
+    pet.current_form = target_form
 
-    return {
+    from app.catalog import ITEM_CATALOG
+    full_name = ITEM_CATALOG.get(item_id, {}).get("name", item_id)
+    _log_game_action(cid, "evolution", item_id,
+                     f"使用{full_name}进化 {pet.pet_type} → {evo.get('form_label', target_form)}",
+                     db, item_name=full_name)
+
+    # 🔥 先构建返回数据再提交（防止返回时出错导致已提交的错误数据）
+    result = {
         "ok": True,
         "pet_id": pet.id,
-        "form_label": evo["form_label"],
-        "display_emoji": evo["display_emoji"],
+        "form_label": evo.get("form_label", target_form),
+        "display_emoji": evo.get("display_emoji", "✨"),
+        "current_form": target_form,
     }
+    db.commit()
+    return result
 
 
 # ===== 等级进化（每5级手动确认）=====
@@ -376,7 +484,12 @@ def level_evolve_pet(pet_id: int, user: User = Depends(get_current_user), db: Se
         raise HTTPException(404, "宠物不存在")
     if not pet.evolution_ready:
         raise HTTPException(400, "当前不可进化")
+
+    # 🔥 SSR满15级没有等级进化（必须使用道具进化）
     rarity = PET_RARITY.get(pet.pet_type, "R")
+    if rarity == "SSR" and pet.level >= 15:
+        raise HTTPException(400, "SSR满15级无法等级进化，请使用「道具进化」")
+
     new_form = get_form_by_level(pet.level)
     unlocked = json.loads(pet.unlocked_forms) if isinstance(pet.unlocked_forms, str) else pet.unlocked_forms
     if new_form not in unlocked:
@@ -558,10 +671,40 @@ def use_inventory_item(req: dict, user: User = Depends(get_current_user), db: Se
             result["effect"] = f"指派了{partner_name}去做{name}！"
 
         inv.quantity -= 1
+        from app.catalog import ITEM_CATALOG
+        item_info = ITEM_CATALOG.get(inv.item_id, {})
+        item_name = item_info.get("name", inv.item_id)
+        from app.routes.card_task import CARD_NAMES
+        card_name = CARD_NAMES.get(inv.item_id, "")
+        use_name = item_name or card_name or inv.item_id
+        eff = result.get("effect", "")
+        _log_game_action(cid, "item_use", inv.item_id,
+                         f"使用{use_name}：{eff}",
+                         db, item_name=use_name)
         db.commit()
         return result
 
     raise HTTPException(400, "该物品无法直接使用")
+
+
+# ===== 宠物图鉴/目录 =====
+
+
+@router.get("/catalog")
+def get_pet_catalog(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """获取所有宠物类型配置"""
+    from app.models.pet import PET_RARITY, FORM_NAMES, PET_EMOJI
+    pet_types = []
+    for ptype, rarity in PET_RARITY.items():
+        names = FORM_NAMES.get(ptype, [])
+        emojis = PET_EMOJI.get(ptype, {})
+        pet_types.append({
+            "type": ptype,
+            "rarity": rarity,
+            "form_names": names,
+            "emojis": {k: v for k, v in emojis.items()},
+        })
+    return {"pet_types": pet_types}
 
 
 # ===== 图鉴 =====
@@ -669,39 +812,75 @@ def daily_adventure(user: User = Depends(get_current_user), db: Session = Depend
     today = date.today()
     _apply_intimacy_decay(cid, db)
 
-    pet = db.query(Pet).filter(Pet.couple_id == cid, Pet.is_active == True).first()
-    if not pet:
-        return {"triggered": False, "message": "还没有宠物呢～"}
-
-    pet_type = pet.pet_type
-    form_labels = FORM_NAMES.get(pet_type, [])
-    form_idx = ["baby","teen","adult","deluxe","legend"].index(pet.current_form) if pet.current_form in ["baby","teen","adult","deluxe","legend"] else 0
-    pet_name = form_labels[form_idx] if form_idx < len(form_labels) else pet.current_form
-    pet_emoji = PET_EMOJI.get(pet_type, {}).get(pet.current_form, "🐾")
-
-    # 检查今日是否已触发
-    existing = db.query(PetDailyLog).filter(
+    # 检查今日是否已触发（优先于其他逻辑）
+    existing_log = db.query(PetDailyLog).filter(
         PetDailyLog.couple_id == cid,
         PetDailyLog.created_date == today,
     ).first()
-    if existing:
+    if existing_log and existing_log.pet_type:
+        pet_type = existing_log.pet_type
+        passive_name = PASSIVE_SKILLS.get(pet_type, {}).get("name", "")
+        form_labels = FORM_NAMES.get(pet_type, [])
         return {
             "triggered": True, "already_done": True,
-            "pet_name": pet_name, "pet_type": pet_type, "pet_emoji": pet_emoji,
-            "reward": {"shards": existing.shards_reward, "exp": existing.exp_reward, "tickets": existing.tickets_reward},
-            "passive_name": PASSIVE_SKILLS.get(pet_type, {}).get("name", ""),
+            "pet_name": form_labels[0] if form_labels else pet_type,
+            "pet_type": pet_type,
+            "pet_emoji": PET_EMOJI.get(pet_type, {}).get("legend", "🐾"),
+            "reward": {"shards": existing_log.shards_reward, "exp": existing_log.exp_reward, "tickets": existing_log.tickets_reward},
+            "passive_name": passive_name,
             "week_summary": _get_week_summary(cid, db),
         }
 
-    if pet.intimacy < 60:
+    # 🔥 查找所有好感度≥60的宠物，选形态最高者计算被动奖励
+    from sqlalchemy import text
+    FORM_ORDER = ["baby", "teen", "adult", "deluxe", "legend"]
+    all_pets = db.query(Pet).filter(Pet.couple_id == cid).all()
+    best_pet = None          # 用于计算奖励的宠物
+    best_form_idx = -1        # 最高形态索引
+    display_pet = None        # 用于展示的活跃宠物
+
+    for p in all_pets:
+        if p.is_active:
+            display_pet = p
+        if p.intimacy < 60:
+            continue
+        unlocked = json.loads(p.unlocked_forms) if isinstance(p.unlocked_forms, str) else p.unlocked_forms
+        # 计算该宠物的最高形态索引
+        form_idx = -1
+        for f in FORM_ORDER:
+            if f in unlocked:
+                form_idx = max(form_idx, FORM_ORDER.index(f))
+        # 分支进化（branch_xxx）视为最高阶（legend级）
+        if any(uf.startswith("branch_") for uf in unlocked):
+            form_idx = max(form_idx, 4)
+
+        if form_idx > best_form_idx:
+            best_form_idx = form_idx
+            best_pet = p
+
+    # 没有符合条件的宠物
+    if not best_pet:
+        if not display_pet:
+            return {"triggered": False, "message": "还没有宠物呢～"}
+        pet_name = FORM_NAMES.get(display_pet.pet_type, [None])[0] or display_pet.pet_type
         return {
             "triggered": False,
-            "pet_name": pet_name, "pet_type": pet_type, "pet_emoji": pet_emoji,
+            "pet_name": pet_name,
+            "pet_type": display_pet.pet_type,
+            "pet_emoji": PET_EMOJI.get(display_pet.pet_type, {}).get(display_pet.current_form, "🐾"),
             "reward": None,
-            "message": f"亲密度还不够（{pet.intimacy}/60），还不能出门冒险～",
-            "passive_name": PASSIVE_SKILLS.get(pet_type, {}).get("name", ""),
+            "message": f"亲密度还不够（{display_pet.intimacy}/60），还不能出门冒险～",
+            "passive_name": PASSIVE_SKILLS.get(display_pet.pet_type, {}).get("name", ""),
             "week_summary": _get_week_summary(cid, db),
         }
+
+    # 使用最佳宠物的类型/亲密度计算奖励
+    pet = best_pet
+    pet_type = pet.pet_type
+    display_type = display_pet.pet_type if display_pet else pet_type
+    form_labels = FORM_NAMES.get(display_type, [])
+    pet_emoji = PET_EMOJI.get(display_type, {}).get("legend" if best_form_idx >= 4 else FORM_ORDER[best_form_idx], "🐾")
+    pet_name = form_labels[0] if form_labels else display_type
 
     reward = get_passive_reward(pet_type, pet.intimacy)
     shards_gain = reward.get("shards", 0)
@@ -733,6 +912,29 @@ def daily_adventure(user: User = Depends(get_current_user), db: Session = Depend
         "passive_name": PASSIVE_SKILLS.get(pet_type, {}).get("name", ""),
         "week_summary": _get_week_summary(cid, db),
     }
+
+
+# ===== 游戏日志查看 =====
+
+
+@router.get("/logs")
+def get_game_logs(user: User = Depends(get_current_user), db: Session = Depends(get_db),
+                  limit: int = 50, action_type: str = ""):
+    """查看游戏行为日志"""
+    cid = get_couple_id(user)
+    from app.models.social import GameLog
+    q = db.query(GameLog).filter(GameLog.couple_id == cid)
+    if action_type:
+        q = q.filter(GameLog.action_type == action_type)
+    logs = q.order_by(GameLog.created_at.desc()).limit(limit).all()
+    return [{
+        "id": l.id,
+        "action_type": l.action_type,
+        "item_id": l.item_id,
+        "item_name": l.item_name,
+        "details": l.details,
+        "created_at": l.created_at.isoformat() if l.created_at else "",
+    } for l in logs]
 
 
 def _get_week_summary(couple_id: int, db) -> dict:

@@ -20,7 +20,18 @@ function request(url, method = 'GET', data = {}) {
           return
         }
         if (res.statusCode >= 400) {
-          const err = typeof res.data === 'object' ? (res.data || {}) : { detail: res.data || '' }
+          const err = typeof res.data === 'object' ? (res.data || {}) : { detail: String(res.data || '') }
+          // 统一错误信息：从 detail 中提取字符串
+          let detail = ''
+          if (typeof err.detail === 'string') {
+            detail = err.detail
+          } else if (Array.isArray(err.detail)) {
+            // 422 错误可能是数组，取第一条
+            detail = err.detail[0]?.msg || err.detail[0] || '请求参数错误'
+          } else if (err.detail && typeof err.detail === 'object') {
+            detail = err.detail.msg || JSON.stringify(err.detail)
+          }
+          err.detail = detail || '请求失败'
           err._statusCode = res.statusCode
           reject(err)
         } else {
