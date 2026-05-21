@@ -537,6 +537,16 @@
   color: var(--text-secondary);
   margin-top: 4px;
 }
+.pet-convert-hint {
+  font-size: 10px;
+  color: var(--pink-dark);
+  display: block;
+  margin-top: 4px;
+  font-weight: 600;
+  background: rgba(214,92,138,0.06);
+  padding: 3px 10px;
+  border-radius: 6px;
+}
 .pet-click-hint {
   position: absolute;
   right: 14px;
@@ -1126,3 +1136,45 @@
 }
 .adventure-week-text { font-size: 11px; color: #8b6914; }
 .adventure-tap { font-size: 11px; color: var(--text-muted); display: block; }
+
+/* ===== 新用户引导蒙层 ===== */
+.guide-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.guide-card {
+  background: #fff;
+  border-radius: 20px;
+  margin: 0 28px;
+  padding: 32px 24px 24px;
+  max-width: 320px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+}
+.guide-step { text-align: center; }
+.guide-active { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.guide-icon { font-size: 48px; display: block; margin-bottom: 8px; }
+.guide-title { font-size: 20px; font-weight: 800; color: var(--pink-dark); margin-bottom: 10px; }
+.guide-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px; }
+.guide-nav { display: flex; gap: 8px; justify-content: center; margin-bottom: 18px; }
+.guide-dot { width: 8px; height: 8px; border-radius: 50%; background: #ddd; }
+.guide-dot.active { width: 24px; border-radius: 4px; background: var(--pink); }
+.guide-actions { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
+.guide-btn {
+  width: 100%;
+  border: none;
+  border-radius: 30px;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+  min-height: 0;
+}
+.guide-btn::after { border: none; }
+.guide-btn-next { background: var(--pink); color: #fff; }
+.guide-btn-start { background: linear-gradient(135deg, var(--pink), var(--pink-dark)); color: #fff; }
+.guide-skip { font-size: 12px; color: var(--text-muted); }

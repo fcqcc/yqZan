@@ -54,14 +54,8 @@ def wx_code_to_openid(code: str) -> str:
     跳过真实的微信 API 调用。上线前请配置 WECHAT_APPID/WECHAT_SECRET 并关闭 mock。
     """
     if settings.WECHAT_MOCK_ENABLED:
-        # 开发环境：code 每次不同，但同一用户在同一手机上的 code → 一致的 openid？
-        # 实际上每次 wx.login() 的 code 不同，所以用 code 的 hash 无法持久识别。
-        # 更合理：第一次登录后后端保存 openid，后续通过 token 识别。
-        # mock 模式下直接用固定字符串 + 随机后缀，或直接用设备相关标识。
-        # 但这里安全做法：每次 mock 都生成不同的 openid → 每次都是新用户。
-        # 更好的方式：mock 模式下记录 code 到 openid 映射到内存（重启丢失）。
-        # 最简单合理：mock 模式下固定 openid 方便开发
-        return "mock_openid_" + hashlib.md5(code.encode()).hexdigest()[:8]
+        # 开发环境：使用固定 openid，避免每次 wx.login() 生成不同用户
+        return "mock_dev_user"
 
     # 生产环境：调用微信 API
     url = (

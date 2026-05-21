@@ -213,6 +213,7 @@
       <text class="pet-tip" wx:elif="{{intimacyPct <= 60}}">一起加油存钱吧 💪</text>
       <text class="pet-tip" wx:elif="{{intimacyPct <= 90}}">感情越来越好了 💕</text>
       <text class="pet-tip" wx:else>幸福满级！🎉</text>
+      <text class="pet-convert-hint" wx:if="{{tickets > 0 || pet}}">💰 每存一笔 → 💎积分+⭐经验+🎟️抽卡券</text>
       <text class="pet-click-hint" catchtap="goPetPage">宠物管理 ›</text>
     </view>
   </scroll-view>
