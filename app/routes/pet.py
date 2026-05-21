@@ -1,5 +1,6 @@
 import json
-from datetime import datetime, timedelta
+import random
+from datetime import date, datetime, timedelta
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -7,8 +8,9 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.couple import Couple
 from app.models.pet import (
-    PET_EMOJI, FORM_NAMES, FORM_THRESHOLDS, EVOLUTION_ITEMS,
-    Pet, Inventory,
+    PET_EMOJI, FORM_NAMES, FORM_THRESHOLDS, EVOLUTION_ITEMS, PET_RARITY,
+    PASSIVE_SKILLS, get_passive_reward,
+    Pet, Inventory, PetDailyLog,
 )
 from app.models.plan import Plan, Delivery
 from app.models.user import User
@@ -65,18 +67,31 @@ def build_pet_response(pet: Pet, total_delivered: float):
     return {
         "id": pet.id,
         "pet_type": pet.pet_type,
+        "name": form_label or pet.pet_type,
         "emoji": form_emoji,
         "form": pet.current_form,
         "form_label": form_label,
         "intimacy": pet.intimacy,
+        "intimacy_max": 100,
         "intimacy_level": get_intimacy_level(pet.intimacy),
         "is_active": pet.is_active,
         "unlocked_forms": unlocked,
+        "forms": [{"form": f, "name": form_labels[i] if i < len(form_labels) else f, "unlocked": f in unlocked}
+                  for i, f in enumerate(["baby", "teen", "adult", "deluxe", "legend"])],
         "accessories": accs,
         "next_form_ready": next_form_ready,
         "next_form_name": form_labels[current_idx + 1] if next_form else None,
         "last_fed_at": pet.last_fed_at.isoformat() if pet.last_fed_at else None,
+        "passive_skill": PASSIVE_SKILLS.get(pet.pet_type, {}).get("name", ""),
+        "passive_skill_desc": PASSIVE_SKILLS.get(pet.pet_type, {}).get("desc", ""),
+        "image_url": get_pet_image_url(pet.pet_type, pet.current_form),
+        "rarity": PET_RARITY.get(pet.pet_type, "N"),
     }
+
+
+def get_pet_image_url(pet_type: str, form: str) -> str:
+    """生成宠物图片 URL"""
+    return f"/assets/pets/{pet_type}_{form or 'baby'}.png"
 
 
 def get_intimacy_level(intimacy: int) -> str:
@@ -188,17 +203,50 @@ def switch_form(pet_id: int, req: dict, user: User = Depends(get_current_user), 
 
 @router.post("/{pet_id}/feed")
 def feed_pet(pet_id: int, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    """喂食（增加亲密度，前端在用户存钱/互动时调用）"""
+    """每日喂食（+3亲密度，每天限1次）"""
     cid = get_couple_id(user)
     pet = db.query(Pet).filter(Pet.id == pet_id, Pet.couple_id == cid).first()
     if not pet:
         raise HTTPException(404, "宠物不存在")
-    # 亲密度 +3，但1分钟内不能重复喂
-    now = datetime.now()
-    if pet.last_fed_at and (now - pet.last_fed_at) < timedelta(minutes=1):
-        raise HTTPException(429, "宠物刚吃过，让它消化一会儿吧～")
+    today = date.today()
+    if pet.last_fed_at and pet.last_fed_at.date() == today:
+        raise HTTPException(429, "今天已经喂过了，明天再来吧～")
     pet.intimacy = min(100, pet.intimacy + 3)
-    pet.last_fed_at = now
+    pet.last_fed_at = datetime.now()
+    db.commit()
+    total = calc_total_delivered(cid, db)
+    return build_pet_response(pet, total)
+
+
+@router.post("/{pet_id}/pet")
+def pet_pet(pet_id: int, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """每日抚摸（+2亲密度，每天限1次）"""
+    cid = get_couple_id(user)
+    pet = db.query(Pet).filter(Pet.id == pet_id, Pet.couple_id == cid).first()
+    if not pet:
+        raise HTTPException(404, "宠物不存在")
+    today = date.today()
+    if pet.last_pet_date == today:
+        raise HTTPException(429, "今天已经抚摸过了，明天再来吧～")
+    pet.intimacy = min(100, pet.intimacy + 2)
+    pet.last_pet_date = today
+    db.commit()
+    total = calc_total_delivered(cid, db)
+    return build_pet_response(pet, total)
+
+
+@router.post("/{pet_id}/walk")
+def walk_pet(pet_id: int, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """每日散步（+2亲密度，每天限1次）"""
+    cid = get_couple_id(user)
+    pet = db.query(Pet).filter(Pet.id == pet_id, Pet.couple_id == cid).first()
+    if not pet:
+        raise HTTPException(404, "宠物不存在")
+    today = date.today()
+    if pet.last_walk_date == today:
+        raise HTTPException(429, "今天已经散过步了，明天再来吧～")
+    pet.intimacy = min(100, pet.intimacy + 2)
+    pet.last_walk_date = today
     db.commit()
     total = calc_total_delivered(cid, db)
     return build_pet_response(pet, total)
@@ -384,13 +432,21 @@ def get_bestiary(user: User = Depends(get_current_user), db: Session = Depends(g
 
     # 宠物
     my_pets = {p.pet_type for p in db.query(Pet).filter(Pet.couple_id == cid).all()}
-    all_pets = [
-        {"type": "pig", "name": "小粉猪🐷", "obtained": "pig" in my_pets, "rarity": "N"},
-        {"type": "fox", "name": "小狐狸🦊", "obtained": "fox" in my_pets, "rarity": "R"},
-        {"type": "cat", "name": "招财猫🐱", "obtained": "cat" in my_pets, "rarity": "SR"},
-        {"type": "unicorn", "name": "独角兽🦄", "obtained": "unicorn" in my_pets, "rarity": "SSR"},
-        {"type": "dragon", "name": "金元宝龙🐉", "obtained": "dragon" in my_pets, "rarity": "SSR+"},
+    from app.models.pet import PET_RARITY
+    all_pet_types = [
+        ("star_fox", "星绒狐🦊", "SSR"),
+        ("bamboo_dragon", "嫩芽龙🐉", "SSR"),
+        ("wave_cat", "浪花喵🐱", "SSR"),
+        ("honey_bear", "棉花糖熊🐻", "SSR"),
+        ("dream_rabbit", "绒耳兔🐰", "SR"),
+        ("snow_deer", "雪团鹿🦌", "SR"),
+        ("wind_bell", "风铃芽🎐", "R"),
+        ("sugar_squirrel", "橡果鼠🐿️", "R"),
+        ("lava_tanuki", "暖炭狸🦝", "R"),
+        ("leaf_roll", "叶卷卷🍃", "R"),
+        ("paper_crane", "小纸鹤🦢", "R"),
     ]
+    all_pets = [{"type": t, "name": n, "obtained": t in my_pets, "rarity": r} for t, n, r in all_pet_types]
 
     # 进化形态
     pet_records = db.query(Pet).filter(Pet.couple_id == cid).all()
@@ -433,4 +489,119 @@ def get_bestiary(user: User = Depends(get_current_user), db: Session = Depends(g
         "evolutions": evo_list,
         "items": all_items,
         "achievements": [],
+    }
+
+
+def _add_exp(couple_id: int, amount: int, reason: str, db):
+    """给情侣增加经验"""
+    from app.models.couple import Couple
+    couple = db.query(Couple).filter(Couple.id == couple_id).first()
+    if not couple:
+        return
+    from app.models.level import LevelLog
+    couple.exp = (couple.exp or 0) + amount
+    db.add(LevelLog(couple_id=couple_id, amount=amount, reason=reason))
+    db.flush()
+
+
+def _apply_intimacy_decay(couple_id: int, db):
+    """非活跃宠物亲密衰减：≥60且连续3天未活跃→每天-1"""
+    today = date.today()
+    pets = db.query(Pet).filter(Pet.couple_id == couple_id).all()
+    for pet in pets:
+        if pet.is_active or pet.intimacy < 60 or pet.last_active_at is None:
+            continue
+        days_since = (today - pet.last_active_at).days
+        if days_since >= 3 and pet.intimacy > 60:
+            pet.intimacy = max(60, pet.intimacy - 1)
+    db.commit()
+
+
+@router.get("/daily-adventure")
+def daily_adventure(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """每日冒险：活跃宠物触发被动技能"""
+    cid = get_couple_id(user)
+    today = date.today()
+    _apply_intimacy_decay(cid, db)
+
+    pet = db.query(Pet).filter(Pet.couple_id == cid, Pet.is_active == True).first()
+    if not pet:
+        return {"triggered": False, "message": "还没有宠物呢～"}
+
+    pet_type = pet.pet_type
+    form_labels = FORM_NAMES.get(pet_type, [])
+    form_idx = ["baby","teen","adult","deluxe","legend"].index(pet.current_form) if pet.current_form in ["baby","teen","adult","deluxe","legend"] else 0
+    pet_name = form_labels[form_idx] if form_idx < len(form_labels) else pet.current_form
+    pet_emoji = PET_EMOJI.get(pet_type, {}).get(pet.current_form, "🐾")
+
+    # 检查今日是否已触发
+    existing = db.query(PetDailyLog).filter(
+        PetDailyLog.couple_id == cid,
+        PetDailyLog.created_date == today,
+    ).first()
+    if existing:
+        return {
+            "triggered": True, "already_done": True,
+            "pet_name": pet_name, "pet_type": pet_type, "pet_emoji": pet_emoji,
+            "reward": {"shards": existing.shards_reward, "exp": existing.exp_reward, "tickets": existing.tickets_reward},
+            "passive_name": PASSIVE_SKILLS.get(pet_type, {}).get("name", ""),
+            "week_summary": _get_week_summary(cid, db),
+        }
+
+    if pet.intimacy < 60:
+        return {
+            "triggered": False,
+            "pet_name": pet_name, "pet_type": pet_type, "pet_emoji": pet_emoji,
+            "reward": None,
+            "message": f"亲密度还不够（{pet.intimacy}/60），还不能出门冒险～",
+            "passive_name": PASSIVE_SKILLS.get(pet_type, {}).get("name", ""),
+            "week_summary": _get_week_summary(cid, db),
+        }
+
+    reward = get_passive_reward(pet_type, pet.intimacy)
+    shards_gain = reward.get("shards", 0)
+    exp_gain = reward.get("exp", 0)
+    tickets_gain = reward.get("tickets", 0)
+
+    log = PetDailyLog(
+        couple_id=cid, pet_id=pet.id, pet_type=pet_type,
+        shards_reward=shards_gain, exp_reward=exp_gain, tickets_reward=tickets_gain,
+        created_date=today,
+    )
+    db.add(log)
+
+    couple = db.query(Couple).filter(Couple.id == cid).first()
+    if couple:
+        if shards_gain > 0:
+            couple.shards = (couple.shards or 0) + shards_gain
+        if tickets_gain > 0:
+            couple.draw_tickets = (couple.draw_tickets or 0) + tickets_gain
+    if exp_gain > 0:
+        _add_exp(cid, exp_gain, f"宠物冒险：{PASSIVE_SKILLS.get(pet_type, {}).get('name', '冒险归来')}", db)
+
+    db.commit()
+
+    return {
+        "triggered": True, "already_done": False,
+        "pet_name": pet_name, "pet_type": pet_type, "pet_emoji": pet_emoji,
+        "reward": {"shards": shards_gain, "exp": exp_gain, "tickets": tickets_gain},
+        "passive_name": PASSIVE_SKILLS.get(pet_type, {}).get("name", ""),
+        "week_summary": _get_week_summary(cid, db),
+    }
+
+
+def _get_week_summary(couple_id: int, db) -> dict:
+    """本周宠物冒险总收益"""
+    today = date.today()
+    week_start = today - timedelta(days=6)
+    logs = db.query(PetDailyLog).filter(
+        PetDailyLog.couple_id == couple_id,
+        PetDailyLog.created_date >= week_start,
+        PetDailyLog.created_date <= today,
+    ).all()
+    return {
+        "total_shards": sum(l.shards_reward for l in logs),
+        "total_exp": sum(l.exp_reward for l in logs),
+        "total_tickets": sum(l.tickets_reward for l in logs),
+        "days_active": len(logs),
     }

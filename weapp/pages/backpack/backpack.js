@@ -24,10 +24,13 @@ Page({
     achievements: [],
     filteredAch: [],
     achievementsUnlocked: 0,
+    crystalBalance: 0,
+    exchangeList: [],
   },
 
   onShow() {
     this.load()
+    this.loadCrystals()
   },
 
   async load() {
@@ -142,6 +145,42 @@ Page({
           this.load()
         } catch (e) {
           wx.showToast({ title: e.errMsg || '使用失败', icon: 'none' })
+        }
+      },
+    })
+  },
+  switchTab(e) {
+    this.setData({ tab: e.currentTarget.dataset.tab })
+    if (e.currentTarget.dataset.tab === 'crystals') this.loadCrystals()
+  },
+
+  async loadCrystals() {
+    try {
+      const res = await api.request('/api/gacha/crystals')
+      this.setData({ crystalBalance: res.balance || 0, exchangeList: res.exchange_list || [] })
+    } catch (e) {
+      console.error('加载晶石失败', e)
+    }
+  },
+
+  onExchange(e) {
+    const { item_id, name, cost } = e.currentTarget.dataset
+    if (this.data.crystalBalance < cost) {
+      wx.showToast({ title: '晶石不足', icon: 'none' })
+      return
+    }
+    wx.showModal({
+      title: '确认兑换',
+      content: `消耗 ${cost} 晶石兑换「${name}」？`,
+      success: async (res) => {
+        if (!res.confirm) return
+        try {
+          const result = await api.request('/api/gacha/crystals/exchange', 'POST', { item_id })
+          wx.showToast({ title: `兑换成功！获得「${result.item_name}」`, icon: 'none' })
+          this.loadCrystals()
+          this.load()
+        } catch (e) {
+          wx.showToast({ title: e.detail || e.errMsg || '兑换失败', icon: 'none' })
         }
       },
     })

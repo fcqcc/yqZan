@@ -1,5 +1,7 @@
 /* 首页 — 一起攒 · 新布局 */
-.page { height: 100vh; background: transparent; }
+.page { height: 100vh; background: transparent; display: flex; flex-direction: column; }
+.fixed-top { flex-shrink: 0; }
+.scroll-body { flex: 1; overflow-y: scroll; -webkit-overflow-scrolling: touch; }
 
 /* ===== 1. 伴侣+等级 ===== */
 .compact-header {
@@ -26,6 +28,7 @@
 }
 .ch-lv-bar { width: 48px; height: 3px; background: rgba(214, 92, 138, 0.2); border-radius: 2px; margin: 4px auto 0; overflow: hidden; }
 .ch-lv-fill { height: 100%; background: var(--pink-dark); border-radius: 2px; }
+.ch-days-inline { font-size: 10px; font-weight: 400; opacity: 0.8; }
 
 /* ===== 2. 攒钱总进度（核心大卡片） ===== */
 .money-card {
@@ -149,6 +152,37 @@
 .anni-unit { font-size: 12px; font-weight: 400; color: var(--text-secondary); margin-left: 2px; }
 .anni-arrow { font-size: 18px; color: var(--text-muted); }
 
+/* ===== 5b. 今天的纪念日（金边高亮） ===== */
+.today-anni-banner {
+  margin: 0 12px 6px;
+  background-color: #fff8e7;
+  border: 3px solid #d4a017;
+  border-radius: 12px;
+  padding: 10px 16px;
+  box-shadow: 0 0 12px rgba(212, 160, 23, 0.3);
+}
+.today-anni-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.today-anni-emoji { font-size: 24px; }
+.today-anni-info {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.today-anni-label { font-size: 15px; font-weight: 700; color: #8b6914; }
+.today-anni-badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #d4a017, #b8860b);
+  padding: 4px 14px;
+  border-radius: 999px;
+}
+
 /* ===== 6. 快捷入口 ===== */
 .quick-row {
   display: flex;
@@ -188,6 +222,149 @@
 .sb-num { display: block; font-size: 14px; font-weight: 700; color: var(--pink-dark); }
 .sb-label { display: block; font-size: 10px; color: var(--text-secondary); margin-top: 1px; }
 
+/* ===== 7.5 卡片任务 ===== */
+.card-tasks-section {
+  margin: 0 12px 8px;
+  background: var(--glass-bg);
+  border: var(--glass-border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  box-shadow: var(--shadow-sm);
+}
+.ct-header { margin-bottom: 8px; }
+.ct-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.ct-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(214, 92, 138, 0.08);
+}
+.ct-item:first-child { border-top: none; }
+.ct-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.ct-icon { font-size: 20px; flex-shrink: 0; }
+.ct-info { flex: 1; }
+.ct-name { font-size: 13px; font-weight: 600; color: var(--text); display: block; }
+.ct-desc { font-size: 11px; color: var(--text-secondary); display: block; margin-top: 2px; line-height: 1.5; }
+.ct-actions { display: flex; gap: 8px; margin-left: 28px; }
+.ct-btn {
+  font-size: 12px;
+  padding: 4px 14px;
+  border: none;
+  border-radius: 14px;
+  line-height: 1.8;
+  min-height: 0;
+}
+.ct-btn::after { border: none; }
+.ct-btn-forgive { background: #ff6b9d; color: #fff; }
+.ct-btn-reject { background: rgba(214, 92, 138, 0.1); color: var(--text-secondary); }
+.ct-btn-retry { background: #ffd43b; color: #333; }
+.ct-btn-confirm { background: #52c41a; color: #fff; }
+.ct-btn-hooray {
+  background: linear-gradient(135deg, #ff6b9d, #c44d7a);
+  font-size: 14px;
+  padding: 6px 22px;
+  font-weight: 700;
+  box-shadow: 0 3px 12px rgba(196, 77, 122, 0.35);
+  animation: forgiveBtnGlow 2s ease-in-out infinite;
+}
+.ct-btn-dispute { background: rgba(255, 71, 87, 0.1); color: #ff4757; }
+.ct-btn-complete { background: var(--pink); color: #fff; }
+.ct-btn-decline { background: rgba(214, 92, 138, 0.1); color: var(--text-secondary); }
+.ct-done-badge { font-size: 14px; margin-left: 28px; }
+.ct-forgive-completed {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #fff0f7, #fff5f0);
+  border: 1.5px solid #ffd700;
+  border-radius: 20px;
+  padding: 8px 18px;
+  margin-left: 28px;
+  color: var(--pink-dark);
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
+  animation: forgiveBtnGlow 2s ease-in-out infinite;
+  cursor: pointer;
+}
+.ct-forgive-completed:active {
+  opacity: 0.7;
+  transform: scale(0.96);
+}
+.ct-waiting-text { font-size: 11px; color: var(--text-muted); margin-left: 28px; }
+.ct-status-text { font-size: 11px; color: var(--text-muted); margin-left: 28px; }
+
+/* ===== 原谅卡专属特效（超稀有SSR） ===== */
+.ct-item--forgive {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #fff5f0 0%, #fff0f7 40%, #fef8ff 100%);
+  border: 1.5px solid #ffd700;
+  border-radius: 14px;
+  padding: 14px 14px 12px;
+  margin: -4px 0 2px;
+  animation: forgivePulse 2.5s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.25), inset 0 0 30px rgba(255, 215, 0, 0.05);
+}
+.ct-item--forgive::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 40%, rgba(255, 215, 0, 0.06) 0%, transparent 50%),
+              radial-gradient(circle at 70% 60%, rgba(255, 107, 157, 0.06) 0%, transparent 50%);
+  pointer-events: none;
+  animation: forgiveShimmer 4s ease-in-out infinite;
+}
+.ct-item--forgive .ct-icon { font-size: 26px; animation: forgiveBounce 2s ease-in-out infinite; }
+.ct-item--forgive .ct-name {
+  font-size: 14px;
+  background: linear-gradient(90deg, #c44d7a, #ff6b9d, #d4a017);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.ct-item--forgive .ct-btn-forgive {
+  background: linear-gradient(135deg, #ff6b9d, #c44d7a);
+  font-size: 13px;
+  padding: 5px 18px;
+  font-weight: 700;
+  box-shadow: 0 3px 10px rgba(196, 77, 122, 0.35);
+  animation: forgiveBtnGlow 2s ease-in-out infinite;
+}
+.ct-item--forgive .ct-btn-reject {
+  font-size: 13px;
+  padding: 5px 18px;
+  background: rgba(255, 215, 0, 0.15);
+  color: #b8860b;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+@keyframes forgivePulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.25), inset 0 0 30px rgba(255, 215, 0, 0.05); }
+  50% { box-shadow: 0 0 35px rgba(255, 215, 0, 0.4), inset 0 0 40px rgba(255, 215, 0, 0.08); }
+}
+@keyframes forgiveShimmer {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.5; }
+  33% { transform: translate(8px, -8px) rotate(3deg); opacity: 0.8; }
+  66% { transform: translate(-4px, 4px) rotate(-2deg); opacity: 0.6; }
+}
+@keyframes forgiveBounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-5px) scale(1.1); }
+}
+@keyframes forgiveBtnGlow {
+  0%, 100% { box-shadow: 0 3px 10px rgba(196, 77, 122, 0.35); }
+  50% { box-shadow: 0 3px 18px rgba(196, 77, 122, 0.55); }
+}
+
 /* ===== 8. 宠物展示区域 ===== */
 .pet-area {
   margin: 0 12px 12px;
@@ -218,12 +395,23 @@
   line-height: 1;
   transition: transform 0.3s ease;
 }
+.pet-image {
+  width: 60px;
+  height: 60px;
+  display: block;
+}
 .pet-intimacy-text {
   display: block;
   font-size: 12px;
   font-weight: 600;
   color: var(--pink-dark);
   margin-top: 8px;
+}
+.pet-skill-text {
+  display: block;
+  font-size: 11px;
+  color: #8b6914;
+  margin-top: 3px;
 }
 .pet-tip {
   display: block;
@@ -241,10 +429,57 @@
   opacity: 0.6;
 }
 
+/* 互动环绕按钮组 */
+.pet-interact-ring {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 0 10px;
+}
+.interact-btn {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 44px;
+  padding: 6px 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid #ffd6e8;
+  box-shadow: 0 2px 8px rgba(214,92,138,0.12);
+  transition: all 0.12s;
+}
+.interact-btn:active { transform: scale(0.9); }
+.interact-icon { font-size: 18px; }
+.interact-label { font-size: 9px; color: var(--text-muted); font-weight: 600; }
+.interact-pet { top: 0; left: 4px; }
+.interact-walk { top: 0; right: 4px; }
+.interact-play { bottom: 8px; left: -8px; }
+.interact-talk { bottom: 8px; right: -8px; }
+
+/* ===== 宠物动画 ===== */
+.pet-happy .pet-container {
+  animation: petHappyJump 0.6s ease-out !important;
+}
+@keyframes petHappyJump {
+  0% { transform: translateY(0) scale(1); }
+  20% { transform: translateY(-18px) scale(1.12); }
+  40% { transform: translateY(-8px) scale(1.05); }
+  60% { transform: translateY(-14px) scale(1.08); }
+  80% { transform: translateY(-4px) scale(1.02); }
+  100% { transform: translateY(0) scale(1); }
+}
+
 /* ===== 宠物动画 ===== */
 /* 睡眠 - 轻微上下浮动 */
 .pet-sleep .pet-emoji {
   animation: petBounce 3s ease-in-out infinite;
+}
+/* 通用弹跳动画（所有宠物默认） */
+.pet-bounce .pet-emoji {
+  animation: petBounce 2s ease-in-out infinite;
 }
 /* 慢走 - 左右慢速移动 */
 .pet-walk-slow .pet-container {
@@ -339,7 +574,7 @@
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -359,6 +594,12 @@
   font-size: 54px;
   display: block;
   margin-bottom: 6px;
+}
+.pet-modal-img {
+  width: 80px;
+  height: 80px;
+  display: block;
+  margin: 0 auto;
 }
 .pet-modal-name {
   font-size: 20px;
@@ -432,64 +673,22 @@
   opacity: 0.85;
   transform: scale(0.97);
 }
+.pet-modal-btn-secondary {
+  margin-top: 8px;
+  background: rgba(214,92,138,0.1);
+  color: var(--pink-dark);
+  font-size: 13px;
+  box-shadow: none;
+}
 .pet-modal-close {
   position: absolute;
-  top: 8px;
-  right: 12px;
+  top: 12px;
+  right: 16px;
   font-size: 18px;
   color: var(--text-muted);
-  padding: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
 }
-
-/* ===== 成就祝贺弹窗 ===== */
-.ach-popup {
-  width: 75%;
-  max-width: 320px;
-  background: #fff;
-  border-radius: 32rpx;
-  padding: 32px 24px 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 16px 48px rgba(214,92,138,0.2);
-  animation: achSlideUp 0.4s ease;
-}
-@keyframes achSlideUp {
-  0% { transform: translateY(40px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-.ach-popup-icon { font-size: 48px; }
-.ach-popup-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-.ach-popup-name {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--text);
-  text-align: center;
-}
-.ach-popup-desc {
-  font-size: 14px;
-  color: var(--text-secondary);
-  text-align: center;
-}
-.ach-popup-reward {
-  font-size: 16px;
-  font-weight: 700;
-  color: #7c4dff;
-  background: rgba(124,77,255,0.08);
-  padding: 6px 16px;
-  border-radius: var(--radius-pill);
-  margin-top: 4px;
-}
-.ach-popup-btn {
-  width: 100%;
-  margin-top: 8px;
-}
-
 
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -499,3 +698,107 @@
   from { opacity: 0; transform: scale(0.85); }
   to { opacity: 1; transform: scale(1); }
 }
+
+/* ===== 升级动画弹窗 ===== */
+.levelup-overlay {
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+.levelup-modal {
+  background: linear-gradient(160deg, #fff8fc, #fff0f7);
+  border-radius: 24px;
+  padding: 40px 32px 32px;
+  width: 260px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(214,92,138,0.3);
+  animation: levelUpPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes levelUpPop {
+  0% { transform: scale(0.3); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.levelup-title { font-size: 16px; font-weight: 700; color: var(--pink-dark); display: block; }
+.levelup-lv {
+  font-size: 56px; font-weight: 900;
+  background: linear-gradient(135deg, #c44d7a, #ff6b9d, #d4a017);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+  margin: 8px 0;
+  animation: levelUpLv 1s ease-in-out infinite alternate;
+}
+@keyframes levelUpLv {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+.levelup-sub { font-size: 12px; color: var(--text-secondary); display: block; }
+.levelup-stars { position: absolute; inset: 0; pointer-events: none; }
+.levelup-star {
+  position: absolute; font-size: 14px;
+  animation: levelUpStarFloat 2s ease-in-out infinite;
+}
+.levelup-star.s1 { top: 10%; left: 10%; animation-delay: 0s; }
+.levelup-star.s2 { top: 8%; right: 12%; animation-delay: 0.3s; }
+.levelup-star.s3 { bottom: 15%; left: 8%; animation-delay: 0.6s; }
+.levelup-star.s4 { bottom: 12%; right: 10%; animation-delay: 0.9s; }
+.levelup-star.s5 { top: 50%; left: 5%; animation-delay: 1.2s; }
+@keyframes levelUpStarFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.6; }
+  50% { transform: translateY(-12px) rotate(180deg); opacity: 1; }
+}
+.levelup-sparkle { margin-top: 12px; position: relative; height: 20px; }
+.levelup-particle {
+  position: absolute; font-size: 10px; color: #ffd700;
+  animation: levelUpParticle 1.5s ease-out infinite;
+}
+.levelup-particle.p0 { left: 20%; animation-delay: 0s; }
+.levelup-particle.p1 { left: 40%; animation-delay: 0.3s; }
+.levelup-particle.p2 { left: 60%; animation-delay: 0.6s; }
+.levelup-particle.p3 { left: 80%; animation-delay: 0.9s; }
+@keyframes levelUpParticle {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-30px) scale(0); opacity: 0; }
+}
+
+/* ===== 冒险归来弹窗 ===== */
+.adventure-modal {
+  background: linear-gradient(160deg, #fff8fc, #fef3e0);
+  border-radius: 24px;
+  padding: 32px 24px 20px;
+  width: 280px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(214,92,138,0.25);
+  animation: levelUpPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.adventure-emoji { font-size: 48px; display: block; margin-bottom: 6px; animation: petBounce 1.5s ease-in-out infinite; }
+.adventure-title { font-size: 17px; font-weight: 800; color: var(--pink-dark); display: block; }
+.adventure-desc { font-size: 12px; color: var(--text-secondary); display: block; margin-top: 2px; }
+.adventure-rewards {
+  display: flex; justify-content: center; gap: 16px;
+  margin: 16px 0;
+}
+.adventure-reward {
+  display: flex; flex-direction: column; align-items: center;
+  background: rgba(255,255,255,0.7);
+  border-radius: 12px;
+  padding: 10px 14px;
+  min-width: 64px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.ar-icon { font-size: 22px; }
+.ar-num { font-size: 18px; font-weight: 800; color: var(--pink-dark); margin-top: 2px; }
+.ar-label { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+.adventure-week {
+  background: rgba(212,160,23,0.08);
+  border-radius: 8px;
+  padding: 6px 12px;
+  margin-bottom: 8px;
+}
+.adventure-week-text { font-size: 11px; color: #8b6914; }
+.adventure-tap { font-size: 11px; color: var(--text-muted); display: block; }

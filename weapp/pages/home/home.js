@@ -7,21 +7,12 @@ function fmtMoney(n) {
   return '¥' + n.toLocaleString()
 }
 
-// ---------- 宠物辅助 ----------
-const PET_EMOJI_MAP = [
-  { max: 20, emoji: '🥚', anim: 'pet-sleep', name: '小蛋蛋', desc: '刚刚孵化的小家伙，需要你的关爱才能长大……' },
-  { max: 40, emoji: '🐣', anim: 'pet-walk-slow', name: '小绒球', desc: '已经开始摇摇晃晃地走动了！' },
-  { max: 60, emoji: '🐰', anim: 'pet-walk', name: '蹦蹦', desc: '活泼好动，每天都在成长～' },
-  { max: 80, emoji: '🦊', anim: 'pet-excited', name: '小灵狐', desc: '充满灵性，和你越来越亲密了！' },
-  { max: 100, emoji: '🦄', anim: 'pet-magic', name: '梦幻独角兽', desc: '你们的爱情已经升华到最美好的境界 ✨' }
-]
+// ---------- 宠物辅助（已移除亲密度映射，使用后端真实形象） ----------
 
-function getPetConfig(intimacy) {
-  const lv = Math.min(Math.max(intimacy || 0, 0), 100)
-  for (const cfg of PET_EMOJI_MAP) {
-    if (lv <= cfg.max) return cfg
-  }
-  return PET_EMOJI_MAP[PET_EMOJI_MAP.length - 1]
+function getFullImageUrl(path) {
+  if (!path) return ''
+  const base = getApp().globalData.baseUrl
+  return base + path
 }
 
 function wrapPlan(p) {
@@ -43,11 +34,14 @@ Page({
     delivered_text: '¥0', target_text: '¥0',
     current_amount: 0, target_amount: 0, plan_progress: 0,
     nearestAnni: null,
+    todayAnni: null,
+    hasOtherAnni: false,
     plans: [],
     plan_count: 0, anni_count: 0, gift_count: 0, together_days: 0,
     // 宠物 & 扭蛋
     pet: null,
     petEmoji: '🥚',
+    petImageUrl: '',
     petAnimationClass: 'pet-sleep',
     petName: '小蛋蛋',
     intimacyLevel: 0,
@@ -56,13 +50,20 @@ Page({
     petId: null,
     tickets: 0,
     showPetModal: false,
-    feeding: false,
-    showAchModal: false,
-    achData: {},
     sparkCount: 0,
     sparkStatus: 'active',
     maxSpark: 0,
-    streakDays: 0
+    streakDays: 0,
+    // 卡片任务
+    cardTasksAsAssigner: [],
+    cardTasksAsAssignee: [],
+    // 升级动画
+    showLevelUp: false,
+    levelUpNewLevel: 1,
+    // 冒险弹窗
+    showAdventure: false,
+    adventureData: null,
+    petHappyClass: '',
   },
 
   onShow() {
@@ -74,8 +75,9 @@ Page({
     // 自动签到
     api.doCheckin().catch(() => {})
     this.loadSpark()
-    // 检查成就有无新解锁
-    this.checkNewAchievements()
+    this.loadCardTasks()
+    // 每日冒险
+    this.loadDailyAdventure()
   },
 
   async loadSpark() {
@@ -122,11 +124,16 @@ Page({
         target_amount: totalTar,
         plan_progress: Math.min(totalCur / Math.max(totalTar, 1) * 100, 100),
         nearestAnni: this.findNearestAnni(anniversaries),
+        todayAnni: this.findTodayAnni(anniversaries),
         plan_count: planList.length,
         anni_count: anniversaries.length,
         gift_count: snapshot.gift_count || 0,
         together_days: snapshot.together_days || 0
       })
+      // 计算是否有"今天之外"的下一个纪念日
+      this.setOtherAnniFlag()
+      // 检测升级弹窗
+      this.checkLevelUp(level)
     } catch(e) { console.error(e) }
   },
 
@@ -142,6 +149,54 @@ Page({
       if (!nearest || days < nearest.days) nearest = { title: a.title, days, date: a.date_val }
     }
     return nearest
+  },
+
+  findTodayAnni(anniversaries) {
+    const now = new Date()
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`
+    const found = anniversaries.filter(a => a.date_val === todayStr)
+    return found.length > 0 ? found : null
+  },
+
+  setOtherAnniFlag() {
+    const { nearestAnni, todayAnni } = this.data
+    if (!nearestAnni || !todayAnni) {
+      this.setData({ hasOtherAnni: !!nearestAnni })
+      return
+    }
+    const isSame = todayAnni.some(t => t.title === nearestAnni.title)
+    this.setData({ hasOtherAnni: !isSame })
+  },
+
+  // ===== 升级动画 =====
+
+  async loadDailyAdventure() {
+    try {
+      const res = await api.getDailyAdventure()
+      if (res.triggered && !res.already_done) {
+        this.setData({ showAdventure: true, adventureData: res })
+        setTimeout(() => this.setData({ showAdventure: false }), 4000)
+      }
+    } catch (e) { /* 静默 */ }
+  },
+
+  hideAdventure() {
+    this.setData({ showAdventure: false })
+  },
+
+  checkLevelUp(levelData) {
+    const pending = levelData.pending_levelups || 0
+    if (pending <= 0) return
+    // 连续升级只弹最高等级
+    this.setData({
+      showLevelUp: true,
+      levelUpNewLevel: levelData.level,
+    })
+    // 自动关闭 + 消费
+    setTimeout(() => {
+      this.setData({ showLevelUp: false })
+      api.consumeLevelPending().catch(() => {})
+    }, 3000)
   },
 
   go(e) { 
@@ -172,23 +227,40 @@ Page({
     if (!pet) {
       this.setData({
         pet: null, petId: null,
-        petEmoji: '🥚', petAnimationClass: 'pet-sleep',
-        petName: '小蛋蛋', intimacyLevel: 0, intimacyPct: 0,
-        petDescription: '还没有领养宠物哦～'
+        petEmoji: '🐾', petAnimationClass: 'pet-sleep',
+        petName: '暂无宠物', intimacyLevel: 0, intimacyPct: 0,
+        petDescription: '还没有宠物，去抽卡获取吧！',
+        intimacyStageName: '', petPassiveSkill: '',
       })
       return
     }
     const intimacy = pet.intimacy ?? 0
-    const cfg = getPetConfig(intimacy)
+    // 亲密度阶段
+    const lvl = pet.intimacy_level || ''
+    let stageName = '初识🤝'
+    if (lvl === 'low') stageName = '初识🤝'
+    else if (lvl === 'normal') stageName = '熟悉😊'
+    else if (lvl === 'happy') stageName = '亲密🥰'
+    else if (lvl === 'love') stageName = '挚爱💕'
+    // 动画：根据形态阶段或亲密度决定
+    const form = pet.form || ''
+    let anim = 'pet-bounce'
+    if (form === 'teen' || form.startsWith('branch_')) anim = 'pet-walk-slow'
+    else if (form === 'adult') anim = 'pet-walk'
+    else if (form === 'deluxe') anim = 'pet-excited'
+    else if (form === 'legend') anim = 'pet-magic'
     this.setData({
       pet,
       petId: pet.id,
-      petEmoji: cfg.emoji,
-      petAnimationClass: cfg.anim,
-      petName: pet.name || cfg.name,
+      petEmoji: pet.emoji || '🐾',
+      petImageUrl: getFullImageUrl(pet.image_url),
+      petAnimationClass: anim,
+      petName: pet.form_label || '宠物',
       intimacyLevel: intimacy,
       intimacyPct: Math.min(100, Math.round(intimacy)),
-      petDescription: cfg.desc
+      petDescription: `形态：${pet.form_label || pet.form} | 亲密度：${intimacy}/100`,
+      intimacyStageName: stageName,
+      petPassiveSkill: pet.passive_skill || '',
     })
   },
 
@@ -200,41 +272,75 @@ Page({
     this.setData({ showPetModal: false })
   },
 
-  stopPropagation() {},
-
-  /** 检查新成就 */
-  async checkNewAchievements() {
-    try {
-      const res = await api.getAchievements()
-      const unlocked = (res.achievements || []).filter(a => a.unlocked && !a.claimed)
-      if (unlocked.length > 0) {
-        const ach = unlocked[0]
-        this.setData({
-          showAchModal: true,
-          achData: {
-            name: ach.name,
-            desc: ach.desc,
-            reward_type: ach.reward_type === 'shards' ? '💎' : '🎟️',
-            reward_amount: ach.reward_amount,
-            hidden: ach.hidden,
-          },
-        })
-      }
-    } catch(e) {}
+  goPetPage() {
+    this.setData({ showPetModal: false })
+    wx.navigateTo({ url: '/pages/pets/pets' })
   },
 
-  hideAchModal() {
-    this.setData({ showAchModal: false })
+  stopPropagation() {},
+
+  /** 点击宠物：触发开心动画 + 调用抚摸API */
+  async onPetTap() {
+    const { petId } = this.data
+    if (!petId) return
+    this.setData({ petHappyClass: 'pet-happy' })
+    try {
+      await api.petPet(petId)
+      wx.showToast({ title: '🤗 抚摸成功 +2 ❤️', icon: 'none' })
+      this.loadPetData()
+    } catch (e) {
+      const msg = ((e && e.detail) || e.errMsg || e.message || '').toLowerCase()
+      if (msg.includes('429') || msg.includes('抚摸')) {
+        wx.showToast({ title: '🤗 今天已经抚摸过了，明天再来吧~', icon: 'none' })
+      }
+    }
+    setTimeout(() => { this.setData({ petHappyClass: '' }) }, 600)
+  },
+
+  /** 散步 */
+  async onWalk() {
+    const { petId } = this.data
+    if (!petId) return
+    this.setData({ petHappyClass: 'pet-happy' })
+    try {
+      await api.walkPet(petId)
+      wx.showToast({ title: '🚶 散步成功 +2 ❤️', icon: 'none' })
+      this.loadPetData()
+    } catch (e) {
+      const msg = ((e && e.detail) || e.errMsg || e.message || '').toLowerCase()
+      if (msg.includes('429') || msg.includes('散步')) {
+        wx.showToast({ title: '🚶 今天已经散过步了~', icon: 'none' })
+      } else {
+        wx.showToast({ title: e.detail || '暂时不想出去~', icon: 'none' })
+      }
+    }
+    setTimeout(() => { this.setData({ petHappyClass: '' }) }, 600)
+  },
+
+  /** 玩耍（纯动画） */
+  onPlay() {
+    const { petId } = this.data
+    if (!petId) return
+    this.setData({ petHappyClass: 'pet-happy' })
+    wx.showToast({ title: '🎮 小宠物很开心~', icon: 'none' })
+    setTimeout(() => { this.setData({ petHappyClass: '' }) }, 600)
+  },
+
+  /** 聊天（纯动画） */
+  onTalk() {
+    const { petId } = this.data
+    if (!petId) return
+    this.setData({ petHappyClass: 'pet-happy' })
+    wx.showToast({ title: '💬 小宠物好像在说什么…', icon: 'none' })
+    setTimeout(() => { this.setData({ petHappyClass: '' }) }, 600)
   },
 
   async feedCurrentPet() {
-    if (this.data.feeding) return
     const { petId } = this.data
     if (!petId) {
       wx.showToast({ title: '还没有宠物', icon: 'none' })
       return
     }
-    this.setData({ feeding: true })
     try {
       wx.showLoading({ title: '投喂中…' })
       const res = await api.feedPet(petId)
@@ -242,20 +348,180 @@ Page({
       wx.showToast({ title: '投喂成功 ❤️', icon: 'none' })
       // 刷新宠物状态
       this.loadPetData()
+      // 投喂后刷新等级/经验
       this.loadData()
-      this.checkNewAchievements()
     } catch (e) {
       wx.hideLoading()
-      const errMsg = String(e.errMsg || e.detail || '')
-      if (errMsg.includes('429')) {
-        wx.showToast({ title: '🐷 宠物刚吃过，1分钟后才能再喂哦', icon: 'none', duration: 2000 })
-      } else if (errMsg.includes('404')) {
-        wx.showToast({ title: '宠物不见了？刷新试试', icon: 'none' })
+      const msg = ((e && e.detail) || e.errMsg || '').toLowerCase()
+      if (msg.includes('429') || msg.includes('消化') || msg.includes('刚吃过')) {
+        wx.showToast({ title: '🐷 小宠物吃饱了，待会再喂吧~', icon: 'none' })
       } else {
-        wx.showToast({ title: '投喂失败，稍后重试', icon: 'none' })
+        wx.showToast({ title: e.detail || e.errMsg || '投喂失败', icon: 'none' })
       }
-    } finally {
-      this.setData({ feeding: false })
     }
-  }
+  },
+
+  // ===== 卡片任务 =====
+
+  async loadCardTasks() {
+    try {
+      const res = await api.getCardTasks()
+      this.setData({
+        cardTasksAsAssigner: res.as_assigner || [],
+        cardTasksAsAssignee: res.as_assignee || [],
+      })
+    } catch (e) { /* 伴侣未绑定时静默 */ }
+  },
+
+  async onCardForgive(e) {
+    const taskId = e.currentTarget.dataset.id
+    const mode = e.currentTarget.dataset.mode
+    // 已完成任务的确认操作
+    if (mode === 'ack') {
+      wx.showModal({
+        title: '确认原谅',
+        content: '对方已经原谅了你 💕',
+        success: async (res) => {
+          if (!res.confirm) return
+          try {
+            await api.dismissCardTask(taskId)
+            wx.showToast({ title: '💕 你们和好了！', icon: 'none' })
+          } catch (e) {
+            wx.showToast({ title: '操作失败', icon: 'none' })
+          }
+          this.loadCardTasks()
+        }
+      })
+      return
+    }
+    wx.showModal({
+      title: '愿意原谅',
+      content: '你真的愿意原谅TA吗？💕',
+      success: async (res) => {
+        if (!res.confirm) return
+        try {
+          await api.forgiveCardTask(taskId)
+          wx.showToast({ title: '你原谅了对方 💕', icon: 'none' })
+          this.loadCardTasks()
+        } catch (e) {
+          wx.showToast({ title: e.errMsg || '操作失败', icon: 'none' })
+        }
+      }
+    })
+  },
+
+  onCardReject(e) {
+    const taskId = e.currentTarget.dataset.id
+    wx.showModal({
+      title: '不愿意',
+      content: '暂时不想原谅TA吗？🥺',
+      success: async (res) => {
+        if (!res.confirm) return
+        try {
+          await api.rejectForgive(taskId)
+          wx.showToast({ title: '已收到，TA还会再来请求的', icon: 'none' })
+          this.loadCardTasks()
+        } catch (e) {
+          wx.showToast({ title: e.errMsg || '操作失败', icon: 'none' })
+        }
+      }
+    })
+  },
+
+  onCardRetry(e) {
+    const taskId = e.currentTarget.dataset.id
+    wx.showModal({
+      title: '再次请求原谅',
+      content: '再给对方发送一次请求吗？🥺',
+      success: async (res) => {
+        if (!res.confirm) return
+        try {
+          await api.retryForgive(taskId)
+          wx.showToast({ title: '已发送，等待对方的回应…', icon: 'none' })
+          this.loadCardTasks()
+        } catch (e) {
+          wx.showToast({ title: e.errMsg || '操作失败', icon: 'none' })
+        }
+      }
+    })
+  },
+
+  onAckForgive(e) {
+    const taskId = e.currentTarget.dataset.id
+    wx.showToast({ title: '💕 你们和好了！', icon: 'none' })
+    // 简单刷新，任务会在5分钟后自动从列表消失
+    this.loadCardTasks()
+  },
+
+  onCardComplete(e) {
+    const taskId = e.currentTarget.dataset.id
+    wx.showModal({
+      title: '完成任务',
+      content: '确认已完成该任务？',
+      success: async (res) => {
+        if (!res.confirm) return
+        try {
+          await api.completeCardTask(taskId)
+          wx.showToast({ title: '已完成，等待对方确认', icon: 'none' })
+          this.loadCardTasks()
+        } catch (e) {
+          wx.showToast({ title: e.errMsg || '操作失败', icon: 'none' })
+        }
+      }
+    })
+  },
+
+  onCardConfirm(e) {
+    const taskId = e.currentTarget.dataset.id
+    wx.showModal({
+      title: '确认完成',
+      content: '确认对方已完成任务？',
+      success: async (res) => {
+        if (!res.confirm) return
+        try {
+          await api.confirmCardTask(taskId)
+          wx.showToast({ title: '任务已完成 ✅', icon: 'none' })
+          this.loadCardTasks()
+        } catch (e) {
+          wx.showToast({ title: e.errMsg || '操作失败', icon: 'none' })
+        }
+      }
+    })
+  },
+
+  onCardDispute(e) {
+    const taskId = e.currentTarget.dataset.id
+    wx.showModal({
+      title: '退回任务',
+      content: '确认任务未完成，退回给对方？',
+      success: async (res) => {
+        if (!res.confirm) return
+        try {
+          await api.disputeCardTask(taskId)
+          wx.showToast({ title: '已退回，等待对方重新完成', icon: 'none' })
+          this.loadCardTasks()
+        } catch (e) {
+          wx.showToast({ title: e.errMsg || '操作失败', icon: 'none' })
+        }
+      }
+    })
+  },
+
+  onCardDecline(e) {
+    const taskId = e.currentTarget.dataset.id
+    wx.showModal({
+      title: '使用「我不要卡」',
+      content: '消耗一张「我不要卡」拒绝此任务？',
+      success: async (res) => {
+        if (!res.confirm) return
+        try {
+          await api.declineCardTask(taskId)
+          wx.showToast({ title: '已拒绝任务 😤', icon: 'none' })
+          this.loadCardTasks()
+        } catch (e) {
+          wx.showToast({ title: e.errMsg || '拒绝失败', icon: 'none' })
+        }
+      }
+    })
+  },
 })

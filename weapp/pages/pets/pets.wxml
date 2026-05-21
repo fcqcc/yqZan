@@ -1,18 +1,38 @@
 <!-- pages/pets/pets.wxml — 宠物管理 -->
 <scroll-view class="page" scroll-y>
   <!-- ===== 当前活跃宠物（大号展示） ===== -->
-  <view class="active-card" wx:if="{{activePet}}">
-    <view class="active-emoji">{{activePet.emoji}}</view>
+  <view class="active-card {{petHappyClass}}" wx:if="{{activePet}}" bindtap="onPetTap">
+    <view class="active-emoji">
+      <image wx:if="{{activePet.image_url}}" class="pet-image-lg" src="{{activePet.full_image_url}}" mode="aspectFit"></image>
+      <text wx:else>{{activePet.emoji}}</text>
+    </view>
     <view class="active-info">
-      <text class="active-name">{{activePet.name}}</text>
-      <text class="active-form">{{activePet.formName || formLabel(activePet.form)}}</text>
+      <text class="active-name">{{activePet.form_label || activePet.pet_type}}</text>
+      <text class="active-form">{{activePet.form_label}}</text>
     </view>
     <view class="active-intimacy">
       <view class="intimacy-label">亲密度</view>
       <view class="intimacy-bar">
         <view class="intimacy-fill" style="width:{{intimacyPct}}%"></view>
       </view>
-      <text class="intimacy-text">{{activePet.intimacy}} / {{activePet.intimacy_max}}</text>
+      <text class="intimacy-text">{{activePet.intimacy}} / 100</text>
+    </view>
+    <!-- 技能说明 -->
+    <view class="active-skills">
+      <view class="skill-item" wx:if="{{activePet.passive_skill}}">
+        <text class="skill-icon">🎯</text>
+        <view class="skill-info">
+          <text class="skill-name">{{activePet.passive_skill}}</text>
+          <text class="skill-desc">{{activePet.passive_skill_desc || '每天首次登录时触发冒险，带回收益'}}</text>
+        </view>
+      </view>
+      <view class="skill-item">
+        <text class="skill-icon">💕</text>
+        <view class="skill-info">
+          <text class="skill-name">{{intimacyStageName}}</text>
+          <text class="skill-desc">{{intimacyStageDesc}}</text>
+        </view>
+      </view>
     </view>
     <view class="active-actions">
       <button class="btn btn-sm btn-outline" bindtap="onFeed">🍼 喂食</button>
@@ -32,7 +52,7 @@
         data-form="{{item.form}}"
       >
         <text class="form-chip-icon">{{item.emoji}}</text>
-        <text class="form-chip-name">{{item.name || formLabel(item.form)}}</text>
+        <text class="form-chip-name">{{item.name}}</text>
         <text wx:if="{{!item.unlocked}}" class="form-chip-lock">🔒</text>
       </view>
     </view>
@@ -49,10 +69,13 @@
         bindtap="onSwitchPet"
         data-id="{{item.id}}"
       >
-        <text class="pet-emoji">{{item.emoji || '🐱'}}</text>
+        <view class="pet-emoji">
+          <image wx:if="{{item.image_url}}" class="pet-image-sm" src="{{item.full_image_url}}" mode="aspectFit"></image>
+          <text wx:else>{{item.emoji || '🐾'}}</text>
+        </view>
         <view class="pet-info">
-          <text class="pet-name">{{item.name || '未知宠物'}}</text>
-          <text class="pet-form-sub">{{item.formName || formLabel(item.form)}}</text>
+          <text class="pet-name">{{item.form_label || item.pet_type || '未知宠物'}}</text>
+          <text class="pet-form-sub">{{item.form_label}}</text>
         </view>
         <view wx:if="{{item.active}}" class="pet-badge">当前</view>
         <view wx:else class="pet-switch-hint">切换 ›</view>

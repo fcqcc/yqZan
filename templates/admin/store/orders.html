@@ -1,0 +1,101 @@
+{% extends "admin/base.html" %}
+{% block title %}订单管理{% endblock %}
+{% block page_title %}📋 订单管理{% endblock %}
+{% block subtitle %}管理订单、确认收款后自动发货{% endblock %}
+
+{% block content %}
+
+<div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+  <a href="/admin/store/orders/new" class="btn btn-primary">➕ 新建订单</a>
+  <a href="/admin/store" class="btn">← 商店概览</a>
+</div>
+
+<!-- 状态过滤 -->
+<div class="filter-bar">
+  <a href="/admin/store/orders" class="{{ 'active' if status_filter == 'all' }}">全部 ({{ total }})</a>
+  <a href="/admin/store/orders?status_filter=pending" class="{{ 'active' if status_filter == 'pending' }}">⏳ 待处理</a>
+  <a href="/admin/store/orders?status_filter=completed" class="{{ 'active' if status_filter == 'completed' }}">✅ 已完成</a>
+  <a href="/admin/store/orders?status_filter=cancelled" class="{{ 'active' if status_filter == 'cancelled' }}">❌ 已取消</a>
+  <a href="/admin/store/orders?status_filter=refunded" class="{{ 'active' if status_filter == 'refunded' }}">↩️ 已退款</a>
+</div>
+
+<!-- 搜索 -->
+<form class="search-bar" method="GET" action="/admin/store/orders">
+  {% if status_filter != 'all' %}<input type="hidden" name="status_filter" value="{{ status_filter }}">{% endif %}
+  <input type="text" name="q" placeholder="搜索买家ID/平台/联系方式..." value="{{ q }}">
+  <button type="submit">搜索</button>
+</form>
+
+<!-- 订单列表 -->
+<table>
+  <thead>
+    <tr>
+      <th>ID</th><th>商品</th><th>平台</th><th>买家</th><th>金额</th>
+      <th>兑换码</th><th>状态</th><th>时间</th><th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for o in orders %}
+    <tr style="{{ 'background:#fff8e1' if o.status == 'pending' else '' }}">
+      <td>#{{ o.id }}</td>
+      <td>{{ o.product_name }}</td>
+      <td>{{ o.platform }}</td>
+      <td>{{ o.platform_username }}</td>
+      <td><strong>¥{{ "%.2f"|format(o.amount) }}</strong></td>
+      <td>
+        {% if o.assigned_code %}
+        <code style="font-size:.75rem;background:#f5f5f5;padding:2px 6px;border-radius:3px;user-select:all">{{ o.assigned_code }}</code>
+        {% else %}<span style="color:#999">-</span>{% endif %}
+      </td>
+      <td>
+        {% if o.status == "pending" %}
+        <span class="badge" style="background:#fff3e0;color:#e65100">待处理</span>
+        {% elif o.status == "completed" %}
+        <span class="badge" style="background:#e8f5e9;color:#2e7d32">已发货</span>
+        {% elif o.status == "cancelled" %}
+        <span class="badge" style="background:#fbe9e7;color:#bf360c">已取消</span>
+        {% elif o.status == "refunded" %}
+        <span class="badge" style="background:#f3e5f5;color:#6a1b9a">已退款</span>
+        {% endif %}
+      </td>
+      <td>{{ o.created_at.strftime("%m-%d %H:%M") if o.created_at else "-" }}</td>
+      <td>
+        {% if o.status == "pending" %}
+        <form method="POST" action="/admin/store/orders/{{ o.id }}/confirm" style="display:inline">
+          <button type="submit" class="btn-sm btn-sm-success" onclick="return confirm('确认收到付款？系统将自动发货')">✅ 确认收款</button>
+        </form>
+        <a href="/admin/store/orders/{{ o.id }}" class="btn-sm">详情</a>
+        {% elif o.status == "completed" %}
+        <a href="/admin/store/orders/{{ o.id }}" class="btn-sm">查看回复</a>
+        {% else %}
+        <a href="/admin/store/orders/{{ o.id }}" class="btn-sm">详情</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+    {% if not orders %}
+    <tr><td colspan="9" style="text-align:center;color:#999;padding:30px">暂无订单</td></tr>
+    {% endif %}
+  </tbody>
+</table>
+
+<!-- 分页 -->
+{% if total > per_page %}
+<div class="pagination">
+  {% if page > 1 %}
+  <a href="?page={{ page-1 }}&status_filter={{ status_filter }}&q={{ q }}">上一页</a>
+  {% endif %}
+  <span>第 {{ page }} / {{ ((total-1)//per_page)+1 }} 页（共 {{ total }} 笔）</span>
+  {% if page * per_page < total %}
+  <a href="?page={{ page+1 }}&status_filter={{ status_filter }}&q={{ q }}">下一页</a>
+  {% endif %}
+</div>
+{% endif %}
+
+<style>
+.btn{display:inline-block;padding:8px 16px;border-radius:6px;font-size:.82rem;text-decoration:none;background:#eee;color:#333;border:1px solid #ddd}
+.btn-primary{background:#9d2d5a;color:#fff;border-color:#9d2d5a}
+.btn-sm{display:inline-block;padding:4px 10px;border-radius:4px;font-size:.75rem;text-decoration:none;background:#9d2d5a;color:#fff;margin-right:4px}
+.btn-sm-success{background:#2e7d32;color:#fff;border:none;cursor:pointer;padding:4px 10px;border-radius:4px;font-size:.75rem}
+</style>
+{% endblock %}

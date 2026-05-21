@@ -12,6 +12,7 @@
   text-align: center;
 }
 .active-emoji { font-size: 64px; display: block; margin-bottom: 6px; }
+.pet-image-lg { width: 90px; height: 90px; display: block; margin: 0 auto; }
 .active-info { margin-bottom: 12px; }
 .active-name { font-size: 18px; font-weight: 800; color: var(--text); display: block; }
 .active-form { font-size: 13px; color: var(--text-secondary); display: block; margin-top: 2px; }
@@ -35,6 +36,26 @@
 .intimacy-text { font-size: 11px; color: var(--text-muted); }
 
 .active-actions { display: flex; gap: 10px; justify-content: center; }
+
+/* 技能说明区 */
+.active-skills {
+  margin: 0 0 14px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.skill-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(255,255,255,0.7);
+  border: 1px solid rgba(214,92,138,0.12);
+  border-radius: 8px;
+  padding: 8px 10px;
+  text-align: left;
+}
+.skill-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.skill-info { flex: 1; }
+.skill-name { font-size: 12px; font-weight: 700; color: var(--text); display: block; }
+.skill-desc { font-size: 11px; color: var(--text-secondary); display: block; margin-top: 1px; line-height: 1.4; }
 
 /* ===== 形态切换 ===== */
 .section-card {
@@ -84,6 +105,7 @@
 .pet-item:last-child { border-bottom: none; }
 .pet-item--active { background: rgba(214, 92, 138, 0.04); margin: 0 -16px; padding: 10px 16px; border-radius: var(--radius-sm); }
 .pet-emoji { font-size: 28px; width: 40px; text-align: center; }
+.pet-image-sm { width: 36px; height: 36px; display: block; }
 .pet-info { flex: 1; min-width: 0; }
 .pet-name { font-size: 14px; font-weight: 600; color: var(--text); display: block; }
 .pet-form-sub { font-size: 11px; color: var(--text-secondary); display: block; margin-top: 1px; }
@@ -96,6 +118,19 @@
   border-radius: var(--radius-pill);
 }
 .pet-switch-hint { font-size: 12px; color: var(--pink-dark); font-weight: 500; }
+
+/* ===== 宠物互动动画 ===== */
+.pet-happy .pet-image-lg {
+  animation: petHappyJump 0.6s ease-out !important;
+}
+@keyframes petHappyJump {
+  0% { transform: translateY(0) scale(1); }
+  20% { transform: translateY(-18px) scale(1.12); }
+  40% { transform: translateY(-8px) scale(1.05); }
+  60% { transform: translateY(-14px) scale(1.08); }
+  80% { transform: translateY(-4px) scale(1.02); }
+  100% { transform: translateY(0) scale(1); }
+}
 
 /* ===== 空状态 ===== */
 .empty { text-align: center; padding: 40px 16px; color: var(--text-light); font-size: 14px; }

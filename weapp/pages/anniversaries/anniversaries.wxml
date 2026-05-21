@@ -7,18 +7,51 @@
   </view>
 
   <!-- 添加表单 -->
-  <view wx:if="{{showForm}}" class="overlay">
-    <view class="overlay-dismiss" bindtap="toggleForm" />
-    <view class="sheet" catchtap="catchTap">
+  <view wx:if="{{showForm}}" class="overlay" catchtap="toggleForm">
+    <view class="sheet sheet--drawer" catchtap="catchTap">
       <view class="sheet-title">添加纪念日</view>
-      <input class="input" placeholder="名称（如：在一起）" model:value="{{title}}" />
-      <picker mode="date" value="{{dateVal}}" bindchange="onDateChange" style="margin-top:8px">
-        <view class="input">{{dateVal || '选择日期'}}</view>
-      </picker>
-      <view class="sheet-actions-inline">
-        <button class="btn btn-outline" bindtap="toggleForm">取消</button>
-        <button class="btn btn-primary" bindtap="create">确定</button>
+      <view class="field">
+        <text class="field-label">纪念日名称</text>
+        <input class="input" placeholder="如：在一起" model:value="{{title}}" />
       </view>
+      <view class="field">
+        <text class="field-label">日期</text>
+        <view class="input input-picker" bindtap="openDatePicker">
+          {{dateVal || '点选日期'}}
+        </view>
+      </view>
+      <view class="sheet-actions-inline">
+        <button class="btn btn-outline" catchtap="toggleForm">取消</button>
+        <button class="btn btn-primary" catchtap="create">确定</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 日期选择器（底部滚轮，独立于表单外层） -->
+  <view wx:if="{{showDatePicker}}" class="overlay overlay--picker-bottom" catchtap="closeDatePicker">
+    <view class="date-picker-sheet" catchtap="catchTap">
+      <view class="date-picker-bar">
+        <text class="date-picker-link" catchtap="closeDatePicker">取消</text>
+        <text class="date-picker-title">选择日期</text>
+        <text class="date-picker-link date-picker-link--strong" catchtap="confirmDatePicker">确定</text>
+      </view>
+      <picker-view
+        class="date-picker-view"
+        indicator-style="height:44px;"
+        mask-style="background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.6),rgba(255,255,255,.95));"
+        value="{{datePickerIdx}}"
+        bindchange="onDatePickerViewChange"
+      >
+        <picker-view-column>
+          <view wx:for="{{dateYears}}" wx:key="*this" class="date-picker-item">{{item}}年</view>
+        </picker-view-column>
+        <picker-view-column>
+          <view wx:for="{{dateMonths}}" wx:key="*this" class="date-picker-item">{{item}}月</view>
+        </picker-view-column>
+        <picker-view-column>
+          <view wx:for="{{dateDays}}" wx:key="*this" class="date-picker-item">{{item}}日</view>
+        </picker-view-column>
+      </picker-view>
     </view>
   </view>
 
@@ -59,10 +92,14 @@
   </view>
 
   <!-- 列表 -->
-  <view wx:for="{{anniversaries}}" wx:key="id" class="card" style="display:flex;justify-content:space-between;align-items:center">
+  <view wx:for="{{anniversaries}}" wx:key="id" class="card {{item.isToday ? 'card--today' : ''}}" style="display:flex;justify-content:space-between;align-items:center">
     <view><view style="font-weight:600">{{item.title}}</view><view style="font-size:12px;color:#999;margin-top:2px">{{item.date_val}}</view></view>
     <view style="display:flex;align-items:center;gap:8px">
-      <view style="text-align:right"><view style="font-size:20px;font-weight:900;color:#9d2d5a">{{item.days}}天</view><view style="font-size:11px;color:#999">倒计时</view></view>
+      <view style="text-align:right">
+        <view wx:if="{{item.isToday}}" style="font-size:14px;font-weight:700;color:#b8860b">🎉 就是今天！</view>
+        <view wx:else style="font-size:20px;font-weight:900;color:#9d2d5a">{{item.days}}天</view>
+        <view style="font-size:11px;color:#999">倒计时</view>
+      </view>
       <text class="del-btn" bindtap="del" data-id="{{item.id}}" data-title="{{item.title}}">✕</text>
     </view>
   </view>

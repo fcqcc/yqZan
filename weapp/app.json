@@ -5,14 +5,14 @@
     "pages/plans/plans",
     "pages/anniversaries/anniversaries",
     "pages/pets/pets",
+    "pages/gacha/gacha",
     "pages/backpack/backpack",
     "pages/level/level",
-    "pages/gacha/gacha",
     "pages/notes/notes",
     "pages/settings/settings"
   ],
   "window": {
-    "navigationBarTitleText": "一起攒",
+    "navigationBarTitleText": "\u4e00\u8d77\u6512",
     "navigationBarBackgroundColor": "#FFECF4",
     "navigationBarTextStyle": "black",
     "backgroundColor": "#FFF5FB"
@@ -24,19 +24,19 @@
     "list": [
       {
         "pagePath": "pages/home/home",
-        "text": "首页",
+        "text": "\u9996\u9875",
         "iconPath": "images/tab_home.png",
         "selectedIconPath": "images/tab_home_active.png"
       },
       {
         "pagePath": "pages/plans/plans",
-        "text": "计划",
+        "text": "\u8ba1\u5212",
         "iconPath": "images/tab_note.png",
         "selectedIconPath": "images/tab_note_active.png"
       },
       {
         "pagePath": "pages/settings/settings",
-        "text": "我的",
+        "text": "\u6211\u7684",
         "iconPath": "images/tab_me.png",
         "selectedIconPath": "images/tab_me_active.png"
       }

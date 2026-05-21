@@ -7,6 +7,7 @@ from app.database import get_db
 from app.models.checkin import Checkin
 from app.models.couple import Couple
 from app.models.user import User
+from app.routes.social import add_exp as _add_exp
 from app.services.auth import get_current_user
 
 router = APIRouter(prefix="/api/checkin", tags=["签到"])
@@ -30,12 +31,39 @@ def do_checkin(user: User = Depends(get_current_user), db: Session = Depends(get
 
     # 签到
     db.add(Checkin(couple_id=user.couple_id, user_id=user.id, checkin_date=today))
-    db.commit()
+
+    # 签到奖励
+    couple = db.query(Couple).filter(Couple.id == user.couple_id).first()
+    bonus_msg = ""
+    if couple:
+        # 基础奖励：+5 积分
+        couple.shards = (couple.shards or 0) + 5
+
+        # 伴侣双签奖励：如果伴侣今天已经签了，再+5
+        partner = db.query(User).filter(
+            User.couple_id == user.couple_id, User.id != user.id
+        ).first()
+        if partner:
+            partner_checked = db.query(Checkin).filter(
+                Checkin.couple_id == user.couple_id,
+                Checkin.user_id == partner.id,
+                Checkin.checkin_date == today,
+            ).first() is not None
+            if partner_checked:
+                couple.shards = (couple.shards or 0) + 5
+                bonus_msg = " 伴侣已签到，获得双签奖励+5💎"
+
+    # 签到经验奖励
+    _add_exp(user.couple_id, 5, f"每日签到", db)
 
     # 更新火花状态
     _update_spark(user.couple_id, today, db)
 
-    return {"ok": True, "checked": True, "message": "签到成功🔥"}
+    return {
+        "ok": True,
+        "checked": True,
+        "message": f"签到成功🔥 +5💎 +5EXP{bonus_msg}",
+    }
 
 
 @router.get("/status")
@@ -84,7 +112,6 @@ def get_spark(user: User = Depends(get_current_user), db: Session = Depends(get_
     if not user.couple_id:
         return {"spark_count": 0, "max_spark_count": 0, "spark_status": "active"}
 
-    # 每次查询时自动刷新火花状态
     today = date.today()
     _update_spark(user.couple_id, today, db)
 
@@ -108,23 +135,19 @@ def _update_spark(couple_id: int, today: date, db: Session):
 
     yesterday = today - timedelta(days=1)
 
-    # 前一天两人的签到情况
     yesterday_count = db.query(Checkin).filter(
         Checkin.couple_id == couple_id,
         Checkin.checkin_date == yesterday,
     ).count()
 
-    # 当天两人的签到情况
     today_count = db.query(Checkin).filter(
         Checkin.couple_id == couple_id,
         Checkin.checkin_date == today,
     ).count()
 
-    # 如果两人昨天都没签 → 火花置灰
     if yesterday_count == 0:
         couple.spark_status = "gray"
 
-    # 如果火花已灰 → 查近3天总签到
     if couple.spark_status == "gray":
         three_days_count = db.query(Checkin).filter(
             Checkin.couple_id == couple_id,
@@ -133,33 +156,20 @@ def _update_spark(couple_id: int, today: date, db: Session):
         ).count()
 
         if three_days_count >= 3:
-            # 火花恢复
             couple.spark_status = "active"
         else:
-            # 检查是否已超过3天还没恢复
             oldest_in_window = db.query(Checkin.checkin_date).filter(
                 Checkin.couple_id == couple_id,
                 Checkin.checkin_date >= today - timedelta(days=6),
             ).order_by(Checkin.checkin_date).first()
 
             if oldest_in_window and (today - oldest_in_window[0]).days >= 3:
-                # 记录最高，重置
                 if (couple.spark_count or 0) > (couple.max_spark_count or 0):
                     couple.max_spark_count = couple.spark_count
                 couple.spark_count = 0
                 couple.spark_status = "active"
 
-    # 如果火花活跃 → 计数每天两人的总签到
     if couple.spark_status == "active":
-        today_total = 0
-        # 计算今天的签到
-        today_checkins = db.query(Checkin).filter(
-            Checkin.couple_id == couple_id,
-            Checkin.checkin_date == today,
-        ).all()
-        today_total = len(today_checkins)
-
-        # 更新活跃天数的火花（连续签到天数）
         continuous = _calc_continuous(couple_id, today, db)
         couple.spark_count = continuous
 

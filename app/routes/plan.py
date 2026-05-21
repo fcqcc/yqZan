@@ -5,8 +5,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.models.couple import Couple
+from app.models.pet import Pet
 from app.models.plan import Delivery, Plan, Wish
 from app.models.user import User
+from app.routes.social import add_exp as _add_exp
 from app.schemas.plan import (
     DeliverRequest,
     DeliveryResponse,
@@ -127,7 +130,27 @@ def deliver_plan(
     plan.current_amount += req.amount
     db.add(Delivery(plan_id=plan_id, amount=req.amount, note=req.note))
 
-    # 🎟️ 存钱奖励抽卡券（每日上限 3 张）
+    couple = db.query(Couple).filter(Couple.id == cid).first()
+
+    # 💎 存钱奖励积分（每笔+2）
+    if couple:
+        couple.shards = (couple.shards or 0) + 2
+
+    # ⭐ 存钱奖励经验（每笔+3）
+    _add_exp(cid, 3, f"存钱：{plan.title}", db)
+
+    # 🫶 喂食当前活跃宠物（亲密+3）
+    active_pet = db.query(Pet).filter(
+        Pet.couple_id == cid, Pet.is_active == True
+    ).first()
+    if active_pet:
+        from datetime import timedelta
+        now = datetime.now()
+        if not active_pet.last_fed_at or (now - active_pet.last_fed_at) >= timedelta(seconds=30):
+            active_pet.intimacy = min(100, active_pet.intimacy + 3)
+            active_pet.last_fed_at = now
+
+    # 🎟️ 存钱奖励抽卡券（每日上限 4 张）
     today = datetime.now().date()
     today_count = (
         db.query(Delivery)
@@ -138,9 +161,7 @@ def deliver_plan(
         )
         .count()
     )
-    if today_count <= 3:
-        from app.models.couple import Couple
-        couple = db.query(Couple).filter(Couple.id == cid).first()
+    if today_count <= 4:
         if couple:
             couple.draw_tickets = (couple.draw_tickets or 0) + 1
 
@@ -157,7 +178,6 @@ def deliver_plan(
             notify[str(partner.id)] = "unread"
         plan.notify_status = json.dumps(notify, ensure_ascii=False)
         # 🎟️ 目标达成奖励 10 张
-        from app.models.couple import Couple
         couple = db.query(Couple).filter(Couple.id == cid).first()
         if couple:
             couple.draw_tickets = (couple.draw_tickets or 0) + 10

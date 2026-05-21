@@ -141,4 +141,28 @@
       </view>
     </block>
   </block>
+
+  <!-- ============================ 晶石商店 TAB ============================ -->
+  <block wx:if="{{tab === 'crystals'}}">
+    <view class="crystal-header">
+      <text class="crystal-balance-icon">💎</text>
+      <text class="crystal-balance-num">{{crystalBalance}}</text>
+      <text class="crystal-balance-label">晶石</text>
+    </view>
+    <view class="section-card">
+      <text class="section-label">🏪 兑换商店</text>
+      <view wx:if="{{exchangeList.length === 0}}" class="empty">
+        <text class="empty-icon">📦</text>
+        <text>正在加载…</text>
+      </view>
+      <view wx:else class="exchange-grid">
+        <view wx:for="{{exchangeList}}" wx:key="item_id" class="exchange-item {{crystalBalance < item.cost ? 'exchange-item--locked' : ''}}"
+              bindtap="onExchange" data-item_id="{{item.item_id}}" data-name="{{item.name}}" data-cost="{{item.cost}}">
+          <text class="exchange-item-name">{{item.name}}</text>
+          <text class="exchange-item-cost">💎 {{item.cost}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="crystal-hint">重复抽到宠物自动转化为晶石，可在本店兑换道具</view>
+  </block>
 </scroll-view>

@@ -1,9 +1,19 @@
 // pages/anniversaries/anniversaries.js
 const api = require('../../utils/api')
+
+function pad2(n) { return (n < 10 ? '0' : '') + n }
+function daysInMonth(y, m) { return new Date(y, m, 0).getDate() }
+function buildYears(y) { const a = []; for (let i = y - 2; i <= y + 10; i++) a.push(i); return a }
+function buildMonths() { return [1,2,3,4,5,6,7,8,9,10,11,12] }
+function buildDays(y, m) { const max = daysInMonth(y, m); const a = []; for (let i = 1; i <= max; i++) a.push(i); return a }
+
 Page({
   data: {
     anniversaries: [],
     showForm: false, title: '', dateVal: '',
+    showDatePicker: false,
+    dateYears: [], dateMonths: [], dateDays: [],
+    datePickerIdx: [0, 0, 0],
     showHolidayPicker: false,
     holidayList: [],
     holidaySelectedCount: 0,
@@ -15,30 +25,92 @@ Page({
     try {
       const anniversaries = await api.getAnniversaries()
       const now = new Date()
+      const todayStr = `${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}`
       const withDays = anniversaries.map(a => {
         const p = a.date_val.split('-')
-        if (p.length < 3) return { ...a, days: '--' }
+        if (p.length < 3) return { ...a, days: '--', isToday: false }
         const d = new Date(now.getFullYear(), parseInt(p[1]) - 1, parseInt(p[2]))
         if (d < now) d.setFullYear(d.getFullYear() + 1)
-        return { ...a, days: Math.ceil((d - now) / 86400000) }
+        return {
+          ...a,
+          days: Math.ceil((d - now) / 86400000),
+          isToday: a.date_val === todayStr,
+        }
+      })
+      // 按距离排序：今天的排最前，其余按天数升序
+      withDays.sort((a, b) => {
+        if (a.isToday && !b.isToday) return -1
+        if (!a.isToday && b.isToday) return 1
+        return (a.days === '--' ? 99999 : a.days) - (b.days === '--' ? 99999 : b.days)
       })
       this.setData({ anniversaries: withDays })
     } catch(e) {}
   },
 
   toggleForm() {
-    // 打开表单时默认今天日期
-    const today = new Date()
-    const defaultDate = today.getFullYear() + '-' +
-      String(today.getMonth() + 1).padStart(2, '0') + '-' +
-      String(today.getDate()).padStart(2, '0')
     this.setData({
       showForm: !this.data.showForm,
       title: '',
-      dateVal: defaultDate,
+      dateVal: '',
+      showDatePicker: false,
     })
   },
-  onDateChange(e) { this.setData({ dateVal: e.detail.value }) },
+
+  openDatePicker() {
+    const now = new Date()
+    let y = now.getFullYear(), m = now.getMonth() + 1, d = now.getDate()
+    const cur = this.data.dateVal
+    if (cur && /^\d{4}-\d{2}-\d{2}$/.test(cur)) {
+      const p = cur.split('-').map(Number)
+      y = p[0]; m = p[1]; d = p[2]
+    }
+    const years = buildYears(y)
+    const months = buildMonths()
+    const yIdx = Math.max(0, years.indexOf(y))
+    const mIdx = Math.min(11, Math.max(0, m - 1))
+    const ySel = years[yIdx]
+    const mSel = months[mIdx]
+    const days = buildDays(ySel, mSel)
+    d = Math.min(daysInMonth(ySel, mSel), Math.max(1, d))
+    const dIdx = Math.max(0, days.indexOf(d))
+    this.setData({
+      showDatePicker: true,
+      dateYears: years,
+      dateMonths: months,
+      dateDays: days,
+      datePickerIdx: [yIdx, mIdx, dIdx],
+    })
+  },
+
+  onDatePickerViewChange(e) {
+    const val = e.detail.value
+    const years = this.data.dateYears
+    const months = this.data.dateMonths
+    const yi = val[0], mi = val[1]
+    let di = val[2]
+    const ySel = years[yi]
+    const mSel = months[mi]
+    const days = buildDays(ySel, mSel)
+    if (di >= days.length) di = days.length - 1
+    if (di < 0) di = 0
+    this.setData({
+      datePickerIdx: [yi, mi, di],
+      dateDays: days,
+    })
+  },
+
+  confirmDatePicker() {
+    const [yi, mi, di] = this.data.datePickerIdx
+    const y = this.data.dateYears[yi]
+    const m = this.data.dateMonths[mi]
+    const d = this.data.dateDays[di]
+    const dateVal = `${y}-${pad2(m)}-${pad2(d)}`
+    this.setData({ dateVal, showDatePicker: false })
+  },
+
+  closeDatePicker() {
+    this.setData({ showDatePicker: false })
+  },
 
   async create() {
     if (!this.data.title || !this.data.dateVal) return

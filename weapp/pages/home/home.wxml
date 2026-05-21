@@ -1,150 +1,291 @@
 <!-- pages/home/home.wxml — 一起攒 · 首页 -->
-<scroll-view class="page" scroll-y>
-  <!-- ===== 1. 伴侣+等级 ===== -->
-  <view class="compact-header">
-    <view class="ch-left">
-      <text class="ch-name">{{userInfo.nickname}}</text>
-      <text wx:if="{{partner}}" class="ch-partner">💑 {{partner.nickname}}</text>
-      <text wx:else class="ch-partner ch-bind" bindtap="goBind">➕ 绑定伴侣</text>
-      <text class="ch-days" wx:if="{{together_days}}">· 第{{together_days}}天</text>
-      <text wx:if="{{sparkCount > 0}}" class="ch-spark">
-        {{sparkStatus === 'gray' ? '🔥' : '🔥'}}{{sparkCount}}天
+<view class="page">
+  <!-- ===== 固定顶部：个人信息 + 存钱计划 ===== -->
+  <view class="fixed-top">
+    <!-- 1. 伴侣+等级 -->
+    <view class="compact-header">
+      <view class="ch-left">
+        <text class="ch-name">{{userInfo.nickname}}</text>
+        <text wx:if="{{partner}}" class="ch-partner">💑 {{partner.nickname}}</text>
+        <text wx:else class="ch-partner ch-bind" bindtap="goBind">➕ 绑定伴侣</text>
+        <text wx:if="{{sparkCount > 0}}" class="ch-spark">
+          {{sparkStatus === 'gray' ? '🔥' : '🔥'}}{{sparkCount}}天
+        </text>
+      </view>
+      <view class="ch-level" bindtap="go" data-url="/pages/level/level">
+        <text class="ch-lv">Lv{{level}}<text wx:if="{{together_days}}" class="ch-days-inline"> · 第{{together_days}}天</text></text>
+        <view class="ch-lv-bar"><view class="ch-lv-fill" style="width:{{progress_pct}}%"></view></view>
+      </view>
+    </view>
+
+    <!-- 2. 攒钱总进度 -->
+    <view class="money-card" bindtap="go" data-url="/pages/plans/plans">
+      <view class="money-top">
+        <view class="money-info">
+          <text class="money-label">累计已存</text>
+          <text class="money-amount">{{delivered_text}}</text>
+          <text wx:if="{{target_text != '¥0'}}" class="money-target">总目标 {{target_text}}</text>
+          <text wx:else class="money-target">先创建一个存钱计划吧 🎯</text>
+        </view>
+        <view class="money-icon">💰</view>
+      </view>
+      <view class="money-bar">
+        <view class="money-bar-fill" style="width:{{plan_progress}}%"></view>
+      </view>
+      <view class="money-footer">
+        <text class="money-pct">{{plan_progress.toFixed(1)}}%</text>
+        <text class="money-plans-count" wx:if="{{plan_count > 0}}">{{plan_count}} 个计划进行中</text>
+      </view>
+    </view>
+
+    <!-- 3. 各计划进度列表 / 空状态 -->
+    <view wx:if="{{plans.length > 0}}" class="plans-mini-list">
+      <view class="pml-header">
+        <text class="pml-title">📋 我的计划</text>
+        <text class="pml-more" bindtap="go" data-url="/pages/plans/plans">全部 ›</text>
+      </view>
+      <view wx:for="{{plans.slice(0,3)}}" wx:key="id" class="pml-item" bindtap="go" data-url="/pages/plans/plans">
+        <view class="pml-top">
+          <text class="pml-name">{{item.title}}</text>
+          <text class="pml-amount">¥{{item._curText}} / ¥{{item._tarText}}</text>
+        </view>
+        <view class="pml-bar">
+          <view class="pml-bar-fill" style="width:{{item.progressPct}}%"></view>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{plans.length === 0}}" class="empty-state" bindtap="go" data-url="/pages/plans/plans">
+      <text class="empty-icon">🐷</text>
+      <text class="empty-text">还没有存钱计划</text>
+      <text class="empty-sub">点我创建一个 →</text>
+    </view>
+  </view>
+
+  <!-- ===== 可滚动区域 ===== -->
+  <scroll-view class="scroll-body" scroll-y>
+    <!-- 5. 纪念日 -->
+    <view wx:if="{{todayAnni && todayAnni.length > 0}}" bindtap="go" data-url="/pages/anniversaries/anniversaries" style="margin:0 12px 6px;background-color:#fff8e7;border:3px solid #d4a017;border-radius:12px;padding:10px 16px;box-shadow:0 0 12px rgba(212,160,23,0.3);">
+      <view wx:for="{{todayAnni}}" wx:for-item="anni" wx:key="title" style="display:flex;align-items:center;gap:10px;">
+        <text style="font-size:24px;">🎉</text>
+        <view style="flex:1;display:flex;justify-content:space-between;align-items:center;">
+          <text style="font-size:15px;font-weight:700;color:#8b6914;">{{anni.title}}</text>
+          <text style="font-size:12px;font-weight:700;color:#fff;background:linear-gradient(135deg,#d4a017,#b8860b);padding:4px 16px;border-radius:999px;">就是今天！</text>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{nearestAnni && hasOtherAnni}}" class="anni-row" bindtap="go" data-url="/pages/anniversaries/anniversaries">
+      <text class="anni-emoji">⏰</text>
+      <view class="anni-info">
+        <text class="anni-label">距离{{nearestAnni.title}}</text>
+        <text class="anni-days">{{nearestAnni.days}}<text class="anni-unit">天</text></text>
+      </view>
+      <text class="anni-arrow">›</text>
+    </view>
+
+    <!-- 6. 快捷入口 -->
+    <view class="quick-row">
+      <view class="qr-item" catchtap="go" data-url="/pages/pets/pets">
+        <text class="qr-emoji">{{petEmoji === '🐾' ? '🐱' : petEmoji}}</text>
+        <text class="qr-label">宠物</text>
+      </view>
+      <view class="qr-item" catchtap="go" data-url="/pages/anniversaries/anniversaries">
+        <text class="qr-emoji">🎉</text>
+        <text class="qr-label">纪念日</text>
+      </view>
+      <view class="qr-item" catchtap="go" data-url="/pages/backpack/backpack">
+        <text class="qr-emoji">🎒</text>
+        <text class="qr-label">背包</text>
+      </view>
+      <view class="qr-item" catchtap="go" data-url="/pages/notes/notes">
+        <text class="qr-emoji">💌</text>
+        <text class="qr-label">留言</text>
+      </view>
+      <view class="qr-item" catchtap="go" data-url="/pages/level/level">
+        <text class="qr-emoji">🏆</text>
+        <text class="qr-label">等级</text>
+      </view>
+      <view class="qr-item" catchtap="go" data-url="/pages/gacha/gacha">
+        <text class="qr-emoji">🎰</text>
+        <text class="qr-label">抽卡</text>
+      </view>
+    </view>
+
+    <!-- 7. 底部数据 -->
+    <view class="stats-bar" bindtap="go" data-url="/pages/plans/plans">
+      <view class="sb-item"><text class="sb-num">{{plan_count}}</text><text class="sb-label">计划</text></view>
+      <view class="sb-item"><text class="sb-num">{{anni_count}}</text><text class="sb-label">纪念日</text></view>
+      <view class="sb-item"><text class="sb-num">{{together_days}}天</text><text class="sb-label">相伴</text></view>
+    </view>
+
+    <!-- 7.5 卡片任务 -->
+    <view wx:if="{{cardTasksAsAssigner.length > 0}}" class="card-tasks-section">
+      <view class="ct-header">
+        <text class="ct-title">📋 我发起的任务</text>
+      </view>
+      <view wx:for="{{cardTasksAsAssigner}}" wx:key="id" class="ct-item ct-assigner {{item.card_item_id === 'forgive_me' ? 'ct-item--forgive' : ''}}">
+        <view class="ct-body">
+          <text class="ct-icon">{{item.card_item_id === 'forgive_me' ? '🥺✨' : '📋'}}</text>
+          <view class="ct-info">
+            <text class="ct-name">{{item.card_name || '任务'}}</text>
+            <text class="ct-desc">{{item.task_display_text}}</text>
+          </view>
+        </view>
+        <view wx:if="{{item.card_item_id === 'forgive_me' && item.rejected && item.status === 'pending'}}" class="ct-actions">
+          <button class="ct-btn ct-btn-retry" bindtap="onCardRetry" data-id="{{item.id}}">再次请求</button>
+        </view>
+        <view wx:elif="{{item.card_item_id === 'forgive_me' && item.status === 'completed'}}" class="ct-forgive-completed" bindtap="onCardForgive" data-id="{{item.id}}" data-mode="ack">💕 对方原谅你了！点我确认</view>
+        <view wx:elif="{{item.status === 'completed_pending'}}" class="ct-actions">
+          <button class="ct-btn ct-btn-confirm" bindtap="onCardConfirm" data-id="{{item.id}}">确认完成</button>
+          <button class="ct-btn ct-btn-dispute" bindtap="onCardDispute" data-id="{{item.id}}">未完成</button>
+        </view>
+        <view wx:elif="{{item.status === 'disputed'}}" class="ct-actions">
+          <text class="ct-waiting-text">等待对方重新完成</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{cardTasksAsAssignee.length > 0}}" class="card-tasks-section">
+      <view class="ct-header">
+        <text class="ct-title">📋 指派给我的任务</text>
+      </view>
+      <view wx:for="{{cardTasksAsAssignee}}" wx:key="id" class="ct-item ct-assignee {{item.card_item_id === 'forgive_me' ? 'ct-item--forgive' : ''}}">
+        <view class="ct-body">
+          <text class="ct-icon">{{item.card_item_id === 'forgive_me' ? '🥺✨' : '📋'}}</text>
+          <view class="ct-info">
+            <text class="ct-name">{{item.card_name || '任务'}}</text>
+            <text class="ct-desc">{{item.task_display_text}}</text>
+          </view>
+        </view>
+        <view wx:if="{{item.card_item_id === 'forgive_me' && !item.rejected && item.status === 'pending'}}" class="ct-actions">
+          <button class="ct-btn ct-btn-forgive" bindtap="onCardForgive" data-id="{{item.id}}">愿意原谅 💕</button>
+          <button class="ct-btn ct-btn-reject" bindtap="onCardReject" data-id="{{item.id}}">不愿意</button>
+        </view>
+        <view wx:elif="{{item.card_item_id === 'forgive_me' && item.rejected}}" class="ct-status-text">已收到，等待你的决定💕</view>
+        <view wx:elif="{{item.card_item_id === 'forgive_me' && item.status === 'completed_pending'}}" class="ct-status-text">等待对方确认中…</view>
+        <view wx:elif="{{item.card_item_id === 'forgive_me' && item.status === 'completed'}}" class="ct-done-badge">✅ 已原谅</view>
+        <view wx:elif="{{item.status === 'pending' && item.card_item_id !== 'serve_me'}}" class="ct-actions">
+          <button class="ct-btn ct-btn-complete" bindtap="onCardComplete" data-id="{{item.id}}">已完成</button>
+          <button class="ct-btn ct-btn-decline" bindtap="onCardDecline" data-id="{{item.id}}">我不要😤</button>
+        </view>
+        <view wx:elif="{{item.status === 'pending' && item.card_item_id === 'serve_me'}}" class="ct-actions">
+          <button class="ct-btn ct-btn-complete" bindtap="onCardComplete" data-id="{{item.id}}">已完成</button>
+        </view>
+        <view wx:elif="{{item.status === 'disputed' && item.card_item_id !== 'serve_me'}}" class="ct-actions">
+          <button class="ct-btn ct-btn-complete" bindtap="onCardComplete" data-id="{{item.id}}">已完成</button>
+          <button class="ct-btn ct-btn-decline" bindtap="onCardDecline" data-id="{{item.id}}">我不要😤</button>
+        </view>
+        <view wx:elif="{{item.status === 'disputed' && item.card_item_id === 'serve_me'}}" class="ct-actions">
+          <button class="ct-btn ct-btn-complete" bindtap="onCardComplete" data-id="{{item.id}}">已完成</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 8. 宠物展示区域 -->
+    <view class="pet-area">
+      <view class="pet-interact-ring">
+        <view class="pet-container {{petAnimationClass}} {{petHappyClass}}" catchtap="onPetTap" data-pet="1">
+          <image wx:if="{{petImageUrl}}" class="pet-image" src="{{petImageUrl}}" mode="aspectFit"></image>
+          <text wx:else class="pet-emoji">{{petEmoji}}</text>
+        </view>
+        <view class="interact-btn interact-pet" catchtap="onPetTap">
+          <text class="interact-icon">🤗</text>
+          <text class="interact-label">抚摸</text>
+        </view>
+        <view class="interact-btn interact-walk" catchtap="onWalk">
+          <text class="interact-icon">🚶</text>
+          <text class="interact-label">散步</text>
+        </view>
+        <view class="interact-btn interact-play" catchtap="onPlay">
+          <text class="interact-icon">🎮</text>
+          <text class="interact-label">玩耍</text>
+        </view>
+        <view class="interact-btn interact-talk" catchtap="onTalk">
+          <text class="interact-icon">💬</text>
+          <text class="interact-label">聊天</text>
+        </view>
+      </view>
+      <text class="pet-intimacy-text">❤️ {{intimacyStageName}} · {{intimacyPct}}%</text>
+      <text class="pet-skill-text" wx:if="{{petPassiveSkill}}">🎯 {{petPassiveSkill}}</text>
+      <text class="pet-tip" wx:if="{{intimacyPct <= 20}}">多存钱能提升亲密度 🪙</text>
+      <text class="pet-tip" wx:elif="{{intimacyPct <= 60}}">一起加油存钱吧 💪</text>
+      <text class="pet-tip" wx:elif="{{intimacyPct <= 90}}">感情越来越好了 💕</text>
+      <text class="pet-tip" wx:else>幸福满级！🎉</text>
+      <text class="pet-click-hint">点我互动 ›</text>
+    </view>
+  </scroll-view>
+
+  <!-- ===== 弹窗（固定在page内） ===== -->
+  <!-- 宠物信息弹窗 -->
+  <view wx:if="{{showPetModal}}" class="modal-overlay" bindtap="hidePetModal">
+    <view class="pet-modal" catchtap="stopPropagation">
+      <text class="pet-modal-emoji">
+        <image wx:if="{{petImageUrl}}" class="pet-modal-img" src="{{petImageUrl}}" mode="aspectFit"></image>
+        <text wx:else>{{petEmoji}}</text>
       </text>
-    </view>
-    <view class="ch-level" bindtap="go" data-url="/pages/level/level">
-      <text class="ch-lv">Lv{{level}}</text>
-      <view class="ch-lv-bar"><view class="ch-lv-fill" style="width:{{progress_pct}}%"></view></view>
+      <text class="pet-modal-name">{{petName}}</text>
+      <view class="pet-modal-level-row">
+        <text class="pet-modal-level-label">亲密度</text>
+        <text class="pet-modal-level-val">{{intimacyPct}}%</text>
+      </view>
+      <view class="pet-modal-bar-wrap">
+        <view class="pet-modal-bar">
+          <view class="pet-modal-fill" style="width:{{intimacyPct}}%"></view>
+        </view>
+        <text class="pet-modal-pct">{{intimacyPct}}%</text>
+      </view>
+      <text class="pet-modal-desc">{{petDescription}}</text>
+      <button class="pet-modal-btn" bindtap="feedCurrentPet">🍼 投喂宠物</button>
+      <button class="pet-modal-btn pet-modal-btn-secondary" bindtap="goPetPage">🐾 管理宠物</button>
+      <text class="pet-modal-close" bindtap="hidePetModal">✕</text>
     </view>
   </view>
 
-  <!-- ===== 2. 攒钱总进度（核心大卡片） ===== -->
-  <view class="money-card" bindtap="go" data-url="/pages/plans/plans">
-    <view class="money-top">
-      <view class="money-info">
-        <text class="money-label">累计已存</text>
-        <text class="money-amount">{{delivered_text}}</text>
-        <text wx:if="{{target_text != '¥0'}}" class="money-target">总目标 {{target_text}}</text>
-        <text wx:else class="money-target">先创建一个存钱计划吧 🎯</text>
+  <!-- 升级动画弹窗 -->
+  <view wx:if="{{showLevelUp}}" class="levelup-overlay">
+    <view class="levelup-modal">
+      <view class="levelup-stars">
+        <text class="levelup-star s1">⭐</text>
+        <text class="levelup-star s2">✨</text>
+        <text class="levelup-star s3">⭐</text>
+        <text class="levelup-star s4">✨</text>
+        <text class="levelup-star s5">⭐</text>
       </view>
-      <view class="money-icon">💰</view>
-    </view>
-    <view class="money-bar">
-      <view class="money-bar-fill" style="width:{{plan_progress}}%"></view>
-    </view>
-    <view class="money-footer">
-      <text class="money-pct">{{plan_progress.toFixed(1)}}%</text>
-      <text class="money-plans-count" wx:if="{{plan_count > 0}}">{{plan_count}} 个计划进行中</text>
-    </view>
-  </view>
-
-  <!-- ===== 3. 各计划进度列表 ===== -->
-  <view wx:if="{{plans.length > 0}}" class="plans-mini-list">
-    <view class="pml-header">
-      <text class="pml-title">📋 我的计划</text>
-      <text class="pml-more" bindtap="go" data-url="/pages/plans/plans">全部 ›</text>
-    </view>
-    <view wx:for="{{plans.slice(0,3)}}" wx:key="id" class="pml-item" bindtap="go" data-url="/pages/plans/plans">
-      <view class="pml-top">
-        <text class="pml-name">{{item.title}}</text>
-        <text class="pml-amount">¥{{item._curText}} / ¥{{item._tarText}}</text>
-      </view>
-      <view class="pml-bar">
-        <view class="pml-bar-fill" style="width:{{item.progressPct}}%"></view>
+      <text class="levelup-title">🎉 升级啦！</text>
+      <text class="levelup-lv">Lv.{{levelUpNewLevel}}</text>
+      <text class="levelup-sub">情侣等级提升！</text>
+      <view class="levelup-sparkle">
+        <text wx:for="{{4}}" wx:for-index="i" wx:key="i" class="levelup-particle p{{i}}">✦</text>
       </view>
     </view>
   </view>
 
-  <!-- ===== 4. 空状态 ===== -->
-  <view wx:if="{{plans.length === 0}}" class="empty-state" bindtap="go" data-url="/pages/plans/plans">
-    <text class="empty-icon">🐷</text>
-    <text class="empty-text">还没有存钱计划</text>
-    <text class="empty-sub">点我创建一个 →</text>
-  </view>
-
-  <!-- ===== 5. 纪念日倒计时 ===== -->
-  <view wx:if="{{nearestAnni}}" class="anni-row" bindtap="go" data-url="/pages/anniversaries/anniversaries">
-    <text class="anni-emoji">⏰</text>
-    <view class="anni-info">
-      <text class="anni-label">距离{{nearestAnni.title}}</text>
-      <text class="anni-days">{{nearestAnni.days}}<text class="anni-unit">天</text></text>
-    </view>
-    <text class="anni-arrow">›</text>
-  </view>
-
-  <!-- ===== 6. 快捷入口 ===== -->
-  <view class="quick-row">
-    <view class="qr-item" catchtap="go" data-url="/pages/anniversaries/anniversaries">
-      <text class="qr-emoji">🎉</text>
-      <text class="qr-label">纪念日</text>
-    </view>
-    <view class="qr-item" catchtap="go" data-url="/pages/backpack/backpack">
-      <text class="qr-emoji">🎒</text>
-      <text class="qr-label">背包</text>
-    </view>
-    <view class="qr-item" catchtap="go" data-url="/pages/notes/notes">
-      <text class="qr-emoji">💌</text>
-      <text class="qr-label">留言</text>
-    </view>
-    <view class="qr-item" catchtap="go" data-url="/pages/level/level">
-      <text class="qr-emoji">🏆</text>
-      <text class="qr-label">等级</text>
-    </view>
-    <view class="qr-item" catchtap="go" data-url="/pages/gacha/gacha">
-      <text class="qr-emoji">🎰</text>
-      <text class="qr-label">抽卡</text>
-    </view>
-  </view>
-
-  <!-- ===== 7. 底部数据 ===== -->
-  <view class="stats-bar" bindtap="go" data-url="/pages/plans/plans">
-    <view class="sb-item"><text class="sb-num">{{plan_count}}</text><text class="sb-label">计划</text></view>
-    <view class="sb-item"><text class="sb-num">{{anni_count}}</text><text class="sb-label">纪念日</text></view>
-    <view class="sb-item"><text class="sb-num">{{together_days}}天</text><text class="sb-label">相伴</text></view>
-  </view>
-
-  <!-- ===== 8. 宠物展示区域 ===== -->
-  <view class="pet-area" bindtap="showPetModal" data-pet="1">
-    <view class="pet-container {{petAnimationClass}}">
-      <text class="pet-emoji">{{petEmoji}}</text>
-    </view>
-    <text class="pet-intimacy-text">❤️ 亲密度 {{intimacyPct}}%</text>
-    <text class="pet-tip" wx:if="{{intimacyPct <= 20}}">多存钱能提升亲密度 🪙</text>
-    <text class="pet-tip" wx:elif="{{intimacyPct <= 60}}">一起加油存钱吧 💪</text>
-    <text class="pet-tip" wx:elif="{{intimacyPct <= 90}}">感情越来越好了 💕</text>
-    <text class="pet-tip" wx:else>幸福满级！🎉</text>
-    <text class="pet-click-hint">点我互动 ›</text>
-  </view>
-</scroll-view>
-
-<!-- ===== 宠物信息弹窗 ===== -->
-<view wx:if="{{showPetModal}}" class="modal-overlay" bindtap="hidePetModal">
-  <view class="pet-modal" catchtap="stopPropagation">
-    <text class="pet-modal-emoji">{{petEmoji}}</text>
-    <text class="pet-modal-name">{{petName}}</text>
-    <view class="pet-modal-level-row">
-      <text class="pet-modal-level-label">亲密度</text>
-      <text class="pet-modal-level-val">{{intimacyPct}}%</text>
-    </view>
-    <view class="pet-modal-bar-wrap">
-      <view class="pet-modal-bar">
-        <view class="pet-modal-fill" style="width:{{intimacyPct}}%"></view>
+  <!-- 每日冒险弹窗 -->
+  <view wx:if="{{showAdventure && adventureData}}" class="levelup-overlay" bindtap="hideAdventure">
+    <view class="adventure-modal" catchtap="stopPropagation">
+      <text class="adventure-emoji">{{adventureData.pet_emoji}}</text>
+      <text class="adventure-title">{{adventureData.pet_name}}冒险归来！</text>
+      <text class="adventure-desc">{{adventureData.passive_name}}</text>
+      <view class="adventure-rewards">
+        <view wx:if="{{adventureData.reward.shards > 0}}" class="adventure-reward">
+          <text class="ar-icon">💎</text>
+          <text class="ar-num">+{{adventureData.reward.shards}}</text>
+          <text class="ar-label">积分</text>
+        </view>
+        <view wx:if="{{adventureData.reward.exp > 0}}" class="adventure-reward">
+          <text class="ar-icon">⭐</text>
+          <text class="ar-num">+{{adventureData.reward.exp}}</text>
+          <text class="ar-label">经验</text>
+        </view>
+        <view wx:if="{{adventureData.reward.tickets > 0}}" class="adventure-reward">
+          <text class="ar-icon">🎟️</text>
+          <text class="ar-num">+{{adventureData.reward.tickets}}</text>
+          <text class="ar-label">抽卡券</text>
+        </view>
       </view>
-      <text class="pet-modal-pct">{{intimacyPct}}%</text>
+      <view wx:if="{{adventureData.week_summary}}" class="adventure-week">
+        <text class="adventure-week-text">本周冒险：💎{{adventureData.week_summary.total_shards}} ⭐{{adventureData.week_summary.total_exp}} 🎟️{{adventureData.week_summary.total_tickets}}</text>
+      </view>
+      <text class="adventure-tap">点击关闭</text>
     </view>
-    <text class="pet-modal-desc">{{petDescription}}</text>
-    <button class="pet-modal-btn" bindtap="feedCurrentPet">🍼 投喂宠物</button>
-    <text class="pet-modal-close" bindtap="hidePetModal">✕</text>
-  </view>
-</view>
-
-<!-- ===== 成就祝贺弹窗 ===== -->
-<view wx:if="{{showAchModal}}" class="modal-overlay" bindtap="hideAchModal">
-  <view class="ach-popup" catchtap="stopPropagation">
-    <text class="ach-popup-icon">{{achData.hidden ? '🌟' : '🏆'}}</text>
-    <text class="ach-popup-title">成就达成！</text>
-    <text class="ach-popup-name">{{achData.name}}</text>
-    <text class="ach-popup-desc">{{achData.desc}}</text>
-    <text class="ach-popup-reward">获得 {{achData.reward_type}}{{achData.reward_amount}}</text>
-    <button class="btn btn-primary ach-popup-btn" bindtap="hideAchModal">太棒了！</button>
   </view>
 </view>

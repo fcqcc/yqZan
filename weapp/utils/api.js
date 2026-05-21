@@ -80,6 +80,7 @@ const stampNote = (id) => request('/api/notes/' + id + '/stamp', 'POST')
 // ===== 等级 =====
 const getLevel = () => request('/api/level')
 const getLevelLogs = () => request('/api/level/logs')
+const consumeLevelPending = () => request('/api/level/consume-pending', 'POST')
 
 // ===== 贺卡 =====
 const getCardTemplates = () => request('/api/card/templates')
@@ -104,12 +105,18 @@ const getPets = () => request('/api/pets')
 const switchPet = (petId) => request('/api/pets/switch', 'POST', { pet_id: petId })
 const switchPetForm = (petId, form) => request('/api/pets/' + petId + '/form', 'POST', { form })
 const feedPet = (petId) => request('/api/pets/' + petId + '/feed', 'POST')
+const petPet = (petId) => request('/api/pets/' + petId + '/pet', 'POST')
+const walkPet = (petId) => request('/api/pets/' + petId + '/walk', 'POST')
 const evolvePet = (petId, itemId) => request('/api/pets/' + petId + '/evolve', 'POST', { item_id: itemId })
+const getDailyAdventure = () => request('/api/pets/daily-adventure')
+const getPetCatalog = () => request('/api/pets/catalog')
+const getGachaPool = () => request('/api/gacha/pool')
+const getLevelUnlocks = () => request('/api/level/unlocks')
 
 // ===== 抽卡 =====
 const getTickets = () => request('/api/gacha/tickets')
 const drawSingle = () => request('/api/gacha/draw', 'POST')
-const drawTen = () => request('/api/gacha/draw10', 'POST')
+const drawTen = (boost = false) => request('/api/gacha/draw10', 'POST', { boost })
 const buyTickets = (amount) => request('/api/gacha/buy-tickets', 'POST', { amount })
 
 // ===== 背包 =====
@@ -123,23 +130,38 @@ const getCheckinStatus = () => request('/api/checkin/status')
 const getSpark = () => request('/api/checkin/spark')
 
 // ===== 成就 =====
+// ===== 卡片任务 =====
+const useCard = (inventoryId) => request('/api/card-tasks/use', 'POST', { inventory_id: inventoryId })
+const getCardTasks = () => request('/api/card-tasks/active')
+const completeCardTask = (taskId) => request('/api/card-tasks/' + taskId + '/complete', 'POST')
+const declineCardTask = (taskId) => request('/api/card-tasks/' + taskId + '/decline', 'POST')
+const confirmCardTask = (taskId) => request('/api/card-tasks/' + taskId + '/confirm', 'POST')
+const disputeCardTask = (taskId) => request('/api/card-tasks/' + taskId + '/dispute', 'POST')
+const forgiveCardTask = (taskId) => request('/api/card-tasks/' + taskId + '/forgive', 'POST')
+const rejectForgive = (taskId) => request('/api/card-tasks/' + taskId + '/reject', 'POST')
+const retryForgive = (taskId) => request('/api/card-tasks/' + taskId + '/retry', 'POST')
+const dismissCardTask = (taskId) => request('/api/card-tasks/' + taskId + '/dismiss', 'POST')
 const getAchievements = () => request('/api/achievements')
 
 module.exports = {
-  register, login, getMe, getPartner, bindPartner, unbindPartner,
+  request, register, login, getMe, getPartner, bindPartner, unbindPartner,
   getPlans, createPlan, deletePlan, deliverPlan, getPlanDeliveries,
   getWishes, createWish, updateWish, deleteWish,
   getTodos, createTodo, checkinTodo, deleteTodo,
   getAnniversaries, createAnniversary, deleteAnniversary, importHolidays, getHolidayList,
   getGifts, createGift, deleteGift,
   getNotes, createNote, likeNote, deleteNote, stampNote,
-  getLevel, getLevelLogs,
+  getLevel, getLevelLogs, consumeLevelPending,
    getCardTemplates, getCardSnapshot, generateCard, getCards,
    getTasks, getTaskEvents, createTask, acceptTaskEvent, verifyTask, deleteTask,
    congratulatePlan,
-  getActivePet, getPets, switchPet, switchPetForm, feedPet, evolvePet,
+  getActivePet, getPets, switchPet, switchPetForm, feedPet, petPet, walkPet, evolvePet, getDailyAdventure,
+  getPetCatalog, getGachaPool,
+  getLevelUnlocks,
   getTickets, drawSingle, drawTen, buyTickets,
   getInventory, useItem, getBestiary,
   doCheckin, getCheckinStatus, getSpark,
+  useCard, getCardTasks, completeCardTask, declineCardTask, confirmCardTask, disputeCardTask,
+  forgiveCardTask, rejectForgive, retryForgive, dismissCardTask,
   getAchievements
 }

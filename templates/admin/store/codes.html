@@ -1,0 +1,110 @@
+{% extends "admin/base.html" %}
+{% block title %}码库管理{% endblock %}
+{% block page_title %}🔑 码库管理{% endblock %}
+{% block subtitle %}管理兑换码库存，支持批量生成和导入{% endblock %}
+
+{% block content %}
+
+<div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+  <a href="/admin/store" class="btn">← 返回商店概览</a>
+</div>
+
+<!-- 过滤 -->
+<div class="filter-bar">
+  <a href="/admin/store/codes" class="{{ 'active' if product_id is none and status_filter == 'all' }}">全部</a>
+  <a href="/admin/store/codes?status_filter=unused{{ '&product_id='+product_id|string if product_id else '' }}" class="{{ 'active' if status_filter == 'unused' }}">未使用</a>
+  <a href="/admin/store/codes?status_filter=used{{ '&product_id='+product_id|string if product_id else '' }}" class="{{ 'active' if status_filter == 'used' }}">已使用</a>
+
+  <select onchange="location=this.value" style="margin-left:8px;padding:4px 8px;border-radius:4px;border:1px solid #ddd;font-size:.8rem">
+    <option value="/admin/store/codes">全部商品</option>
+    {% for p in products %}
+    <option value="/admin/store/codes?product_id={{ p.id }}" {{ 'selected' if product_id == p.id }}>{{ p.name }}</option>
+    {% endfor %}
+  </select>
+
+  <span style="margin-left:auto;font-size:.8rem;color:#888;align-self:center">
+    共 {{ total }} 个码 · 此页显示 {{ codes|length }} 个
+  </span>
+</div>
+
+<!-- 生成/导入操作 -->
+<div style="display:flex;gap:16px;margin-bottom:12px">
+  <!-- 生成 -->
+  <form method="POST" action="/admin/store/codes/generate" style="display:flex;gap:6px;align-items:center;background:#fff;padding:10px 14px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+    <select name="product_id" required class="small-input">
+      <option value="">选择商品</option>
+      {% for p in products %}
+      <option value="{{ p.id }}" {{ 'selected' if product_id == p.id }}>{{ p.name }}</option>
+      {% endfor %}
+    </select>
+    <input type="number" name="count" value="10" min="1" max="1000" class="small-input" style="width:60px" placeholder="数量">
+    <input type="number" name="length" value="16" min="8" max="64" class="small-input" style="width:60px" placeholder="长度">
+    <button type="submit" class="btn btn-primary" style="padding:6px 12px">🎲 批量生成</button>
+  </form>
+
+  <!-- 导入 -->
+  <form method="POST" action="/admin/store/codes/import" style="display:flex;gap:6px;align-items:center;background:#fff;padding:10px 14px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+    <select name="product_id" required class="small-input">
+      <option value="">选择商品</option>
+      {% for p in products %}
+      <option value="{{ p.id }}">{{ p.name }}</option>
+      {% endfor %}
+    </select>
+    <textarea name="codes_text" placeholder="每行一个码，粘贴进来&#10;XXXX-XXXX-XXXX-XXXX&#10;YYYY-YYYY-YYYY-YYYY" style="width:200px;height:32px;padding:4px 8px;border:1px solid #ddd;border-radius:4px;font-size:.75rem" required></textarea>
+    <button type="submit" class="btn" style="padding:6px 12px">📥 导入</button>
+  </form>
+</div>
+
+<!-- 码列表 -->
+<table>
+  <thead>
+    <tr><th>ID</th><th>商品</th><th>兑换码</th><th>状态</th><th>关联订单</th><th>生成时间</th><th>使用时间</th></tr>
+  </thead>
+  <tbody>
+    {% for c in codes %}
+    <tr>
+      <td>{{ c.id }}</td>
+      <td>{{ c.product.name if c.product else '-' }}</td>
+      <td><code style="font-size:.8rem;background:#f5f5f5;padding:2px 6px;border-radius:3px;user-select:all">{{ c.code_value }}</code></td>
+      <td>
+        <span class="badge {{ 'badge-active' if c.status == 'unused' else ('badge-archived' if c.status == 'used' else '') }}">
+          {{ "未使用" if c.status == "unused" else ("已使用" if c.status == "used" else c.status) }}
+        </span>
+      </td>
+      <td>
+        {% if c.order_id %}
+        <a href="/admin/store/orders/{{ c.order_id }}" style="color:#9d2d5a">#{{ c.order_id }}</a>
+        {% else %}-{% endif %}
+      </td>
+      <td>{{ c.created_at.strftime("%m-%d %H:%M") if c.created_at else "-" }}</td>
+      <td>{{ c.used_at.strftime("%m-%d %H:%M") if c.used_at else "-" }}</td>
+    </tr>
+    {% endfor %}
+    {% if not codes %}
+    <tr><td colspan="7" style="text-align:center;color:#999;padding:30px">
+      {% if product_id %}该商品暂无兑换码 → 在上方「批量生成」「导入」添加{% else %}选择商品后管理兑换码{% endif %}
+    </td></tr>
+    {% endif %}
+  </tbody>
+</table>
+
+<!-- 分页 -->
+{% if total > per_page %}
+<div class="pagination">
+  {% if page > 1 %}
+  <a href="?page={{ page-1 }}&product_id={{ product_id or '' }}&status_filter={{ status_filter }}">上一页</a>
+  {% endif %}
+  <span>第 {{ page }} / {{ ((total-1)//per_page)+1 }} 页</span>
+  {% if page * per_page < total %}
+  <a href="?page={{ page+1 }}&product_id={{ product_id or '' }}&status_filter={{ status_filter }}">下一页</a>
+  {% endif %}
+</div>
+{% endif %}
+
+<style>
+.btn{display:inline-block;padding:8px 16px;border-radius:6px;font-size:.82rem;text-decoration:none;background:#eee;color:#333;border:1px solid #ddd}
+.btn-primary{background:#9d2d5a;color:#fff;border-color:#9d2d5a}
+.small-input{padding:6px 8px;border:1px solid #ddd;border-radius:4px;font-size:.8rem;outline:0}
+.small-input:focus{border-color:#9d2d5a}
+</style>
+{% endblock %}

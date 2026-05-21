@@ -1,10 +1,34 @@
 <scroll-view class="page" scroll-y>
   <view class="page-title">⭐ 攒钱等级</view>
-  <view class="card" style="text-align:center;padding:24px">
+  <view class="card" style="text-align:center;padding:20px">
     <view style="font-size:48px;font-weight:900;color:var(--pink-dark)">Lv{{level}}</view>
-    <view class="progress-bar" style="margin:12px 0"><view class="progress-fill" style="width:{{progress_pct}}%"></view></view>
-    <view style="font-size:13px;color:var(--text-secondary)">{{current_exp}} / {{next_level_exp}} ({{progress_pct}}%)</view>
+    <view class="progress-bar" style="margin:10px 0"><view class="progress-fill" style="width:{{progress_pct}}%"></view></view>
+    <view style="font-size:12px;color:var(--text-secondary)">{{current_exp}} / {{next_level_exp}} ({{progress_pct}}%)</view>
   </view>
+
+  <!-- 等级解锁功能 -->
+  <view wx:if="{{nextUnlock}}" class="card next-unlock-card">
+    <view class="section-title">🔒 下一个解锁</view>
+    <view class="next-unlock">
+      <text class="nu-lv">Lv.{{nextUnlock.level}}</text>
+      <view class="nu-info">
+        <text class="nu-name">{{nextUnlock.name}}</text>
+        <text class="nu-desc">{{nextUnlock.desc}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{unlocks.length > 0}}" class="card">
+    <view class="section-title">✅ 已解锁功能</view>
+    <view wx:for="{{unlocks}}" wx:key="feature" class="unlock-item">
+      <text class="unlock-check">✅</text>
+      <view class="unlock-info">
+        <text class="unlock-name">{{item.name}}</text>
+        <text class="unlock-desc">{{item.desc}}</text>
+      </view>
+    </view>
+  </view>
+
   <view class="card">
     <view class="section-title">📋 最近经验记录</view>
     <view wx:for="{{logs}}" wx:key="id" class="list-item">

@@ -1,0 +1,67 @@
+{% extends "admin/base.html" %}
+{% block title %}新建订单{% endblock %}
+{% block page_title %}➕ 新建订单{% endblock %}
+{% block subtitle %}收到用户付款后，在这里录入订单{% endblock %}
+
+{% block content %}
+
+<div style="max-width:500px">
+  <form method="POST" action="/admin/store/orders/new" style="background:#fff;border-radius:10px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+    <div style="margin-bottom:12px">
+      <label style="font-size:.8rem;color:#555;display:block;margin-bottom:4px">商品 *</label>
+      <select name="product_id" required class="form-input">
+        <option value="">选择商品</option>
+        {% for p in products %}
+        <option value="{{ p.id }}">[{{ p.category }}] {{ p.name }} - ¥{{ "%.2f"|format(p.price) }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <label style="font-size:.8rem;color:#555;display:block;margin-bottom:4px">金额 *</label>
+      <input type="number" step="0.01" name="amount" required class="form-input" placeholder="9.90">
+    </div>
+
+    <div style="margin-bottom:12px">
+      <label style="font-size:.8rem;color:#555;display:block;margin-bottom:4px">来源平台</label>
+      <select name="platform" class="form-input">
+        <option value="微信">微信</option>
+        <option value="抖音">抖音</option>
+        <option value="小红书">小红书</option>
+        <option value="快手">快手</option>
+        <option value="闲鱼">闲鱼</option>
+        <option value="淘宝">淘宝</option>
+        <option value="支付宝">支付宝</option>
+        <option value="其他">其他</option>
+      </select>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <label style="font-size:.8rem;color:#555;display:block;margin-bottom:4px">买家平台ID *</label>
+      <input type="text" name="platform_username" class="form-input" placeholder="抖音/小红书用户名或ID" required>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <label style="font-size:.8rem;color:#555;display:block;margin-bottom:4px">联系方式（选填）</label>
+      <input type="text" name="customer_contact" class="form-input" placeholder="微信号/手机号">
+    </div>
+
+    <div style="margin-bottom:16px">
+      <label style="font-size:.8rem;color:#555;display:block;margin-bottom:4px">内部备注（选填）</label>
+      <textarea name="admin_note" class="form-input" rows="2" placeholder="记录一些信息..."></textarea>
+    </div>
+
+    <div style="display:flex;gap:8px">
+      <button type="submit" class="btn btn-primary">创建订单</button>
+      <a href="/admin/store/orders" class="btn">取消</a>
+    </div>
+  </form>
+</div>
+
+<style>
+.btn{display:inline-block;padding:8px 16px;border-radius:6px;font-size:.82rem;text-decoration:none;background:#eee;color:#333;border:1px solid #ddd}
+.btn-primary{background:#9d2d5a;color:#fff;border-color:#9d2d5a}
+.form-input{width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:6px;font-size:.85rem;outline:0;box-sizing:border-box}
+.form-input:focus{border-color:#9d2d5a}
+</style>
+{% endblock %}

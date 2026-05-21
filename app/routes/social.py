@@ -32,9 +32,12 @@ def get_couple_id(user: User) -> int:
 
 # ── 等级计算 ──
 
-EXP_THRESHOLDS = [0]  # level 1
-for n in range(2, 100):
-    # 公式: 每级所需经验 ≈ 20 * n^1.8，累计形成总经验门槛
+# 手动设定前15级的累计经验门槛（让前期升级飞快）
+EARLY_THRESHOLDS = [0, 10, 25, 45, 70, 100, 140, 190, 250, 320, 400, 490, 590, 700, 820]
+
+EXP_THRESHOLDS = list(EARLY_THRESHOLDS)  # level 1-15
+for n in range(len(EARLY_THRESHOLDS) + 1, 100):
+    # 从第16级起用原公式 20 * n^1.8
     EXP_THRESHOLDS.append(int(20 * (n**1.8)))
 
 
@@ -155,6 +158,47 @@ def consume_pending(
     level.pending_levelups = 0
     db.commit()
     return {"ok": True}
+
+
+# ── 等级解锁系统 ──
+
+LEVEL_UNLOCKS = [
+    {"level": 1,  "feature": "basic",          "name": "基础功能",               "desc": "1个存钱计划、3个宠物位"},
+    {"level": 3,  "feature": "plan_slot_2",    "name": "存钱计划+1",            "desc": "可同时进行2个存钱计划"},
+    {"level": 5,  "feature": "pet_slot_4",     "name": "宠物位+1",              "desc": "可拥有4只宠物"},
+    {"level": 8,  "feature": "note_color",     "name": "留言字体颜色",          "desc": "留言可更换字体颜色"},
+    {"level": 10, "feature": "plan_slot_3",    "name": "存钱计划+1",            "desc": "可同时进行3个存钱计划"},
+    {"level": 12, "feature": "shop_limited",   "name": "限量外观商城",          "desc": "积分商城解锁限量头像框和背景"},
+    {"level": 15, "feature": "pet_slot_5",     "name": "宠物位+1",              "desc": "可拥有全部5只宠物"},
+    {"level": 18, "feature": "boost_upgrade",  "name": "强化积分加注",          "desc": "抽卡积分加注上限提升至100💎"},
+    {"level": 20, "feature": "spark_custom",   "name": "火花自定义图标",        "desc": "可自定义火花显示图标"},
+    {"level": 25, "feature": "plan_slot_4",    "name": "存钱计划+1",            "desc": "可同时进行最多4个存钱计划"},
+    {"level": 30, "feature": "pk_arena",       "name": "情侣PK周榜",            "desc": "解锁情侣存钱PK排行榜"},
+    {"level": 40, "feature": "note_sticker",   "name": "留言贴图",              "desc": "留言可插入自定义表情/贴图"},
+    {"level": 50, "feature": "pet_frame",      "name": "宠物展示框",            "desc": "宠物页面获得特殊金色展示框"},
+]
+
+
+@router.get("/level/unlocks")
+def get_level_unlocks(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """获取当前等级已解锁/即将解锁的功能"""
+    cid = user.couple_id
+    if not cid:
+        return {"current_level": 1, "unlocked": [], "next_unlock": None, "all": LEVEL_UNLOCKS}
+
+    from app.models.social import Level as Lvl
+    level = db.query(Lvl).filter(Lvl.couple_id == cid).first()
+    current_level = level.level if level else 1
+
+    unlocked = [u for u in LEVEL_UNLOCKS if u["level"] <= current_level]
+    next_unlock = next((u for u in LEVEL_UNLOCKS if u["level"] > current_level), None)
+
+    return {
+        "current_level": current_level,
+        "unlocked": unlocked,
+        "next_unlock": next_unlock,
+        "all": LEVEL_UNLOCKS,
+    }
 
 
 # ===================== 便利贴墙 =====================
@@ -292,12 +336,8 @@ def _add_exp(couple_id, amount, reason, db):
     level.total_exp_earned += amount
     
     # 重新计算等级
-    thresholds = [0]
-    for n in range(2, 100):
-        thresholds.append(int(20 * (n ** 1.8)))
-    
     new_lvl = 1
-    for i, t in enumerate(thresholds, 1):
+    for i, t in enumerate(EXP_THRESHOLDS, 1):
         if level.total_exp_earned >= t:
             new_lvl = i
     

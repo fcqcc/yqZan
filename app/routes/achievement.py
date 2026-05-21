@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.achievements import ACHIEVEMENTS
@@ -108,9 +108,15 @@ def check_and_unlock(couple_id: int, db: Session):
         Plan.done == True,
     ).count()
 
-    # 宠物数量
+    # 宠物数量 + 所有宠物亲密度检查
     pet_count = db.query(Pet).filter(Pet.couple_id == couple_id).count()
     pet_types = {p.pet_type for p in db.query(Pet).filter(Pet.couple_id == couple_id).all()}
+    all_pets_60 = True
+    all_pets = db.query(Pet).filter(Pet.couple_id == couple_id).all()
+    for p in all_pets:
+        if (p.intimacy or 0) < 60:
+            all_pets_60 = False
+            break
 
     # 所有已解锁形态 + 检测传说形态
     total_forms = 0
@@ -130,14 +136,14 @@ def check_and_unlock(couple_id: int, db: Session):
         Inventory.couple_id == couple_id,
     ).count()
 
-    # 抽到传说宠物（unicorn / dragon）
+    # 抽到SSR宠物（star_fox / bamboo_dragon / wave_cat / honey_bear）
     has_golden = db.query(Inventory).filter(
         Inventory.couple_id == couple_id,
         Inventory.item_type == "pet",
-        Inventory.item_id.in_(["unicorn", "dragon"]),
+        Inventory.item_id.in_(["star_fox", "bamboo_dragon", "wave_cat", "honey_bear"]),
     ).count() > 0 or db.query(Pet).filter(
         Pet.couple_id == couple_id,
-        Pet.pet_type.in_(["unicorn", "dragon"]),
+        Pet.pet_type.in_(["star_fox", "bamboo_dragon", "wave_cat", "honey_bear"]),
     ).count() > 0
 
     gacha_ssrp = db.query(Inventory).filter(
@@ -149,6 +155,16 @@ def check_and_unlock(couple_id: int, db: Session):
         Inventory.item_type == "consumable",
         Inventory.item_id == "serve_me",
     ).count()
+
+    # 等级检查
+    from app.models.social import Level as LvlModel
+    lvl_record = db.query(LvlModel).filter(LvlModel.couple_id == couple_id).first()
+    current_level = lvl_record.level if lvl_record else 1
+
+    # 火花状态检查
+    spark_count = db.query(Couple).filter(Couple.id == couple_id).first()
+    spark_val = spark_count.spark_count if spark_count else 0
+    spark_status = spark_count.spark_status if spark_count else "active"
 
     # 逐一检查
     checks = {
@@ -179,6 +195,12 @@ def check_and_unlock(couple_id: int, db: Session):
         "first_ssrp": gacha_ssrp >= 1,
         "all_pets_collected": len(pet_types) >= 5,
         "streak_recover": False,
+        # 新增
+        "all_pets_intimacy_60": pet_count >= 1 and all_pets_60,
+        "level_10": current_level >= 10,
+        "level_30": current_level >= 30,
+        "spark_7": spark_val >= 7 and spark_status == "active",
+        "spark_30": spark_val >= 30 and spark_status == "active",
     }
 
     for aid, condition in checks.items():
@@ -224,6 +246,40 @@ def get_achievements(user: User = Depends(get_current_user), db: Session = Depen
         "total": len(result),
         "unlocked": unlocked_count,
     }
+
+
+@router.post("/{achievement_id}/claim")
+def claim_achievement(achievement_id: str, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """标记成就已领取（弹窗关闭后不再展示）"""
+    if not user.couple_id:
+        raise HTTPException(400, "未绑定伴侣")
+    prog = db.query(AchievementProgress).filter(
+        AchievementProgress.couple_id == user.couple_id,
+        AchievementProgress.achievement_id == achievement_id,
+    ).first()
+    if not prog:
+        raise HTTPException(404, "成就记录不存在")
+    if not prog.unlocked:
+        raise HTTPException(400, "该成就尚未解锁")
+    prog.claimed = True
+    prog.claimed_at = datetime.now()
+    db.commit()
+    return {"ok": True}
+
+
+@router.post("/claim-all")
+def claim_all_achievements(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """标记所有未领取的成就为已领取"""
+    if not user.couple_id:
+        raise HTTPException(400, "未绑定伴侣")
+    now = datetime.now()
+    count = db.query(AchievementProgress).filter(
+        AchievementProgress.couple_id == user.couple_id,
+        AchievementProgress.unlocked == True,
+        AchievementProgress.claimed == False,
+    ).update({"claimed": True, "claimed_at": now})
+    db.commit()
+    return {"ok": True, "claimed_count": count}
 
 
 @router.post("/check")

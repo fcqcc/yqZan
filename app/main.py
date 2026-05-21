@@ -6,7 +6,7 @@ from app.database import Base, engine, SessionLocal
 from app.models.card import CardTemplate
 from app.models.social import TaskEvent
 from app.jinja_fix import *  # Must come before other imports that use Jinja2
-from app.routes import achievement_router, admin_router, card_router, checkin_router, couple_router, extra_router, gacha_router, pet_router, plan_router, social_router, user_router
+from app.routes import achievement_router, admin_router, card_router, card_task_router, checkin_router, couple_router, extra_router, gacha_router, pet_router, plan_router, social_router, store_admin_router, user_router
 
 
 PRESET_TEMPLATES = [
@@ -77,6 +77,10 @@ def startup():
 
 # 静态页面
 app.mount("/fortune", StaticFiles(directory="weapp/fortune", html=True), name="fortune")
+# 宠物形象静态资源
+import os
+assets_dir = os.path.join(os.path.dirname(__file__), "..", "assets")
+app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
 
 
 app.add_middleware(
@@ -97,6 +101,8 @@ app.include_router(achievement_router)
 app.include_router(checkin_router)
 app.include_router(pet_router)
 app.include_router(gacha_router)
+app.include_router(card_task_router)
+app.include_router(store_admin_router)
 
 
 @app.get("/health")

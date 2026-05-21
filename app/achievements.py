@@ -167,4 +167,63 @@ ACHIEVEMENTS = {
         "reward_type": "tickets", "reward_amount": 5,
         "hidden": True, "category": "隐藏",
     },
+    # === 新增：亲密度维持类 ===
+    "intimacy_keep_7d": {
+        "name": "宠辱不惊💕",
+        "desc": "亲密度100维持7天",
+        "reward_type": "shards", "reward_amount": 100,
+        "hidden": False, "category": "宠物",
+    },
+    "all_pets_intimacy_60": {
+        "name": "宠物大家长👨‍👩‍👧‍👦",
+        "desc": "所有宠物亲密度均达到60以上",
+        "reward_type": "shards", "reward_amount": 200,
+        "hidden": False, "category": "宠物",
+    },
+    # === 新增：冒险类 ===
+    "adventure_7d": {
+        "name": "探索达人🗺️",
+        "desc": "连续7天触发宠物冒险",
+        "reward_type": "shards", "reward_amount": 100,
+        "hidden": False, "category": "宠物",
+    },
+    # === 新增：抽卡类 ===
+    "gacha_boost": {
+        "name": "豪赌一把🎲",
+        "desc": "首次使用积分加注抽卡",
+        "reward_type": "shards", "reward_amount": 50,
+        "hidden": False, "category": "抽卡",
+    },
+    "gacha_pity": {
+        "name": "非酋的救赎🛡️",
+        "desc": "触发低保机制（30抽无SSR+）",
+        "reward_type": "shards", "reward_amount": 80,
+        "hidden": True, "category": "隐藏",
+    },
+    # === 新增：等级类 ===
+    "level_10": {
+        "name": "初出茅庐🌟",
+        "desc": "情侣等级达到10级",
+        "reward_type": "shards", "reward_amount": 100,
+        "hidden": False, "category": "里程碑",
+    },
+    "level_30": {
+        "name": "情比金坚💎",
+        "desc": "情侣等级达到30级",
+        "reward_type": "shards", "reward_amount": 300,
+        "hidden": False, "category": "里程碑",
+    },
+    # === 新增：火花类 ===
+    "spark_7": {
+        "name": "火花守护·7🔥",
+        "desc": "连续7天火花保持活跃",
+        "reward_type": "shards", "reward_amount": 30,
+        "hidden": False, "category": "打卡",
+    },
+    "spark_30": {
+        "name": "火花守护·30🔥",
+        "desc": "连续30天火花保持活跃",
+        "reward_type": "shards", "reward_amount": 150,
+        "hidden": False, "category": "打卡",
+    },
 }

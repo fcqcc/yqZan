@@ -199,3 +199,31 @@
   font-size: 13px;
   color: var(--text-secondary);
 }
+
+/* ===== 解锁功能 ===== */
+.next-unlock-card { border: 1.5px solid #ffd700; background: #fffdf5; }
+.next-unlock { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+.nu-lv {
+  font-size: 20px; font-weight: 900; color: #d4a017;
+  background: rgba(212,160,23,0.1);
+  padding: 4px 10px; border-radius: 8px;
+  flex-shrink: 0;
+}
+.nu-info { flex: 1; }
+.nu-name { font-size: 14px; font-weight: 700; color: #8b6914; display: block; }
+.nu-desc { font-size: 11px; color: var(--text-secondary); display: block; margin-top: 2px; }
+
+.unlock-item { display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; border-bottom: 1px solid rgba(214,92,138,0.06); }
+.unlock-item:last-child { border-bottom: none; }
+.unlock-check { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.unlock-info { flex: 1; }
+.unlock-name { font-size: 13px; font-weight: 600; color: var(--text); display: block; }
+.unlock-desc { font-size: 11px; color: var(--text-secondary); display: block; margin-top: 1px; }
+
+.section-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.list-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(214,92,138,0.06); }
+.list-item:last-child { border-bottom: none; }
+.list-info { flex: 1; }
+.list-sub { font-size: 12px; color: var(--text-secondary); }
+.progress-bar { height: 8px; background: rgba(214,92,138,0.15); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--pink), var(--pink-dark)); border-radius: 4px; transition: width 0.8s ease; }
