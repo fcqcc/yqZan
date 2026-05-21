@@ -409,6 +409,14 @@
   color: var(--pink-dark);
   margin-top: 8px;
 }
+/* 首页经验条 */
+.pet-exp-wrap { margin-top: 6px; }
+.pet-exp-label { display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--text-secondary); margin-bottom: 3px; }
+.pet-exp-num { font-weight: 600; color: #7c4dff; }
+.pet-exp-bar { height: 4px; background: rgba(124, 77, 255, 0.12); border-radius: 2px; overflow: hidden; }
+.pet-exp-fill { height: 100%; background: linear-gradient(90deg, #7c4dff, #b388ff); border-radius: 2px; transition: width 0.5s ease; }
+.pet-exp-evo-tip { font-size: 11px; font-weight: 700; color: #ff6b35; margin-top: 4px; animation: homeEvoPulse 1s ease-in-out infinite; }
+@keyframes homeEvoPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 .pet-skill-text {
   display: block;
   font-size: 11px;
@@ -819,6 +827,21 @@
   color: var(--pink-dark);
   min-width: 36px;
   text-align: right;
+}
+.pet-modal-exp-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+.pet-modal-evo-tip {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ff6b35;
+  margin-top: 6px;
+  animation: homeEvoPulse 1s ease-in-out infinite;
 }
 .pet-modal-desc {
   display: block;

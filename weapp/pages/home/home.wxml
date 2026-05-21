@@ -185,7 +185,18 @@
         <image wx:if="{{petImageUrl}}" class="pet-image" src="{{petImageUrl}}" mode="aspectFit"></image>
         <text wx:else class="pet-emoji">{{petEmoji}}</text>
       </view>
-      <text class="pet-intimacy-text">❤️ {{intimacyStageName}} · Lv.{{petLevel}} · {{intimacyPct}}%</text>
+      <text class="pet-intimacy-text">❤️ {{intimacyStageName}} · {{intimacyPct}}%</text>
+      <!-- 经验/等级条 -->
+      <view class="pet-exp-wrap" wx:if="{{petId && !petEvolutionReady}}">
+        <view class="pet-exp-label">
+          <text>Lv.{{petLevel}}/{{petMaxLevel}}</text>
+          <text class="pet-exp-num">EXP {{petExp}}/{{petExpNeeded}}</text>
+        </view>
+        <view class="pet-exp-bar">
+          <view class="pet-exp-fill" style="width:{{petExpNeeded > 0 ? (petExp / petExpNeeded * 100) : 0}}%"></view>
+        </view>
+      </view>
+      <view class="pet-exp-evo-tip" wx:elif="{{petEvolutionReady}}">✨ 可进化！</view>
       <text class="pet-skill-text" wx:if="{{petPassiveSkill}}">🎯 {{petPassiveSkill}}</text>
       <text class="pet-tip" wx:if="{{intimacyPct <= 20}}">多存钱能提升亲密度 🪙</text>
       <text class="pet-tip" wx:elif="{{intimacyPct <= 60}}">一起加油存钱吧 💪</text>
@@ -214,6 +225,18 @@
         </view>
         <text class="pet-modal-pct">{{intimacyPct}}%</text>
       </view>
+      <!-- 弹窗内经验条 -->
+      <view class="pet-modal-exp-row">
+        <text class="pet-modal-level-label">等级</text>
+        <text class="pet-modal-level-val">Lv.{{petLevel}} / {{petMaxLevel}}</text>
+      </view>
+      <view class="pet-modal-bar-wrap" wx:if="{{!petEvolutionReady}}">
+        <view class="pet-modal-bar">
+          <view class="pet-modal-fill" style="width:{{petExpNeeded > 0 ? (petExp / petExpNeeded * 100) : 0}}%"></view>
+        </view>
+        <text class="pet-modal-pct">EXP {{petExp}}/{{petExpNeeded}}</text>
+      </view>
+      <text wx:elif="{{petEvolutionReady}}" class="pet-modal-evo-tip">🌟 可进化！前往宠物管理页面进化</text>
       <text class="pet-modal-desc">{{petDescription}}</text>
       <button class="pet-modal-btn" bindtap="feedCurrentPet">🍼 投喂宠物</button>
       <text class="pet-modal-close" bindtap="hidePetModal">✕</text>

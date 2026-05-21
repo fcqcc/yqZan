@@ -27,6 +27,7 @@ Page({
     petCatalog: null,  // 后端获取的宠物配置
     petHappyClass: '',  // 互动动画class
     lastInteractTime: 0,  // 防抖时间戳
+    showEvoEffect: false,  // 进化粒子特效
   },
 
   onShow() {
@@ -228,18 +229,24 @@ Page({
     setTimeout(() => { this.setData({ petHappyClass: '' }) }, 600)
   },
 
-  /** 等级进化（每5级手动确认） */
+  /** 等级进化（每5级手动确认）+ 粒子特效 */
   async onLevelEvolve() {
     const pet = this.data.activePet
     if (!pet || !pet.evolution_ready) return
+    // 🎆 先播进化动画
+    this.setData({ showEvoEffect: true })
+    // 等待动画播放
+    await new Promise(r => setTimeout(r, 1200))
+    this.setData({ showEvoEffect: false })
     try {
       wx.showLoading({ title: '🌟 进化中…' })
-      await api.request(`/api/pets/${pet.id}/level-evolve`, 'POST')
+      const res = await api.request(`/api/pets/${pet.id}/level-evolve`, 'POST')
       wx.hideLoading()
       wx.showToast({ title: '✨ 进化成功！', icon: 'none' })
       this.load()
     } catch (e) {
       wx.hideLoading()
+      this.setData({ showEvoEffect: false })
       wx.showToast({ title: e.detail || e.errMsg || '进化失败', icon: 'none' })
     }
   },

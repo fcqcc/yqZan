@@ -194,6 +194,16 @@ def deliver_plan(
         if couple:
             couple.draw_tickets = (couple.draw_tickets or 0) + 10
 
+        # 🐾 目标达成宠物经验（按次数，每日上限2次）
+        if couple:
+            today = date.today()
+            if couple.goal_exp_date != today:
+                couple.goal_exp_date = today
+                couple.goal_exp_count = 0
+            if couple.goal_exp_count < 2:
+                couple.goal_exp_count += 1
+                add_exp_to_active_pet(cid, 1, db)
+
     db.commit()
     return {"ok": True, "current_amount": plan.current_amount, "done": plan.done}
 
