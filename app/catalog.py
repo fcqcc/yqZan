@@ -2,8 +2,9 @@
 ITEM_CATALOG = {
     # 消耗品
     "switch_card":     {"name": "切换卡🔄",           "icon": "🔄", "type_display": "消耗品",  "desc": "切换宠物时自动消耗"},
-    "intimacy_candy":  {"name": "亲密糖果🍬",         "icon": "🍬", "type_display": "消耗品",  "desc": "所有宠物亲密+5%（每日限5颗）"},
+    "intimacy_candy":  {"name": "亲密糖果🍬",         "icon": "🍬", "type_display": "消耗品",  "desc": "所有宠物亲密+5（每日限5颗）"},
     "spark_card":      {"name": "火花卡🔥",           "icon": "🔥", "type_display": "消耗品",  "desc": "火花断掉时恢复至最高记录"},
+    "fortune_cookie":  {"name": "幸运饼干🥠",         "icon": "🥠", "type_display": "消耗品",  "desc": "打开获得一句好运势！"},
     # 卡牌
     "decline_card":    {"name": "我不要😤",           "icon": "😤", "type_display": "卡牌",    "desc": "逃过一次家务指派"},
     "chore_dishes":    {"name": "洗碗🧹",              "icon": "🧹", "type_display": "卡牌",    "desc": "指派伴侣洗碗"},

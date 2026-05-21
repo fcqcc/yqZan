@@ -38,27 +38,7 @@
       </view>
     </view>
 
-    <!-- 3. 各计划进度列表 / 空状态 -->
-    <view wx:if="{{plans.length > 0}}" class="plans-mini-list">
-      <view class="pml-header">
-        <text class="pml-title">📋 我的计划</text>
-        <text class="pml-more" bindtap="go" data-url="/pages/plans/plans">全部 ›</text>
-      </view>
-      <view wx:for="{{plans.slice(0,3)}}" wx:key="id" class="pml-item" bindtap="go" data-url="/pages/plans/plans">
-        <view class="pml-top">
-          <text class="pml-name">{{item.title}}</text>
-          <text class="pml-amount">¥{{item._curText}} / ¥{{item._tarText}}</text>
-        </view>
-        <view class="pml-bar">
-          <view class="pml-bar-fill" style="width:{{item.progressPct}}%"></view>
-        </view>
-      </view>
-    </view>
-    <view wx:if="{{plans.length === 0}}" class="empty-state" bindtap="go" data-url="/pages/plans/plans">
-      <text class="empty-icon">🐷</text>
-      <text class="empty-text">还没有存钱计划</text>
-      <text class="empty-sub">点我创建一个 →</text>
-    </view>
+<!-- 3. 各计划进度列表 / 空状态（已移除） -->
   </view>
 
   <!-- ===== 可滚动区域 ===== -->
@@ -84,10 +64,6 @@
 
     <!-- 6. 快捷入口 -->
     <view class="quick-row">
-      <view class="qr-item" catchtap="go" data-url="/pages/pets/pets">
-        <text class="qr-emoji">{{petEmoji === '🐾' ? '🐱' : petEmoji}}</text>
-        <text class="qr-label">宠物</text>
-      </view>
       <view class="qr-item" catchtap="go" data-url="/pages/anniversaries/anniversaries">
         <text class="qr-emoji">🎉</text>
         <text class="qr-label">纪念日</text>
@@ -99,10 +75,6 @@
       <view class="qr-item" catchtap="go" data-url="/pages/notes/notes">
         <text class="qr-emoji">💌</text>
         <text class="qr-label">留言</text>
-      </view>
-      <view class="qr-item" catchtap="go" data-url="/pages/level/level">
-        <text class="qr-emoji">🏆</text>
-        <text class="qr-label">等级</text>
       </view>
       <view class="qr-item" catchtap="go" data-url="/pages/gacha/gacha">
         <text class="qr-emoji">🎰</text>
@@ -181,28 +153,37 @@
     </view>
 
     <!-- 8. 宠物展示区域 -->
-    <view class="pet-area">
-      <view class="pet-interact-ring">
-        <view class="pet-container {{petAnimationClass}} {{petHappyClass}}" catchtap="onPetTap" data-pet="1">
-          <image wx:if="{{petImageUrl}}" class="pet-image" src="{{petImageUrl}}" mode="aspectFit"></image>
-          <text wx:else class="pet-emoji">{{petEmoji}}</text>
+    <view class="pet-area" id="petArea">
+      <!-- 互动按钮行（宠物头顶平铺） -->
+      <view class="interact-row" wx:if="{{pet}}">
+        <view class="interact-btn" bindtap="onFeed">
+          <text class="interact-icon">🍼</text>
+          <text class="interact-label">喂食</text>
         </view>
-        <view class="interact-btn interact-pet" catchtap="onPetTap">
-          <text class="interact-icon">🤗</text>
-          <text class="interact-label">抚摸</text>
-        </view>
-        <view class="interact-btn interact-walk" catchtap="onWalk">
+        <view class="interact-btn" bindtap="onWalk">
           <text class="interact-icon">🚶</text>
           <text class="interact-label">散步</text>
         </view>
-        <view class="interact-btn interact-play" catchtap="onPlay">
+        <view class="interact-btn" bindtap="onPlay">
           <text class="interact-icon">🎮</text>
           <text class="interact-label">玩耍</text>
         </view>
-        <view class="interact-btn interact-talk" catchtap="onTalk">
+        <view class="interact-btn" bindtap="onTalk">
           <text class="interact-icon">💬</text>
           <text class="interact-label">聊天</text>
         </view>
+      </view>
+      <!-- 宠物容器（点击=抚摸，扇形抖动+调用API） -->
+      <view class="pet-container {{petAnimationClass}} {{petActionClass}} {{petFeedClass}}" catchtap="onPetTap">
+        <!-- 互动反馈emoji（漂浮展示后消失） -->
+        <text wx:if="{{showActionEmoji}}" class="pet-action-emoji {{actionEmojiClass}}">{{actionEmoji}}</text>
+        <!-- 喂食饭盆动画 -->
+        <view wx:if="{{showFeedBowl}}" class="feed-bowl-wrap">
+          <view class="feed-bowl">🍚</view>
+          <view class="feed-food-cover" style="height:{{100 - bowlFoodHeight}}%"></view>
+        </view>
+        <image wx:if="{{petImageUrl}}" class="pet-image" src="{{petImageUrl}}" mode="aspectFit"></image>
+        <text wx:else class="pet-emoji">{{petEmoji}}</text>
       </view>
       <text class="pet-intimacy-text">❤️ {{intimacyStageName}} · {{intimacyPct}}%</text>
       <text class="pet-skill-text" wx:if="{{petPassiveSkill}}">🎯 {{petPassiveSkill}}</text>
@@ -210,7 +191,7 @@
       <text class="pet-tip" wx:elif="{{intimacyPct <= 60}}">一起加油存钱吧 💪</text>
       <text class="pet-tip" wx:elif="{{intimacyPct <= 90}}">感情越来越好了 💕</text>
       <text class="pet-tip" wx:else>幸福满级！🎉</text>
-      <text class="pet-click-hint">点我互动 ›</text>
+      <text class="pet-click-hint" catchtap="goPetPage">宠物管理 ›</text>
     </view>
   </scroll-view>
 
@@ -235,7 +216,6 @@
       </view>
       <text class="pet-modal-desc">{{petDescription}}</text>
       <button class="pet-modal-btn" bindtap="feedCurrentPet">🍼 投喂宠物</button>
-      <button class="pet-modal-btn pet-modal-btn-secondary" bindtap="goPetPage">🐾 管理宠物</button>
       <text class="pet-modal-close" bindtap="hidePetModal">✕</text>
     </view>
   </view>

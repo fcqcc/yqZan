@@ -63,7 +63,15 @@ Page({
     // 冒险弹窗
     showAdventure: false,
     adventureData: null,
-    petHappyClass: '',
+    petActionClass: '',       // 当前互动动画class
+    petFeedClass: '',
+    showFeedBowl: false,
+    bowlFoodHeight: 100,
+    feedAnimTimer: null,
+    lastInteractTime: 0,      // 防抖时间戳
+    showActionEmoji: false,   // 互动反馈emoji
+    actionEmoji: '',
+    actionEmojiClass: '',
   },
 
   onShow() {
@@ -279,60 +287,110 @@ Page({
 
   stopPropagation() {},
 
-  /** 点击宠物：触发开心动画 + 调用抚摸API */
-  async onPetTap() {
-    const { petId } = this.data
-    if (!petId) return
-    this.setData({ petHappyClass: 'pet-happy' })
-    try {
-      await api.petPet(petId)
-      wx.showToast({ title: '🤗 抚摸成功 +2 ❤️', icon: 'none' })
-      this.loadPetData()
-    } catch (e) {
-      const msg = ((e && e.detail) || e.errMsg || e.message || '').toLowerCase()
-      if (msg.includes('429') || msg.includes('抚摸')) {
-        wx.showToast({ title: '🤗 今天已经抚摸过了，明天再来吧~', icon: 'none' })
-      }
-    }
-    setTimeout(() => { this.setData({ petHappyClass: '' }) }, 600)
+  /** 展示互动反馈emoji（漂浮动画） */
+  showActionEmojiWithAnim(emoji, animClass) {
+    this.setData({ showActionEmoji: true, actionEmoji: emoji, actionEmojiClass: animClass })
+    setTimeout(() => {
+      this.setData({ showActionEmoji: false, actionEmojiClass: '' })
+    }, 1200)
   },
 
-  /** 散步 */
-  async onWalk() {
-    const { petId } = this.data
+  /** 点击宠物→抚摸：扇形抖动动画+抚摸API（动画先于接口） */
+  async onPetTap() {
+    const { petId, lastInteractTime } = this.data
     if (!petId) return
-    this.setData({ petHappyClass: 'pet-happy' })
+    const now = Date.now()
+    if (now - lastInteractTime < 1500) return
+    this.setData({ petActionClass: 'pet-fan-shake', lastInteractTime: now })
+    this.showActionEmojiWithAnim('🤗', 'emoji-float-up')
+    setTimeout(() => {
+      this.setData({ petActionClass: '' })
+    }, 800)
+    try {
+      await api.petPet(petId)
+    } catch (e) { /* 静默，日限由后端处理 */ }
+  },
+
+  /** 喂食按钮：剧烈抖动+饭盆emoji→调用喂食API（动画先于接口） */
+  async onFeed() {
+    const { petId, lastInteractTime } = this.data
+    if (!petId) return
+    const now = Date.now()
+    if (now - lastInteractTime < 2000) {
+      wx.showToast({ title: '🔄 等一等…', icon: 'none' })
+      return
+    }
+    this.setData({ lastInteractTime: now })
+    // 先播动画
+    this.startFeedAnimation()
+    this.showActionEmojiWithAnim('🍚', 'emoji-pop')
+    // 再调接口
+    try {
+      const res = await api.feedPet(petId)
+      wx.showToast({ title: '🍼 喂食成功！', icon: 'none' })
+      this.loadPetData()
+      this.loadData()
+    } catch (e) {
+      const msg = ((e && e.detail) || e.errMsg || '').toLowerCase()
+      if (msg.includes('429') || msg.includes('喂过') || msg.includes('明天')) {
+        wx.showToast({ title: '🐷 小宠物吃饱了，明天再来吧~', icon: 'none' })
+      } else {
+        wx.showToast({ title: e.detail || e.errMsg || '喂食失败', icon: 'none' })
+      }
+    }
+  },
+
+  /** 散步按钮：四处蹦跳动画→调用散步API（动画先于接口） */
+  async onWalk() {
+    const { petId, lastInteractTime } = this.data
+    if (!petId) return
+    const now = Date.now()
+    if (now - lastInteractTime < 2000) {
+      wx.showToast({ title: '🔄 等一等…', icon: 'none' })
+      return
+    }
+    this.setData({ petActionClass: 'pet-bounce-all', lastInteractTime: now })
+    this.showActionEmojiWithAnim('🚶', 'emoji-float-up')
+    setTimeout(() => {
+      this.setData({ petActionClass: '' })
+    }, 1200)
     try {
       await api.walkPet(petId)
       wx.showToast({ title: '🚶 散步成功 +2 ❤️', icon: 'none' })
       this.loadPetData()
     } catch (e) {
-      const msg = ((e && e.detail) || e.errMsg || e.message || '').toLowerCase()
+      const msg = ((e && e.detail) || e.errMsg || '').toLowerCase()
       if (msg.includes('429') || msg.includes('散步')) {
         wx.showToast({ title: '🚶 今天已经散过步了~', icon: 'none' })
-      } else {
-        wx.showToast({ title: e.detail || '暂时不想出去~', icon: 'none' })
       }
     }
-    setTimeout(() => { this.setData({ petHappyClass: '' }) }, 600)
   },
 
-  /** 玩耍（纯动画） */
+  /** 玩耍按钮：上下跳动动画（纯前端，不调接口） */
   onPlay() {
-    const { petId } = this.data
+    const { petId, lastInteractTime } = this.data
     if (!petId) return
-    this.setData({ petHappyClass: 'pet-happy' })
-    wx.showToast({ title: '🎮 小宠物很开心~', icon: 'none' })
-    setTimeout(() => { this.setData({ petHappyClass: '' }) }, 600)
+    const now = Date.now()
+    if (now - lastInteractTime < 1000) return
+    this.setData({ petActionClass: 'pet-jump-up', lastInteractTime: now })
+    this.showActionEmojiWithAnim('🎮', 'emoji-float-up')
+    setTimeout(() => { this.setData({ petActionClass: '' }) }, 800)
   },
 
-  /** 聊天（纯动画） */
+  /** 聊天按钮：左右摆动动画（纯前端，不调接口） */
   onTalk() {
-    const { petId } = this.data
+    const { petId, lastInteractTime } = this.data
     if (!petId) return
-    this.setData({ petHappyClass: 'pet-happy' })
-    wx.showToast({ title: '💬 小宠物好像在说什么…', icon: 'none' })
-    setTimeout(() => { this.setData({ petHappyClass: '' }) }, 600)
+    const now = Date.now()
+    if (now - lastInteractTime < 1000) return
+    this.setData({ petActionClass: 'pet-sway', lastInteractTime: now })
+    this.showActionEmojiWithAnim('💬', 'emoji-float-up')
+    setTimeout(() => { this.setData({ petActionClass: '' }) }, 1000)
+  },
+
+  /** 点击宠物容器 → 宠物管理页面（唯一入口） */
+  goPetPage() {
+    wx.navigateTo({ url: '/pages/pets/pets' })
   },
 
   async feedCurrentPet() {
@@ -341,24 +399,48 @@ Page({
       wx.showToast({ title: '还没有宠物', icon: 'none' })
       return
     }
+    // 动画先播放，不论是否已喂过
+    this.startFeedAnimation()
     try {
       wx.showLoading({ title: '投喂中…' })
       const res = await api.feedPet(petId)
       wx.hideLoading()
-      wx.showToast({ title: '投喂成功 ❤️', icon: 'none' })
-      // 刷新宠物状态
+      wx.showToast({ title: '🍼 投喂成功！', icon: 'none' })
+      // 投喂后刷新宠物状态
       this.loadPetData()
-      // 投喂后刷新等级/经验
       this.loadData()
     } catch (e) {
       wx.hideLoading()
       const msg = ((e && e.detail) || e.errMsg || '').toLowerCase()
-      if (msg.includes('429') || msg.includes('消化') || msg.includes('刚吃过')) {
-        wx.showToast({ title: '🐷 小宠物吃饱了，待会再喂吧~', icon: 'none' })
+      if (msg.includes('429') || msg.includes('喂过') || msg.includes('消化') || msg.includes('明天')) {
+        wx.showToast({ title: '🐷 小宠物吃饱了，明天再来吧~', icon: 'none' })
       } else {
         wx.showToast({ title: e.detail || e.errMsg || '投喂失败', icon: 'none' })
       }
     }
+  },
+
+  /** 开始喂食动画：宠物剧烈抖动 + 饭盆被啃食 */
+  startFeedAnimation() {
+    const oldTimer = this.data.feedAnimTimer
+    if (oldTimer) clearInterval(oldTimer)
+    this.setData({
+      petFeedClass: 'pet-shake',
+      showFeedBowl: true,
+      bowlFoodHeight: 100,
+    })
+    // 饭盆食物逐渐减少（每帧减5%，约2秒吃完）
+    let pct = 100
+    const timer = setInterval(() => {
+      pct -= 5
+      if (pct <= 0) {
+        pct = 0
+        clearInterval(timer)
+        this.setData({ showFeedBowl: false, petFeedClass: '', feedAnimTimer: null })
+      }
+      this.setData({ bowlFoodHeight: pct })
+    }, 100)
+    this.setData({ feedAnimTimer: timer })
   },
 
   // ===== 卡片任务 =====
