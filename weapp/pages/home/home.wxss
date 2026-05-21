@@ -483,20 +483,14 @@
   transition: height 0.1s linear;
 }
 
-/* 宠物剧烈抖动（喂食动画） */
-.pet-shake .pet-container {
-  animation: violentShake 0.1s ease-in-out 20 !important;
-}
-@keyframes violentShake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-6px) rotate(-4deg); }
-  75% { transform: translateX(6px) rotate(4deg); }
-}
-
+/* 宠物剧烈抖动（喂食动画） - 已在下方互动动作动画中统一 */
 /* ===== 互动动作动画 ===== */
-/* 抚摸 - 扇形抖动 */
+/* 抚摸 - 扇形抖动（容器+图片双重动画） */
 .pet-fan-shake .pet-container {
   animation: fanShake 0.6s ease-out !important;
+}
+.pet-fan-shake .pet-image {
+  animation: petImgBob 0.6s ease-out !important;
 }
 @keyframes fanShake {
   0% { transform: translateY(0) rotate(0deg) scale(1); }
@@ -507,9 +501,20 @@
   80% { transform: translateY(-6px) rotate(-3deg) scale(1.03); }
   100% { transform: translateY(0) rotate(0deg) scale(1); }
 }
-/* 散步 - 四处蹦跳 */
+@keyframes petImgBob {
+  0% { transform: translateY(0) scale(1) rotate(0deg); }
+  20% { transform: translateY(-14px) scale(1.10) rotate(-5deg); }
+  40% { transform: translateY(-4px) scale(1.03) rotate(3deg); }
+  60% { transform: translateY(-10px) scale(1.06) rotate(-3deg); }
+  80% { transform: translateY(-2px) scale(1.01) rotate(2deg); }
+  100% { transform: translateY(0) scale(1) rotate(0deg); }
+}
+/* 散步 - 四处蹦跳（容器+图片） */
 .pet-bounce-all .pet-container {
   animation: bounceAll 1.2s ease-in-out !important;
+}
+.pet-bounce-all .pet-image {
+  animation: petImgHappy 1.2s ease-in-out !important;
 }
 @keyframes bounceAll {
   0% { transform: translate(0, 0); }
@@ -522,9 +527,22 @@
   87% { transform: translate(12px, -8px); }
   100% { transform: translate(0, 0); }
 }
+@keyframes petImgHappy {
+  0% { transform: translateY(0) scale(1); }
+  15% { transform: translateY(-16px) scale(1.12); }
+  30% { transform: translateY(-4px) scale(1.02); }
+  45% { transform: translateY(-14px) scale(1.08); }
+  60% { transform: translateY(-2px) scale(1.01); }
+  75% { transform: translateY(-10px) scale(1.05); }
+  90% { transform: translateY(-6px) scale(1.03); }
+  100% { transform: translateY(0) scale(1); }
+}
 /* 玩耍 - 上下跳动 */
 .pet-jump-up .pet-container {
   animation: jumpUp 0.6s ease-in-out !important;
+}
+.pet-jump-up .pet-image {
+  animation: petImgJump 0.6s ease-in-out !important;
 }
 @keyframes jumpUp {
   0% { transform: translateY(0) scale(1); }
@@ -534,9 +552,19 @@
   80% { transform: translateY(-4px) scale(1.02); }
   100% { transform: translateY(0) scale(1); }
 }
+@keyframes petImgJump {
+  0% { transform: translateY(0) scale(1); }
+  25% { transform: translateY(-18px) scale(1.15); }
+  50% { transform: translateY(0) scale(0.95); }
+  75% { transform: translateY(-8px) scale(1.08); }
+  100% { transform: translateY(0) scale(1); }
+}
 /* 聊天 - 左右摆动 */
 .pet-sway .pet-container {
   animation: sway 0.8s ease-in-out !important;
+}
+.pet-sway .pet-image {
+  animation: petImgSway 0.8s ease-in-out !important;
 }
 @keyframes sway {
   0% { transform: translateX(0) rotate(0deg); }
@@ -544,6 +572,29 @@
   40% { transform: translateX(10px) rotate(8deg); }
   60% { transform: translateX(-6px) rotate(-5deg); }
   80% { transform: translateX(6px) rotate(5deg); }
+  100% { transform: translateX(0) rotate(0deg); }
+}
+@keyframes petImgSway {
+  0% { transform: rotate(0deg) scale(1); }
+  20% { transform: rotate(-12deg) scale(1.02); }
+  40% { transform: rotate(12deg) scale(1.02); }
+  60% { transform: rotate(-8deg) scale(1); }
+  80% { transform: rotate(8deg) scale(1); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+/* 喂食 - 剧烈抖动（图片加倍效果） */
+.pet-shake .pet-container {
+  animation: violentShake 0.1s ease-in-out 20 !important;
+}
+.pet-shake .pet-image {
+  animation: petImgShake 0.08s ease-in-out 24 !important;
+}
+@keyframes petImgShake {
+  0% { transform: translateX(0) rotate(0deg); }
+  20% { transform: translateX(-8px) rotate(-6deg); }
+  40% { transform: translateX(6px) rotate(4deg); }
+  60% { transform: translateX(-4px) rotate(-3deg); }
+  80% { transform: translateX(8px) rotate(5deg); }
   100% { transform: translateX(0) rotate(0deg); }
 }
 
