@@ -174,7 +174,7 @@
         </view>
       </view>
       <!-- 宠物容器（点击=抚摸，扇形抖动+调用API） -->
-      <view class="pet-container {{petAnimationClass}} {{petActionClass}} {{petFeedClass}}" catchtap="onPetTap">
+      <view class="pet-container {{petAnimationClass}} {{petActionClass}} {{petFeedClass}} {{petEvolutionReady ? 'evolution-glow' : ''}}" catchtap="onPetTap">
         <!-- 互动反馈emoji（漂浮展示后消失） -->
         <text wx:if="{{showActionEmoji}}" class="pet-action-emoji {{actionEmojiClass}}">{{actionEmoji}}</text>
         <!-- 喂食饭盆动画 -->
@@ -182,7 +182,7 @@
           <view class="feed-bowl">🍚</view>
           <view class="feed-food-cover" style="height:{{100 - bowlFoodHeight}}%"></view>
         </view>
-        <image wx:if="{{petImageUrl}}" class="pet-image" src="{{petImageUrl}}" mode="aspectFit"></image>
+        <image wx:if="{{petImageUrl}}" class="pet-image {{petEvolutionReady ? 'evolution-flash' : ''}}" src="{{petImageUrl}}" mode="aspectFit"></image>
         <text wx:else class="pet-emoji">{{petEmoji}}</text>
       </view>
       <text class="pet-intimacy-text">❤️ {{intimacyStageName}} · {{intimacyPct}}%</text>
