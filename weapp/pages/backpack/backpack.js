@@ -45,7 +45,7 @@ Page({
 
       const marked = inventory.map(item => ({
         ...item,
-        usable: item.item_type === 'consumable' && item.item_id !== 'switch_card',
+        usable: item.item_type === 'consumable' && item.item_id !== 'switch_card' && item.item_id !== 'decline_card',
       }))
       const filtered = this.filterByCategory(marked, this.data.backpackTab)
 

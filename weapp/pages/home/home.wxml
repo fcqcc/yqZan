@@ -94,9 +94,9 @@
       <view class="ct-header">
         <text class="ct-title">📋 我发起的任务</text>
       </view>
-      <view wx:for="{{cardTasksAsAssigner}}" wx:key="id" class="ct-item ct-assigner {{item.card_item_id === 'forgive_me' ? 'ct-item--forgive' : ''}}">
+      <view wx:for="{{cardTasksAsAssigner}}" wx:key="id" class="ct-item ct-assigner {{item.card_item_id === 'forgive_me' ? 'ct-item--forgive' : ''}} {{item.card_item_id === 'please_forgive_me' ? 'ct-item--please-forgive' : ''}}">
         <view class="ct-body">
-          <text class="ct-icon">{{item.card_item_id === 'forgive_me' ? '🥺✨' : '📋'}}</text>
+          <text class="ct-icon">{{item.card_item_id === 'forgive_me' ? '🥺✨' : item.card_item_id === 'please_forgive_me' ? '💎✨' : '📋'}}</text>
           <view class="ct-info">
             <text class="ct-name">{{item.card_name || '任务'}}</text>
             <text class="ct-desc">{{item.task_display_text}}</text>
@@ -106,6 +106,10 @@
           <button class="ct-btn ct-btn-retry" bindtap="onCardRetry" data-id="{{item.id}}">再次请求</button>
         </view>
         <view wx:elif="{{item.card_item_id === 'forgive_me' && item.status === 'completed'}}" class="ct-forgive-completed" bindtap="onCardForgive" data-id="{{item.id}}" data-mode="ack">💕 对方原谅你了！点我确认</view>
+        <view wx:elif="{{item.card_item_id === 'please_forgive_me' && item.rejected && item.status === 'pending'}}" class="ct-actions ct-actions--please">
+          <button class="ct-btn ct-btn-retry ct-btn--please" bindtap="onCardRetry" data-id="{{item.id}}">再次诚挚请求 💎✨</button>
+        </view>
+        <view wx:elif="{{item.card_item_id === 'please_forgive_me' && item.status === 'completed'}}" class="ct-forgive-completed ct-forgive-completed--please" bindtap="onCardForgive" data-id="{{item.id}}" data-mode="ack">💕✨ 对方原谅你了！快去找他当面认错吧！点我确认</view>
         <view wx:elif="{{item.status === 'completed_pending'}}" class="ct-actions">
           <button class="ct-btn ct-btn-confirm" bindtap="onCardConfirm" data-id="{{item.id}}">确认完成</button>
           <button class="ct-btn ct-btn-dispute" bindtap="onCardDispute" data-id="{{item.id}}">未完成</button>
@@ -120,9 +124,9 @@
       <view class="ct-header">
         <text class="ct-title">📋 指派给我的任务</text>
       </view>
-      <view wx:for="{{cardTasksAsAssignee}}" wx:key="id" class="ct-item ct-assignee {{item.card_item_id === 'forgive_me' ? 'ct-item--forgive' : ''}}">
+      <view wx:for="{{cardTasksAsAssignee}}" wx:key="id" class="ct-item ct-assignee {{item.card_item_id === 'forgive_me' ? 'ct-item--forgive' : ''}} {{item.card_item_id === 'please_forgive_me' ? 'ct-item--please-forgive' : ''}}">
         <view class="ct-body">
-          <text class="ct-icon">{{item.card_item_id === 'forgive_me' ? '🥺✨' : '📋'}}</text>
+          <text class="ct-icon">{{item.card_item_id === 'forgive_me' ? '🥺✨' : item.card_item_id === 'please_forgive_me' ? '💎✨' : '📋'}}</text>
           <view class="ct-info">
             <text class="ct-name">{{item.card_name || '任务'}}</text>
             <text class="ct-desc">{{item.task_display_text}}</text>
@@ -135,6 +139,13 @@
         <view wx:elif="{{item.card_item_id === 'forgive_me' && item.rejected}}" class="ct-status-text">已收到，等待你的决定💕</view>
         <view wx:elif="{{item.card_item_id === 'forgive_me' && item.status === 'completed_pending'}}" class="ct-status-text">等待对方确认中…</view>
         <view wx:elif="{{item.card_item_id === 'forgive_me' && item.status === 'completed'}}" class="ct-done-badge">✅ 已原谅</view>
+        <view wx:elif="{{item.card_item_id === 'please_forgive_me' && !item.rejected && item.status === 'pending'}}" class="ct-actions ct-actions--please">
+          <button class="ct-btn ct-btn-forgive ct-btn--please" bindtap="onCardForgive" data-id="{{item.id}}">原谅TA 💕✨</button>
+          <button class="ct-btn ct-btn-reject" bindtap="onCardReject" data-id="{{item.id}}">不愿意</button>
+        </view>
+        <view wx:elif="{{item.card_item_id === 'please_forgive_me' && item.rejected}}" class="ct-status-text ct-status-text--please">已收到，等待TA的再次诚挚道歉…💎</view>
+        <view wx:elif="{{item.card_item_id === 'please_forgive_me' && item.status === 'completed_pending'}}" class="ct-status-text">等待对方确认中…</view>
+        <view wx:elif="{{item.card_item_id === 'please_forgive_me' && item.status === 'completed'}}" class="ct-done-badge ct-done-badge--please">✅💎 已原谅！✨</view>
         <view wx:elif="{{item.status === 'pending' && item.card_item_id !== 'serve_me'}}" class="ct-actions">
           <button class="ct-btn ct-btn-complete" bindtap="onCardComplete" data-id="{{item.id}}">已完成</button>
           <button class="ct-btn ct-btn-decline" bindtap="onCardDecline" data-id="{{item.id}}">我不要😤</button>

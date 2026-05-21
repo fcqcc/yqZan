@@ -563,38 +563,39 @@ def use_inventory_item(req: dict, user: User = Depends(get_current_user), db: Se
 
     result = {"ok": True}
 
-    # ===== 每日使用限制配置 =====
-    DAILY_LIMITS = {
-        "intimacy_candy": 5,
-        "decline_card": 3,
-        "spark_card": 1,
-        "serve_me": 1,
-        "forgive_me": 1,
-    }
-    CHORE_LIMIT = 3  # 每种家务卡每天限制
+    # ===== 每日使用限制配置（已注释，测试模式） =====
+    # DAILY_LIMITS = {
+    #     "intimacy_candy": 5,
+    #     "decline_card": 3,
+    #     "spark_card": 1,
+    #     "serve_me": 1,
+    #     "forgive_me": 1,
+    #     "please_forgive_me": 1,
+    # }
+    # CHORE_LIMIT = 3
 
-    # 检查每日限制（仅对有配置且非经验糖果的item生效）
-    today = date.today()
-    limit = None
-    if inv.item_id not in ("exp_candy",):
-        if inv.item_id in DAILY_LIMITS:
-            limit = DAILY_LIMITS[inv.item_id]
-        elif inv.item_id.startswith("chore_"):
-            limit = CHORE_LIMIT
+    # 检查每日限制（已注释）
+    # today = date.today()
+    # limit = None
+    # if inv.item_id not in ("exp_candy",):
+    #     if inv.item_id in DAILY_LIMITS:
+    #         limit = DAILY_LIMITS[inv.item_id]
+    #     elif inv.item_id.startswith("chore_"):
+    #         limit = CHORE_LIMIT
 
-    if limit is not None:
-        usage = db.query(ItemDailyUsage).filter(
-            ItemDailyUsage.user_id == user.id,
-            ItemDailyUsage.item_id == inv.item_id,
-            ItemDailyUsage.use_date == today,
-        ).first()
-        used = usage.use_count if usage else 0
-        if used >= limit:
-            raise HTTPException(429, f"今日已使用{used}次，已达上限{limit}次")
-        if usage:
-            usage.use_count += 1
-        else:
-            db.add(ItemDailyUsage(user_id=user.id, item_id=inv.item_id, use_date=today, use_count=1))
+    # if limit is not None:
+    #     usage = db.query(ItemDailyUsage).filter(
+    #         ItemDailyUsage.user_id == user.id,
+    #         ItemDailyUsage.item_id == inv.item_id,
+    #         ItemDailyUsage.use_date == today,
+    #     ).first()
+    #     used = usage.use_count if usage else 0
+    #     if used >= limit:
+    #         raise HTTPException(429, f"今日已使用{used}次，已达上限{limit}次")
+    #     if usage:
+    #         usage.use_count += 1
+    #     else:
+    #         db.add(ItemDailyUsage(user_id=user.id, item_id=inv.item_id, use_date=today, use_count=1))
 
     if inv.item_type == "consumable":
         if inv.item_id == "intimacy_candy":
@@ -641,40 +642,60 @@ def use_inventory_item(req: dict, user: User = Depends(get_current_user), db: Se
                 inv.quantity += 1  # 不消耗
         elif inv.item_id == "decline_card":
             result["effect"] = "你逃过了一次家务！😤"
-        elif inv.item_id == "serve_me":
-            partner = db.query(User).filter(
-                User.couple_id == user.couple_id, User.id != user.id
-            ).first()
-            partner_name = partner.nickname if partner else "对方"
-            result["effect"] = f"你命令{partner_name}为你服务，不得拒绝！👑"
-            result["super_rare"] = True
-        elif inv.item_id == "forgive_me":
-            partner = db.query(User).filter(
-                User.couple_id == user.couple_id, User.id != user.id
-            ).first()
-            partner_name = partner.nickname if partner else "对方"
-            result["effect"] = f"你对{partner_name}说：原谅我吧🥺（ta的心已经软了）"
-            result["super_rare"] = True
-        elif inv.item_id.startswith("chore_"):
-            chore_names = {
-                "chore_dishes": "洗碗🧹",
-                "chore_mop": "拖地🧹",
-                "chore_cook": "做饭🍳",
-                "chore_laundry": "洗衣🧺",
-                "chore_garbage": "倒垃圾🗑️",
-            }
-            name = chore_names.get(inv.item_id, inv.item_id.replace("chore_", ""))
-            partner = db.query(User).filter(
-                User.couple_id == user.couple_id, User.id != user.id
-            ).first()
-            partner_name = partner.nickname if partner else "对方"
-            result["effect"] = f"指派了{partner_name}去做{name}！"
-
         inv.quantity -= 1
+
+        # ===== 卡牌类物品 → 创建 CardTask（复用 card_task 模块） =====
+        from app.routes.card_task import CARD_NAMES, check_conflict
+        from app.models.card_task import CardTask
+
+        if inv.item_id in CARD_NAMES and inv.item_id != "decline_card":
+            partner = db.query(User).filter(
+                User.couple_id == user.couple_id, User.id != user.id
+            ).first()
+            if not partner:
+                inv.quantity += 1  # 不消耗，退回
+                raise HTTPException(400, "伴侣不存在")
+            partner_name = partner.nickname or "对方"
+            card_name = CARD_NAMES.get(inv.item_id, inv.item_id)
+
+            # 检查同类型冲突
+            try:
+                check_conflict(cid, inv.item_id, db)
+            except HTTPException:
+                inv.quantity += 1  # 冲突了也不要消耗
+                raise
+
+            task = CardTask(
+                couple_id=cid,
+                card_item_id=inv.item_id,
+                card_name=card_name,
+                assigner_id=user.id,
+                assignee_id=partner.id,
+                status="pending",
+            )
+            db.add(task)
+            db.commit()
+            db.refresh(task)
+            _log_game_action(cid, "card_use", inv.item_id,
+                             f"使用{card_name}：指派{partner_name}",
+                             db, item_name=card_name)
+
+            if inv.item_id == "serve_me":
+                result["effect"] = f"你命令{partner_name}为你服务，不得拒绝！👑"
+                result["super_rare"] = True
+            elif inv.item_id == "forgive_me":
+                result["effect"] = f"你对{partner_name}说：原谅我吧🥺"
+                result["super_rare"] = True
+            else:
+                result["effect"] = f"指派了{partner_name}去做{card_name}！"
+        else:
+            # decline_card → 仅提示，不创建任务
+            if inv.item_id == "decline_card":
+                result["effect"] = "你逃过了一次家务！😤"
+
         from app.catalog import ITEM_CATALOG
         item_info = ITEM_CATALOG.get(inv.item_id, {})
         item_name = item_info.get("name", inv.item_id)
-        from app.routes.card_task import CARD_NAMES
         card_name = CARD_NAMES.get(inv.item_id, "")
         use_name = item_name or card_name or inv.item_id
         eff = result.get("effect", "")

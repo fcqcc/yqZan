@@ -23,6 +23,7 @@ CARD_NAMES = {
     "chore_garbage": "倒垃圾🗑️",
     "serve_me":      "为我服务👑",
     "forgive_me":    "原谅我吧🥺",
+    "please_forgive_me": "请原谅我吧💎✨",
     "decline_card":  "我不要😤",
 }
 
@@ -94,6 +95,53 @@ def build_task_response(task: CardTask, current_user: User, db: Session):
                 task_display_text = "你暂时不想原谅TA，等待TA再次请求…"
             else:
                 task_display_text = "对方对你使用了极其稀有的原谅卡🤲 求求你，可以原谅他吗？"
+
+    elif task.card_item_id == "please_forgive_me":
+        if is_assigner:
+            if task.status == "completed":
+                task_display_text = "对方已经原谅你了，快去找他当面认错吧 💕✨"
+            elif task.rejected:
+                task_display_text = "对方暂时不原谅你，是否再次诚挚请求？🥺💎"
+            else:
+                task_display_text = "等待对方的原谅…💎✨"
+        else:
+            if task.status == "completed":
+                task_display_text = "你已原谅了对方 💕✨"
+            elif task.status == "completed_pending":
+                task_display_text = "你已原谅了对方，等待TA确认…"
+            elif task.rejected:
+                task_display_text = "你暂时不想原谅TA，等待TA再次请求…"
+            else:
+                task_display_text = "对方使用了极其罕见的💎请原谅我吧💎卡！诚挚地向你认错，求你原谅他吧 🤲✨"
+
+    elif task.card_item_id.startswith("chore_"):
+        chore_labels = {
+            "chore_dishes": "洗碗🧹", "chore_mop": "拖地🧹", "chore_cook": "做饭🍳",
+            "chore_laundry": "洗衣🧺", "chore_garbage": "倒垃圾🗑️",
+        }
+        label = chore_labels.get(task.card_item_id, task.card_name)
+        if is_assigner:
+            if task.status == "completed":
+                task_display_text = f"对方已完成{label} ✅"
+            elif task.status == "completed_pending":
+                task_display_text = f"对方声称{label}已完成，确认一下？"
+            elif task.status == "declined":
+                task_display_text = "对方使用了「我不要卡」无视了你的指派 😤"
+            elif task.status == "disputed":
+                task_display_text = "你认为对方未完成，已退回。等待对方重新完成…"
+            else:
+                task_display_text = f"等待{assignee.nickname if assignee else '对方'}去做{label}…"
+        else:
+            if task.status == "completed":
+                task_display_text = f"你已完成{label} ✅"
+            elif task.status == "completed_pending":
+                task_display_text = f"已声明完成{label}，等待{assigner.nickname if assigner else '对方'}确认"
+            elif task.status == "declined":
+                task_display_text = f"你使用了「我不要卡」😤 已无视该任务"
+            elif task.status == "disputed":
+                task_display_text = f"对方认为你未完成{label}，请重新完成"
+            else:
+                task_display_text = f"对方指派你去做{label}！快去完成吧 💪"
 
     return {
         "id": task.id,
@@ -186,6 +234,32 @@ def use_card(req: dict, user: User = Depends(get_current_user), db: Session = De
         return {
             "ok": True,
             "effect": f"你使用了「{card_name}」，等待{partner.nickname}的原谅中…",
+            "card_task": build_task_response(task, user, db),
+        }
+    if item_id == "please_forgive_me":
+        check_conflict(cid, item_id, db)
+        inv.quantity -= 1
+        partner = get_partner(user, db)
+        card_name = CARD_NAMES[item_id]
+        task = CardTask(
+            couple_id=cid,
+            card_item_id=item_id,
+            card_name=card_name,
+            assigner_id=user.id,
+            assignee_id=partner.id,
+            status="pending",
+        )
+        db.add(task)
+        db.commit()
+        db.refresh(task)
+        from app.routes.pet import _log_game_action
+        _log_game_action(cid, "card_use", item_id,
+                         f"使用极其稀有的{card_name}：诚挚向{partner.nickname if partner else '对方'}道歉",
+                         db, item_name=card_name)
+        return {
+            "ok": True,
+            "super_rare": True,
+            "effect": f"💎✨ 你使用了极其罕见的「{card_name}」！诚挚地向{partner.nickname}道歉，等待对方的原谅…",
             "card_task": build_task_response(task, user, db),
         }
     if item_id == "decline_card":
@@ -327,7 +401,7 @@ def confirm_task(task_id: int, user: User = Depends(get_current_user), db: Sessi
 
     task.status = "completed"
     db.commit()
-    msg = "你们和解了 💕" if task.card_item_id == "forgive_me" else "任务已完成✅"
+    msg = "你们和解了 💕" if task.card_item_id in ("forgive_me", "please_forgive_me") else "任务已完成✅"
     return {"ok": True, "card_task": build_task_response(task, user, db), "message": msg}
 
 
@@ -355,14 +429,16 @@ def forgive_task(task_id: int, user: User = Depends(get_current_user), db: Sessi
         raise HTTPException(404, "任务不存在")
     if task.assignee_id != user.id:
         raise HTTPException(403, "只有接收方可以原谅")
-    if task.card_item_id != "forgive_me":
+    if task.card_item_id not in ("forgive_me", "please_forgive_me"):
         raise HTTPException(400, "该任务不是原谅卡任务")
     if task.status != "pending":
         raise HTTPException(400, f"当前状态({task.status})不能原谅")
 
     task.status = "completed"
     db.commit()
-    return {"ok": True, "card_task": build_task_response(task, user, db), "message": "你原谅了对方 💕"}
+    is_please = task.card_item_id == "please_forgive_me"
+    msg = "对方已经原谅你了，快去找他当面认错吧 💕✨" if is_please else "你原谅了对方 💕"
+    return {"ok": True, "card_task": build_task_response(task, user, db), "message": msg, "is_please_forgive": is_please}
 
 
 @router.post("/{task_id}/reject")
@@ -373,7 +449,7 @@ def reject_forgive(task_id: int, user: User = Depends(get_current_user), db: Ses
         raise HTTPException(404, "任务不存在")
     if task.assignee_id != user.id:
         raise HTTPException(403, "只有接收方可以决定是否原谅")
-    if task.card_item_id != "forgive_me":
+    if task.card_item_id not in ("forgive_me", "please_forgive_me"):
         raise HTTPException(400, "该任务不是原谅卡任务")
     if task.status != "pending":
         raise HTTPException(400, f"当前状态({task.status})不能操作")
@@ -392,7 +468,7 @@ def retry_forgive(task_id: int, user: User = Depends(get_current_user), db: Sess
         raise HTTPException(404, "任务不存在")
     if task.assigner_id != user.id:
         raise HTTPException(403, "只有发起方可以再次请求")
-    if task.card_item_id != "forgive_me":
+    if task.card_item_id not in ("forgive_me", "please_forgive_me"):
         raise HTTPException(400, "该任务不是原谅卡任务")
     if task.status != "pending":
         raise HTTPException(400, f"当前状态({task.status})不能再次请求")
@@ -413,9 +489,9 @@ def dismiss_task(task_id: int, user: User = Depends(get_current_user), db: Sessi
         raise HTTPException(404, "任务不存在")
     if task.assigner_id != user.id:
         raise HTTPException(403, "只有发起方可以确认")
-    if task.card_item_id != "forgive_me":
+    if task.card_item_id not in ("forgive_me", "please_forgive_me"):
         raise HTTPException(400, "仅支持原谅卡")
     # 直接删除任务，让列表立即清除
     db.delete(task)
     db.commit()
-    return {"ok": True}
+    return {"ok": True, "is_please_forgive": task.card_item_id == "please_forgive_me"}

@@ -15,6 +15,7 @@ ITEM_CATALOG = {
     "chore_garbage":   {"name": "倒垃圾🗑️",           "icon": "🗑️", "type_display": "卡牌",  "desc": "指派伴侣倒垃圾"},
     "serve_me":        {"name": "为我服务👑",        "icon": "👑", "type_display": "卡牌",    "desc": "强制伴侣为你服务（无视我不要卡）"},
     "forgive_me":      {"name": "原谅我吧🥺",        "icon": "🥺", "type_display": "卡牌",    "desc": "向伴侣道歉，心软效果💕"},
+    "please_forgive_me": {"name": "请原谅我吧💎✨",   "icon": "💎", "type_display": "卡牌",    "desc": "极其稀有的道歉卡！诚挚认错💎✨"},
     # 进化道具
     "star_ribbon":     {"name": "星河绶带🌀",         "icon": "🌀", "type_display": "进化道具", "desc": "星绒狐→星河神狐"},
     "bamboo_sword":    {"name": "青竹剑🗡️",          "icon": "🗡️", "type_display": "进化道具", "desc": "嫩芽龙→九节神竹龙"},

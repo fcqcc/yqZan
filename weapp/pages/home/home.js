@@ -472,13 +472,17 @@ Page({
     // 已完成任务的确认操作
     if (mode === 'ack') {
       wx.showModal({
-        title: '确认原谅',
-        content: '对方已经原谅了你 💕',
+        title: '🎉 太好了！',
+        content: '对方原谅你了，快去主动找她吧 💕✨',
         success: async (res) => {
           if (!res.confirm) return
           try {
-            await api.dismissCardTask(taskId)
-            wx.showToast({ title: '💕 你们和好了！', icon: 'none' })
+            const result = await api.dismissCardTask(taskId)
+            if (result.is_please_forgive) {
+              wx.showToast({ title: '💕✨ 太好了！快去找他当面认错吧！', icon: 'none', duration: 3000 })
+            } else {
+              wx.showToast({ title: '💕 太好了！你们和好了！', icon: 'none' })
+            }
           } catch (e) {
             wx.showToast({ title: '操作失败', icon: 'none' })
           }
@@ -493,11 +497,12 @@ Page({
       success: async (res) => {
         if (!res.confirm) return
         try {
-          await api.forgiveCardTask(taskId)
-          wx.showToast({ title: '你原谅了对方 💕', icon: 'none' })
+          const result = await api.forgiveCardTask(taskId)
+          const msg = result.is_please_forgive ? '对方已经原谅你了，快去找他当面认错吧 💕✨' : '你原谅了对方 💕'
+          wx.showToast({ title: msg, icon: 'none', duration: 3000 })
           this.loadCardTasks()
         } catch (e) {
-          wx.showToast({ title: e.errMsg || '操作失败', icon: 'none' })
+          wx.showToast({ title: e.detail || '操作失败', icon: 'none' })
         }
       }
     })
@@ -515,7 +520,7 @@ Page({
           wx.showToast({ title: '已收到，TA还会再来请求的', icon: 'none' })
           this.loadCardTasks()
         } catch (e) {
-          wx.showToast({ title: e.errMsg || '操作失败', icon: 'none' })
+          wx.showToast({ title: e.detail || '操作失败', icon: 'none' })
         }
       }
     })
@@ -533,7 +538,7 @@ Page({
           wx.showToast({ title: '已发送，等待对方的回应…', icon: 'none' })
           this.loadCardTasks()
         } catch (e) {
-          wx.showToast({ title: e.errMsg || '操作失败', icon: 'none' })
+          wx.showToast({ title: e.detail || '操作失败', icon: 'none' })
         }
       }
     })
@@ -558,7 +563,7 @@ Page({
           wx.showToast({ title: '已完成，等待对方确认', icon: 'none' })
           this.loadCardTasks()
         } catch (e) {
-          wx.showToast({ title: e.errMsg || '操作失败', icon: 'none' })
+          wx.showToast({ title: e.detail || '操作失败', icon: 'none' })
         }
       }
     })
@@ -576,7 +581,7 @@ Page({
           wx.showToast({ title: '任务已完成 ✅', icon: 'none' })
           this.loadCardTasks()
         } catch (e) {
-          wx.showToast({ title: e.errMsg || '操作失败', icon: 'none' })
+          wx.showToast({ title: e.detail || '操作失败', icon: 'none' })
         }
       }
     })
@@ -594,7 +599,7 @@ Page({
           wx.showToast({ title: '已退回，等待对方重新完成', icon: 'none' })
           this.loadCardTasks()
         } catch (e) {
-          wx.showToast({ title: e.errMsg || '操作失败', icon: 'none' })
+          wx.showToast({ title: e.detail || '操作失败', icon: 'none' })
         }
       }
     })
@@ -612,7 +617,7 @@ Page({
           wx.showToast({ title: '已拒绝任务 😤', icon: 'none' })
           this.loadCardTasks()
         } catch (e) {
-          wx.showToast({ title: e.errMsg || '拒绝失败', icon: 'none' })
+          wx.showToast({ title: e.detail || '拒绝失败', icon: 'none' })
         }
       }
     })

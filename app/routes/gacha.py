@@ -61,6 +61,7 @@ GACHA_POOL = [
     ("background", "starry", "星光背景🌟", "SR", 2),
     ("consumable", "serve_me",  "为我服务👑", "SSR", 0.8),
     ("consumable", "forgive_me","原谅我吧🥺", "SSR+", 0.2),
+    ("consumable", "please_forgive_me","💎请原谅我吧💎", "SSR+", 0.08),
 ]
 
 TOTAL_WEIGHT = sum(w for _, _, _, _, w in GACHA_POOL)
@@ -138,6 +139,7 @@ CRYSTAL_EXCHANGE = [
     ("evolution_item", "rainbow_cape",  "彩虹披风🎂", 100),
     ("consumable", "serve_me",   "为我服务👑", 100),
     ("consumable", "forgive_me", "原谅我吧🥺", 1000),
+    ("consumable", "please_forgive_me", "💎请原谅我吧💎", 2000),
     ("consumable", "switch_card",    "切换卡🔄",   5),
     ("consumable", "intimacy_candy", "亲密糖果🍬", 10),
     ("consumable", "spark_card",     "火花卡🔥",   5),
