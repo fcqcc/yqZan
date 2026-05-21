@@ -96,34 +96,26 @@ Page({
    */
   buildForms(pets, activePet) {
     if (!pets || pets.length === 0) return []
-    const catalog = this.data.petCatalog || []
-    if (activePet && activePet.unlocked_forms && activePet.unlocked_forms.length > 0) {
-      const forms = activePet.unlocked_forms
-      // 从 catalog 查找对应的形态数据
-      const typeCfg = catalog.find(c => c.type === activePet.pet_type)
-      const formNames = {}
-      const formEmojis = {}
-      if (typeCfg) {
-        for (const f of typeCfg.forms) {
-          formNames[f.form] = f.name
-          formEmojis[f.form] = f.emoji
-        }
+    // 直接从 activePet.forms（后端返回的表单列表）取名称和表情
+    if (activePet && activePet.forms && activePet.forms.length > 0) {
+      const apiForms = {}
+      for (const f of activePet.forms) {
+        apiForms[f.form] = { name: f.name, unlocked: f.unlocked }
       }
-      return forms.map(f => {
-        let name = formNames[f] || '未知形态'
-        let emoji = formEmojis[f] || activePet.emoji || '🐾'
-        // 分支进化形态从 evolutions 获取
+      const unlocked = activePet.unlocked_forms || ['baby']
+      return unlocked.map(f => {
+        const info = apiForms[f] || {}
+        let name = info.name || f
+        let emoji = activePet.emoji || '🐾'
+        // 分支进化形态
         if (f.startsWith('branch_')) {
           const itemId = f.replace('branch_', '')
-          if (typeCfg) {
-            const evo = typeCfg.evolutions.find(e => e.item_id === itemId)
-            if (evo) {
-              name = evo.form_label
-              emoji = evo.display_emoji
-            }
+          if (activePet.forms) {
+            const evo = activePet.forms.find(af => af.form === f)
+            if (evo) name = evo.name
           }
         }
-        return { form: f, name, emoji, unlocked: true }
+        return { form: f, name, emoji: activePet.emoji || '🐾', unlocked: info.unlocked !== false }
       })
     }
     return pets.map(p => ({
@@ -235,7 +227,7 @@ Page({
     if (!pet || !pet.evolution_ready) return
     // 🎆 先播进化动画（5秒）
     this.setData({ showEvoEffect: true })
-    await new Promise(r => setTimeout(r, 5000))
+    await new Promise(r => setTimeout(r, 3000))
     this.setData({ showEvoEffect: false })
     try {
       await api.request(`/api/pets/${pet.id}/level-evolve`, 'POST')
