@@ -1,5 +1,0 @@
-{
-  "navigationBarTitleText": "贺卡",
-  "usingComponents": {},
-  "behaviors": ["../../behaviors/theme-behavior"]
-}
