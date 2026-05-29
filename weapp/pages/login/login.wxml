@@ -1,5 +1,22 @@
 <!-- pages/login/login.wxml -->
 <view class="app-root app-theme-{{uiTheme}}">
+  <!-- 隐私政策弹窗（首次打开必现，用户需主动同意） -->
+  <view wx:if="{{showPrivacy}}" class="privacy-overlay">
+    <view class="privacy-card">
+      <view class="privacy-icon">🔒</view>
+      <text class="privacy-title">欢迎使用「一起攒」</text>
+      <text class="privacy-desc">请仔细阅读以下协议，确认后开始使用</text>
+      <view class="privacy-links">
+        <text class="privacy-link" bindtap="onViewUserAgreement">《用户服务协议》</text>
+        <text class="privacy-link" bindtap="onViewPrivacyPolicy">《隐私政策》</text>
+      </view>
+      <view class="privacy-actions">
+        <button class="privacy-btn privacy-btn-agree" bindtap="onAgreePrivacy">同意并继续</button>
+        <button class="privacy-btn privacy-btn-disagree" bindtap="onDisagreePrivacy">不同意</button>
+      </view>
+    </view>
+  </view>
+
   <view class="login-page">
     <!-- 未登录：展示欢迎 + 微信登录按钮 -->
     <block wx:if="{{!step}}">
@@ -12,7 +29,6 @@
       <button class="login-btn login-btn-secondary" bindtap="goBindPartner">
         已有账号？绑定伴侣
       </button>
-      <view class="login-footer">登录即表示同意《用户协议》和《隐私政策》</view>
     </block>
 
     <!-- 首次登录：设置昵称 -->
