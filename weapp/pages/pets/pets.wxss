@@ -106,6 +106,21 @@
 
 .active-actions { display: flex; gap: 10px; justify-content: center; }
 
+/* 两栏统计（亲密度+经验并列） */
+.active-stats {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.active-stats .active-intimacy,
+.active-stats .active-exp {
+  flex: 1;
+  min-width: 0;
+}
+.active-stats .active-exp { margin-top: 0; }
+.active-stats .intimacy-label,
+.active-stats .exp-label { font-size: 10px; margin-bottom: 3px; }
+
 /* 技能说明区 */
 .active-skills {
   margin: 0 0 14px;
@@ -200,6 +215,48 @@
   60% { transform: translateY(-14px) scale(1.08); }
   80% { transform: translateY(-4px) scale(1.02); }
   100% { transform: translateY(0) scale(1); }
+}
+.pet-fan-shake .pet-image-lg { animation: petsFanShake 0.5s ease-out !important; }
+@keyframes petsFanShake {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(-14deg) translateX(-4px); }
+  40% { transform: rotate(12deg) translateX(4px); }
+  60% { transform: rotate(-10deg) translateX(-3px); }
+  80% { transform: rotate(8deg) translateX(3px); }
+  100% { transform: rotate(0deg) translateX(0); }
+}
+.pet-violent-shake .pet-image-lg { animation: petsViolentShake 0.6s ease-in-out !important; }
+@keyframes petsViolentShake {
+  0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
+  10% { transform: translateX(-8px) translateY(-4px) rotate(-8deg); }
+  20% { transform: translateX(10px) translateY(3px) rotate(8deg); }
+  30% { transform: translateX(-6px) translateY(-10px) rotate(-6deg); }
+  40% { transform: translateX(8px) translateY(5px) rotate(7deg); }
+  50% { transform: translateX(-12px) translateY(-3px) rotate(-10deg); }
+  60% { transform: translateX(10px) translateY(8px) rotate(9deg); }
+  70% { transform: translateX(-5px) translateY(-8px) rotate(-5deg); }
+  80% { transform: translateX(12px) translateY(3px) rotate(7deg); }
+  90% { transform: translateX(-8px) translateY(-5px) rotate(-6deg); }
+}
+.pet-wild-move .pet-image-lg { animation: petsWildMove 0.7s ease-in-out !important; }
+@keyframes petsWildMove {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  12% { transform: translate(-12px, -8px) rotate(-8deg); }
+  25% { transform: translate(10px, -12px) rotate(6deg); }
+  37% { transform: translate(-8px, 10px) rotate(-10deg); }
+  50% { transform: translate(14px, 6px) rotate(8deg); }
+  62% { transform: translate(-10px, -10px) rotate(-6deg); }
+  75% { transform: translate(8px, 12px) rotate(10deg); }
+  87% { transform: translate(-14px, 4px) rotate(-12deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+.pet-talk-anim .pet-image-lg { animation: petsTalkAnim 0.6s ease-in-out !important; }
+@keyframes petsTalkAnim {
+  0% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(6px) rotate(4deg); }
+  50% { transform: translateX(-6px) rotate(-4deg); }
+  75% { transform: translateX(4px) rotate(2deg); }
+  100% { transform: translateX(0) rotate(0deg); }
 }
 
 /* ===== 空状态 ===== */

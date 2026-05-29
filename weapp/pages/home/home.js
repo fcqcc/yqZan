@@ -47,6 +47,7 @@ Page({
     myInitial: '我',
     partnerInitial: '?',
     checkedInToday: false,
+    checkinAnim: '',
     plan_count: 0, anni_count: 0, gift_count: 0, together_days: 0,
     // 宠物 & 扭蛋
     pet: null,
@@ -88,6 +89,11 @@ Page({
     showActionEmoji: false,   // 互动反馈emoji
     actionEmoji: '',
     actionEmojiClass: '',
+    // 今日互动标识
+    todayInteractRemaining: 3,
+    todayInteractTotal: 0,
+    intimacyDeg: 0,
+    expDeg: 0,
   },
 
   onShow() {
@@ -290,9 +296,13 @@ Page({
       nav.openPage('/pages/level/level')
       return
     }
+    // 先播动画
+    this.setData({ checkinAnim: 'checkin-bounce' })
+    setTimeout(() => { this.setData({ checkinAnim: '' }) }, 500)
     api.doCheckin()
       .then(() => {
-        this.setData({ checkedInToday: true })
+        this.setData({ checkedInToday: true, checkinAnim: 'checkin-done-pop' })
+        setTimeout(() => { this.setData({ checkinAnim: '' }) }, 600)
         wx.showToast({ title: '签到成功 +5积分', icon: 'none' })
         this.loadSpark()
       })
@@ -370,6 +380,12 @@ Page({
       petExp: pet.exp || 0,
       petExpNeeded: pet.exp_needed || 4,
       petEvolutionReady: pet.evolution_ready || false,
+      // 计算今日互动状态（使用后端返回的统一每日次数）
+      todayInteractRemaining: Math.max(0, (pet.max_daily_interact || 3) - (pet.today_interact_count || 0)),
+      todayInteractTotal: pet.today_interact_count || 0,
+      // 半圆环角度
+      intimacyDeg: Math.round(1.8 * Math.min(100, Math.round(intimacy))),
+      expDeg: pet.exp_needed > 0 ? Math.round(1.8 * Math.min(100, (pet.exp || 0) / pet.exp_needed * 100)) : 0,
     })
   },
 
@@ -394,99 +410,93 @@ Page({
     }, 1200)
   },
 
-  /** 点击宠物→抚摸：扇形抖动动画+抚摸API（动画先于接口） */
+  /** 点击宠物→抚摸：扇形摆动动画（已互动过也播动画，但不调接口） */
   async onPetTap() {
-    const { petId, lastInteractTime } = this.data
+    const { petId, lastInteractTime, todayInteractRemaining } = this.data
     if (!petId) return
     const now = Date.now()
-    if (now - lastInteractTime < 1500) return
+    if (now - lastInteractTime < 500) return
     this.setData({ petActionClass: 'pet-fan-shake', lastInteractTime: now })
-    this.showActionEmojiWithAnim('🤗', 'emoji-float-up')
-    setTimeout(() => {
-      this.setData({ petActionClass: '' })
-    }, 800)
+    setTimeout(() => { this.setData({ petActionClass: '' }) }, 600)
+    if (todayInteractRemaining <= 0) return
     try {
       await api.petPet(petId)
+      this.setData({ todayInteractRemaining: this.data.todayInteractRemaining - 1, todayInteractTotal: this.data.todayInteractTotal + 1 })
     } catch (e) {
       if (e._statusCode === 429) {
-        wx.showToast({ title: e.detail || '今天已经抚摸过了~', icon: 'none' })
+        this.setData({ todayInteractRemaining: 0 })
       }
     }
   },
 
-  /** 喂食按钮：剧烈抖动+饭盆emoji→调用喂食API（动画先于接口） */
+  /** 喂食按钮：剧烈抖动+饭盆（已互动过也播动画，但不调接口） */
   async onFeed() {
-    const { petId, lastInteractTime } = this.data
+    const { petId, lastInteractTime, todayInteractRemaining } = this.data
     if (!petId) return
     const now = Date.now()
-    if (now - lastInteractTime < 2000) {
-      wx.showToast({ title: '🔄 等一等…', icon: 'none' })
-      return
-    }
+    if (now - lastInteractTime < 500) return
     this.setData({ lastInteractTime: now })
-    // 先播动画
     this.startFeedAnimation()
-    this.showActionEmojiWithAnim('🍚', 'emoji-pop')
-    // 再调接口
+    if (todayInteractRemaining <= 0) return
     try {
       const res = await api.feedPet(petId)
+      this.setData({ todayInteractRemaining: this.data.todayInteractRemaining - 1, todayInteractTotal: this.data.todayInteractTotal + 1 })
       wx.showToast({ title: '🍼 喂食成功！', icon: 'none' })
       this.loadPetData()
       this.loadData()
     } catch (e) {
       if (e._statusCode === 429) {
-        wx.showToast({ title: e.detail || '🐷 小宠物吃饱了，明天再来吧~', icon: 'none' })
+        this.setData({ todayInteractRemaining: 0 })
+        wx.showToast({ title: e.detail || '今天互动次数已用完~', icon: 'none' })
       } else {
         wx.showToast({ title: e.detail || e.errMsg || '喂食失败', icon: 'none' })
       }
     }
   },
 
-  /** 散步按钮：四处蹦跳动画→调用散步API（动画先于接口） */
+  /** 散步按钮：左右蹦跳动画（已互动过也播动画，但不调接口） */
   async onWalk() {
-    const { petId, lastInteractTime } = this.data
+    const { petId, lastInteractTime, todayInteractRemaining } = this.data
     if (!petId) return
     const now = Date.now()
-    if (now - lastInteractTime < 2000) {
-      wx.showToast({ title: '🔄 等一等…', icon: 'none' })
-      return
-    }
-    this.setData({ petActionClass: 'pet-bounce-all', lastInteractTime: now })
+    if (now - lastInteractTime < 500) return
+    this.setData({ petActionClass: 'pet-walk-anim', lastInteractTime: now })
     this.showActionEmojiWithAnim('🚶', 'emoji-float-up')
-    setTimeout(() => {
-      this.setData({ petActionClass: '' })
-    }, 1200)
+    setTimeout(() => { this.setData({ petActionClass: '' }) }, 1000)
+    if (todayInteractRemaining <= 0) return
     try {
       await api.walkPet(petId)
+      this.setData({ todayInteractRemaining: this.data.todayInteractRemaining - 1, todayInteractTotal: this.data.todayInteractTotal + 1 })
       wx.showToast({ title: '🚶 散步成功 +2 ❤️', icon: 'none' })
       this.loadPetData()
     } catch (e) {
       if (e._statusCode === 429) {
-        wx.showToast({ title: e.detail || '🚶 今天已经散过步了~', icon: 'none' })
+        this.setData({ todayInteractRemaining: 0 })
+        wx.showToast({ title: e.detail || '今天互动次数已用完~', icon: 'none' })
       }
     }
   },
 
-  /** 玩耍按钮：上下跳动动画（纯前端，不调接口） */
+  /** 玩耍按钮：八个方向无规则剧烈移动（纯前端，不调接口） */
   onPlay() {
     const { petId, lastInteractTime } = this.data
     if (!petId) return
     const now = Date.now()
-    if (now - lastInteractTime < 1000) return
-    this.setData({ petActionClass: 'pet-jump-up', lastInteractTime: now })
-    this.showActionEmojiWithAnim('🎮', 'emoji-float-up')
-    setTimeout(() => { this.setData({ petActionClass: '' }) }, 800)
+    if (now - lastInteractTime < 300) return
+    this.setData({ petActionClass: 'pet-wild-move', lastInteractTime: now })
+    this.showActionEmojiWithAnim('😊', 'emoji-float-up')
+    setTimeout(() => { this.setData({ petActionClass: '' }) }, 700)
   },
 
-  /** 聊天按钮：左右摆动动画（纯前端，不调接口） */
+  /** 聊天按钮：轻快摇晃动画（纯前端，不调接口） */
   onTalk() {
     const { petId, lastInteractTime } = this.data
     if (!petId) return
     const now = Date.now()
-    if (now - lastInteractTime < 1000) return
-    this.setData({ petActionClass: 'pet-sway', lastInteractTime: now })
+    if (now - lastInteractTime < 300) return
+    this.setData({ petActionClass: 'pet-talk-anim', lastInteractTime: now })
     this.showActionEmojiWithAnim('💬', 'emoji-float-up')
-    setTimeout(() => { this.setData({ petActionClass: '' }) }, 1000)
+    setTimeout(() => { this.setData({ petActionClass: '' }) }, 700)
   },
 
   stopPropagation() {},
@@ -522,7 +532,7 @@ Page({
     const oldTimer = this.data.feedAnimTimer
     if (oldTimer) clearInterval(oldTimer)
     this.setData({
-      petFeedClass: 'pet-shake',
+      petFeedClass: 'pet-violent-shake',
       showFeedBowl: true,
       bowlFoodHeight: 100,
     })
@@ -707,5 +717,20 @@ Page({
         }
       }
     })
+  },
+
+  /** 判断一个日期字符串/对象是否为今天 */
+  isToday(dateVal) {
+    if (!dateVal) return false
+    try {
+      const d = new Date(String(dateVal).slice(0, 10))
+      const t = new Date()
+      return d.getFullYear() === t.getFullYear() && d.getMonth() === t.getMonth() && d.getDate() === t.getDate()
+    } catch (e) { return false }
+  },
+
+  /** 计算今日互动总数（使用后端返回的统一次数） */
+  countTodayInteractions(pet) {
+    return pet.today_interact_count || 0
   },
 })

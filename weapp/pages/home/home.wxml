@@ -99,7 +99,7 @@
     </view>
 
     <!-- 签到 -->
-    <view class="checkin {{checkedInToday ? 'checkin--done' : ''}}" bindtap="onCheckinTap">
+    <view class="checkin {{checkedInToday ? 'checkin--done' : ''}} {{checkinAnim}}" bindtap="onCheckinTap">
       <view class="checkin-icon-wrap">
         <view class="checkin-icon {{checkedInToday ? 'checkin-icon--done' : ''}}">
           <cp-icon wx:if="{{checkedInToday}}" name="sparkle" size="36" />
@@ -287,6 +287,20 @@
       <view class="pet-stage">
         <view class="pet-stage-glow"></view>
         <view class="pet-stage-inner">
+          <view class="pet-dock">
+            <view class="pet-dock-btn" bindtap="onFeed">
+              <view class="pet-dock-icon"><text>喂</text></view>
+              <text>喂食</text>
+            </view>
+            <view class="pet-dock-btn" bindtap="onWalk">
+              <view class="pet-dock-icon"><text>散</text></view>
+              <text>散步</text>
+            </view>
+            <view class="pet-dock-btn" bindtap="onPlay">
+              <view class="pet-dock-icon"><text>玩</text></view>
+              <text>玩耍</text>
+            </view>
+          </view>
           <view class="pet-stage-avatar {{petAnimationClass}} {{petActionClass}} {{petFeedClass}} {{petHappyClass}} {{petEvolutionReady ? 'evolution-glow' : ''}}" catchtap="onPetTap">
             <text wx:if="{{showActionEmoji}}" class="pet-action-emoji {{actionEmojiClass}}">{{actionEmoji}}</text>
             <view wx:if="{{showFeedBowl}}" class="feed-bowl-wrap">
@@ -302,6 +316,9 @@
               <text class="pet-tag pet-tag--rarity">{{petRarity}}</text>
               <text class="pet-tag">Lv.{{petLevel}}</text>
             </view>
+            <view wx:if="{{todayInteractTotal > 0}}" class="pet-today-badge">
+              <text>今日互动 {{todayInteractTotal}}/3</text>
+            </view>
           </view>
           <view class="pet-stage-intimacy">
             <view class="pet-intimacy-head">
@@ -310,24 +327,6 @@
             </view>
             <view class="pet-intimacy-track">
               <view class="pet-intimacy-fill" style="width:{{intimacyPct}}%"></view>
-            </view>
-          </view>
-          <view class="pet-dock">
-            <view class="pet-dock-btn" bindtap="onFeed">
-              <view class="pet-dock-icon"><text>喂</text></view>
-              <text>喂食</text>
-            </view>
-            <view class="pet-dock-btn" catchtap="onPetTap">
-              <view class="pet-dock-icon"><text>抚</text></view>
-              <text>抚摸</text>
-            </view>
-            <view class="pet-dock-btn" bindtap="onWalk">
-              <view class="pet-dock-icon"><text>散</text></view>
-              <text>散步</text>
-            </view>
-            <view class="pet-dock-btn" bindtap="onPlay">
-              <view class="pet-dock-icon"><text>玩</text></view>
-              <text>玩耍</text>
             </view>
           </view>
         </view>

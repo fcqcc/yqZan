@@ -230,18 +230,16 @@ Page({
       }
     })
   },
-  /** 点击宠物卡片→跳跃动画+抚摸API（防抖1秒） */
+  /** 点击宠物卡片→随机互动特效（纯前端，不调后端） */
   onPetTap() {
     const pet = this.data.activePet
     if (!pet) return
     const now = Date.now()
-    if (now - this.data.lastInteractTime < 1000) {
-      wx.showToast({ title: '🔄 等一等…', icon: 'none' })
-      return
-    }
-    this.setData({ petHappyClass: 'pet-happy', lastInteractTime: now })
-    api.petPet(pet.id).catch(() => {})
-    setTimeout(() => { this.setData({ petHappyClass: '' }) }, 600)
+    if (now - this.data.lastInteractTime < 600) return
+    const anims = ['pet-happy', 'pet-fan-shake', 'pet-violent-shake', 'pet-wild-move', 'pet-talk-anim']
+    const anim = anims[Math.floor(Math.random() * anims.length)]
+    this.setData({ petHappyClass: anim, lastInteractTime: now })
+    setTimeout(() => { this.setData({ petHappyClass: '' }) }, 700)
   },
 
   /** 等级进化（每5级手动确认）+ 粒子特效 */

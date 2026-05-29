@@ -88,6 +88,10 @@ def build_pet_response(pet: Pet, total_delivered: float):
         "next_form_ready": next_form_ready,
         "next_form_name": form_labels[current_idx + 1] if next_form and current_idx + 1 < len(form_labels) else None,
         "last_fed_at": pet.last_fed_at.isoformat() if pet.last_fed_at else None,
+        "today_interact_count": (1 if pet.last_fed_at is not None and pet.last_fed_at.date() == date.today() else 0)
+            + (1 if pet.last_pet_date is not None and pet.last_pet_date == date.today() else 0)
+            + (1 if pet.last_walk_date is not None and pet.last_walk_date == date.today() else 0),
+        "max_daily_interact": 3,
         "passive_skill": PASSIVE_SKILLS.get(pet.pet_type, {}).get("name", ""),
         "passive_skill_desc": PASSIVE_SKILLS.get(pet.pet_type, {}).get("desc", ""),
         "image_url": get_pet_image_url(pet.pet_type, pet.current_form),
@@ -322,14 +326,17 @@ def switch_form(pet_id: int, req: dict, user: User = Depends(get_current_user), 
 
 @router.post("/{pet_id}/feed")
 def feed_pet(pet_id: int, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    """每日喂食（+3亲密度，每天限1次）"""
+    """每日喂食（+3亲密度，每天共享3次互动）"""
     cid = get_couple_id(user)
     pet = db.query(Pet).filter(Pet.id == pet_id, Pet.couple_id == cid).first()
     if not pet:
         raise HTTPException(404, "宠物不存在")
     today = date.today()
-    if pet.last_fed_at and pet.last_fed_at.date() == today:
-        raise HTTPException(429, "今天已经喂过了，明天再来吧～")
+    interact_count = (1 if pet.last_fed_at and pet.last_fed_at.date() == today else 0) \
+                   + (1 if pet.last_pet_date == today else 0) \
+                   + (1 if pet.last_walk_date == today else 0)
+    if interact_count >= 3:
+        raise HTTPException(429, "今天互动次数已用完，明天再来吧～")
     pet.intimacy = min(100, pet.intimacy + 3)
     pet.last_fed_at = datetime.now()
     add_exp_to_active_pet(cid, 1, db)
@@ -340,14 +347,17 @@ def feed_pet(pet_id: int, user: User = Depends(get_current_user), db: Session = 
 
 @router.post("/{pet_id}/pet")
 def pet_pet(pet_id: int, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    """每日抚摸（+2亲密度，每天限1次）"""
+    """每日抚摸（+2亲密度，每天共享3次互动）"""
     cid = get_couple_id(user)
     pet = db.query(Pet).filter(Pet.id == pet_id, Pet.couple_id == cid).first()
     if not pet:
         raise HTTPException(404, "宠物不存在")
     today = date.today()
-    if pet.last_pet_date == today:
-        raise HTTPException(429, "今天已经抚摸过了，明天再来吧～")
+    interact_count = (1 if pet.last_fed_at and pet.last_fed_at.date() == today else 0) \
+                   + (1 if pet.last_pet_date == today else 0) \
+                   + (1 if pet.last_walk_date == today else 0)
+    if interact_count >= 3:
+        raise HTTPException(429, "今天互动次数已用完，明天再来吧～")
     pet.intimacy = min(100, pet.intimacy + 2)
     pet.last_pet_date = today
     add_exp_to_active_pet(cid, 1, db)
@@ -358,14 +368,17 @@ def pet_pet(pet_id: int, user: User = Depends(get_current_user), db: Session = D
 
 @router.post("/{pet_id}/walk")
 def walk_pet(pet_id: int, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    """每日散步（+2亲密度，每天限1次）"""
+    """每日散步（+2亲密度，每天共享3次互动）"""
     cid = get_couple_id(user)
     pet = db.query(Pet).filter(Pet.id == pet_id, Pet.couple_id == cid).first()
     if not pet:
         raise HTTPException(404, "宠物不存在")
     today = date.today()
-    if pet.last_walk_date == today:
-        raise HTTPException(429, "今天已经散过步了，明天再来吧～")
+    interact_count = (1 if pet.last_fed_at and pet.last_fed_at.date() == today else 0) \
+                   + (1 if pet.last_pet_date == today else 0) \
+                   + (1 if pet.last_walk_date == today else 0)
+    if interact_count >= 3:
+        raise HTTPException(429, "今天互动次数已用完，明天再来吧～")
     pet.intimacy = min(100, pet.intimacy + 2)
     pet.last_walk_date = today
     add_exp_to_active_pet(cid, 1, db)

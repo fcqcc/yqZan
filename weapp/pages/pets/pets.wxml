@@ -13,22 +13,23 @@
       </view>
       <text class="active-form">{{activePet.form_label}}</text>
     </view>
-    <view class="active-intimacy">
-      <view class="intimacy-label">亲密度</view>
-      <view class="intimacy-bar">
-        <view class="intimacy-fill" style="width:{{intimacyPct}}%"></view>
+    <view class="active-stats">
+      <view class="active-intimacy">
+        <view class="intimacy-label">亲密度</view>
+        <view class="intimacy-bar">
+          <view class="intimacy-fill" style="width:{{intimacyPct}}%"></view>
+        </view>
+        <text class="intimacy-text">{{activePet.intimacy}} / 100</text>
       </view>
-      <text class="intimacy-text">{{activePet.intimacy}} / 100</text>
-    </view>
-    <!-- 经验/等级条 -->
-    <view class="active-exp" wx:if="{{activePet}}">
-      <view class="exp-label">
-        <text>等级 {{activePet.level}} / {{activePet.max_level}}</text>
-        <text wx:if="{{!activePet.evolution_ready}}" class="exp-num">EXP {{activePet.exp}}/{{activePet.exp_needed}}</text>
-        <text wx:else class="exp-ready">✨ 可进化</text>
-      </view>
-      <view class="exp-bar" wx:if="{{!activePet.evolution_ready}}">
-        <view class="exp-fill" style="width:{{activePet.exp_needed > 0 ? (activePet.exp / activePet.exp_needed * 100) : 0}}%"></view>
+      <view class="active-exp" wx:if="{{activePet}}">
+        <view class="exp-label">
+          <text>Lv.{{activePet.level}}/{{activePet.max_level}}</text>
+          <text wx:if="{{!activePet.evolution_ready}}" class="exp-num">EXP {{activePet.exp}}/{{activePet.exp_needed}}</text>
+          <text wx:else class="exp-ready">✨可进化</text>
+        </view>
+        <view class="exp-bar" wx:if="{{!activePet.evolution_ready}}">
+          <view class="exp-fill" style="width:{{activePet.exp_needed > 0 ? (activePet.exp / activePet.exp_needed * 100) : 0}}%"></view>
+        </view>
       </view>
     </view>
     <!-- 技能说明 -->

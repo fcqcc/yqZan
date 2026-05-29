@@ -1,11 +1,10 @@
 // app.js
-// baseUrl：开发者工具可用 localhost；真机预览须改为电脑局域网 IP（如 http://192.168.1.3:5000），否则请求会超时。
-// 上线须 https 合法域名。
+// 线上版本使用域名，微信小程序要求 https
 const theme = require('./utils/theme')
 
 App({
   globalData: {
-    baseUrl: 'http://localhost:5000',
+    baseUrl: 'https://api.yqzan.cn',
     token: '',
     userInfo: null,
     uiTheme: theme.UI_THEME

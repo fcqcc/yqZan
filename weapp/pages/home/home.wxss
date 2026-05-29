@@ -230,13 +230,39 @@ page {
 .vault-card__body {
   position: relative;
   z-index: 1;
-  background: linear-gradient(168deg, #ffffff 0%, #fffafb 55%, #fff5f8 100%);
+  background: linear-gradient(168deg, rgba(255,255,255,0.92) 0%, rgba(255,250,251,0.88) 55%, rgba(255,245,248,0.85) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 22px;
   padding: 20px 20px 16px;
   box-shadow:
     var(--elev-3),
     inset 0 1px 0 rgba(255, 255, 255, 1),
     inset 0 -2px 4px rgba(255, 107, 157, 0.04);
+  overflow: hidden;
+}
+.vault-card__body::before {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 25%,
+    rgba(255,255,255,0.3) 30%,
+    rgba(255,255,255,0.45) 32%,
+    rgba(255,255,255,0.15) 35%,
+    transparent 40%
+  );
+  pointer-events: none;
+  z-index: 5;
+  animation: glassShineVault 8s ease-in-out infinite;
+}
+@keyframes glassShineVault {
+  0%, 100% { transform: translateX(-40%) translateY(-30%) rotate(50deg); opacity: 0.5; }
+  50% { transform: translateX(40%) translateY(30%) rotate(50deg); opacity: 1; }
 }
 
 .vault-card__tag {
@@ -415,9 +441,11 @@ page {
   gap: 14px;
   margin: 0 18px 20px;
   padding: 16px 18px;
-  background: var(--surface);
+  background: linear-gradient(168deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.85) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-radius: var(--radius);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.7);
   box-shadow: var(--elev-2), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 .checkin--done { background: linear-gradient(145deg, #fff, #fff5f8); }
@@ -512,10 +540,12 @@ page {
 
 /* 计划卡 */
 .plan-premium {
-  background: var(--surface);
+  background: linear-gradient(168deg, rgba(255,255,255,0.92) 0%, rgba(255,250,251,0.88) 55%, rgba(255,245,248,0.85) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-radius: var(--radius);
   padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.7);
   box-shadow: var(--elev-2), inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
@@ -624,9 +654,11 @@ page {
   align-items: center;
   gap: 14px;
   padding: 18px;
-  background: var(--surface);
+  background: linear-gradient(168deg, rgba(255,255,255,0.9) 0%, rgba(255,250,251,0.85) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-radius: var(--radius);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.7);
   box-shadow: var(--elev-2), inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 .anni-premium--today {
@@ -733,9 +765,35 @@ page {
   position: relative;
   border-radius: 24px;
   overflow: hidden;
-  background: var(--surface);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: linear-gradient(168deg, rgba(255,255,255,0.92) 0%, rgba(255,250,251,0.88) 55%, rgba(255,245,248,0.85) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
   box-shadow: var(--elev-2), inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+.pet-stage::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255,255,255,0.35) 35%,
+    rgba(255,255,255,0.5) 37%,
+    rgba(255,255,255,0.2) 40%,
+    transparent 45%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 5;
+  animation: glassShine 6s ease-in-out infinite;
+}
+@keyframes glassShine {
+  0%, 100% { transform: translateX(-30%) translateY(-20%) rotate(45deg); opacity: 0.6; }
+  50% { transform: translateX(30%) translateY(20%) rotate(45deg); opacity: 1; }
 }
 
 .pet-stage-glow {
@@ -828,6 +886,7 @@ page {
   display: flex;
   justify-content: center;
   gap: 14px;
+  margin: 6px 0 8px;
 }
 .pet-dock-btn {
   display: flex;
@@ -880,22 +939,57 @@ page {
   transition: height 0.1s linear;
 }
 
-.pet-fan-shake .pet-stage-avatar { animation: fanShake 0.6s ease-out !important; }
-@keyframes fanShake {
-  25% { transform: rotate(-8deg) translateY(-4px); }
-  75% { transform: rotate(8deg) translateY(-4px); }
+.pet-stage-avatar.pet-fan-shake { animation: petFanShake 0.5s ease-out !important; }
+@keyframes petFanShake {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(-14deg) translateX(-3px); }
+  40% { transform: rotate(12deg) translateX(3px); }
+  60% { transform: rotate(-10deg) translateX(-2px); }
+  80% { transform: rotate(8deg) translateX(2px); }
+  100% { transform: rotate(0deg) translateX(0); }
 }
-.pet-bounce-all .pet-stage-avatar { animation: bounceAll 1.2s ease-in-out !important; }
-@keyframes bounceAll {
-  33% { transform: translate(-12px, -10px); }
-  66% { transform: translate(12px, -8px); }
+.pet-stage-avatar.pet-walk-anim { animation: petAnimWalk 1s ease-in-out !important; }
+@keyframes petAnimWalk {
+  0% { transform: translateX(0) translateY(0); }
+  20% { transform: translateX(-14px) translateY(-6px); }
+  40% { transform: translateX(0) translateY(0); }
+  60% { transform: translateX(14px) translateY(-6px); }
+  80% { transform: translateX(0) translateY(0); }
+  100% { transform: translateX(0) translateY(0); }
 }
-.pet-jump-up .pet-stage-avatar { animation: jumpUp 0.6s ease-in-out !important; }
-@keyframes jumpUp { 40% { transform: translateY(-14px); } }
-.pet-sway .pet-stage-avatar { animation: sway 0.8s ease-in-out !important; }
-@keyframes sway { 50% { transform: translateX(8px); } }
-.pet-shake .pet-stage-avatar { animation: violentShake 0.1s ease-in-out 20 !important; }
-@keyframes violentShake { 50% { transform: translateX(4px); } }
+.pet-stage-avatar.pet-wild-move { animation: petWildMove 0.7s ease-in-out !important; }
+@keyframes petWildMove {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  12% { transform: translate(-12px, -8px) rotate(-8deg); }
+  25% { transform: translate(10px, -12px) rotate(6deg); }
+  37% { transform: translate(-8px, 10px) rotate(-10deg); }
+  50% { transform: translate(14px, 6px) rotate(8deg); }
+  62% { transform: translate(-10px, -10px) rotate(-6deg); }
+  75% { transform: translate(8px, 12px) rotate(10deg); }
+  87% { transform: translate(-14px, 4px) rotate(-12deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+.pet-stage-avatar.pet-talk-anim { animation: petAnimTalk 0.6s ease-in-out !important; }
+@keyframes petAnimTalk {
+  0% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(6px) rotate(4deg); }
+  50% { transform: translateX(-6px) rotate(-4deg); }
+  75% { transform: translateX(4px) rotate(2deg); }
+  100% { transform: translateX(0) rotate(0deg); }
+}
+.pet-stage-avatar.pet-violent-shake { animation: petViolentShake 0.6s ease-in-out !important; }
+@keyframes petViolentShake {
+  0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
+  10% { transform: translateX(-8px) translateY(-4px) rotate(-8deg); }
+  20% { transform: translateX(10px) translateY(3px) rotate(8deg); }
+  30% { transform: translateX(-6px) translateY(-10px) rotate(-6deg); }
+  40% { transform: translateX(8px) translateY(5px) rotate(7deg); }
+  50% { transform: translateX(-12px) translateY(-3px) rotate(-10deg); }
+  60% { transform: translateX(10px) translateY(8px) rotate(9deg); }
+  70% { transform: translateX(-5px) translateY(-8px) rotate(-5deg); }
+  80% { transform: translateX(12px) translateY(3px) rotate(7deg); }
+  90% { transform: translateX(-8px) translateY(-5px) rotate(-6deg); }
+}
 .pet-action-emoji {
   position: absolute; top: -8px; left: 50%;
   transform: translateX(-50%);
@@ -1033,3 +1127,51 @@ page {
   border-radius: 10px; margin-bottom: 8px;
 }
 .adventure-tap { font-size: 11px; color: var(--ink-muted); }
+
+/* 今日互动标识 */
+.pet-today-badge {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(212,175,55,.15);
+  border: 1px solid rgba(212,175,55,.25);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  color: #D4AF37;
+  margin-top: 4px;
+}
+.pet-dock-check {
+  position: absolute;
+  top: -4px; right: -4px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: #4CAF50;
+  color: #fff;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 16px;
+}
+
+/* 签到动画 */
+.checkin-bounce {
+  animation: checkinBounce .5s ease;
+}
+@keyframes checkinBounce {
+  0%{transform:scale(1)}
+  30%{transform:scale(1.05)}
+  50%{transform:scale(.95)}
+  70%{transform:scale(1.02)}
+  100%{transform:scale(1)}
+}
+.checkin-done-pop {
+  animation: donePop .6s ease;
+}
+@keyframes donePop {
+  0%{transform:scale(1)}
+  20%{transform:scale(1.1)}
+  40%{transform:scale(.9)}
+  60%{transform:scale(1.05)}
+  100%{transform:scale(1)}
+}
