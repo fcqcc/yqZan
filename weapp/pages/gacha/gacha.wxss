@@ -1,8 +1,62 @@
-/* pages/gacha/gacha.wxss — 扭蛋机抽卡 */
+/* pages/gacha/gacha.wxss — 扭蛋机抽卡（粉红主题 · 深色头部） */
 
 .page { height: 100vh; background: transparent; }
 
-/* ===== 1. 顶部标题 + 券数栏 ===== */
+/* ===== 1. 蜜桃苏打顶部 + 券数栏 ===== */
+.gacha-header {
+  position: relative;
+  overflow: hidden;
+  margin: 8px 12px 0;
+  padding: 18px 16px 16px;
+  background: linear-gradient(180deg, #ff8fab 0%, #ff6b9d 50%, #d4a0f0 100%);
+  border-radius: var(--radius-lg, 20px);
+  box-shadow: 0 8px 28px rgba(255, 107, 157, 0.28);
+}
+.gacha-header-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 30% 0%, rgba(255, 255, 255, 0.25), transparent 60%),
+              radial-gradient(ellipse 50% 40% at 80% 100%, rgba(221, 160, 240, 0.2), transparent 50%);
+  pointer-events: none;
+}
+.gacha-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+.gacha-header-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.gacha-header-icon { font-size: 24px; }
+.gacha-header-text {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(196, 61, 110, 0.2);
+  letter-spacing: 1px;
+}
+
+/* 装饰星点 */
+.gacha-header-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: gachaStarPulse 2.5s ease-in-out infinite;
+}
+.gacha-header-dot--1 { top: 16%; right: 22%; background: rgba(255, 255, 255, 0.5); animation-delay: 0s; }
+.gacha-header-dot--2 { bottom: 20%; left: 12%; background: rgba(255, 107, 157, 0.5); animation-delay: 0.7s; }
+.gacha-header-dot--3 { top: 40%; right: 8%; background: rgba(255, 255, 255, 0.45); animation-delay: 1.4s; }
+@keyframes gachaStarPulse {
+  0%, 100% { opacity: 0.2; transform: scale(0.7); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -24,8 +78,8 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  background: rgba(214, 92, 138, 0.10);
-  border: 1px solid rgba(214, 92, 138, 0.20);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: var(--radius-pill);
   padding: 5px 14px;
 }
@@ -33,15 +87,15 @@
 .ticket-count {
   font-size: 18px;
   font-weight: 800;
-  color: var(--pink-dark);
+  color: #ffd54f;
 }
 .ticket-label {
   font-size: 11px;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.6);
 }
-.shard-divider { font-size: 13px; color: var(--text-muted); margin: 0 2px; }
+.shard-divider { font-size: 13px; color: rgba(255, 255, 255, 0.3); margin: 0 2px; }
 .shard-icon { font-size: 13px; }
-.shard-count { font-size: 15px; font-weight: 700; color: #7c4dff; margin-left: 1px; }
+.shard-count { font-size: 15px; font-weight: 700; color: #b388ff; margin-left: 1px; }
 
 /* ===== 2. 扭蛋机主体 ===== */
 .machine-area {
@@ -69,7 +123,7 @@
 .machine-body {
   width: 140px;
   height: 130px;
-  background: linear-gradient(135deg, #fff8fc 0%, #fff0f6 100%);
+  background: linear-gradient(135deg, #fffafb 0%, #fff0f6 100%);
   border: 2px solid var(--pink-dark);
   border-radius: 16px;
   display: flex;
@@ -78,12 +132,12 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
-  box-shadow: inset 0 4px 20px rgba(214, 92, 138, 0.12);
+  box-shadow: inset 0 4px 20px rgba(255, 107, 157, 0.12);
 }
 .machine-ball {
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, #ffecf4, #ffd6ea);
+  background: linear-gradient(135deg, #ffecf4, #ffe4dc);
   border: 2px solid var(--pink-dark);
   border-radius: 50%;
   display: flex;
@@ -168,14 +222,14 @@
   transition: all 0.15s ease;
 }
 .btn-draw-single {
-  background: linear-gradient(135deg, #f8a5c4, #d65c8a);
+  background: linear-gradient(135deg, #ff8fab, #ff6b9d);
   color: #fff;
-  box-shadow: 0 4px 14px rgba(214, 92, 138, 0.25);
+  box-shadow: 0 4px 14px rgba(255, 107, 157, 0.25);
 }
 .btn-draw-ten {
-  background: linear-gradient(135deg, #c9a0b2, #a87a92);
+  background: linear-gradient(135deg, #dda0f0, #c9a0f5);
   color: #fff;
-  box-shadow: 0 4px 14px rgba(201, 160, 178, 0.30);
+  box-shadow: 0 4px 14px rgba(201, 160, 245, 0.35);
 }
 .btn-draw:active {
   transform: scale(0.96);
@@ -192,10 +246,10 @@
 .ten-list {
   margin: 0 12px 12px;
   background: #ffffff;
-  border: 1px solid #ffd6e8;
+  border: 1px solid #f0c0d0;
   border-radius: var(--radius-md);
   padding: 14px 16px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 2px 10px rgba(255, 107, 157, 0.08);
 }
 .ten-list-title {
   font-size: 14px;
@@ -214,8 +268,8 @@
   gap: 6px;
   padding: 6px 10px;
   border-radius: var(--radius-sm);
-  border: 1px solid #ffd6e8;
-  background: #fff8fc;
+  border: 1px solid #ffdce8;
+  background: #fffafb;
   min-width: 0;
 }
 .ten-item-N { border-color: #d0d0d0; background: #fafafa; }
@@ -423,21 +477,23 @@
   width: 36rpx;
   height: 36rpx;
   border-radius: 50%;
-  background: rgba(214, 92, 138, 0.12);
+  background: rgba(255, 255, 255, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18rpx;
-  color: var(--pink-dark);
+  color: rgba(255, 255, 255, 0.8);
 }
 .prob-modal {
   width: 85%;
   max-height: 75vh;
-  background: #fff;
+  background: #fffafc;
   border-radius: 32rpx;
   padding: 32rpx;
   box-sizing: border-box;
   overflow-y: auto;
+  border: 1px solid #ffdce8;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.2);
 }
 .prob-modal-title {
   font-size: 32rpx;
@@ -454,7 +510,7 @@
   display: flex;
   align-items: center;
   padding: 10rpx 0;
-  border-bottom: 1rpx solid #f0f0f0;
+  border-bottom: 1rpx solid rgba(255, 107, 157, 0.1);
 }
 .prob-rarity {
   font-size: 20rpx;
@@ -491,4 +547,121 @@
   font-size: 10px;
   color: var(--text-muted);
   line-height: 1.6;
+}
+
+/* ===== 原型风格补充 ===== */
+.gacha-tickets-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ticket-icon-lg { font-size: 30px; }
+.ticket-count-lg { font-size: 34px; font-weight: 700; color: var(--primary, #ff6b9d); }
+.ticket-label-lg { font-size: 13px; color: var(--text-secondary, #666); }
+
+.gacha-btn {
+  flex: 1;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 0;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.gacha-btn::after { border: none; }
+
+.gacha-btn-single {
+  background: linear-gradient(135deg, #ffb5a0, #ff8fab);
+  color: #fff;
+}
+
+.gacha-btn-ten {
+  background: linear-gradient(135deg, var(--primary, #ff6b9d), var(--primary-light, #ff8fab));
+  color: white;
+}
+
+.gacha-shards {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--text-light, #999);
+}
+
+.gacha-pool { padding: 16px; }
+
+.pool-info {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.pool-title {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.pool-rates {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.rate-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 6px 10px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.rate-name { color: var(--text-secondary, #666); }
+.rate-value { color: var(--primary, #ff6b9d); font-weight: 600; }
+
+.pity-card {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.pity-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.pity-label { color: var(--text-secondary, #666); }
+.pity-count { color: var(--primary, #ff6b9d); font-weight: 600; }
+
+.pity-progress-bar {
+  height: 8px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.pity-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary, #ff6b9d), var(--primary-light, #ff8fab));
+  border-radius: 4px;
+}
+
+.pity-hint {
+  display: block;
+  font-size: 11px;
+  color: var(--text-light, #999);
+  margin-top: 4px;
 }

@@ -9,7 +9,7 @@
 }
 .card-item {
   background: #ffffff;
-  border: 1px solid #ffd6e8;
+  border: 1px solid #ffdce8;
   border-radius: var(--radius);
   padding: 16px 12px;
   box-shadow: var(--shadow-sm);

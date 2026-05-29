@@ -151,8 +151,10 @@ Page({
     })
   },
   switchTab(e) {
-    this.setData({ tab: e.currentTarget.dataset.tab })
-    if (e.currentTarget.dataset.tab === 'crystals') this.loadCrystals()
+    const tab = e.currentTarget.dataset.tab
+    this.setData({ tab })
+    if (tab === 'crystals') this.loadCrystals()
+    if (tab === 'achievements' && !this.data.achievements.length) this.load()
   },
 
   async loadCrystals() {

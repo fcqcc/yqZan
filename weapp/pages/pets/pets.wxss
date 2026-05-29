@@ -1,14 +1,82 @@
-/* pages/pets/pets.wxss — 宠物管理 */
+/* pages/pets/pets.wxss — 宠物管理（原型风格） */
 .page { height: 100vh; background: transparent; }
+
+.rarity-badge {
+  display: inline-flex;
+  background: linear-gradient(135deg, #ffd700, #ffa500);
+  color: white;
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ===== 旧头部（兼容） ===== */
+.pets-detail-header {
+  position: relative;
+  overflow: hidden;
+  margin: 10px 12px 8px;
+  padding: 24px 20px 20px;
+  background: linear-gradient(180deg, #ff8fab 0%, #ff6b9d 50%, #d4a0f0 100%);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 24px rgba(255, 107, 157, 0.25);
+  text-align: center;
+}
+.pets-detail-header-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 30% 0%, rgba(255,255,255,0.15), transparent 60%),
+              radial-gradient(ellipse 50% 50% at 80% 100%, rgba(255,182,193,0.2), transparent 50%);
+  pointer-events: none;
+}
+.pets-detail-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+.pets-detail-icon { font-size: 28px; }
+.pets-detail-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.pets-detail-subtitle {
+  display: block;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 6px;
+  position: relative;
+  z-index: 1;
+}
+.pets-detail-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+  animation: petsDotPulse 3s ease-in-out infinite;
+}
+.pets-detail-dot--1 { top: 18%; right: 12%; animation-delay: 0s; }
+.pets-detail-dot--2 { bottom: 20%; left: 10%; animation-delay: 0.8s; }
+.pets-detail-dot--3 { top: 40%; right: 8%; animation-delay: 1.6s; }
+@keyframes petsDotPulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
 
 /* ===== 当前活跃宠物卡片 ===== */
 .active-card {
   margin: 12px 12px 8px;
-  background: linear-gradient(135deg, #ffffff 0%, #fff8fc 55%, #ffe8f2 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #fffafb 55%, #ffe8f0 100%);
   border-radius: var(--radius-lg);
   padding: 24px 20px 20px;
-  box-shadow: 0 8px 24px rgba(214, 92, 138, 0.12);
-  border: 1px solid #ffd6e8;
+  box-shadow: 0 8px 24px rgba(255, 107, 157, 0.12);
+  border: 1.5px solid #f0c0d0;
   text-align: center;
 }
 .active-emoji { font-size: 64px; display: block; margin-bottom: 6px; }
@@ -23,7 +91,7 @@
 .intimacy-label { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; }
 .intimacy-bar {
   height: 8px;
-  background: rgba(214, 92, 138, 0.15);
+  background: rgba(255, 107, 157, 0.15);
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 3px;
@@ -62,10 +130,10 @@
 .section-card {
   margin: 0 12px 8px;
   background: #ffffff;
-  border: 1px solid #ffd6e8;
+  border: 1px solid #f0c0d0;
   border-radius: var(--radius);
   padding: 14px 16px;
-  box-shadow: 0 2px 10px rgba(214, 92, 138, 0.1);
+  box-shadow: 0 2px 10px rgba(255, 107, 157, 0.1);
 }
 .section-label { font-size: 13px; font-weight: 700; color: var(--text); display: block; margin-bottom: 10px; }
 
@@ -76,15 +144,15 @@
   gap: 4px;
   padding: 6px 12px;
   border-radius: var(--radius-pill);
-  background: #fff8fc;
-  border: 1px solid rgba(214, 92, 138, 0.22);
+  background: #fffafb;
+  border: 1px solid rgba(255, 107, 157, 0.22);
   font-size: 12px;
   color: var(--text-secondary);
   transition: all 0.12s ease;
 }
 .form-chip:active { transform: scale(0.96); }
 .form-chip--active {
-  background: rgba(214, 92, 138, 0.14);
+  background: rgba(255, 107, 157, 0.14);
   border-color: var(--pink-dark);
   color: var(--pink-dark);
   font-weight: 600;
@@ -104,7 +172,7 @@
   border-bottom: 1px solid rgba(42, 36, 38, 0.06);
 }
 .pet-item:last-child { border-bottom: none; }
-.pet-item--active { background: rgba(214, 92, 138, 0.04); margin: 0 -16px; padding: 10px 16px; border-radius: var(--radius-sm); }
+.pet-item--active { background: rgba(255, 107, 157, 0.04); margin: 0 -16px; padding: 10px 16px; border-radius: var(--radius-sm); }
 .pet-emoji { font-size: 28px; width: 50px; text-align: center; }
 .pet-image-sm { width: 48px; height: 48px; display: block; }
 .pet-info { flex: 1; min-width: 0; }
@@ -297,53 +365,6 @@
   padding: 16px;
   text-align: center;
   background: #fff;
-  border: 1px solid #ffd6e8;
-  border-radius: var(--radius);
-}
-.evo-text {
-  position: absolute;
-  top: 35%; left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 36px;
-  font-weight: 900;
-  color: #ffd700;
-  text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.4);
-  animation: evoTextPop 5s ease-out forwards;
-  letter-spacing: 4px;
-}
-@keyframes evoTextPop {
-  0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
-  8% { transform: translate(-50%, -50%) scale(1.4); opacity: 1; }
-  12% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
-  15% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
-  50% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
-  100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
-}
-
-/* ===== 没绑定伴侣提示 ===== */
-.no-partner-banner {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-secondary);
-}
-.no-partner-icon { font-size: 48px; display: block; margin-bottom: 12px; }
-.no-partner-text { font-size: 14px; display: block; margin-bottom: 16px; }
-.bind-btn-small {
-  display: inline-block;
-  padding: 8px 24px;
-  background: linear-gradient(135deg, var(--pink), var(--pink-dark));
-  color: #fff;
-  border-radius: var(--radius-pill);
-  font-size: 14px;
-  font-weight: 600;
-}
-
-/* 首页：没伴侣时的宠物管理链接 */
-.pet-area-no-partner {
-  margin: 0 12px 6px;
-  padding: 16px;
-  text-align: center;
-  background: #fff;
-  border: 1px solid #ffd6e8;
+  border: 1px solid #ffdce8;
   border-radius: var(--radius);
 }

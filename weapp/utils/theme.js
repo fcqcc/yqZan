@@ -1,4 +1,4 @@
-/** 全站固定主题 — 偏粉实色（无毛玻璃） */
+/** 全站固定主题 — 蜜桃苏打（年轻情侣向） */
 const UI_THEME = 'bloom'
 
 function readTheme() {
@@ -10,12 +10,12 @@ function writeTheme() {
   return UI_THEME
 }
 
-/** 与页面粉调顶栏一致 */
-const NAV_BAR_BG = '#FFECF4'
+/** 蜜桃苏打导航栏 — 主色 #FF8FAB */
+const NAV_BAR_BG = '#FF8FAB'
 
 function applyNavigationBar() {
   wx.setNavigationBarColor({
-    frontColor: '#000000',
+    frontColor: '#ffffff',
     backgroundColor: NAV_BAR_BG,
     animation: { duration: 200, timingFunc: 'easeIn' }
   })
@@ -23,8 +23,8 @@ function applyNavigationBar() {
 
 function progressColors() {
   return {
-    progressActive: '#D65C8A',
-    progressBg: 'rgba(214, 92, 138, 0.16)'
+    progressActive: '#FF6B9D',
+    progressBg: 'rgba(255, 107, 157, 0.14)'
   }
 }
 

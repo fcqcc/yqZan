@@ -1,5 +1,6 @@
 // pages/home/home.js
 const api = require('../../utils/api')
+const nav = require('../../utils/nav')
 
 function fmtMoney(n) {
   if (n >= 100000000) return '¥' + (n/100000000).toFixed(1) + '亿'
@@ -18,9 +19,11 @@ function getFullImageUrl(path) {
 function wrapPlan(p) {
   const cur = Number(p.current_amount) || 0
   const tar = Math.max(Number(p.target_amount) || 1, 1)
+  const progressPct = Math.min(100, (cur / tar) * 100)
   return {
     ...p,
-    progressPct: Math.min(100, (cur / tar) * 100),
+    progressPct,
+    progressPctText: progressPct.toFixed(0),
     _curText: fmtMoney(cur),
     _tarText: fmtMoney(tar)
   }
@@ -29,14 +32,21 @@ function wrapPlan(p) {
 Page({
   data: {
     tabBarIndex: 0,
-    userInfo: null, partner: null,
+    userInfo: { nickname: '' }, partner: null,
     level: 1, current_exp: 0, next_level_exp: 1, progress_pct: 0,
     delivered_text: '¥0', target_text: '¥0',
     current_amount: 0, target_amount: 0, plan_progress: 0,
+    plan_progress_text: '0.0',
     nearestAnni: null,
     todayAnni: null,
     hasOtherAnni: false,
     plans: [],
+    featuredPlan: null,
+    active_plan_count: 0,
+    coupleDisplayName: '',
+    myInitial: '我',
+    partnerInitial: '?',
+    checkedInToday: false,
     plan_count: 0, anni_count: 0, gift_count: 0, together_days: 0,
     // 宠物 & 扭蛋
     pet: null,
@@ -44,6 +54,7 @@ Page({
     petImageUrl: '',
     petAnimationClass: 'pet-sleep',
     petName: '小蛋蛋',
+    petRarity: 'R',
     intimacyLevel: 0,
     intimacyPct: 0,
     petLevel: 1,
@@ -82,11 +93,23 @@ Page({
   onShow() {
     const userInfo = wx.getStorageSync('userInfo')
     if (!userInfo) { wx.reLaunch({ url: '/pages/login/login' }); return }
-    this.setData({ userInfo })
+    const setHomeNav = () => wx.setNavigationBarColor({
+      frontColor: '#ffffff',
+      backgroundColor: '#FF8FAB',
+      animation: { duration: 200, timingFunc: 'easeIn' }
+    })
+    setHomeNav()
+    setTimeout(setHomeNav, 60)
+    this.setData({
+      userInfo,
+      myInitial: (userInfo.nickname || '我').slice(0, 1),
+    })
     this.loadData()
     this.loadPetData()
     // 自动签到
-    api.doCheckin().catch(() => {})
+    api.doCheckin()
+      .then(() => this.setData({ checkedInToday: true }))
+      .catch(() => {})
     this.loadSpark()
     this.loadCardTasks()
     // 每日冒险
@@ -107,12 +130,16 @@ Page({
 
   async loadSpark() {
     try {
-      const s = await api.getSpark()
+      const [s, status] = await Promise.all([
+        api.getSpark().catch(() => ({})),
+        api.getCheckinStatus().catch(() => ({})),
+      ])
       this.setData({
         sparkCount: s.spark_count || 0,
         sparkStatus: s.spark_status || 'active',
         maxSpark: s.max_spark_count || 0,
         streakDays: s.streak_days || 0,
+        checkedInToday: !!(status.checked_in || status.already_checked),
       })
     } catch(e) {}
   },
@@ -136,9 +163,21 @@ Page({
       const cur = activePlan ? activePlan.current_amount || 0 : 0
       const tar = activePlan ? activePlan.target_amount || 1 : 1
 
+      const activePlans = planList.filter(p => !p.done)
+      const featuredPlan = activePlans[0] || planList[0] || null
+      const userInfo = this.data.userInfo || wx.getStorageSync('userInfo') || {}
+      const coupleDisplayName = partner
+        ? `${userInfo.nickname || '我'} 💕 ${partner.nickname}`
+        : (userInfo.nickname || '我')
+
       this.setData({
         partner,
+        myInitial: (userInfo.nickname || '我').slice(0, 1),
+        partnerInitial: partner ? (partner.nickname || 'Ta').slice(0, 1) : '?',
         plans: planList,
+        featuredPlan,
+        active_plan_count: activePlans.length,
+        coupleDisplayName,
         level: level.level || 1,
         current_exp: level.current_exp || 0,
         next_level_exp: level.next_level_exp || 1,
@@ -148,10 +187,11 @@ Page({
         current_amount: totalCur,
         target_amount: totalTar,
         plan_progress: Math.min(totalCur / Math.max(totalTar, 1) * 100, 100),
+        plan_progress_text: Math.min(totalCur / Math.max(totalTar, 1) * 100, 100).toFixed(1),
         nearestAnni: this.findNearestAnni(anniversaries),
         todayAnni: this.findTodayAnni(anniversaries),
         plan_count: planList.length,
-        anni_count: anniversaries.length,
+        anni_count: Array.isArray(anniversaries) ? anniversaries.length : 0,
         gift_count: snapshot.gift_count || 0,
         together_days: snapshot.together_days || 0
       })
@@ -163,6 +203,7 @@ Page({
   },
 
   findNearestAnni(anniversaries) {
+    if (!Array.isArray(anniversaries)) return null
     const now = new Date()
     let nearest = null
     for (const a of anniversaries) {
@@ -177,10 +218,10 @@ Page({
   },
 
   findTodayAnni(anniversaries) {
+    if (!Array.isArray(anniversaries)) return null
     const now = new Date()
     const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`
-    const found = anniversaries.filter(a => a.date_val === todayStr)
-    return found.length > 0 ? found : null
+    return anniversaries.find(a => a && a.date_val === todayStr) || null
   },
 
   setOtherAnniFlag() {
@@ -189,7 +230,7 @@ Page({
       this.setData({ hasOtherAnni: !!nearestAnni })
       return
     }
-    const isSame = todayAnni.some(t => t.title === nearestAnni.title)
+    const isSame = todayAnni.title === nearestAnni.title
     this.setData({ hasOtherAnni: !isSame })
   },
 
@@ -199,7 +240,19 @@ Page({
     try {
       const res = await api.getDailyAdventure()
       if (res.triggered && !res.already_done) {
-        this.setData({ showAdventure: true, adventureData: res })
+        const reward = res.reward || {}
+        this.setData({
+          showAdventure: true,
+          adventureData: {
+            ...res,
+            reward: {
+              shards: reward.shards || 0,
+              exp: reward.exp || 0,
+              tickets: reward.tickets || 0,
+            },
+            week_summary: res.week_summary || null,
+          },
+        })
         setTimeout(() => this.setData({ showAdventure: false }), 4000)
       }
     } catch (e) { /* 静默 */ }
@@ -224,16 +277,27 @@ Page({
     }, 3000)
   },
 
-  go(e) { 
-    const url = e.currentTarget.dataset.url
-    if (url === '/pages/plans/plans') {
-      wx.switchTab({ url })
-    } else {
-      wx.navigateTo({ url })
-    }
+  go(e) {
+    nav.openPage(e.currentTarget.dataset.url)
   },
-  goTab(e) { wx.switchTab({ url: e.currentTarget.dataset.url }) },
-  goBind() { wx.switchTab({ url: '/pages/settings/settings' }) },
+  goTab(e) {
+    nav.openPage(e.currentTarget.dataset.url)
+  },
+  goBind() { nav.openPage('/pages/settings/settings') },
+
+  onCheckinTap() {
+    if (this.data.checkedInToday) {
+      nav.openPage('/pages/level/level')
+      return
+    }
+    api.doCheckin()
+      .then(() => {
+        this.setData({ checkedInToday: true })
+        wx.showToast({ title: '签到成功 +5积分', icon: 'none' })
+        this.loadSpark()
+      })
+      .catch(() => wx.showToast({ title: '签到失败', icon: 'none' }))
+  },
 
   // ===== 新用户引导 =====
 
@@ -295,6 +359,7 @@ Page({
       petImageUrl: getFullImageUrl(pet.image_url),
       petAnimationClass: anim,
       petName: pet.form_label || '宠物',
+      petRarity: pet.rarity || 'R',
       intimacyLevel: intimacy,
       intimacyPct: Math.min(100, Math.round(intimacy)),
       petDescription: `形态：${pet.form_label || pet.form} | 亲密度：${intimacy}/100`,
@@ -318,10 +383,8 @@ Page({
 
   goPetPage() {
     this.setData({ showPetModal: false })
-    wx.navigateTo({ url: '/pages/pets/pets' })
+    nav.openPage('/pages/pets/pets')
   },
-
-  stopPropagation() {},
 
   /** 展示互动反馈emoji（漂浮动画） */
   showActionEmojiWithAnim(emoji, animClass) {
@@ -426,10 +489,7 @@ Page({
     setTimeout(() => { this.setData({ petActionClass: '' }) }, 1000)
   },
 
-  /** 点击宠物容器 → 宠物管理页面（唯一入口） */
-  goPetPage() {
-    wx.navigateTo({ url: '/pages/pets/pets' })
-  },
+  stopPropagation() {},
 
   async feedCurrentPet() {
     const { petId } = this.data

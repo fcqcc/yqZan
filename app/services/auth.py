@@ -94,6 +94,8 @@ def get_or_create_user_by_openid(openid: str, db: Session) -> User:
 
     user = User(
         openid=openid,
+        nickname=openid,  # 默认用 openid 作为昵称
+        password_hash='',  # 微信登录无需密码
         invite_code=code,
     )
     db.add(user)

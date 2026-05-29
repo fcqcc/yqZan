@@ -7,7 +7,8 @@ Page({
     nickname: '',
     loading: false,
     nicknameLoading: false,
-    error: ''
+    error: '',
+    afterLoginGoBind: false,
   },
 
   onShow() {
@@ -47,7 +48,11 @@ Page({
           loading: false
         })
       } else {
-        wx.reLaunch({ url: '/pages/home/home' })
+        const dest = this.data.afterLoginGoBind
+          ? '/pages/settings/settings'
+          : '/pages/home/home'
+        this.setData({ afterLoginGoBind: false })
+        wx.reLaunch({ url: dest })
       }
     } catch (e) {
       this.setData({
@@ -69,12 +74,26 @@ Page({
       const user = await api.setNickname(name)
       wx.setStorageSync('userInfo', user)
       getApp().globalData.userInfo = user
-      wx.reLaunch({ url: '/pages/home/home' })
+      const dest = this.data.afterLoginGoBind
+        ? '/pages/settings/settings'
+        : '/pages/home/home'
+      this.setData({ afterLoginGoBind: false })
+      wx.reLaunch({ url: dest })
     } catch (e) {
       this.setData({
         error: (e && (e.detail || e.message)) || '设置昵称失败',
         nicknameLoading: false
       })
     }
-  }
+  },
+
+  goBindPartner() {
+    const token = wx.getStorageSync('token')
+    if (token) {
+      wx.reLaunch({ url: '/pages/settings/settings' })
+      return
+    }
+    this.setData({ afterLoginGoBind: true })
+    wx.showToast({ title: '请先完成微信登录', icon: 'none' })
+  },
 })

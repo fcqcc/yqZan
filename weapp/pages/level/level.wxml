@@ -1,42 +1,57 @@
 <scroll-view class="page" scroll-y>
-  <view class="page-title">⭐ 攒钱等级</view>
-  <view class="card" style="text-align:center;padding:20px">
-    <view style="font-size:48px;font-weight:900;color:var(--pink-dark)">Lv{{level}}</view>
-    <view class="progress-bar" style="margin:10px 0"><view class="progress-fill" style="width:{{progress_pct}}%"></view></view>
-    <view style="font-size:12px;color:var(--text-secondary)">{{current_exp}} / {{next_level_exp}} ({{progress_pct}}%)</view>
+  <!-- 等级头部 -->
+  <view class="level-header">
+    <text class="level-badge">🏅</text>
+    <text class="level-number">{{level}} 级</text>
+    <text class="level-title-text">{{levelTitle}}</text>
+    <text class="level-next">还差 {{expRemaining}} 经验升级到 {{level + 1}} 级</text>
   </view>
 
-  <!-- 等级解锁功能 -->
-  <view wx:if="{{nextUnlock}}" class="card next-unlock-card">
-    <view class="section-title">🔒 下一个解锁</view>
-    <view class="next-unlock">
-      <text class="nu-lv">Lv.{{nextUnlock.level}}</text>
-      <view class="nu-info">
-        <text class="nu-name">{{nextUnlock.name}}</text>
-        <text class="nu-desc">{{nextUnlock.desc}}</text>
-      </view>
+  <!-- 经验卡片 -->
+  <view class="exp-card">
+    <view class="exp-header">
+      <text class="exp-label">当前经验</text>
+      <text class="exp-value">{{current_exp}} / {{next_level_exp}}</text>
+    </view>
+    <view class="progress-bar">
+      <view class="progress-fill" style="width:{{progress_pct}}%"></view>
     </view>
   </view>
 
-  <view wx:if="{{unlocks.length > 0}}" class="card">
-    <view class="section-title">✅ 已解锁功能</view>
+  <!-- 等级特权 -->
+  <view class="section-header">
+    <view class="section-title"><text>📜</text> 等级特权</view>
+  </view>
+  <view class="unlock-list">
+    <view wx:if="{{nextUnlock}}" class="unlock-item unlock-item--locked">
+      <text class="unlock-icon">🌟</text>
+      <view class="unlock-info">
+        <text class="unlock-name">{{nextUnlock.name}}</text>
+        <text class="unlock-level">{{nextUnlock.level}}级解锁</text>
+      </view>
+      <text class="unlock-lock">🔒</text>
+    </view>
     <view wx:for="{{unlocks}}" wx:key="feature" class="unlock-item">
-      <text class="unlock-check">✅</text>
+      <text class="unlock-icon">🎨</text>
       <view class="unlock-info">
         <text class="unlock-name">{{item.name}}</text>
-        <text class="unlock-desc">{{item.desc}}</text>
+        <text class="unlock-level">{{item.desc}}</text>
       </view>
+      <text class="unlock-check">✓</text>
     </view>
   </view>
 
-  <view class="card">
-    <view class="section-title">📋 最近经验记录</view>
-    <view wx:for="{{logs}}" wx:key="id" class="list-item">
-      <view class="list-info">
-        <view class="list-sub">{{item.reason}}</view>
-        <view class="list-sub" style="font-size:11px">{{item.logDate}}</view>
+  <!-- 经验记录 -->
+  <view class="section-header">
+    <view class="section-title"><text>📋</text> 最近经验记录</view>
+  </view>
+  <view class="log-list">
+    <view wx:for="{{logs}}" wx:key="id" class="log-item">
+      <view class="log-info">
+        <text class="log-reason">{{item.reason}}</text>
+        <text class="log-date">{{item.logDate}}</text>
       </view>
-      <text style="color:#2e7d32;font-weight:700">+{{item.amount}}</text>
+      <text class="log-amount">+{{item.amount}}</text>
     </view>
     <view wx:if="{{!logs.length}}" class="empty">暂无记录</view>
   </view>

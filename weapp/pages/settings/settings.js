@@ -1,6 +1,7 @@
 // pages/settings/settings.js
 const api = require('../../utils/api')
 const theme = require('../../utils/theme')
+const nav = require('../../utils/nav')
 
 function firstChar(name) {
   const s = (name || '').trim()
@@ -22,8 +23,14 @@ Page({
     partnerInitial: '?',
     coupleTitle: '',
     partnerLine: '等待绑定',
-    progressActive: '#D65C8A',
-    progressBg: 'rgba(214, 92, 138, 0.16)'
+    togetherDays: 0,
+    sparkCount: 0,
+    shards: 0,
+    tickets: 0,
+    petCount: 0,
+    collectionProgress: '0/0',
+    progressActive: '#FF6B9D',
+    progressBg: 'rgba(255, 107, 157, 0.14)'
   },
 
   onShow() {
@@ -40,6 +47,32 @@ Page({
     })
     this.loadPartner()
     this.loadLevel()
+    this.loadProfileStats()
+  },
+
+  async loadProfileStats() {
+    try {
+      const [spark, tickets, snapshot, pets, bestiary] = await Promise.all([
+        api.getSpark().catch(() => ({})),
+        api.getTickets().catch(() => ({})),
+        api.getCardSnapshot().catch(() => ({})),
+        api.getPets().catch(() => []),
+        api.getBestiary().catch(() => ({})),
+      ])
+      const petsList = Array.isArray(pets) ? pets : (pets.pets || [])
+      const obtained = (bestiary.pets || []).filter(p => p.obtained).length
+      const total = (bestiary.pets || []).length
+      const achUnlocked = (bestiary.achievements || []).filter(a => a.unlocked).length
+      const achTotal = (bestiary.achievements || []).length || 0
+      this.setData({
+        sparkCount: spark.spark_count || 0,
+        togetherDays: snapshot.together_days || 0,
+        shards: tickets.shards || 0,
+        tickets: tickets.tickets || 0,
+        petCount: petsList.length,
+        collectionProgress: achTotal ? `${achUnlocked}/${achTotal}` : `${obtained}/${total || 0}`,
+      })
+    } catch (e) {}
   },
 
   async loadLevel() {
@@ -133,15 +166,40 @@ Page({
   },
 
   goToAchievements() {
-    wx.navigateTo({ url: '/pages/level/level' })
+    nav.openPage('/pages/level/level')
   },
 
   goToAnniversaries() {
-    wx.navigateTo({ url: '/pages/anniversaries/anniversaries' })
+    nav.openPage('/pages/anniversaries/anniversaries')
   },
 
   goToWallet() {
-    wx.navigateTo({ url: '/pages/plans/plans' })
+    nav.openPage('/pages/plans/plans')
+  },
+
+  goToBackpack() {
+    nav.openPage('/pages/backpack/backpack')
+  },
+
+  goToGacha() {
+    nav.openPage('/pages/gacha/gacha')
+  },
+
+  goToPets() {
+    nav.openPage('/pages/pets/pets')
+  },
+
+  goToNotes() {
+    nav.openPage('/pages/notes/notes')
+  },
+
+  onBindMenuTap() {
+    if (this.data.partner) {
+      this.unbindPartner()
+    } else {
+      wx.pageScrollTo({ scrollTop: 0, duration: 300 })
+      wx.showToast({ title: '请在上方输入邀请码', icon: 'none' })
+    }
   },
 
   goToAbout() {

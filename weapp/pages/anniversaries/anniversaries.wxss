@@ -1,119 +1,97 @@
-/* pages/anniversaries/anniversaries.wxss */
-.page { height: 100vh; background: transparent; }
-.page-title { font-size: 18px; font-weight: 800; color: var(--text); padding: 12px 16px 2px; }
-.page-subtitle { font-size: 12px; color: var(--text-secondary); padding: 0 16px 8px; }
-.anni-actions { display: flex; gap: 8px; padding: 0 12px; margin-bottom: 8px; }
-.anni-actions .btn { flex: 1; }
-.card { margin: 0 12px 6px; padding: 14px 16px; background: var(--glass-bg); border-radius: var(--radius); border: var(--glass-border); box-shadow: var(--shadow-sm); }
-.card--today {
-  background: linear-gradient(135deg, #fff8e7, #ffefc0, #fff8e7);
-  background-size: 200% 200%;
-  animation: goldShimmer 3s ease-in-out infinite;
-  border: 2px solid #d4a017;
-  box-shadow: 0 0 16px rgba(212, 160, 23, 0.25), 0 2px 8px rgba(212, 160, 23, 0.12);
-}
-@keyframes goldShimmer {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-.empty { text-align: center; padding: 40px 16px; color: var(--text-light); font-size: 14px; }
-.overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 50; display: flex; align-items: flex-end; }
-.overlay-dismiss { position: absolute; inset: 0; }
-.sheet { width: 100%; background: #fff; border-radius: 24rpx 24rpx 0 0; padding: 20px; box-sizing: border-box; }
-.sheet--drawer { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
-.sheet-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
-.sheet-actions-inline { display: flex; gap: 8px; margin-top: 12px; }
-.sheet-actions-inline .btn { flex: 1; }
-.input { width: 100%; height: 40px; border: 1px solid #ddd; border-radius: 8px; padding: 0 12px; font-size: 14px; box-sizing: border-box; }
-.field { margin-bottom: 10px; }
-.field-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; display: block; }
-.input-picker { display: flex; align-items: center; color: var(--text); }
-
-/* ===== 日期选择器（底部滚轮） ===== */
-.overlay--picker-bottom { align-items: flex-end; }
-.date-picker-sheet {
-  width: 100%;
-  background: #fff;
-  border-radius: 24rpx 24rpx 0 0;
-  overflow: hidden;
-}
-.date-picker-bar {
+/* pages/anniversaries/anniversaries.wxss — 原型风格 */
+.anni-actions {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 20px;
-  border-bottom: 1rpx solid #f0f0f0;
-}
-.date-picker-link { font-size: 14px; color: #999; }
-.date-picker-link--strong { color: var(--pink-dark); font-weight: 600; }
-.date-picker-title { font-size: 15px; font-weight: 700; color: var(--text); }
-.date-picker-view { height: 220px; }
-.date-picker-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  color: var(--text);
-  height: 44px;
-}
-
-/* ===== 节日勾选弹窗 ===== */
-.holiday-picker {
-  width: 100%;
-  max-height: 80vh;
-  background: #fff;
-  border-radius: 24rpx 24rpx 0 0;
-  display: flex;
-  flex-direction: column;
-}
-.holiday-picker-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 20px 12px;
-  border-bottom: 1rpx solid #f0f0f0;
-}
-.holiday-picker-title { font-size: 16px; font-weight: 700; color: var(--text); }
-.holiday-picker-close { font-size: 20px; color: var(--text-muted); padding: 4px; }
-.holiday-picker-list { flex: 1; overflow-y: auto; padding: 8px 0; }
-.holiday-item {
-  display: flex;
-  align-items: center;
   gap: 10px;
-  padding: 12px 20px;
-  transition: background 0.1s;
+  padding: 12px;
 }
-.holiday-item:active { background: #fff5fb; }
-.holiday-item--disabled { opacity: 0.5; }
-.holiday-checkbox {
+
+.anni-list {
+  padding: 0 12px 24px;
+}
+
+.anni-item {
+  background: white;
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  position: relative;
+}
+
+.anni-item--today {
+  border: 2px solid var(--primary, #ff6b9d);
+  background: linear-gradient(135deg, #fff5f2, #ffe8f0);
+  box-shadow: 0 4px 16px rgba(255, 107, 157, 0.12);
+}
+
+.anni-icon {
+  font-size: 28px;
+  width: 44px;
+  text-align: center;
   flex-shrink: 0;
-  transform: scale(0.85);
 }
-.holiday-emoji { font-size: 24px; flex-shrink: 0; }
-.holiday-info { flex: 1; display: flex; flex-direction: column; gap: 1px; }
-.holiday-title { font-size: 14px; font-weight: 600; color: var(--text); }
-.holiday-date { font-size: 11px; color: var(--text-muted); }
-.holiday-tag { font-size: 10px; color: #999; background: #f0f0f0; padding: 2px 8px; border-radius: 999px; }
-.holiday-picker-footer {
-  padding: 12px 20px 20px;
-  border-top: 1rpx solid #f0f0f0;
+
+.anni-info {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 2px;
+  min-width: 0;
 }
-.holiday-picker-count { font-size: 12px; color: var(--text-secondary); text-align: center; }
 
-/* ===== 删除按钮 ===== */
-.del-btn {
+.anni-name {
   font-size: 14px;
+  font-weight: 600;
+  color: var(--text, #333);
+}
+
+.anni-date-text {
+  font-size: 11px;
+  color: var(--text-secondary, #666);
+}
+
+.anni-days-wrap {
+  text-align: right;
+  padding-right: 24px;
+}
+
+.anni-days-count {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary, #ff6b9d);
+}
+
+.anni-days-unit {
+  font-size: 11px;
+  color: var(--text-secondary, #666);
+  font-weight: 400;
+}
+
+.anni-today-tag {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary, #ff6b9d);
+}
+
+.del-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
   color: #ccc;
-  padding: 6px;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+  font-size: 16px;
+  padding: 4px;
+}
+
+.add-anni-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(214,92,138,0.06);
+  gap: 6px;
+  padding: 12px;
+  color: var(--primary, #ff6b9d);
+  font-size: 14px;
 }
-.del-btn:active { background: rgba(214,92,138,0.15); color: var(--pink-dark); }

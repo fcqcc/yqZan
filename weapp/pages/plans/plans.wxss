@@ -1,4 +1,4 @@
-/* pages/plans/plans.wxss — 存钱计划 */
+/* pages/plans/plans.wxss — 存钱计划（原型风格） */
 
 .plans-wrap {
   min-height: 100vh;
@@ -10,83 +10,129 @@
   box-sizing: border-box;
 }
 
-.plans-cta {
-  padding: 0 12px 12px;
+/* ===== 顶部头部 ===== */
+.plans-header {
+  padding: 20px 16px;
+  background: linear-gradient(180deg, #ff8fab 0%, #ff6b9d 50%, #d4a0f0 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 8px 24px rgba(255, 107, 157, 0.2);
 }
 
-.plan-card {
-  margin-bottom: 14px;
-  padding-top: 6px;
+.plans-header-left {
+  display: flex;
+  flex-direction: column;
 }
 
-.plan-head {
-  padding-right: 40px;
+.total-amount-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.88);
 }
 
-.plan-head-main {
-  min-width: 0;
+.total-amount-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(196, 61, 110, 0.2);
 }
 
-.plan-title-row {
+.add-plan-btn {
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--primary, #ff6b9d);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 4px;
+  box-shadow: 0 4px 12px rgba(255, 107, 157, 0.2);
 }
 
-.plan-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text);
+.plan-list {
+  padding: 0 12px 24px;
 }
 
-.plan-done-tag {
-  font-size: 11px;
+.plan-item {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(255, 140, 180, 0.12);
+  border: 1px solid rgba(255, 220, 232, 0.6);
+  position: relative;
+}
+
+.plan-item-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 18px;
+  color: #ccc;
+  padding: 4px 8px;
+  z-index: 2;
+}
+
+.plan-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-right: 24px;
+}
+
+.plan-item-title {
+  font-size: 15px;
   font-weight: 600;
-  color: var(--pink-dark);
-  background: rgba(214, 92, 138, 0.14);
-  padding: 2px 8px;
-  border-radius: 999px;
+  color: var(--text, #333);
+}
+
+.plan-item-status {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 8px;
+}
+
+.plan-item-status.active {
+  background: #e8f5e9;
+  color: #4caf50;
+}
+
+.plan-item-status.completed {
+  background: var(--primary-pale, #ffe8f0);
+  color: var(--primary, #ff6b9d);
 }
 
 .plan-amount-row {
-  margin-top: 6px;
-  font-size: 14px;
-  color: var(--text-secondary);
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 6px;
 }
 
-.plan-amount {
-  font-weight: 800;
-  color: var(--pink-dark);
-  font-variant-numeric: tabular-nums;
-}
-
-.plan-slash {
-  margin: 0 4px;
-  opacity: 0.5;
+.plan-current {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--primary, #ff6b9d);
 }
 
 .plan-target {
-  font-variant-numeric: tabular-nums;
-}
-
-.plan-deadline {
-  margin-top: 8px;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.plan-chevron {
   font-size: 14px;
-  color: var(--text-light);
-  line-height: 1.2;
+  color: var(--text-light, #999);
+}
+
+.plan-item-date {
+  font-size: 11px;
+  color: var(--text-light, #999);
+  margin-top: 6px;
 }
 
 .plan-foot-btn-wrap {
-  display: flex;
-  justify-content: flex-start;
-  margin-top: 14px;
+  margin-top: 10px;
 }
+
+/* ===== 弹窗/明细/庆祝特效 ===== */
 
 .plan-expand-panel {
   margin-top: 8px;
@@ -246,8 +292,8 @@
   max-width: 500px;
   background: #fffafc;
   border-radius: 20px 20px 0 0;
-  border-top: 1px solid #ffd6e8;
-  box-shadow: 0 -8px 28px rgba(214, 92, 138, 0.15);
+  border-top: 1px solid #ffdce8;
+  box-shadow: 0 -8px 28px rgba(255, 107, 157, 0.15);
   padding-bottom: calc(12px + constant(safe-area-inset-bottom));
   padding-bottom: calc(12px + env(safe-area-inset-bottom));
   box-sizing: border-box;
@@ -258,7 +304,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px 10px;
-  border-bottom: 1px solid rgba(214, 92, 138, 0.12);
+  border-bottom: 1px solid rgba(255, 107, 157, 0.12);
 }
 
 .deadline-picker-title {
@@ -734,7 +780,7 @@
 }
 
 .totem-amt {
-  color: #d65c8a;
+  color: #ff6b9d;
 }
 
 .totem-slash {

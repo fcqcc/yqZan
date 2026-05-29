@@ -1,110 +1,99 @@
-<!-- pages/settings/settings.wxml -->
+<!-- pages/settings/settings.wxml — 我的（原型风格） -->
 <view class="app-root app-theme-{{uiTheme}}">
   <scroll-view class="page-scroll" scroll-y show-scrollbar="{{false}}">
     <view class="page-inner">
-      <view class="couple-card glass-card">
-        <view class="avatar-group">
-          <image wx:if="{{myAvatar}}" class="avatar" src="{{myAvatar}}" mode="aspectFill" />
-          <view wx:else class="avatar avatar-ph">{{myInitial}}</view>
-          <block wx:if="{{partner}}">
-            <image wx:if="{{partnerAvatar}}" class="avatar partner" src="{{partnerAvatar}}" mode="aspectFill" />
-            <view wx:else class="avatar partner avatar-ph">{{partnerInitial}}</view>
-          </block>
-          <view wx:else class="avatar partner avatar-slot">
-            <cp-icon name="heart-line" size="40" />
-          </view>
-        </view>
-        <view class="couple-info">
-          <text class="couple-name">{{coupleTitle}}</text>
-          <view class="couple-slogan-wrap">
-            <text class="couple-slogan">一起攒，一起实现</text>
-          </view>
-        </view>
-        <view class="level-badge">
-          <text class="level-text">Lv.{{level}}</text>
-          <progress
-            class="level-progress"
-            percent="{{expPercent}}"
-            stroke-width="4"
-            activeColor="{{progressActive}}"
-            backgroundColor="{{progressBg}}"
-            border-radius="10"
-            active
-          />
-        </view>
-      </view>
 
-      <view class="info-card glass-card" wx:if="{{userInfo}}">
-        <view class="info-item">
-          <text class="info-label">昵称</text>
-          <view class="info-right">
-            <text class="info-value">{{userInfo.nickname}}</text>
-            <view class="icon-hit" catchtap="editNickname">
-              <cp-icon name="pencil" size="36" />
-            </view>
-          </view>
+      <!-- 粉色渐变头部 -->
+      <view class="profile-header">
+        <view class="profile-avatars">
+          <view class="profile-avatar-item">{{myInitial}}</view>
+          <text class="profile-heart">💕</text>
+          <view class="profile-avatar-item profile-avatar-item--small">{{partner ? partnerInitial : '?'}}</view>
         </view>
-        <view class="divider" />
-        <view class="info-item">
-          <text class="info-label">邀请码</text>
-          <view class="info-right">
-            <text class="info-value code">{{userInfo.invite_code}}</text>
-            <view class="icon-hit" catchtap="copyInviteCode">
-              <cp-icon name="copy" size="36" />
-            </view>
+        <text class="profile-name">{{userInfo.nickname || '我'}}</text>
+        <text class="profile-code">邀请码: {{userInfo.invite_code || '------'}} · {{partner ? '已绑定伴侣' : '未绑定伴侣'}}</text>
+        <view class="profile-stats">
+          <view class="profile-stat">
+            <text class="profile-stat-value">{{level}}</text>
+            <text class="profile-stat-label">等级</text>
           </view>
-        </view>
-        <view class="divider" />
-        <view class="info-item">
-          <text class="info-label">伴侣</text>
-          <view class="info-right">
-            <text class="info-value">{{partnerLine}}</text>
-            <view class="icon-hit" catchtap="viewPartner">
-              <cp-icon name="users" size="36" />
-            </view>
+          <view class="profile-stat">
+            <text class="profile-stat-value">{{togetherDays}}</text>
+            <text class="profile-stat-label">在一起</text>
+          </view>
+          <view class="profile-stat">
+            <text class="profile-stat-value">{{sparkCount}}</text>
+            <text class="profile-stat-label">火花</text>
           </view>
         </view>
       </view>
 
-      <view wx:if="{{!partner}}" class="bind-card glass-card">
+      <!-- 绑定伴侣（未绑定时显示） -->
+      <view wx:if="{{!partner}}" class="bind-card">
         <view class="bind-title">💞 绑定伴侣</view>
         <view class="bind-desc">输入对方的邀请码，一起攒钱</view>
         <input class="input bind-input" placeholder="对方的6位邀请码" model:value="{{inviteCodeInput}}" maxlength="6" />
         <button class="bind-btn" bindtap="handleBind">绑定</button>
       </view>
-      <view wx:else class="bound-tip glass-card">
-        <view class="bound-title">💞 已绑定</view>
-        <text class="bound-name">{{partner.nickname}}</text>
-      </view>
 
-      <view class="menu-list glass-card">
-        <view class="menu-item" bindtap="goToWallet" hover-class="menu-item-hover" hover-stay-time="70">
-          <view class="menu-left">
-            <view class="menu-icon-wrap"><cp-icon name="wallet" size="40" /></view>
-            <text class="menu-title">存钱计划</text>
+      <!-- 菜单组 -->
+      <view class="menu-section">
+        <view class="menu-group">
+          <view class="menu-item" bindtap="goToPets" hover-class="menu-item-hover">
+            <view class="menu-icon">🐾</view>
+            <text class="menu-text">宠物管理</text>
+            <text wx:if="{{petCount > 0}}" class="menu-sub">{{petCount}} 只</text>
+            <text class="menu-arrow">›</text>
           </view>
-          <text class="menu-chevron">›</text>
+          <view class="menu-item" bindtap="goToAnniversaries" hover-class="menu-item-hover">
+            <view class="menu-icon">📅</view>
+            <text class="menu-text">纪念日</text>
+            <text class="menu-arrow">›</text>
+          </view>
+          <view class="menu-item" bindtap="goToNotes" hover-class="menu-item-hover">
+            <view class="menu-icon">💌</view>
+            <text class="menu-text">留言板</text>
+            <text class="menu-arrow">›</text>
+          </view>
+          <view class="menu-item" bindtap="goToGacha" hover-class="menu-item-hover">
+            <view class="menu-icon">🎰</view>
+            <text class="menu-text">扭蛋抽卡</text>
+            <text wx:if="{{tickets > 0}}" class="menu-badge">{{tickets}}</text>
+            <text class="menu-arrow">›</text>
+          </view>
+          <view class="menu-item menu-item-last" bindtap="goToBackpack" hover-class="menu-item-hover">
+            <view class="menu-icon">🎒</view>
+            <text class="menu-text">背包/图鉴/成就</text>
+            <text class="menu-sub">{{collectionProgress}}</text>
+            <text class="menu-arrow">›</text>
+          </view>
         </view>
-        <view class="menu-item" bindtap="goToAchievements" hover-class="menu-item-hover" hover-stay-time="70">
-          <view class="menu-left">
-            <view class="menu-icon-wrap"><cp-icon name="trophy" size="40" /></view>
-            <text class="menu-title">攒钱等级</text>
+
+        <view class="menu-group">
+          <view class="menu-item" bindtap="goToAchievements" hover-class="menu-item-hover">
+            <view class="menu-icon">🏆</view>
+            <text class="menu-text">攒钱等级</text>
+            <text class="menu-value">Lv.{{level}}</text>
+            <text class="menu-arrow">›</text>
           </view>
-          <text class="menu-chevron">›</text>
+          <view class="menu-item" bindtap="goToWallet" hover-class="menu-item-hover">
+            <view class="menu-icon">💰</view>
+            <text class="menu-text">存钱计划</text>
+            <text class="menu-arrow">›</text>
+          </view>
         </view>
-        <view class="menu-item" bindtap="goToAnniversaries" hover-class="menu-item-hover" hover-stay-time="70">
-          <view class="menu-left">
-            <view class="menu-icon-wrap"><cp-icon name="heart" size="40" /></view>
-            <text class="menu-title">纪念日</text>
+
+        <view class="menu-group">
+          <view class="menu-item" bindtap="onBindMenuTap" hover-class="menu-item-hover">
+            <view class="menu-icon">🔗</view>
+            <text class="menu-text">绑定/解绑伴侣</text>
+            <text class="menu-arrow">›</text>
           </view>
-          <text class="menu-chevron">›</text>
-        </view>
-        <view class="menu-item menu-item-last" bindtap="goToAbout" hover-class="menu-item-hover" hover-stay-time="70">
-          <view class="menu-left">
-            <view class="menu-icon-wrap"><cp-icon name="gear" size="40" /></view>
-            <text class="menu-title">关于一起攒</text>
+          <view class="menu-item menu-item-last" bindtap="goToAbout" hover-class="menu-item-hover">
+            <view class="menu-icon">⚙️</view>
+            <text class="menu-text">设置</text>
+            <text class="menu-arrow">›</text>
           </view>
-          <text class="menu-chevron">›</text>
         </view>
       </view>
 

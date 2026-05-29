@@ -1,19 +1,23 @@
-<!-- pages/backpack/backpack.wxml — 背包 & 图鉴 -->
+<!-- pages/backpack/backpack.wxml — 背包 & 图鉴（粉红主题） -->
 <scroll-view class="page" scroll-y>
-  <!-- ===== 主 TAB 切换 ===== -->
-  <view class="tab-bar">
-    <view
-      class="tab-item {{tab === 'backpack' ? 'tab-item--active' : ''}}"
-      bindtap="switchTab" data-tab="backpack"
-    >🎒 背包</view>
-    <view
-      class="tab-item {{tab === 'pokedex' ? 'tab-item--active' : ''}}"
-      bindtap="switchTab" data-tab="pokedex"
-    >📖 图鉴</view>
-    <view
-      class="tab-item {{tab === 'crystals' ? 'tab-item--active' : ''}}"
-      bindtap="switchTab" data-tab="crystals"
-    >💎 晶石</view>
+  <!-- ===== 背包头部 ===== -->
+  <view class="bp-header">
+    <view class="bp-header-bg"></view>
+    <view class="bp-header-title-row">
+      <text class="bp-header-icon">🎒</text>
+      <text class="bp-header-title">背包</text>
+    </view>
+    <text class="bp-header-sub">管理你的道具与收藏</text>
+    <view class="bp-dot bp-dot--1"></view>
+    <view class="bp-dot bp-dot--2"></view>
+  </view>
+
+  <!-- ===== 主 TAB 切换（原型 4 Tab） ===== -->
+  <view class="backpack-tabs">
+    <view class="bp-tab {{tab === 'backpack' ? 'bp-tab--active' : ''}}" bindtap="switchTab" data-tab="backpack">背包</view>
+    <view class="bp-tab {{tab === 'pokedex' ? 'bp-tab--active' : ''}}" bindtap="switchTab" data-tab="pokedex">图鉴</view>
+    <view class="bp-tab {{tab === 'achievements' ? 'bp-tab--active' : ''}}" bindtap="switchTab" data-tab="achievements">成就</view>
+    <view class="bp-tab {{tab === 'crystals' ? 'bp-tab--active' : ''}}" bindtap="switchTab" data-tab="crystals">晶石商店</view>
   </view>
 
   <!-- ============================ 背包 TAB ============================ -->
@@ -38,23 +42,19 @@
       <text class="empty-sub">去扭蛋机抽卡获得各种道具！</text>
     </view>
 
-    <!-- 卡片网格 -->
-    <view wx:if="{{filteredItems.length > 0}}" class="card-grid">
+    <!-- 卡片网格（原型 4 列） -->
+    <view wx:if="{{filteredItems.length > 0}}" class="bp-grid">
       <view
         wx:for="{{filteredItems}}"
         wx:key="id"
-        class="item-card {{item.usable ? 'item-card--usable' : ''}}"
+        class="bp-item {{item.usable ? 'bp-item--usable' : ''}}"
         bindtap="onUseItem"
         data-id="{{item.id}}"
         data-name="{{item.name}}"
       >
-        <view class="item-card-top">
-          <text class="item-card-icon">{{item.icon || '📦'}}</text>
-          <text wx:if="{{item.quantity > 1}}" class="item-card-qty">×{{item.quantity}}</text>
-        </view>
-        <text class="item-card-name">{{item.name}}</text>
-        <text class="item-card-desc">{{item.desc}}</text>
-        <view wx:if="{{item.usable}}" class="item-card-btn">使用</view>
+        <text class="bp-item-icon">{{item.icon || '📦'}}</text>
+        <text class="bp-item-name">{{item.name}}</text>
+        <text class="bp-item-count">×{{item.quantity || 1}}</text>
       </view>
     </view>
   </block>
@@ -70,10 +70,6 @@
         class="sub-tab {{pokedexTab === 'items' ? 'sub-tab--active' : ''}}"
         bindtap="switchPokedexTab" data-tab="items"
       >🎁 道具</view>
-      <view
-        class="sub-tab {{pokedexTab === 'achievements' ? 'sub-tab--active' : ''}}"
-        bindtap="switchPokedexTab" data-tab="achievements"
-      >🏆 成就</view>
     </view>
 
     <block wx:if="{{pokedexTab === 'pets'}}">
@@ -119,40 +115,45 @@
         </view>
       </view>
     </block>
+  </block>
 
-    <!-- 成就图鉴 -->
-    <block wx:if="{{pokedexTab === 'achievements'}}">
-      <!-- 分类子TAB -->
-      <scroll-view class="cat-scroll" scroll-x show-scrollbar="{{false}}">
-        <view class="cat-bar">
-          <view
-            wx:for="{{achCategories}}"
-            wx:key="*this"
-            class="cat-item {{achTab === item ? 'cat-item--active' : ''}}"
-            bindtap="switchAchTab"
-            data-cat="{{item}}"
-          >{{item}}</view>
-        </view>
-      </scroll-view>
-      <view class="section-card">
-        <text class="section-sub">共 {{achievements.length}} 项，已解锁 {{achievementsUnlocked}} 项</text>
-        <view wx:if="{{filteredAch.length === 0}}" class="empty" style="padding:20px 0">
-          <text class="empty-icon">🏆</text>
-          <text>该分类暂无成就</text>
-        </view>
-        <view wx:else class="ach-grid">
-          <view wx:for="{{filteredAch}}" wx:key="id" class="ach-cell {{item.unlocked ? (item.hidden ? 'ach-cell--hidden-unlocked' : 'ach-cell--unlocked') : 'ach-cell--locked'}}">
-            <view class="ach-cell-top">
-              <text class="ach-icon">{{item.unlocked ? (item.hidden ? '🌟' : '🏆') : '🔒'}}</text>
-              <text wx:if="{{item.unlocked && !item.hidden}}" class="ach-reward">{{item.reward_type === 'shards' ? '💎' : '🎟️'}}+{{item.reward_amount}}</text>
-              <text wx:if="{{item.hidden && !item.unlocked}}" class="ach-hidden-tag">??</text>
-            </view>
-            <text class="ach-name">{{item.unlocked ? item.name : (item.hidden ? '???' : item.name)}}</text>
-            <text class="ach-desc">{{item.unlocked ? item.desc : (item.hidden ? '达成特定条件解锁' : item.desc)}}</text>
+  <!-- ============================ 成就 TAB（原型独立 Tab） ============================ -->
+  <block wx:if="{{tab === 'achievements'}}">
+    <scroll-view class="cat-scroll" scroll-x show-scrollbar="{{false}}">
+      <view class="cat-bar">
+        <view
+          wx:for="{{achCategories}}"
+          wx:key="*this"
+          class="cat-item {{achTab === item ? 'cat-item--active' : ''}}"
+          bindtap="switchAchTab"
+          data-cat="{{item}}"
+        >{{item}}</view>
+      </view>
+    </scroll-view>
+    <view class="bp-content">
+      <text class="section-sub">共 {{achievements.length}} 项，已解锁 {{achievementsUnlocked}} 项</text>
+      <view wx:if="{{filteredAch.length === 0}}" class="empty">
+        <text class="empty-icon">🏆</text>
+        <text>该分类暂无成就</text>
+      </view>
+      <view wx:else class="achievement-list">
+        <view wx:for="{{filteredAch}}" wx:key="id" class="achievement-item">
+          <view class="achievement-icon {{item.unlocked ? 'achievement-icon--gold' : 'achievement-icon--locked'}}">
+            {{item.unlocked ? '🏆' : '🔒'}}
           </view>
+          <view class="achievement-info">
+            <text class="achievement-name">{{item.unlocked ? item.name : (item.hidden ? '???' : item.name)}}</text>
+            <text class="achievement-desc">{{item.unlocked ? item.desc : '达成特定条件解锁'}}</text>
+            <view wx:if="{{!item.unlocked && item.progress != null}}" class="achievement-progress">
+              <view class="progress-mini">
+                <view class="progress-mini-fill" style="width:{{item.progress}}%"></view>
+              </view>
+            </view>
+          </view>
+          <text wx:if="{{item.unlocked}}" class="achievement-reward">{{item.reward_type === 'shards' ? '💎' : '🎟️'}}+{{item.reward_amount}}</text>
         </view>
       </view>
-    </block>
+    </view>
   </block>
 
   <!-- ============================ 晶石商店 TAB ============================ -->

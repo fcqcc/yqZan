@@ -1,12 +1,16 @@
-<!-- pages/plans/plans.wxml -->
+<!-- pages/plans/plans.wxml — 存钱计划（原型风格） -->
 <view class="plans-wrap">
   <scroll-view class="page page--scroll" scroll-y>
-    <view class="page-title">存钱计划</view>
-    <view class="page-subtitle">设定目标，一笔笔攒，一起实现</view>
-
-    <view class="plans-cta">
-      <button class="btn btn-primary btn-block" bindtap="toggleForm">＋ 新计划</button>
+    <!-- 顶部：累计已存 + 新建计划 -->
+    <view class="plans-header">
+      <view class="plans-header-left">
+        <text class="total-amount-label">累计已存</text>
+        <text class="total-amount-value">¥{{totalSaved}}</text>
+      </view>
+      <view class="add-plan-btn" bindtap="toggleForm"><text>+</text> 新建计划</view>
     </view>
+
+    <view class="plan-list">
 
     <view wx:if="{{showForm}}" class="overlay" bindtap="toggleForm">
       <view class="sheet sheet--drawer" catchtap="catchTap">
@@ -67,58 +71,41 @@
       </view>
     </view>
 
-    <view wx:for="{{plans}}" wx:key="id" class="card plan-card">
+    <view wx:for="{{plans}}" wx:key="id" class="plan-item">
       <view
-        class="card-close-hit"
+        class="plan-item-close"
         catchtap="del"
         data-id="{{item.id}}"
-        hover-class="card-close-hit--press"
-        hover-stay-time="60"
       >×</view>
-      <view class="plan-head" bindtap="toggleExpand" data-index="{{index}}">
-        <view class="plan-head-main">
-          <view class="plan-title-row">
-            <text class="plan-title">{{item.title}}</text>
-            <text wx:if="{{item.done}}" class="plan-done-tag">已完成</text>
-            <text wx:elif="{{item.unlimited}}" class="plan-badge-plan-tag">不限时</text>
-            <text wx:elif="{{item.remaining_days != null}}" class="plan-badge-plan-tag plan-badge-limit">剩余{{item.remaining_days}}天</text>
-          </view>
-          <view class="plan-amount-row">
-            <text class="plan-amount">¥{{item._curText}}</text>
-            <text class="plan-slash">/</text>
-            <text class="plan-target">¥{{item._tarText}}</text>
-          </view>
-          <view wx:if="{{item.deadline_date}}" class="plan-deadline">
-            目标完成日：{{item.deadline_date}}
-          </view>
-        </view>
+      <view class="plan-item-header" bindtap="toggleExpand" data-index="{{index}}">
+        <text class="plan-item-title">{{item.title}}</text>
+        <text class="plan-item-status {{item.done ? 'completed' : 'active'}}">{{item.done ? '已完成' : '进行中'}}</text>
       </view>
-
-      <view class="progress-bar plan-progress">
+      <view class="plan-amount-row">
+        <text class="plan-current">¥{{item._curText}}</text>
+        <text class="plan-target">/ ¥{{item._tarText}}</text>
+      </view>
+      <view class="progress-bar">
         <view class="progress-fill" style="width:{{item.progressPct}}%;" />
       </view>
+      <view class="plan-item-date" wx:if="{{item.deadline_date}}">{{item.deadline_date}}</view>
 
       <view wx:if="{{!item.done}}" class="plan-foot-btn-wrap">
-        <button
-          class="btn btn-outline btn-sm"
-          catchtap="openDeliver"
-          data-id="{{item.id}}"
-        >记一笔</button>
+        <button class="btn btn-outline btn-sm" catchtap="openDeliver" data-id="{{item.id}}">🪙 记一笔</button>
       </view>
 
-      <view class="plan-expand-panel {{item.done ? 'plan-expand-panel--after-progress' : ''}}">
+      <view class="plan-expand-panel">
         <view class="plan-expand-bar" catchtap="toggleExpand" data-index="{{index}}">
-          <text class="plan-chevron">{{item.expanded ? '▲' : '▼'}}</text>
+          <text class="plan-chevron">{{item.expanded ? '▲' : '▼'}} 明细</text>
         </view>
         <view wx:if="{{item.expanded}}" class="plan-detail plan-detail--in-panel">
-          <view wx:if="{{item.deliveriesLoading}}" class="plan-detail-loading">加载明细…</view>
+          <view wx:if="{{item.deliveriesLoading}}" class="plan-detail-loading">加载中…</view>
           <block wx:else>
-            <view wx:if="{{!item.deliveries.length}}" class="plan-detail-empty">暂无存入记录，可点击上方「记一笔」添加</view>
+            <view wx:if="{{!item.deliveries.length}}" class="plan-detail-empty">暂无存入记录</view>
             <view wx:for="{{item.deliveries}}" wx:for-item="d" wx:for-index="di" wx:key="di" class="deliver-row">
               <view class="deliver-left">
                 <text class="deliver-amt">+¥{{d.amount}}</text>
                 <text wx:if="{{d.note}}" class="deliver-note">{{d.note}}</text>
-                <text wx:else class="deliver-note muted">无备注</text>
               </view>
               <text class="deliver-time">{{d._when}}</text>
             </view>
@@ -128,6 +115,7 @@
     </view>
 
     <view wx:if="{{!plans.length}}" class="empty">还没有存钱计划，先创建一个吧</view>
+    </view>
   </scroll-view>
 
   <!-- 完成日：底部滚轮（贴屏幕底） -->

@@ -1,34 +1,24 @@
-<!-- pages/notes/notes.wxml — 留言板 -->
+<!-- pages/notes/notes.wxml — 留言板（原型风格） -->
 <scroll-view class="page" scroll-y>
-  <view class="page-title">💌 留言板</view>
-  <view class="page-subtitle">给对方留一句心里话</view>
-
-  <view class="oak-input-board">
-    <textarea class="oak-input" placeholder="想对 Ta 说什么…" model:value="{{content}}" maxlength="200" auto-height />
-    <view class="oak-input-bar">
-      <text class="oak-count">{{content ? content.length : 0}}/200</text>
-      <button class="btn btn-primary btn-sm oak-send" bindtap="send">贴上</button>
-    </view>
+  <view class="notes-input-header">
+    <input class="notes-input" placeholder="写点什么..." model:value="{{content}}" maxlength="200" confirm-type="send" bindconfirm="send" />
+    <view class="notes-submit" bindtap="send">📌</view>
   </view>
 
-  <view class="oak-list">
-    <view wx:for="{{notes}}" wx:key="id" class="oak-row {{stickId === item.id ? 'oak-row--stick' : ''}}">
-      <view class="oak-row-pin" />
-      <view class="oak-row-paper {{item.isMine ? 'oak-mine' : 'oak-theirs'}}">
-        <!-- ✕ 删除（自己的留言才显示） -->
-        <text wx:if="{{item.isMine}}" class="oak-del" catchtap="del" data-id="{{item.id}}">✕</text>
-        <view class="oak-row-text">{{item.content}}</view>
-        <view class="oak-row-meta">
-          <text class="oak-author">{{item.isMine ? '我' : 'Ta'}}</text>
-          <text class="oak-date">{{item.dateShort}}</text>
-          <view class="oak-like" catchtap="like" data-id="{{item.id}}">
-            <text>{{item.liked ? '❤' : '♡'}}</text>
-            <text wx:if="{{item.likes}}" class="oak-like-num">{{item.likes}}</text>
-          </view>
+  <view class="notes-list">
+    <view wx:for="{{notes}}" wx:key="id" class="note-item {{item.isMine ? '' : 'note-item--partner'}}">
+      <text wx:if="{{item.isMine}}" class="note-del" catchtap="del" data-id="{{item.id}}">✕</text>
+      <view class="note-content">{{item.content}}</view>
+      <view class="note-meta">
+        <text>{{item.isMine ? '我' : 'Ta'}} · {{item.dateShort}}</text>
+        <view class="note-actions">
+          <text class="note-action {{item.liked ? 'note-action--liked' : ''}}" catchtap="like" data-id="{{item.id}}">
+            ❤️ {{item.likes || 0}}
+          </text>
         </view>
       </view>
     </view>
   </view>
 
-  <view wx:if="{{!notes || notes.length === 0}}" class="oak-empty">还没有留言，写第一条吧</view>
+  <view wx:if="{{!notes || notes.length === 0}}" class="empty">还没有留言，写第一条吧</view>
 </scroll-view>
