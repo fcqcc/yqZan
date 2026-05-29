@@ -4,7 +4,7 @@ const theme = require('./utils/theme')
 
 App({
   globalData: {
-    baseUrl: 'https://api.yqzan.cn',
+    baseUrl: 'https://yqzan.cn',
     token: '',
     userInfo: null,
     uiTheme: theme.UI_THEME
