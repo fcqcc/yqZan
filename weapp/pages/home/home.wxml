@@ -98,20 +98,19 @@
       </view>
     </view>
 
-    <!-- 签到 -->
-    <view class="checkin {{checkedInToday ? 'checkin--done' : ''}} {{checkinAnim}}" bindtap="onCheckinTap">
+    <!-- 签到（已签后隐藏） -->
+    <view wx:if="{{!checkedInToday}}" class="checkin {{checkinAnim}}" bindtap="onCheckinTap">
       <view class="checkin-icon-wrap">
-        <view class="checkin-icon {{checkedInToday ? 'checkin-icon--done' : ''}}">
-          <cp-icon wx:if="{{checkedInToday}}" name="sparkle" size="36" />
-          <cp-icon wx:else name="clock" size="36" />
+        <view class="checkin-icon">
+          <cp-icon name="clock" size="36" />
         </view>
       </view>
       <view class="checkin-copy">
-        <text class="checkin-title">{{checkedInToday ? '今日已签到' : '完成今日签到'}}</text>
+        <text class="checkin-title">完成今日签到</text>
         <text class="checkin-sub">连续 {{sparkCount}} 天 · 每日 +5 积分</text>
       </view>
-      <view class="checkin-cta {{checkedInToday ? 'checkin-cta--done' : ''}}">
-        {{checkedInToday ? '已完成' : '签到'}}
+      <view class="checkin-cta">
+        签到
       </view>
     </view>
 

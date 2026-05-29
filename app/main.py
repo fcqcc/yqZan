@@ -103,7 +103,7 @@ def startup():
 
 
 # 静态页面
-app.mount("/fortune", StaticFiles(directory="weapp/fortune", html=True), name="fortune")
+#app.mount("/fortune", StaticFiles(directory="weapp/fortune", html=True), name="fortune")
 # 宠物形象静态资源
 import os
 assets_dir = os.path.join(os.path.dirname(__file__), "..", "assets")

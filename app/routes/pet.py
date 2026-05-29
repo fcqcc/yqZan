@@ -88,9 +88,7 @@ def build_pet_response(pet: Pet, total_delivered: float):
         "next_form_ready": next_form_ready,
         "next_form_name": form_labels[current_idx + 1] if next_form and current_idx + 1 < len(form_labels) else None,
         "last_fed_at": pet.last_fed_at.isoformat() if pet.last_fed_at else None,
-        "today_interact_count": (1 if pet.last_fed_at is not None and pet.last_fed_at.date() == date.today() else 0)
-            + (1 if pet.last_pet_date is not None and pet.last_pet_date == date.today() else 0)
-            + (1 if pet.last_walk_date is not None and pet.last_walk_date == date.today() else 0),
+        "today_interact_count": pet.today_interact_count if pet.last_interact_date == date.today() else 0,
         "max_daily_interact": 3,
         "passive_skill": PASSIVE_SKILLS.get(pet.pet_type, {}).get("name", ""),
         "passive_skill_desc": PASSIVE_SKILLS.get(pet.pet_type, {}).get("desc", ""),
@@ -332,11 +330,13 @@ def feed_pet(pet_id: int, user: User = Depends(get_current_user), db: Session = 
     if not pet:
         raise HTTPException(404, "宠物不存在")
     today = date.today()
-    interact_count = (1 if pet.last_fed_at and pet.last_fed_at.date() == today else 0) \
-                   + (1 if pet.last_pet_date == today else 0) \
-                   + (1 if pet.last_walk_date == today else 0)
-    if interact_count >= 3:
+    # 重置或递增今日互动计数器
+    if pet.last_interact_date != today:
+        pet.today_interact_count = 0
+        pet.last_interact_date = today
+    if pet.today_interact_count >= 3:
         raise HTTPException(429, "今天互动次数已用完，明天再来吧～")
+    pet.today_interact_count += 1
     pet.intimacy = min(100, pet.intimacy + 3)
     pet.last_fed_at = datetime.now()
     add_exp_to_active_pet(cid, 1, db)
@@ -353,11 +353,12 @@ def pet_pet(pet_id: int, user: User = Depends(get_current_user), db: Session = D
     if not pet:
         raise HTTPException(404, "宠物不存在")
     today = date.today()
-    interact_count = (1 if pet.last_fed_at and pet.last_fed_at.date() == today else 0) \
-                   + (1 if pet.last_pet_date == today else 0) \
-                   + (1 if pet.last_walk_date == today else 0)
-    if interact_count >= 3:
+    if pet.last_interact_date != today:
+        pet.today_interact_count = 0
+        pet.last_interact_date = today
+    if pet.today_interact_count >= 3:
         raise HTTPException(429, "今天互动次数已用完，明天再来吧～")
+    pet.today_interact_count += 1
     pet.intimacy = min(100, pet.intimacy + 2)
     pet.last_pet_date = today
     add_exp_to_active_pet(cid, 1, db)
@@ -374,11 +375,12 @@ def walk_pet(pet_id: int, user: User = Depends(get_current_user), db: Session = 
     if not pet:
         raise HTTPException(404, "宠物不存在")
     today = date.today()
-    interact_count = (1 if pet.last_fed_at and pet.last_fed_at.date() == today else 0) \
-                   + (1 if pet.last_pet_date == today else 0) \
-                   + (1 if pet.last_walk_date == today else 0)
-    if interact_count >= 3:
+    if pet.last_interact_date != today:
+        pet.today_interact_count = 0
+        pet.last_interact_date = today
+    if pet.today_interact_count >= 3:
         raise HTTPException(429, "今天互动次数已用完，明天再来吧～")
+    pet.today_interact_count += 1
     pet.intimacy = min(100, pet.intimacy + 2)
     pet.last_walk_date = today
     add_exp_to_active_pet(cid, 1, db)

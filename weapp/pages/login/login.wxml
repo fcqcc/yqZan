@@ -3,21 +3,21 @@
   <view class="login-page">
     <!-- 未登录：展示欢迎 + 微信登录按钮 -->
     <block wx:if="{{!step}}">
-      <view class="login-logo">💕</view>
+      <view class="login-logo"></view>
       <view class="login-title">一起攒</view>
       <view class="login-subtitle">情侣存钱 · 共同成长</view>
       <button class="login-btn login-btn-primary" bindtap="handleWxLogin" loading="{{loading}}">
-        <text class="login-btn-icon">🍀</text> 微信一键登录
+        微信一键登录
       </button>
       <button class="login-btn login-btn-secondary" bindtap="goBindPartner">
-        <text class="login-btn-icon">💬</text> 已有账号？绑定伴侣
+        已有账号？绑定伴侣
       </button>
       <view class="login-footer">登录即表示同意《用户协议》和《隐私政策》</view>
     </block>
 
     <!-- 首次登录：设置昵称 -->
     <block wx:elif="{{step === 'set-nickname'}}">
-      <view class="login-logo">👋</view>
+      <view class="login-logo"></view>
       <view class="login-title">欢迎加入</view>
       <view class="login-subtitle">给自己取个喜欢的昵称吧</view>
       <input class="input nickname-input" placeholder="输入昵称" model:value="{{nickname}}" maxlength="12" />

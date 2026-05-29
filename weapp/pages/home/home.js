@@ -94,6 +94,7 @@ Page({
     todayInteractTotal: 0,
     intimacyDeg: 0,
     expDeg: 0,
+    checkingIn: false, // 签到防重复
   },
 
   onShow() {
@@ -112,9 +113,17 @@ Page({
     })
     this.loadData()
     this.loadPetData()
-    // 自动签到
-    api.doCheckin()
-      .then(() => this.setData({ checkedInToday: true }))
+    // 自动签到：先查状态，未签到才调签到接口
+    api.getCheckinStatus()
+      .then(s => {
+        if (s.checked_today) {
+          this.setData({ checkedInToday: true })
+        } else {
+          api.doCheckin()
+            .then(() => this.setData({ checkedInToday: true }))
+            .catch(() => {})
+        }
+      })
       .catch(() => {})
     this.loadSpark()
     this.loadCardTasks()
@@ -292,21 +301,17 @@ Page({
   goBind() { nav.openPage('/pages/settings/settings') },
 
   onCheckinTap() {
-    if (this.data.checkedInToday) {
-      nav.openPage('/pages/level/level')
-      return
-    }
-    // 先播动画
-    this.setData({ checkinAnim: 'checkin-bounce' })
+    if (this.data.checkedInToday || this.data.checkingIn) return
+    this.setData({ checkingIn: true, checkinAnim: 'checkin-bounce' })
     setTimeout(() => { this.setData({ checkinAnim: '' }) }, 500)
     api.doCheckin()
       .then(() => {
-        this.setData({ checkedInToday: true, checkinAnim: 'checkin-done-pop' })
-        setTimeout(() => { this.setData({ checkinAnim: '' }) }, 600)
+        this.setData({ checkedInToday: true })
         wx.showToast({ title: '签到成功 +5积分', icon: 'none' })
         this.loadSpark()
       })
       .catch(() => wx.showToast({ title: '签到失败', icon: 'none' }))
+      .finally(() => this.setData({ checkingIn: false }))
   },
 
   // ===== 新用户引导 =====

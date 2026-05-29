@@ -138,10 +138,11 @@ Page({
       const raw = await api.getPlans()
       const list = Array.isArray(raw) ? raw : []
       const plans = list.map(wrapPlan)
-      this.setData({ plans })
+      const totalSaved = plans.reduce((s, p) => s + (Number(p.current_amount) || 0), 0)
+      this.setData({ plans, totalSaved })
       this.checkCongratulate(plans)
     } catch (e) {
-      this.setData({ plans: [] })
+      this.setData({ plans: [], totalSaved: 0 })
     }
   },
 

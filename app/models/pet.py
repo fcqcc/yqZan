@@ -23,6 +23,8 @@ class Pet(Base):
     last_active_at = Column(Date, nullable=True)
     last_pet_date = Column(Date, nullable=True)  # 上次抚摸日期
     last_walk_date = Column(Date, nullable=True)  # 上次散步日期
+    today_interact_count = Column(Integer, default=0)  # 今日互动计数器
+    last_interact_date = Column(Date, nullable=True)  # 计数器对应的日期
     exp = Column(Integer, default=0)  # 当前经验值
     level = Column(Integer, default=1)  # 当前等级
     evolution_ready = Column(Boolean, default=False)  # 是否可进化
