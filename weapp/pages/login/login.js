@@ -18,10 +18,15 @@ Page({
   },
 
   onShow() {
-    // 如果已经有 token，直接跳转首页
+    // 已经有 token → 正常进入首页
     const token = wx.getStorageSync('token')
     if (token) {
       wx.reLaunch({ url: '/pages/home/home' })
+      return
+    }
+    // 无 token 但已同意隐私 → 游客模式浏览首页
+    if (wx.getStorageSync('privacy_agreed')) {
+      wx.reLaunch({ url: '/pages/home/home?guest=1' })
     }
   },
 

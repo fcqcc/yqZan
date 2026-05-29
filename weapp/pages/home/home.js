@@ -95,9 +95,25 @@ Page({
     intimacyDeg: 0,
     expDeg: 0,
     checkingIn: false, // 签到防重复
+    isGuest: false,     // 游客模式
+  },
+
+  onLoad(options) {
+    if (options && options.guest === '1') {
+      this.setData({ isGuest: true })
+    }
+  },
+
+  /** 游客模式点击 → 去登录 */
+  goGuestLogin() {
+    wx.reLaunch({ url: '/pages/login/login' })
   },
 
   onShow() {
+    if (this.data.isGuest) {
+      // 游客模式：只展示UI，不加载数据
+      return
+    }
     const userInfo = wx.getStorageSync('userInfo')
     if (!userInfo) { wx.reLaunch({ url: '/pages/login/login' }); return }
     const setHomeNav = () => wx.setNavigationBarColor({
