@@ -515,6 +515,29 @@ Page({
     setTimeout(() => { this.setData({ petActionClass: '' }) }, 700)
   },
 
+  /** 抚摸按钮：扇形摆动动画 + 调用抚摸接口 */
+  async onStroke() {
+    const { petId, lastInteractTime, todayInteractRemaining, _dailyInteractCount } = this.data
+    if (!petId) return
+    const now = Date.now()
+    if (now - lastInteractTime < 500) return
+    this.setData({ petActionClass: 'pet-fan-shake', lastInteractTime: now })
+    this.showActionEmojiWithAnim('🥰', 'emoji-float-up')
+    setTimeout(() => { this.setData({ petActionClass: '' }) }, 600)
+    if (todayInteractRemaining <= 0 || _dailyInteractCount >= 3) return
+    try {
+      await api.petPet(petId)
+      const newCount = _dailyInteractCount + 1
+      this.setData({ todayInteractRemaining: this.data.todayInteractRemaining - 1, todayInteractTotal: this.data.todayInteractTotal + 1, _dailyInteractCount: newCount })
+      wx.showToast({ title: '🥰 抚摸成功！', icon: 'none' })
+      this.loadPetData()
+    } catch (e) {
+      if (e._statusCode === 429) {
+        this.setData({ todayInteractRemaining: 0, _dailyInteractCount: 3 })
+      }
+    }
+  },
+
   /** 聊天按钮：轻快摇晃动画（纯前端，不调接口） */
   onTalk() {
     const { petId, lastInteractTime } = this.data

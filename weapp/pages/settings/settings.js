@@ -128,6 +128,10 @@ Page({
     }
   },
 
+  go(e) {
+    nav.openPage(e.currentTarget.dataset.url)
+  },
+
   editNickname() {
     const u = this.data.userInfo
     if (!u) return

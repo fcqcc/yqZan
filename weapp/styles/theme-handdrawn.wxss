@@ -323,7 +323,16 @@
   background: rgba(232, 145, 164, 0.08) !important;
 }
 
-/* ===== 菜单图标容器 ===== */
+/* ===== 菜单组 ===== */
+.app-theme-handdrawn .menu-group {
+  border: 2px dashed var(--hd-border) !important;
+  border-radius: 18px 8px 18px 8px !important;
+}
+.app-theme-handdrawn .menu-group--settings {
+  border: 2px dashed var(--hd-border) !important;
+  border-radius: 18px 8px 18px 8px !important;
+  margin-top: 0;
+}
 .app-theme-handdrawn .menu-icon {
   border: 2px dashed var(--hd-border) !important;
   border-radius: 10px 4px 10px 4px !important;

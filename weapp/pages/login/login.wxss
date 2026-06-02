@@ -78,6 +78,12 @@
   box-shadow: 0 4px 16px rgba(255, 107, 157, 0.1);
 }
 
+.login-logo { margin-bottom: 16px; }
+.login-logo-svg {
+  display: block;
+  filter: drop-shadow(2px 2px 0 rgba(232, 145, 164, 0.2));
+}
+
 .login-footer {
   margin-top: 40px;
   font-size: 11px;

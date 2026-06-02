@@ -291,6 +291,10 @@
               <view class="pet-dock-icon"><text>喂</text></view>
               <text>喂食</text>
             </view>
+            <view class="pet-dock-btn" bindtap="onStroke">
+              <view class="pet-dock-icon"><text>🤚</text></view>
+              <text>抚摸</text>
+            </view>
             <view class="pet-dock-btn" bindtap="onWalk">
               <view class="pet-dock-icon"><text>散</text></view>
               <text>散步</text>
