@@ -48,11 +48,11 @@
   </view>
 
   <!-- ===== 纪念日列表 ===== -->
-  <view class="anniv-list">
+  <view class="anniv-list anim-stagger">
     <view
       wx:for="{{filteredAnniversaries}}"
       wx:key="id"
-      class="anniv-item anniv-item--{{item.colorClass || 'pink'}}"
+      class="anniv-item anim-item anniv-item--{{item.colorClass || 'pink'}}"
     >
       <view class="anniv-item__art">{{item.icon || '💑'}}</view>
       <view class="anniv-item__body">
@@ -74,7 +74,7 @@
   <view wx:if="{{filteredAnniversaries.length === 0}}" class="empty">还没有纪念日</view>
 
   <!-- ===== FAB 浮动添加按钮 ===== -->
-  <view class="fab" bindtap="toggleForm">
+  <view class="fab btn-ripple" bindtap="toggleForm">
     <text>+</text>
   </view>
 

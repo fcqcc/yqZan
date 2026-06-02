@@ -3,7 +3,7 @@
     <!-- ===== 页面Header ===== -->
     <view class="page-header">
       <text class="page-title">存钱计划</text>
-      <view class="header-action" bindtap="toggleForm">+ 新建</view>
+      <view class="header-action btn-ripple" bindtap="toggleForm">+ 新建</view>
     </view>
 
     <!-- ===== 总存汇总卡 ===== -->
@@ -46,8 +46,8 @@
       <text class="plan-section-title__count">共 {{plans.length}} 个</text>
     </view>
 
-    <view class="plan-list">
-      <view wx:for="{{plans}}" wx:key="id" class="plan-card plan-card--{{item.colorClass || 'pink'}}">
+    <view class="plan-list anim-stagger">
+      <view wx:for="{{plans}}" wx:key="id" class="plan-card anim-item plan-card--{{item.colorClass || 'pink'}}">
         <view class="plan-card__head">
           <view class="plan-card__icon">{{item.icon || '💰'}}</view>
           <view class="plan-card__title-block">
@@ -63,13 +63,13 @@
           <text class="plan-card__pct">{{item.progressPct}}%</text>
         </view>
 
-        <view class="plan-card__bar">
+        <view class="plan-card__bar progress-shine">
           <view class="plan-card__bar-fill" style="width: {{item.progressPct}}%;"></view>
         </view>
 
         <view class="plan-card__footer">
           <text class="plan-card__date">{{item._dateRange}}</text>
-          <view wx:if="{{!item.done}}" class="plan-card__btn" catchtap="openDeliver" data-id="{{item.id}}">+ 记一笔</view>
+          <view wx:if="{{!item.done}}" class="plan-card__btn btn-ripple" catchtap="openDeliver" data-id="{{item.id}}">+ 记一笔</view>
           <view wx:else class="plan-card__btn plan-card__btn--done" catchtap="toggleExpand" data-index="{{index}}">查看明细</view>
         </view>
 

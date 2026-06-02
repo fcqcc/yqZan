@@ -2,7 +2,7 @@
   <!-- ===== 输入栏 ===== -->
   <view class="msg-input-bar">
     <input class="msg-input" placeholder="写点什么给 ta..." model:value="{{content}}" maxlength="200" confirm-type="send" bindconfirm="send" />
-    <view class="msg-sticker-btn" catchtap="toggleSticker">📌</view>
+    <view class="msg-sticker-btn btn-ripple" catchtap="toggleSticker">📌</view>
   </view>
 
   <!-- ===== 表情面板 ===== -->
@@ -17,12 +17,12 @@
   </view>
 
   <!-- ===== 留言列表 ===== -->
-  <view class="msg-list">
+  <view class="msg-list anim-stagger">
     <!-- 日期分隔 -->
     <view wx:if="{{todayNotes.length > 0}}" class="msg-day">
       <text class="msg-day__pill">今天</text>
     </view>
-    <view wx:for="{{todayNotes}}" wx:key="id" class="msg-item">
+    <view wx:for="{{todayNotes}}" wx:key="id" class="msg-item anim-item">
       <view class="msg-card msg-card--{{item.colorClass || 'pink'}}">
         <view class="msg-card__tape"></view>
         <text class="msg-card__del" catchtap="del" data-id="{{item.id}}">×</text>
@@ -50,7 +50,7 @@
     <view wx:if="{{yesterdayNotes.length > 0}}" class="msg-day">
       <text class="msg-day__pill">昨天 · {{yesterdayDateStr}}</text>
     </view>
-    <view wx:for="{{yesterdayNotes}}" wx:key="id" class="msg-item">
+    <view wx:for="{{yesterdayNotes}}" wx:key="id" class="msg-item anim-item">
       <view class="msg-card msg-card--{{item.colorClass || 'pink'}}">
         <view class="msg-card__tape"></view>
         <text class="msg-card__del" catchtap="del" data-id="{{item.id}}">×</text>
@@ -78,7 +78,7 @@
     <view wx:if="{{olderNotes.length > 0}}" class="msg-day">
       <text class="msg-day__pill">更早</text>
     </view>
-    <view wx:for="{{olderNotes}}" wx:key="id" class="msg-item">
+    <view wx:for="{{olderNotes}}" wx:key="id" class="msg-item anim-item">
       <view class="msg-card msg-card--{{item.colorClass || 'pink'}}">
         <view class="msg-card__tape"></view>
         <text class="msg-card__del" catchtap="del" data-id="{{item.id}}">×</text>
