@@ -16,6 +16,7 @@ Page({
     probList: [],
     useBoost: false,
     pityCount: 0,
+    uiTheme: getApp().globalData.uiTheme || 'handdrawn',
   },
 
   onLoad() {
@@ -39,6 +40,7 @@ Page({
   },
 
   onShow() {
+    this.setData({ uiTheme: getApp().globalData.uiTheme || 'handdrawn' })
     const userInfo = wx.getStorageSync('userInfo')
     if (!userInfo) { wx.reLaunch({ url: '/pages/login/login' }); return }
     this.loadTickets()

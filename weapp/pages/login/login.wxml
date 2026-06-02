@@ -17,6 +17,23 @@
     </view>
   </view>
 
+  <!-- 登录条款弹窗（合并隐私+采集同意） -->
+  <view wx:if="{{showLoginTerms}}" class="privacy-overlay">
+    <view class="privacy-card">
+      <view class="privacy-icon">🔒</view>
+      <text class="privacy-title">登录即表示同意</text>
+      <text class="privacy-desc">继续登录即表示您已阅读并同意以下条款</text>
+      <view class="privacy-links">
+        <text class="privacy-link" bindtap="onViewLoginUserAgreement">《用户服务协议》</text>
+        <text class="privacy-link" bindtap="onViewLoginPrivacyPolicy">《隐私政策》</text>
+      </view>
+      <view class="privacy-actions">
+        <button class="privacy-btn privacy-btn-agree" bindtap="onAgreeLoginTerms">同意并登录</button>
+        <button class="privacy-btn privacy-btn-disagree" bindtap="onDisagreeLoginTerms">不同意</button>
+      </view>
+    </view>
+  </view>
+
   <view class="login-page">
     <!-- 未登录：展示欢迎 + 微信登录按钮 -->
     <block wx:if="{{!step}}">

@@ -1,4 +1,4 @@
-<view class="page">
+<view class="app-theme-{{uiTheme}} page">
   <!-- ===== 固定区：仪表盘（不随页面滚动） ===== -->
   <view class="fixed-dock">
     <view class="fixed-dock__mesh"></view>
@@ -414,7 +414,7 @@
   </view>
 
   <!-- 游客模式：半透明遮罩，点击任意按钮→登录 -->
-  <view wx:if="{{isGuest}}" class="guest-overlay" bindtap="goGuestLogin">
+  <view wx:if="{{isGuest}}" class="guest-overlay" bindtap="onGuestAction">
     <view class="guest-card">
       <view class="guest-card-icon">🔒</view>
       <text class="guest-card-title">登录后使用全部功能</text>

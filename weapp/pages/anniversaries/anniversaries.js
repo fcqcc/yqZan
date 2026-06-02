@@ -17,9 +17,13 @@ Page({
     showHolidayPicker: false,
     holidayList: [],
     holidaySelectedCount: 0,
+    uiTheme: getApp().globalData.uiTheme || 'handdrawn',
   },
 
-  onShow() { this.load() },
+  onShow() {
+    this.setData({ uiTheme: getApp().globalData.uiTheme || 'handdrawn' })
+    this.load()
+  },
 
   async load() {
     try {

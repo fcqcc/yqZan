@@ -26,9 +26,11 @@ Page({
     achievementsUnlocked: 0,
     crystalBalance: 0,
     exchangeList: [],
+    uiTheme: getApp().globalData.uiTheme || 'handdrawn',
   },
 
   onShow() {
+    this.setData({ uiTheme: getApp().globalData.uiTheme || 'handdrawn' })
     this.load()
     this.loadCrystals()
   },

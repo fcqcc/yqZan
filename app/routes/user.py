@@ -49,6 +49,24 @@ def set_nickname(
     return user
 
 
+@router.put("/nickname", response_model=UserResponse)
+def update_nickname(
+    req: SetNicknameRequest,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """修改昵称（可重复修改）"""
+    # 检查昵称是否被占用
+    existing = db.query(User).filter(User.nickname == req.nickname).first()
+    if existing and existing.id != user.id:
+        raise HTTPException(400, "该昵称已被使用")
+
+    user.nickname = req.nickname
+    db.commit()
+    db.refresh(user)
+    return user
+
+
 @router.get("/me", response_model=UserResponse)
 def get_me(user: User = Depends(get_current_user)):
     """获取当前用户信息"""

@@ -1,5 +1,5 @@
 <!-- pages/gacha/gacha.wxml — 扭蛋机抽卡（粉红主题） -->
-<scroll-view class="page" scroll-y>
+<scroll-view class="app-theme-{{uiTheme}} page" scroll-y>
   <!-- ===== 顶部：深色扭蛋机标题 + 抽卡券数量 ===== -->
   <view class="gacha-header">
     <view class="gacha-header-bg"></view>

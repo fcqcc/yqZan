@@ -60,12 +60,6 @@ const deliverPlan = (id, amount, note, extra = {}) =>
 /** 存入明细（后端需实现 GET /api/plans/:id/deliveries；失败时前端展示空列表） */
 const getPlanDeliveries = (id) => request('/api/plans/' + id + '/deliveries')
 
-// ===== 心愿 =====
-const getWishes = () => request('/api/wishes')
-const createWish = (data) => request('/api/wishes', 'POST', data)
-const updateWish = (id, data) => request('/api/wishes/' + id, 'PUT', data)
-const deleteWish = (id) => request('/api/wishes/' + id, 'DELETE')
-
 // ===== 要做的事 =====
 const getTodos = () => request('/api/todos')
 const createTodo = (data) => request('/api/todos', 'POST', data)
@@ -155,11 +149,11 @@ const rejectForgive = (taskId) => request('/api/card-tasks/' + taskId + '/reject
 const retryForgive = (taskId) => request('/api/card-tasks/' + taskId + '/retry', 'POST')
 const dismissCardTask = (taskId) => request('/api/card-tasks/' + taskId + '/dismiss', 'POST')
 const getAchievements = () => request('/api/achievements')
+const updateNickname = (nickname) => request('/api/nickname', 'PUT', { nickname })
 
 module.exports = {
   request, wxLogin, setNickname, getMe, getPartner, bindPartner, unbindPartner,
   getPlans, createPlan, deletePlan, deliverPlan, getPlanDeliveries,
-  getWishes, createWish, updateWish, deleteWish,
   getTodos, createTodo, checkinTodo, deleteTodo,
   getAnniversaries, createAnniversary, deleteAnniversary, importHolidays, getHolidayList,
   getGifts, createGift, deleteGift,
@@ -176,5 +170,5 @@ module.exports = {
   doCheckin, getCheckinStatus, getSpark,
   useCard, getCardTasks, completeCardTask, declineCardTask, confirmCardTask, disputeCardTask,
   forgiveCardTask, rejectForgive, retryForgive, dismissCardTask,
-  getAchievements
+  getAchievements, updateNickname
 }

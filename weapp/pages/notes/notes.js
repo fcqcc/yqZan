@@ -21,6 +21,7 @@ Page({
   data: { tabBarIndex: 1, notes: [], content: '', userInfo: {}, maxLength: 200, stickId: null },
 
   onShow() {
+    this.setData({ uiTheme: getApp().globalData.uiTheme || 'handdrawn' })
     const userInfo = wx.getStorageSync('userInfo') || {}
     this.setData({ userInfo })
     this.load()
@@ -76,4 +77,5 @@ Page({
       this.load()
     } catch (e) { wx.showToast({ title: '删除失败', icon: 'none' }) }
   },
+  uiTheme: getApp().globalData.uiTheme || 'handdrawn',
 })

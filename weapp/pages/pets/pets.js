@@ -28,9 +28,11 @@ Page({
     petHappyClass: '',  // 互动动画class
     lastInteractTime: 0,  // 防抖时间戳
     showEvoEffect: false,  // 进化粒子特效
+    uiTheme: getApp().globalData.uiTheme || 'handdrawn',
   },
 
   onShow() {
+    this.setData({ uiTheme: getApp().globalData.uiTheme || 'handdrawn' })
     this.load()
     this.loadCatalog()
   },

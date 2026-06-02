@@ -119,10 +119,22 @@ Page({
     totemPlan: null,
     totemParticles: [],
     totemCloseAction: 'none',
-    totemPlanId: null
+    totemPlanId: null,
+    // 存钱动效
+    showCoinEffect: false,
+    coinParticles: [],
+    lastAmount: '0',
+    uiTheme: getApp().globalData.uiTheme || 'handdrawn',
   },
 
   onShow() {
+    this.setData({ uiTheme: getApp().globalData.uiTheme || 'handdrawn' })
+    // 直接判断 token，不依赖 behavior 的时序
+    const token = wx.getStorageSync('token')
+    if (!token) {
+      this.setData({ isGuest: true })
+      return
+    }
     this.load()
   },
 
@@ -130,6 +142,10 @@ Page({
     if (this._totemBurstTimer) {
       clearTimeout(this._totemBurstTimer)
       this._totemBurstTimer = null
+    }
+    if (this._coinTimer) {
+      clearTimeout(this._coinTimer)
+      this._coinTimer = null
     }
   },
 
@@ -334,6 +350,29 @@ Page({
     this.setData({ deliverCompleteTime: e.detail.value })
   },
 
+  /** 生成存钱成功金币弹射粒子 */
+  buildCoinParticles(count = 10) {
+    const emojis = ['🪙', '💰', '✨', '🪙', '💎', '🪙', '✨', '🪙', '💰', '🪙']
+    const particles = []
+    for (let i = 0; i < count; i++) {
+      const angle = (i / count) * 360
+      const dist = 80 + Math.random() * 120
+      particles.push({
+        emoji: emojis[i % emojis.length],
+        delay: i * 0.04,
+        x: Math.cos(angle * Math.PI / 180) * dist,
+        y: Math.sin(angle * Math.PI / 180) * dist,
+        rotate: Math.random() * 360,
+      })
+    }
+    return particles
+  },
+
+  /** 收起金币动效 */
+  onCoinEffectDone() {
+    this.setData({ showCoinEffect: false, coinParticles: [] })
+  },
+
   async doDeliver() {
     const { planId, amount, note, deliverCompleteDate, deliverCompleteTime } = this.data
     if (!planId) return
@@ -354,18 +393,36 @@ Page({
       const res = await api.deliverPlan(planId, parseFloat(amount), note || '', extra)
       wx.hideLoading()
       this.closeDeliver()
+      const formatted = fmtNum(amount)
+      // 振动反馈
+      wx.vibrateShort({ type: 'medium' }).catch(() => {})
+      // 金币弹射动画
+      this.setData({
+        showCoinEffect: true,
+        coinParticles: this.buildCoinParticles(12),
+        lastAmount: formatted,
+      })
+      // 1.4秒后自动关闭
+      if (this._coinTimer) clearTimeout(this._coinTimer)
+      this._coinTimer = setTimeout(() => {
+        this._coinTimer = null
+        this.setData({ showCoinEffect: false, coinParticles: [] })
+      }, 1400)
       await this.load()
       if (res && res.done) {
         const donePlan = this.data.plans.find((x) => String(x.id) === String(planId))
-        this.openTotemCelebrate(
-          donePlan || {
-            id: planId,
-            title: '存钱计划',
-            _curText: fmtNum(amount),
-            _tarText: '—'
-          },
-          { closeAction: 'none' }
-        )
+        // 金币动效结束后弹出图腾
+        setTimeout(() => {
+          this.openTotemCelebrate(
+            donePlan || {
+              id: planId,
+              title: '存钱计划',
+              _curText: fmtNum(amount),
+              _tarText: '—'
+            },
+            { closeAction: 'none' }
+          )
+        }, 1500)
       } else {
         wx.showToast({ title: '已记录', icon: 'success' })
       }
@@ -457,5 +514,10 @@ Page({
   },
 
   /** 阻止弹层点击冒泡 */
-  catchTap() {}
+  catchTap() {},
+
+  /** 游客拦截：直接跳转登录页 */
+  onGuestAction() {
+    wx.reLaunch({ url: '/pages/login/login' })
+  },
 })

@@ -41,6 +41,17 @@
         
 
         <view class="menu-group">
+          <view class="menu-item" bindtap="editNickname" hover-class="menu-item-hover">
+            <view class="menu-icon">✏️</view>
+            <text class="menu-text">修改昵称</text>
+            <text class="menu-arrow">›</text>
+          </view>
+          <view class="menu-item" bindtap="onSwitchTheme" hover-class="menu-item-hover">
+            <view class="menu-icon">🎨</view>
+            <text class="menu-text">切换主题</text>
+            <text class="menu-value">{{themeName}}</text>
+            <text class="menu-arrow">›</text>
+          </view>
           <view class="menu-item" bindtap="onBindMenuTap" hover-class="menu-item-hover">
             <view class="menu-icon">🔗</view>
             <text class="menu-text">绑定/解绑伴侣</text>

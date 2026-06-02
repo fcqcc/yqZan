@@ -10,10 +10,11 @@ from app.routes.admin import router as admin_router
 from app.routes.pet import router as pet_router
 from app.routes.gacha import router as gacha_router
 from app.routes.card_task import router as card_task_router
+from app.routes.draw import router as draw_router
 
 __all__ = [
     "user_router", "couple_router", "plan_router",
     "extra_router", "social_router", "card_router",
     "admin_router", "achievement_router", "checkin_router", "pet_router", "gacha_router",
-    "card_task_router",
+    "card_task_router", "draw_router",
 ]

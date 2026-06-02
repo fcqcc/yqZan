@@ -1,0 +1,140 @@
+<!-- pages/draw/draw.wxml — 今日签 -->
+<scroll-view class="app-theme-{{uiTheme}} page" scroll-y>
+  <!-- ===== 渐变头部 ===== -->
+  <view class="draw-header">
+    <view class="draw-header-bg"></view>
+    <view class="draw-header-content">
+      <view class="draw-header-row">
+        <text class="draw-header-icon">🔮</text>
+        <text class="draw-header-title">今日签</text>
+      </view>
+      <text class="draw-header-sub">不知道干什么？抽一签就知道啦</text>
+    </view>
+    <view class="draw-header-dot draw-header-dot--1"></view>
+    <view class="draw-header-dot draw-header-dot--2"></view>
+  </view>
+
+  <!-- ===== 分类横向滚动 ===== -->
+  <scroll-view class="cat-scroll" scroll-x show-scrollbar="{{false}}">
+    <view class="cat-strip">
+      <view
+        wx:for="{{categories}}"
+        wx:key="id"
+        class="cat-chip {{item.id === selectedCatId ? 'cat-chip--active' : ''}}"
+        bindtap="onSelectCat"
+        data-id="{{item.id}}"
+      >
+        <text class="cat-chip-icon">{{item.icon}}</text>
+        <text class="cat-chip-name">{{item.name}}</text>
+        <text class="cat-chip-count">{{item.item_count}}</text>
+      </view>
+      <!-- 添加分类按钮 -->
+      <view class="cat-chip cat-chip--add" bindtap="onShowAddCat">
+        <text class="cat-chip-icon">+</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- ===== 抽签区 ===== -->
+  <view class="draw-arena">
+    <!-- 抽签按钮 -->
+    <view
+      class="draw-btn {{drawAnimClass}} {{drawing ? 'draw-btn--spinning' : ''}}"
+      bindtap="onDraw"
+    >
+      <view class="draw-btn-glow"></view>
+      <view class="draw-btn-inner">
+        <text class="draw-btn-icon">{{drawing ? '🌀' : (selectedCatIcon || '🎯')}}</text>
+        <text class="draw-btn-text">{{drawing ? '抽签中...' : '抽一签'}}</text>
+      </view>
+    </view>
+
+    <text class="draw-hint" wx:if="{{!selectedCatId}}">选择一个分类开始抽签</text>
+    <text class="draw-hint" wx:elif="{{items.length === 0}}">该分类还没有选项，先添加一些吧</text>
+    <text class="draw-hint draw-hint-count" wx:elif="{{!showResult}}">共 {{items.length}} 个选项</text>
+
+    <!-- 选中分类名称 -->
+    <view class="draw-current-cat" wx:if="{{selectedCatName}}">
+      <text>{{selectedCatIcon}} {{selectedCatName}}</text>
+    </view>
+  </view>
+
+  <!-- ===== 结果弹窗 ===== -->
+  <view wx:if="{{showResult}}" class="result-overlay" bindtap="onHideResult">
+    <view class="result-card" catchtap="catchTap">
+      <view class="result-icon-wrap">
+        <text class="result-big-icon">{{resultCatIcon}}</text>
+      </view>
+      <text class="result-label">{{resultCatName}} · 抽中了</text>
+      <text class="result-content">{{resultContent}}</text>
+      <view class="result-actions">
+        <button class="btn btn-primary" catchtap="onDraw">不满意，再抽一次</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 条目列表 ===== -->
+  <view class="section-card" wx:if="{{items.length > 0}}">
+    <view class="section-head">
+      <text class="section-label">📋 所有选项</text>
+      <text class="section-add" bindtap="onShowAddForm">+ 添加</text>
+    </view>
+    <view class="item-list">
+      <view wx:for="{{items}}" wx:key="id" class="item-row">
+        <text class="item-content">{{item.content}}</text>
+        <view class="item-meta">
+          <text wx:if="{{item.is_custom}}" class="item-tag item-tag--custom">自定义</text>
+          <text wx:if="{{item.used_count > 0}}" class="item-used">抽中{{item.used_count}}次</text>
+          <text wx:if="{{item.is_custom}}" class="item-del" catchtap="onDeleteItem" data-id="{{item.id}}">×</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 空状态 ===== -->
+  <view wx:if="{{selectedCatId && items.length === 0}}" class="empty-section">
+    <text class="empty-icon">📭</text>
+    <text>还没有选项哦</text>
+    <button class="btn btn-primary btn-sm" bindtap="onShowAddForm">添加第一个选项</button>
+  </view>
+
+  <!-- ===== 添加条目弹窗 ===== -->
+  <view wx:if="{{showAddForm}}" class="overlay" bindtap="onHideAddForm">
+    <view class="sheet" catchtap="catchTap">
+      <view class="sheet-title">✏️ 添加选项</view>
+      <view class="sheet-body">
+        <view class="field">
+          <text class="field-label">内容</text>
+          <input class="input" placeholder="例如：一起去吃火锅" model:value="{{formContent}}" maxlength="50" />
+        </view>
+      </view>
+      <view class="sheet-actions-inline">
+        <button class="btn btn-outline" catchtap="onHideAddForm">取消</button>
+        <button class="btn btn-primary" catchtap="onAddItem">添加</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 新建分类弹窗 ===== -->
+  <view wx:if="{{showAddCat}}" class="overlay" bindtap="onHideAddCat">
+    <view class="sheet" catchtap="catchTap">
+      <view class="sheet-title">📦 新建分类</view>
+      <view class="sheet-body">
+        <view class="field">
+          <text class="field-label">分类名称</text>
+          <input class="input" placeholder="例如：喝什么" model:value="{{catFormName}}" maxlength="20" />
+        </view>
+        <view class="field">
+          <text class="field-label">图标（1个emoji）</text>
+          <input class="input" placeholder="例如：☕" model:value="{{catFormIcon}}" maxlength="4" />
+        </view>
+      </view>
+      <view class="sheet-actions-inline">
+        <button class="btn btn-outline" catchtap="onHideAddCat">取消</button>
+        <button class="btn btn-primary" catchtap="onAddCategory">创建</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="scroll-bottom-spacer"></view>
+</scroll-view>

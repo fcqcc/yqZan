@@ -229,3 +229,27 @@ page { height: 100%; }
   background: var(--logout-bg, #f5eef2);
   color: var(--logout-color, #8a6a7a);
 }
+
+/* 游客模式遮罩 */
+.guest-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.guest-card {
+  display: none;
+}
+.guest-card-icon { font-size: 44px; margin-bottom: 12px; }
+.guest-card-title { font-size: 17px; font-weight: 700; color: var(--ink); display: block; margin-bottom: 6px; }
+.guest-card-desc { font-size: 13px; color: var(--ink-soft); display: block; margin-bottom: 24px; }
+.guest-card-btn {
+  border: none; border-radius: 22px; padding: 12px 0;
+  background: linear-gradient(180deg, var(--rose-light), var(--rose));
+  color: #fff; font-size: 15px; font-weight: 600; width: 100%; line-height: 1.4;
+}
+.guest-card-btn::after { border: none; }

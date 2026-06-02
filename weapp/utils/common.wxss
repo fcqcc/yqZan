@@ -1,4 +1,5 @@
 /* ===== 蜜桃苏打风（与 theme-global 一致）===== */
+@import '../styles/theme-handdrawn.wxss';
 page {
   --text: #3a2e35;
   --rose: #ff6b9d;

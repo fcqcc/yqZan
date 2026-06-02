@@ -1,37 +1,65 @@
-/** 全站固定主题 — 蜜桃苏打（年轻情侣向） */
-const UI_THEME = 'bloom'
+// ===== 主题系统 =====
+
+const THEMES = {
+  bloom: {
+    name: '蜜桃苏打',
+    navBg: '#FF8FAB',
+    navFront: '#ffffff',
+  },
+  handdrawn: {
+    name: '可爱手绘',
+    navBg: '#E891A4',
+    navFront: '#ffffff',
+  },
+}
+
+const DEFAULT_THEME = 'handdrawn'
 
 function readTheme() {
-  return UI_THEME
+  try {
+    const saved = wx.getStorageSync('uiTheme')
+    if (saved && THEMES[saved]) return saved
+  } catch (e) {}
+  return DEFAULT_THEME
 }
 
-/** 保留空实现，避免旧代码调用报错 */
-function writeTheme() {
-  return UI_THEME
+function writeTheme(name) {
+  if (!name || !THEMES[name]) return
+  try {
+    wx.setStorageSync('uiTheme', name)
+  } catch (e) {}
 }
 
-/** 蜜桃苏打导航栏 — 主色 #FF8FAB */
-const NAV_BAR_BG = '#FF8FAB'
-
-function applyNavigationBar() {
+function applyNavigationBar(themeName) {
+  const t = THEMES[themeName || readTheme()]
   wx.setNavigationBarColor({
-    frontColor: '#ffffff',
-    backgroundColor: NAV_BAR_BG,
+    frontColor: t.navFront,
+    backgroundColor: t.navBg,
     animation: { duration: 200, timingFunc: 'easeIn' }
   })
 }
 
 function progressColors() {
   return {
-    progressActive: '#FF6B9D',
-    progressBg: 'rgba(255, 107, 157, 0.14)'
+    progressActive: '#E891A4',
+    progressBg: 'rgba(232, 145, 164, 0.12)'
   }
 }
 
+function getThemeList() {
+  return Object.entries(THEMES).map(([key, val]) => ({
+    key,
+    name: val.name,
+    navBg: val.navBg,
+  }))
+}
+
 module.exports = {
-  UI_THEME,
+  UI_THEME: readTheme(),
+  THEMES,
   readTheme,
   writeTheme,
   applyNavigationBar,
-  progressColors
+  progressColors,
+  getThemeList,
 }

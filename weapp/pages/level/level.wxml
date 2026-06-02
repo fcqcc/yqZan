@@ -1,4 +1,4 @@
-<scroll-view class="page" scroll-y>
+<scroll-view class="app-theme-{{uiTheme}} page" scroll-y>
   <!-- 等级头部 -->
   <view class="level-header">
     <text class="level-badge">🏅</text>

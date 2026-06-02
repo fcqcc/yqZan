@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = "mysql+pymysql://root:yuda100Jia@172.19.16.1:3306/couple_promise?charset=utf8mb4"
+    DATABASE_URL: str = "sqlite:///couple_v2.db"
     SECRET_KEY: str = "dev-secret-key-change-in-production"
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRE_HOURS: int = 72

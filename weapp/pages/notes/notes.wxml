@@ -1,5 +1,5 @@
 <!-- pages/notes/notes.wxml — 留言板（原型风格） -->
-<scroll-view class="page" scroll-y>
+<scroll-view class="app-theme-{{uiTheme}} page" scroll-y>
   <view class="notes-input-header">
     <input class="notes-input" placeholder="写点什么..." model:value="{{content}}" maxlength="200" confirm-type="send" bindconfirm="send" />
     <view class="notes-submit" bindtap="send">📌</view>

@@ -1,18 +1,19 @@
 {
   "pages": [
-    "pages/login/login",
     "pages/home/home",
+    "pages/login/login",
     "pages/plans/plans",
     "pages/anniversaries/anniversaries",
     "pages/pets/pets",
     "pages/gacha/gacha",
+    "pages/draw/draw",
     "pages/backpack/backpack",
     "pages/level/level",
     "pages/notes/notes",
     "pages/settings/settings"
   ],
   "window": {
-    "navigationBarTitleText": "\u4e00\u8d77\u6512",
+    "navigationBarTitleText": "一起攒",
     "navigationBarBackgroundColor": "#FF8FAB",
     "navigationBarTextStyle": "white",
     "backgroundColor": "#FFF5F2"
@@ -24,19 +25,19 @@
     "list": [
       {
         "pagePath": "pages/home/home",
-        "text": "\u9996\u9875",
+        "text": "首页",
         "iconPath": "images/tab_home.png",
         "selectedIconPath": "images/tab_home_active.png"
       },
       {
         "pagePath": "pages/plans/plans",
-        "text": "\u8ba1\u5212",
+        "text": "计划",
         "iconPath": "images/tab_note.png",
         "selectedIconPath": "images/tab_note_active.png"
       },
       {
         "pagePath": "pages/settings/settings",
-        "text": "\u6211\u7684",
+        "text": "我的",
         "iconPath": "images/tab_me.png",
         "selectedIconPath": "images/tab_me_active.png"
       }

@@ -1,4 +1,5 @@
 /* 全站主题「蜜桃苏打」— 年轻情侣向 · 珊瑚蜜桃 + 淡紫 */
+@import 'theme-handdrawn.wxss';
 
 page {
   background: linear-gradient(165deg, #fff5f2 0%, #fff0eb 42%, #ffe8f0 100%) !important;

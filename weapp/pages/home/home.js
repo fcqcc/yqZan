@@ -92,30 +92,33 @@ Page({
     // 今日互动标识
     todayInteractRemaining: 3,
     todayInteractTotal: 0,
+    _dailyInteractCount: 0,   // 本地硬计数，避免后端未限速时无限交互
     intimacyDeg: 0,
     expDeg: 0,
     checkingIn: false, // 签到防重复
-    isGuest: false,     // 游客模式
+    isGuest: false,     // 游客模式（由 guest-intercept behavior 自动设置）
+    uiTheme: getApp().globalData.uiTheme || 'handdrawn',
   },
 
-  onLoad(options) {
-    if (options && options.guest === '1') {
-      this.setData({ isGuest: true })
-    }
-  },
-
-  /** 游客模式点击 → 去登录 */
-  goGuestLogin() {
-    wx.reLaunch({ url: '/pages/login/login' })
+  onLoad() {
+    // 游客模式由 behavior 自动检测，无需额外逻辑
   },
 
   onShow() {
-    if (this.data.isGuest) {
-      // 游客模式：只展示UI，不加载数据
+    this.setData({ uiTheme: getApp().globalData.uiTheme || 'handdrawn' })
+    // 直接判断 token，不依赖 behavior 的时序
+    const token = wx.getStorageSync('token')
+    if (!token) {
+      this.setData({ isGuest: true })
       return
     }
     const userInfo = wx.getStorageSync('userInfo')
-    if (!userInfo) { wx.reLaunch({ url: '/pages/login/login' }); return }
+    if (!userInfo) {
+      // 有 token 但没 userInfo 时静默加载，不跳登录页造成死循环
+      this.loadData()
+      this.loadPetData()
+      return
+    }
     const setHomeNav = () => wx.setNavigationBarColor({
       frontColor: '#ffffff',
       backgroundColor: '#FF8FAB',
@@ -433,41 +436,43 @@ Page({
 
   /** 点击宠物→抚摸：扇形摆动动画（已互动过也播动画，但不调接口） */
   async onPetTap() {
-    const { petId, lastInteractTime, todayInteractRemaining } = this.data
+    const { petId, lastInteractTime, todayInteractRemaining, _dailyInteractCount } = this.data
     if (!petId) return
     const now = Date.now()
     if (now - lastInteractTime < 500) return
     this.setData({ petActionClass: 'pet-fan-shake', lastInteractTime: now })
     setTimeout(() => { this.setData({ petActionClass: '' }) }, 600)
-    if (todayInteractRemaining <= 0) return
+    if (todayInteractRemaining <= 0 || _dailyInteractCount >= 3) return
     try {
       await api.petPet(petId)
-      this.setData({ todayInteractRemaining: this.data.todayInteractRemaining - 1, todayInteractTotal: this.data.todayInteractTotal + 1 })
+      const newCount = _dailyInteractCount + 1
+      this.setData({ todayInteractRemaining: this.data.todayInteractRemaining - 1, todayInteractTotal: this.data.todayInteractTotal + 1, _dailyInteractCount: newCount })
     } catch (e) {
       if (e._statusCode === 429) {
-        this.setData({ todayInteractRemaining: 0 })
+        this.setData({ todayInteractRemaining: 0, _dailyInteractCount: 3 })
       }
     }
   },
 
   /** 喂食按钮：剧烈抖动+饭盆（已互动过也播动画，但不调接口） */
   async onFeed() {
-    const { petId, lastInteractTime, todayInteractRemaining } = this.data
+    const { petId, lastInteractTime, todayInteractRemaining, _dailyInteractCount } = this.data
     if (!petId) return
     const now = Date.now()
     if (now - lastInteractTime < 500) return
     this.setData({ lastInteractTime: now })
     this.startFeedAnimation()
-    if (todayInteractRemaining <= 0) return
+    if (todayInteractRemaining <= 0 || _dailyInteractCount >= 3) return
     try {
       const res = await api.feedPet(petId)
-      this.setData({ todayInteractRemaining: this.data.todayInteractRemaining - 1, todayInteractTotal: this.data.todayInteractTotal + 1 })
+      const newCount = _dailyInteractCount + 1
+      this.setData({ todayInteractRemaining: this.data.todayInteractRemaining - 1, todayInteractTotal: this.data.todayInteractTotal + 1, _dailyInteractCount: newCount })
       wx.showToast({ title: '🍼 喂食成功！', icon: 'none' })
       this.loadPetData()
       this.loadData()
     } catch (e) {
       if (e._statusCode === 429) {
-        this.setData({ todayInteractRemaining: 0 })
+        this.setData({ todayInteractRemaining: 0, _dailyInteractCount: 3 })
         wx.showToast({ title: e.detail || '今天互动次数已用完~', icon: 'none' })
       } else {
         wx.showToast({ title: e.detail || e.errMsg || '喂食失败', icon: 'none' })
@@ -477,22 +482,23 @@ Page({
 
   /** 散步按钮：左右蹦跳动画（已互动过也播动画，但不调接口） */
   async onWalk() {
-    const { petId, lastInteractTime, todayInteractRemaining } = this.data
+    const { petId, lastInteractTime, todayInteractRemaining, _dailyInteractCount } = this.data
     if (!petId) return
     const now = Date.now()
     if (now - lastInteractTime < 500) return
     this.setData({ petActionClass: 'pet-walk-anim', lastInteractTime: now })
     this.showActionEmojiWithAnim('🚶', 'emoji-float-up')
     setTimeout(() => { this.setData({ petActionClass: '' }) }, 1000)
-    if (todayInteractRemaining <= 0) return
+    if (todayInteractRemaining <= 0 || _dailyInteractCount >= 3) return
     try {
       await api.walkPet(petId)
-      this.setData({ todayInteractRemaining: this.data.todayInteractRemaining - 1, todayInteractTotal: this.data.todayInteractTotal + 1 })
+      const newCount = _dailyInteractCount + 1
+      this.setData({ todayInteractRemaining: this.data.todayInteractRemaining - 1, todayInteractTotal: this.data.todayInteractTotal + 1, _dailyInteractCount: newCount })
       wx.showToast({ title: '🚶 散步成功 +2 ❤️', icon: 'none' })
       this.loadPetData()
     } catch (e) {
       if (e._statusCode === 429) {
-        this.setData({ todayInteractRemaining: 0 })
+        this.setData({ todayInteractRemaining: 0, _dailyInteractCount: 3 })
         wx.showToast({ title: e.detail || '今天互动次数已用完~', icon: 'none' })
       }
     }
@@ -753,5 +759,10 @@ Page({
   /** 计算今日互动总数（使用后端返回的统一次数） */
   countTodayInteractions(pet) {
     return pet.today_interact_count || 0
+  },
+
+  /** 游客拦截：直接跳转登录页 */
+  onGuestAction() {
+    wx.reLaunch({ url: '/pages/login/login' })
   },
 })

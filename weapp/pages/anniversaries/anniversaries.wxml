@@ -1,4 +1,4 @@
-<scroll-view class="page" scroll-y>
+<scroll-view class="app-theme-{{uiTheme}} page" scroll-y>
   <view class="anni-actions">
     <button class="btn btn-primary" bindtap="toggleForm">➕ 添加</button>
     <button class="btn btn-outline" bindtap="importHolidays">📆 导入节日</button>

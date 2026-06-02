@@ -4,22 +4,22 @@ const theme = require('./utils/theme')
 
 App({
   globalData: {
-    baseUrl: 'https://yqzan.cn',
+    baseUrl: 'http://127.0.0.1:5000',
     token: '',
     userInfo: null,
-    uiTheme: theme.UI_THEME
+    uiTheme: theme.readTheme()
   },
 
   onLaunch() {
-    try {
-      wx.removeStorageSync('uiTheme')
-    } catch (e) {}
     const token = wx.getStorageSync('token')
     const userInfo = wx.getStorageSync('userInfo')
     if (token) {
       this.globalData.token = token
       this.globalData.userInfo = userInfo
     }
-    this.globalData.uiTheme = theme.readTheme()
+    // 从存储恢复主题
+    const savedTheme = theme.readTheme()
+    this.globalData.uiTheme = savedTheme
+    theme.writeTheme(savedTheme)
   }
 })

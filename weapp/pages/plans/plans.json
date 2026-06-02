@@ -1,4 +1,4 @@
 {
   "navigationBarTitleText": "存钱计划",
-  "behaviors": ["../../behaviors/theme-behavior"]
+  "behaviors": ["../../behaviors/theme-behavior", "../../behaviors/guest-intercept"]
 }

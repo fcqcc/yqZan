@@ -30,20 +30,32 @@ Page({
     petCount: 0,
     collectionProgress: '0/0',
     progressActive: '#FF6B9D',
-    progressBg: 'rgba(255, 107, 157, 0.14)'
+    progressBg: 'rgba(255, 107, 157, 0.14)',
+    themeName: '蜜桃苏打',
   },
 
   onShow() {
-    const userInfo = wx.getStorageSync('userInfo') || null
-    if (!userInfo) {
-      wx.reLaunch({ url: '/pages/login/login' })
+    // 直接判断 token，不依赖 behavior 的时序
+    const hasToken = wx.getStorageSync('token')
+    if (!hasToken) {
+      this.setData({ isGuest: true })
       return
     }
+
+    const userInfo = wx.getStorageSync('userInfo') || null
+    if (!userInfo) {
+      // 有 token 但没 userInfo 时不跳登录页造成死循环
+      return
+    }
+    const currentTheme = theme.readTheme()
+    const themeInfo = theme.getThemeList().find(t => t.key === currentTheme)
     this.setData({
+      uiTheme: currentTheme,
       userInfo,
       myInitial: firstChar(userInfo && userInfo.nickname),
       coupleTitle: userInfo ? userInfo.nickname : '',
-      ...theme.progressColors()
+      ...theme.progressColors(),
+      themeName: themeInfo ? themeInfo.name : '蜜桃苏打',
     })
     this.loadPartner()
     this.loadLevel()
@@ -119,26 +131,32 @@ Page({
   editNickname() {
     const u = this.data.userInfo
     if (!u) return
+    const self = this
     wx.showModal({
       title: '修改昵称',
       editable: true,
       placeholderText: u.nickname || '',
-      success: (res) => {
+      success: async (res) => {
         if (!res.confirm) return
         const name = (res.content || '').trim()
         if (!name) {
           wx.showToast({ title: '昵称不能为空', icon: 'none' })
           return
         }
-        const userInfo = { ...u, nickname: name }
-        wx.setStorageSync('userInfo', userInfo)
-        getApp().globalData.userInfo = userInfo
-        this.setData({
-          userInfo,
-          myInitial: firstChar(name),
-          coupleTitle: this.data.partner ? `${name} & ${this.data.partner.nickname}` : name
-        })
-        wx.showToast({ title: '已保存', icon: 'success' })
+        try {
+          await api.updateNickname(name)
+          const userInfo = { ...u, nickname: name }
+          wx.setStorageSync('userInfo', userInfo)
+          getApp().globalData.userInfo = userInfo
+          self.setData({
+            userInfo,
+            myInitial: firstChar(name),
+            coupleTitle: self.data.partner ? `${name} & ${self.data.partner.nickname}` : name
+          })
+          wx.showToast({ title: '昵称已更新', icon: 'success' })
+        } catch (e) {
+          wx.showToast({ title: (e && (e.detail || e.message)) || '修改失败', icon: 'none' })
+        }
       }
     })
   },
@@ -255,11 +273,34 @@ Page({
     }
   },
 
+  /** 切换主题 */
+  onSwitchTheme() {
+    const current = theme.readTheme()
+    const next = current === 'bloom' ? 'handdrawn' : 'bloom'
+    const themeInfo = theme.getThemeList().find(t => t.key === next)
+
+    theme.writeTheme(next)
+    getApp().globalData.uiTheme = next
+
+    this.setData({
+      uiTheme: next,
+      themeName: themeInfo ? themeInfo.name : '可爱手绘',
+    })
+    theme.applyNavigationBar(next)
+
+    wx.showToast({ title: `已切换为「${themeInfo ? themeInfo.name : ''}」`, icon: 'none' })
+  },
+
   logout() {
     wx.removeStorageSync('token')
     wx.removeStorageSync('userInfo')
     getApp().globalData.token = ''
     getApp().globalData.userInfo = null
+    wx.reLaunch({ url: '/pages/login/login' })
+  },
+
+  /** 游客拦截：直接跳转登录页 */
+  onGuestAction() {
     wx.reLaunch({ url: '/pages/login/login' })
   },
 })

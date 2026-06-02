@@ -1,0 +1,401 @@
+/* ===== 可爱手绘风主题（完整版） ===== */
+/* 与 .app-theme-handdrawn 配合使用 */
+
+.app-theme-handdrawn {
+  /* ── 色板 ── */
+  --hd-primary: #E891A4;
+  --hd-primary-dark: #D4708A;
+  --hd-primary-light: #FADCE6;
+  --hd-primary-pale: #FFF0F5;
+  --hd-accent: #FFD93D;
+  --hd-success: #7BC67B;
+  --hd-text: #5D4E60;
+  --hd-text-secondary: #8B7A8E;
+  --hd-text-light: #B8A9BB;
+  --hd-bg-cream: #FFF9F5;
+  --hd-bg-pink: #FFE8EE;
+  --hd-card-bg: #FFFFFF;
+  --hd-border: #F5C6D0;
+  --hd-line-dot: #f0e0e4;
+
+  /* 覆盖现有 theme-global 变量 */
+  --text: #5D4E60;
+  --text-secondary: #8B7A8E;
+  --text-light: #B8A9BB;
+  --text-muted: #B8A9BB;
+  --rose: #E891A4;
+  --rose-light: #FADCE6;
+  --rose-pale: #FFF0F5;
+  --rose-deep: #D4708A;
+  --peach: #E891A4;
+  --lilac: #D4A0E8;
+  --lilac-pale: #F5EDFF;
+  --mint: #7BC67B;
+  --primary: #E891A4;
+  --primary-light: #FADCE6;
+  --primary-pale: #FFF0F5;
+  --ink: #5D4E60;
+  --ink-soft: #8B7A8E;
+  --ink-muted: #B8A9BB;
+  --bg-start: #FFF9F5;
+  --bg-mid: #FFF5F0;
+  --bg-end: #FFE8EE;
+  --surface: #FFFFFF;
+  --card-bg: #FFFFFF;
+  --card-border: 2px dashed #F5C6D0;
+  --line: #f0e0e4;
+  --line-strong: #F5C6D0;
+  --header-start: #E891A4;
+  --header-mid: #D4708A;
+  --header-end: #E891A4;
+  --gradient-header: linear-gradient(180deg, #E891A4 0%, #D4708A 50%, #E891A4 100%);
+  --progress-bar-bg: rgba(232, 145, 164, 0.12);
+
+  background: linear-gradient(165deg, #FFF9F5 0%, #FFF5F0 42%, #FFE8EE 100%) !important;
+}
+
+/* ===== 所有卡片 ===== */
+.app-theme-handdrawn .card,
+.app-theme-handdrawn .plan-item,
+.app-theme-handdrawn .plan-card,
+.app-theme-handdrawn .anni-item,
+.app-theme-handdrawn .wish-card,
+.app-theme-handdrawn .note-item,
+.app-theme-handdrawn .pet-card,
+.app-theme-handdrawn .section-card,
+.app-theme-handdrawn .menu-group,
+.app-theme-handdrawn .bind-card,
+.app-theme-handdrawn .vault-card__body,
+.app-theme-handdrawn .checkin,
+.app-theme-handdrawn .exp-card,
+.app-theme-handdrawn .gacha-pool .pool-info,
+.app-theme-handdrawn .pity-card,
+.app-theme-handdrawn .result-card,
+.app-theme-handdrawn .prob-modal,
+.app-theme-handdrawn .task-card,
+.app-theme-handdrawn .exchange-item,
+.app-theme-handdrawn .stat-card,
+.app-theme-handdrawn .totem-card,
+.app-theme-handdrawn .login-card,
+.app-theme-handdrawn .privacy-card,
+.app-theme-handdrawn .anniversary-card,
+.app-theme-handdrawn .pet-stage-inner,
+.app-theme-handdrawn .plan-premium,
+.app-theme-handdrawn .gacha-btn-section,
+.app-theme-handdrawn .level-card {
+  border: 2px dashed var(--hd-border) !important;
+  border-radius: 18px 8px 20px 10px !important;
+  box-shadow: 3px 3px 0 rgba(232, 145, 164, 0.15), 0 2px 8px rgba(232, 145, 164, 0.06) !important;
+}
+
+/* ===== 所有按钮 ===== */
+.app-theme-handdrawn .btn-primary,
+.app-theme-handdrawn .btn-money,
+.app-theme-handdrawn .btn-wish,
+.app-theme-handdrawn .btn-todo,
+.app-theme-handdrawn .btn-task,
+.app-theme-handdrawn .btn-anni,
+.app-theme-handdrawn .btn-gift,
+.app-theme-handdrawn .btn-note,
+.app-theme-handdrawn .gacha-btn,
+.app-theme-handdrawn .add-plan-btn,
+.app-theme-handdrawn .bind-btn,
+.app-theme-handdrawn .checkin-cta,
+.app-theme-handdrawn .plan-foot-btn-wrap .btn,
+.app-theme-handdrawn .pet-modal-btn,
+.app-theme-handdrawn .guest-card-btn,
+.app-theme-handdrawn .wish-fab,
+.app-theme-handdrawn .result-actions .btn,
+.app-theme-handdrawn .login-btn-primary,
+.app-theme-handdrawn .login-btn-secondary,
+.app-theme-handdrawn .privacy-btn-agree,
+.app-theme-handdrawn .plan-action-btn,
+.app-theme-handdrawn .checkin-mini-btn {
+  border-radius: 25px 10px 25px 10px !important;
+  box-shadow: 3px 3px 0 rgba(212, 112, 138, 0.3) !important;
+  border: none !important;
+  transition: transform 0.12s ease !important;
+}
+.app-theme-handdrawn .btn-primary:active,
+.app-theme-handdrawn .gacha-btn:active,
+.app-theme-handdrawn .login-btn-primary:active {
+  transform: translate(2px, 2px) scale(0.97) !important;
+  box-shadow: 1px 1px 0 rgba(212, 112, 138, 0.3) !important;
+}
+
+.app-theme-handdrawn .btn-outline,
+.app-theme-handdrawn .login-btn-secondary {
+  border: 2px dashed var(--hd-border) !important;
+  border-radius: 25px 10px 25px 10px !important;
+  background: #fffafb !important;
+  color: var(--hd-text) !important;
+  box-shadow: 2px 2px 0 rgba(232, 145, 164, 0.12) !important;
+}
+
+.app-theme-handdrawn .btn-danger {
+  border-radius: 25px 10px 25px 10px !important;
+  box-shadow: 3px 3px 0 rgba(212, 112, 138, 0.25) !important;
+}
+
+/* ===== 登录页按钮（更宽） ===== */
+.app-theme-handdrawn .login-btn-primary {
+  width: 85% !important;
+  max-width: 300px !important;
+  margin: 0 auto 14px !important;
+  background: linear-gradient(135deg, var(--hd-primary) 0%, var(--hd-primary-dark) 100%) !important;
+  color: #fff !important;
+  padding: 14px 0 !important;
+  font-size: 15px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+.app-theme-handdrawn .login-btn-secondary {
+  width: 85% !important;
+  max-width: 300px !important;
+  background: #fff !important;
+  color: var(--hd-primary) !important;
+  border: 2px dashed var(--hd-border) !important;
+  padding: 14px 0 !important;
+  font-size: 15px !important;
+  box-shadow: 3px 3px 0 rgba(232, 145, 164, 0.3) !important;
+}
+
+/* ===== 登录页标题 ===== */
+.app-theme-handdrawn .login-title {
+  font-size: 36px !important;
+  font-weight: 800 !important;
+  color: var(--hd-primary-dark) !important;
+  letter-spacing: 2px !important;
+  margin-bottom: 10px !important;
+}
+.app-theme-handdrawn .login-subtitle {
+  color: var(--hd-text-secondary) !important;
+  font-size: 14px !important;
+  margin-bottom: 40px !important;
+}
+
+/* ===== 输入框 ===== */
+.app-theme-handdrawn .input {
+  border: 2px dashed var(--hd-border) !important;
+  border-radius: 14px 6px 14px 6px !important;
+  background: #fffafb !important;
+}
+.app-theme-handdrawn .input:focus {
+  border-color: var(--hd-primary) !important;
+  box-shadow: 0 0 0 3px rgba(232, 145, 164, 0.12) !important;
+}
+
+/* ===== 渐变头部 ===== */
+.app-theme-handdrawn .fixed-dock,
+.app-theme-handdrawn .plans-header,
+.app-theme-handdrawn .wish-header,
+.app-theme-handdrawn .draw-header,
+.app-theme-handdrawn .gacha-header,
+.app-theme-handdrawn .bp-header,
+.app-theme-handdrawn .level-header,
+.app-theme-handdrawn .profile-header,
+.app-theme-handdrawn .home-header,
+.app-theme-handdrawn .login-page {
+  background: linear-gradient(135deg, #E891A4 0%, #D4708A 50%, #E891A4 100%) !important;
+}
+
+/* ===== 首页头部统计卡片 ===== */
+.app-theme-handdrawn .stat-card {
+  border: 2px dashed rgba(255,255,255,0.3) !important;
+  border-radius: 14px 6px 14px 6px !important;
+  background: rgba(255,255,255,0.18) !important;
+  box-shadow: none !important;
+}
+
+/* ===== 快捷入口（首页dock） ===== */
+.app-theme-handdrawn .dock-icon {
+  border: 2px dashed var(--hd-border) !important;
+  border-radius: 16px 8px 16px 8px !important;
+  box-shadow: 3px 3px 0 rgba(232, 145, 164, 0.15), 0 2px 8px rgba(232, 145, 164, 0.06) !important;
+}
+
+/* ===== 标签/徽章 ===== */
+.app-theme-handdrawn .tag,
+.app-theme-handdrawn .plan-item-status,
+.app-theme-handdrawn .badge,
+.app-theme-handdrawn .cat-chip,
+.app-theme-handdrawn .wish-status,
+.app-theme-handdrawn .wish-plan-link,
+.app-theme-handdrawn .pill,
+.app-theme-handdrawn .plan-tag,
+.app-theme-handdrawn .pet-tag,
+.app-theme-handdrawn .vault-card__tag {
+  border: 1.5px dashed var(--hd-border) !important;
+  border-radius: 12px 4px 12px 4px !important;
+  background: var(--hd-primary-pale) !important;
+  color: var(--hd-primary-dark) !important;
+}
+.app-theme-handdrawn .cat-chip--active {
+  border: none !important;
+  background: linear-gradient(145deg, var(--hd-primary), var(--hd-primary-dark)) !important;
+}
+.app-theme-handdrawn .cat-chip--active .cat-chip-name {
+  color: #fff !important;
+}
+
+/* ===== 进度条 ===== */
+.app-theme-handdrawn .vault-track,
+.app-theme-handdrawn .progress-bar:not(.totem-progress),
+.app-theme-handdrawn .plan-premium-track,
+.app-theme-handdrawn .pity-track,
+.app-theme-handdrawn .pet-intimacy-track,
+.app-theme-handdrawn .intimacy-bar {
+  border: 2px solid #f0e8ec !important;
+  border-radius: 8px !important;
+  height: 12px !important;
+  overflow: hidden !important;
+}
+.app-theme-handdrawn .vault-track__fill,
+.app-theme-handdrawn .progress-fill,
+.app-theme-handdrawn .plan-premium-fill,
+.app-theme-handdrawn .pity-fill,
+.app-theme-handdrawn .intimacy-fill,
+.app-theme-handdrawn .pet-intimacy-fill {
+  border-radius: 6px !important;
+  background: linear-gradient(90deg, #E891A4 0%, #D4708A 50%, #FFD93D 100%) !important;
+}
+
+/* ===== 宠物按钮 ===== */
+.app-theme-handdrawn .pet-dock-btn .pet-dock-icon,
+.app-theme-handdrawn .pet-action-icon {
+  border: 2px dashed var(--hd-border) !important;
+  border-radius: 12px 4px 12px 4px !important;
+  box-shadow: 2px 2px 0 rgba(232, 145, 164, 0.15) !important;
+  background: var(--hd-primary-pale) !important;
+}
+
+/* ===== 宠物卡片 ===== */
+.app-theme-handdrawn .pet-stage {
+  position: relative !important;
+}
+.app-theme-handdrawn .pet-stage-glow {
+  position: absolute !important;
+  top: 0; left: 0; right: 0;
+  height: 100px !important;
+  background: linear-gradient(180deg, var(--hd-primary-pale) 0%, transparent 100%) !important;
+  border-radius: 18px 8px 0 0 !important;
+}
+
+/* ===== 纪念日图标 ===== */
+.app-theme-handdrawn .anni-premium-icon {
+  background: var(--hd-primary) !important;
+  border-radius: 12px 4px 12px 4px !important;
+  box-shadow: 3px 3px 0 rgba(212, 112, 138, 0.2) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* ===== 签到按钮 ===== */
+.app-theme-handdrawn .checkin-mini {
+  border: 2px dashed var(--hd-border) !important;
+  border-radius: 14px 6px 14px 6px !important;
+  box-shadow: 3px 3px 0 rgba(232, 145, 164, 0.12) !important;
+}
+
+/* ===== 分隔线 ===== */
+.app-theme-handdrawn .vault-stats,
+.app-theme-handdrawn .vault-stat__sep,
+.app-theme-handdrawn .plan-footer,
+.app-theme-handdrawn .wish-foot,
+.app-theme-handdrawn .sheet-title,
+.app-theme-handdrawn .plan-header,
+.app-theme-handdrawn .sec-head {
+  border-color: var(--hd-line-dot) !important;
+  border-style: dotted !important;
+}
+
+/* ===== 头像 ===== */
+.app-theme-handdrawn .avatar-ring,
+.app-theme-handdrawn .profile-avatar-item {
+  border: 3px solid rgba(232, 145, 164, 0.4) !important;
+  background: linear-gradient(145deg, #fff, #FFF0F5) !important;
+}
+.app-theme-handdrawn .avatar-ring--empty {
+  border: 3px dashed rgba(232, 145, 164, 0.4) !important;
+  background: rgba(232, 145, 164, 0.08) !important;
+}
+
+/* ===== 菜单图标容器 ===== */
+.app-theme-handdrawn .menu-icon {
+  border: 2px dashed var(--hd-border) !important;
+  border-radius: 10px 4px 10px 4px !important;
+  background: var(--hd-primary-pale) !important;
+}
+
+/* ===== 抽签按钮 ===== */
+.app-theme-handdrawn .draw-btn-inner {
+  box-shadow: 5px 5px 0 rgba(212, 112, 138, 0.35) !important;
+}
+
+/* ===== 结果内容 ===== */
+.app-theme-handdrawn .result-content {
+  border: 2px dashed var(--hd-border) !important;
+  border-radius: 14px 6px 14px 6px !important;
+}
+
+/* ===== 底部弹窗 ===== */
+.app-theme-handdrawn .sheet {
+  border-top: 2px dashed var(--hd-border) !important;
+}
+
+/* ===== 数量金额（大数字） ===== */
+.app-theme-handdrawn .vault-card__amount,
+.app-theme-handdrawn .plan-current,
+.app-theme-handdrawn .total-amount-value,
+.app-theme-handdrawn .vault-stat__num,
+.app-theme-handdrawn .profile-stat-value,
+.app-theme-handdrawn .level-number {
+  font-weight: 800 !important;
+  letter-spacing: -0.5px !important;
+}
+
+/* ===== 底部安全说明 ===== */
+.app-theme-handdrawn .footer-disclaimer {
+  color: var(--hd-text-light) !important;
+  border-top: 2px dashed var(--hd-border) !important;
+}
+
+/* ===== 小猫印章（签到） ===== */
+.app-theme-handdrawn .checkin-cta--done {
+  background: var(--hd-primary-pale) !important;
+  color: var(--hd-primary) !important;
+}
+
+/* ===== 订单完成标记 ===== */
+.app-theme-handdrawn .plan-item-status.active {
+  background: #E8F5E9 !important;
+  border: 1px dashed var(--hd-success) !important;
+  color: var(--hd-success) !important;
+}
+.app-theme-handdrawn .plan-item-status.completed {
+  background: var(--hd-primary-pale) !important;
+  border: 1px dashed var(--hd-primary) !important;
+  color: var(--hd-primary-dark) !important;
+}
+
+/* ===== 弹窗遮罩 ===== */
+.app-theme-handdrawn .overlay,
+.app-theme-handdrawn .modal-overlay {
+  background: rgba(232, 145, 164, 0.2) !important;
+}
+
+/* ===== 扭蛋机 ===== */
+.app-theme-handdrawn .machine-body {
+  border: 2px dashed var(--hd-border) !important;
+  border-radius: 16px 8px 16px 8px !important;
+}
+
+/* ===== 宝石/积分数字 ===== */
+.app-theme-handdrawn .shard-count,
+.app-theme-handdrawn .crystal-balance-num {
+  font-weight: 800 !important;
+  color: var(--hd-primary-dark) !important;
+}

@@ -1,8 +1,11 @@
 // pages/level/level.js
 const api = require('../../utils/api')
 Page({
-  data: { level: 1, current_exp: 0, next_level_exp: 1, progress_pct: 0, logs: [], unlocks: [], nextUnlock: null, levelTitle: '甜蜜恋人', expRemaining: 0 },
-  onShow() { this.load() },
+  data: { level: 1, current_exp: 0, next_level_exp: 1, progress_pct: 0, logs: [], unlocks: [], nextUnlock: null, levelTitle: '甜蜜恋人', expRemaining: 0, uiTheme: getApp().globalData.uiTheme || 'handdrawn' },
+  onShow() {
+    this.setData({ uiTheme: getApp().globalData.uiTheme || 'handdrawn' })
+    this.load()
+  },
   async load() {
     try {
       const [lvl, logsRes, unlocksRes] = await Promise.all([
