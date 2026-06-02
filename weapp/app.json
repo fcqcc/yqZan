@@ -14,14 +14,16 @@
   ],
   "window": {
     "navigationBarTitleText": "一起攒",
-    "navigationBarBackgroundColor": "#FF8FAB",
+    "navigationBarBackgroundColor": "#E891A4",
     "navigationBarTextStyle": "white",
-    "backgroundColor": "#FFF5F2"
+    "backgroundColor": "#FFF9F5"
   },
   "tabBar": {
     "custom": false,
-    "color": "#8A7078",
-    "selectedColor": "#FF6B9D",
+    "color": "#8B7A8E",
+    "selectedColor": "#D4708A",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
     "list": [
       {
         "pagePath": "pages/home/home",

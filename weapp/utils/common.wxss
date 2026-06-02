@@ -1,30 +1,35 @@
-/* ===== 蜜桃苏打风（与 theme-global 一致）===== */
+/* ===== 可爱手绘风（与原型一致）===== */
 @import '../styles/theme-handdrawn.wxss';
+
 page {
-  --text: #3a2e35;
-  --rose: #ff6b9d;
-  --rose-light: #ff8fab;
-  --rose-pale: #ffe8f0;
-  --rose-deep: #e84d85;
-  --peach: #ffb5a0;
-  --lilac: #c9a0f5;
-  --lilac-pale: #f0e8ff;
-  --mint: #7ed4b8;
-  --pink: #ff8fab;
-  --pink-dark: #ff6b9d;
-  --primary: #ff6b9d;
-  --primary-light: #ff8fab;
-  --primary-pale: #ffe8f0;
-  --cream: #fff5f2;
-  --gold: #ffb5a0;
-  --gold-light: #ffe8f0;
-  --purple: #c9a0f5;
-  --purple-light: #f0e8ff;
-  --pink-glass: rgba(255, 140, 180, 0.35);
-  --text-secondary: #8a7078;
-  --text-light: #b8a4ac;
+  --text: #5D4E60;
+  --text-secondary: #8B7A8E;
+  --text-light: #B8A9BB;
+  --text-muted: #B8A9BB;
+  --rose: #E891A4;
+  --rose-light: #FADCE6;
+  --rose-pale: #FFF0F5;
+  --rose-deep: #D4708A;
+  --peach: #E891A4;
+  --lilac: #D4A0E8;
+  --lilac-pale: #F5EDFF;
+  --mint: #7BC67B;
+  --pink: #E891A4;
+  --pink-dark: #D4708A;
+  --primary: #E891A4;
+  --primary-light: #FADCE6;
+  --primary-pale: #FFF0F5;
+  --cream: #FFF9F5;
+  --gold: #FFD93D;
+  --gold-light: #FFF8E1;
+  --purple: #D4A0E8;
+  --purple-light: #F5EDFF;
+  --pink-glass: rgba(232, 145, 164, 0.35);
   --white: #ffffff;
-  --gradient-header: linear-gradient(180deg, #ff8fab 0%, #ff6b9d 50%, #d4a0f0 100%);
+  --gradient-header: linear-gradient(135deg, #E891A4 0%, #FADCE6 100%);
+  --hd-border: #F5C6D0;
+  --hd-line-dot: #f0e0e4;
+  --success: #7BC67B;
 
   --input-min-height: 48px;
   --input-padding-y: 13px;
@@ -36,26 +41,28 @@ page {
   --field-gap: 14px;
 
   --card-bg: #ffffff;
-  --card-border: 1px solid #ffdce8;
-  --shadow-sm: 0 2px 10px rgba(255, 107, 157, 0.1);
-  --shadow-md: 0 8px 24px rgba(255, 140, 180, 0.14), 0 2px 8px rgba(255, 107, 157, 0.08);
-  --shadow-lg: 0 14px 36px rgba(255, 140, 180, 0.16), 0 4px 12px rgba(255, 107, 157, 0.1);
-  --progress-bar-bg: rgba(255, 107, 157, 0.14);
+  --card-border: 2px dashed #F5C6D0;
+  --shadow-sm: 3px 3px 0 rgba(232, 145, 164, 0.12);
+  --shadow-md: 3px 3px 0 rgba(232, 145, 164, 0.15), 0 2px 8px rgba(232, 145, 164, 0.06);
+  --shadow-lg: 4px 4px 0 rgba(212, 112, 138, 0.2), 0 4px 12px rgba(232, 145, 164, 0.1);
+  --progress-bar-bg: rgba(232, 145, 164, 0.12);
 
   --radius-sm: 10px;
   --radius-md: 16px;
   --radius-lg: 20px;
   --radius-pill: 999px;
-  --bg-start: #fff5f2;
-  --bg-mid: #fff0eb;
-  --bg-end: #ffe8f0;
-  --text-muted: #b8a4ac;
+  --bg-start: #FFF9F5;
+  --bg-mid: #FFF5F0;
+  --bg-end: #FFE8EE;
   --radius: 16px;
   --glass-bg: #fffafb;
-  --glass-border: 1px solid #ffdce8;
+  --glass-border: 2px dashed #F5C6D0;
   --glass-blur: none;
-  --glass-shadow: 0 8px 22px rgba(255, 140, 180, 0.12);
-  background: linear-gradient(165deg, #fff5f2 0%, #fff0eb 42%, #ffe8f0 100%);
+  --glass-shadow: 3px 3px 0 rgba(232, 145, 164, 0.12);
+  background:
+    radial-gradient(circle at 20% 80%, rgba(232, 145, 164, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(168, 212, 230, 0.12) 0%, transparent 50%),
+    linear-gradient(180deg, #FFF9F5 0%, #FFE8EE 100%);
   background-attachment: fixed;
   color: var(--text);
   font-size: 14px;
@@ -73,7 +80,7 @@ page {
 .card {
   background: var(--card-bg);
   border: var(--card-border);
-  border-radius: var(--radius-md);
+  border-radius: 18px 8px 20px 10px;
   padding: 16px;
   margin: 8px 12px;
   box-shadow: var(--shadow-md);
@@ -89,25 +96,26 @@ page {
   justify-content: center;
   gap: 8rpx;
   padding: 10px 24px;
-  border-radius: var(--radius-lg);
+  border-radius: 25px 10px 25px 10px;
   font-size: 14px;
   font-weight: 600;
   border: none;
   transition: all 0.12s ease;
 }
 .btn-primary {
-  background: linear-gradient(135deg, var(--rose-light), var(--rose));
+  background: linear-gradient(135deg, var(--primary) 0%, var(--rose-deep) 100%);
   color: var(--white);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 3px 3px 0 rgba(212, 112, 138, 0.3);
 }
 .btn-primary:active {
-  transform: scale(0.96);
-  opacity: 0.88;
+  transform: translate(2px, 2px) scale(0.97);
+  box-shadow: 1px 1px 0 rgba(212, 112, 138, 0.3);
 }
 .btn-outline {
   background: #fffafb;
-  border: 1px solid rgba(255, 107, 157, 0.28);
+  border: 2px dashed var(--hd-border);
   color: var(--text);
+  box-shadow: 2px 2px 0 rgba(232, 145, 164, 0.12);
 }
 .btn-outline:active {
   transform: scale(0.96);
@@ -125,7 +133,7 @@ page {
 .btn-sm {
   padding: 6px 14px;
   font-size: 12px;
-  border-radius: var(--radius-pill);
+  border-radius: 14px 4px 14px 4px;
 }
 .btn-block {
   width: 100%;
@@ -138,9 +146,9 @@ page {
 .btn-anni,
 .btn-gift,
 .btn-note {
-  background: linear-gradient(135deg, var(--rose-light), var(--rose));
+  background: linear-gradient(135deg, var(--primary) 0%, var(--rose-deep) 100%);
   color: var(--white);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 3px 3px 0 rgba(212, 112, 138, 0.3);
 }
 .btn-money:active,
 .btn-wish:active,
@@ -149,14 +157,13 @@ page {
 .btn-anni:active,
 .btn-gift:active,
 .btn-note:active {
-  transform: scale(0.96);
-  opacity: 0.88;
+  transform: translate(2px, 2px) scale(0.97);
 }
 
 .input {
   background: #fffafb;
-  border: 1px solid #ffdce8;
-  border-radius: var(--radius-sm);
+  border: 2px dashed var(--hd-border);
+  border-radius: 14px 6px 14px 6px;
   min-height: var(--input-min-height);
   padding: var(--input-padding-y) var(--input-padding-x);
   font-size: var(--input-font-size);
@@ -167,9 +174,9 @@ page {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 .input:focus {
-  border-color: rgba(255, 107, 157, 0.55);
+  border-color: var(--primary);
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.12);
+  box-shadow: 0 0 0 3px rgba(232, 145, 164, 0.12);
 }
 .input::placeholder {
   color: var(--text-secondary);
@@ -192,6 +199,25 @@ page {
   padding: 14px 16px 2px;
   color: var(--text);
 }
+
+/* 自定义导航（融入渐变头部） */
+.page-nav {
+  width: 100%;
+  box-sizing: border-box;
+}
+.page-nav__bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.page-nav__title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
 .page-subtitle {
   font-size: 12px;
   color: var(--text-secondary);
@@ -199,45 +225,48 @@ page {
 }
 
 .progress-bar {
-  height: 6px;
+  height: 10px;
   background: var(--progress-bar-bg);
-  border-radius: var(--radius-pill);
+  border: 2px solid #f0e8ec;
+  border-radius: 8px;
   overflow: hidden;
 }
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--rose-deep), var(--rose), var(--peach));
-  background-size: 200% 100%;
-  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, #E891A4 0%, #D4708A 50%, #FFD93D 100%);
+  border-radius: 6px;
   transition: width 0.3s ease;
 }
 
 .tag {
   display: inline-block;
   padding: 2px 10px;
-  border-radius: var(--radius-pill);
+  border-radius: 12px 4px 12px 4px;
   font-size: 11px;
   font-weight: 600;
+  border: none;
+  background: var(--primary-pale);
+  color: var(--rose-deep);
 }
 .tag-promised {
-  background: rgba(255, 140, 180, 0.35);
-  color: #e84d85;
+  background: var(--primary-pale);
+  color: var(--rose-deep);
 }
 .tag-in_progress {
-  background: rgba(255, 140, 180, 0.28);
-  color: #ff6b9d;
+  background: #E8F5E9;
+  color: var(--success);
 }
 .tag-fulfilled {
   background: var(--purple-light);
   color: #6b4f9a;
 }
 .tag-pending {
-  background: rgba(255, 140, 180, 0.28);
-  color: #e84d85;
+  background: var(--primary-pale);
+  color: var(--rose-deep);
 }
 .tag-accepted {
-  background: rgba(255, 181, 160, 0.35);
-  color: #c46a58;
+  background: rgba(255, 217, 61, 0.25);
+  color: #b8860b;
 }
 .tag-verified {
   background: var(--purple-light);
@@ -248,19 +277,19 @@ page {
   color: #c6285c;
 }
 .tag-active {
-  background: rgba(255, 107, 157, 0.12);
-  color: var(--rose);
+  background: #E8F5E9;
+  color: var(--success);
 }
 .tag-done {
-  background: var(--purple-light);
-  color: #6b4f9a;
+  background: var(--primary-pale);
+  color: var(--rose-deep);
 }
 
 .list-item {
   display: flex;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(42, 36, 38, 0.06);
+  border-bottom: 2px dotted var(--hd-line-dot);
 }
 .list-item:last-child {
   border-bottom: none;
@@ -287,8 +316,6 @@ page {
   font-size: 14px;
 }
 
-/* 底部表单弹层：勿在整块 overlay 上 bindtap 关闭——input/picker 等原生区会触摸穿透，误点遮罩。
-   用 overlay-dismiss（flex:1，仅占表单上方）承接「点空白关闭」。 */
 .overlay {
   position: fixed;
   inset: 0;
@@ -303,7 +330,7 @@ page {
   min-height: 0;
   width: 100%;
   align-self: stretch;
-  background: white;
+  background: rgba(232, 145, 164, 0.15);
 }
 .sheet {
   flex-shrink: 0;
@@ -314,8 +341,8 @@ page {
   width: 100%;
   max-width: 500px;
   box-sizing: border-box;
-  border-top: 1px solid #ffdce8;
-  box-shadow: 0 -8px 28px rgba(255, 140, 180, 0.14);
+  border-top: 2px dashed var(--hd-border);
+  box-shadow: 0 -8px 28px rgba(232, 145, 164, 0.14);
 }
 .sheet-title {
   font-size: 16px;
@@ -323,11 +350,10 @@ page {
   text-align: center;
   color: var(--text);
   padding-bottom: 12px;
-  border-bottom: 1px solid rgba(42, 36, 38, 0.08);
+  border-bottom: 2px dotted var(--hd-line-dot);
   margin-bottom: 14px;
 }
 
-/* 弹层底部：取消 + 主按钮同一行，占 sheet 内宽的 80%，取消左、主按钮右 */
 .sheet-actions-inline {
   display: flex;
   flex-direction: row;
@@ -372,7 +398,7 @@ page {
   justify-content: space-between;
   gap: 12px;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(42, 36, 38, 0.06);
+  border-bottom: 2px dotted var(--hd-line-dot);
 }
 .event-item:last-child {
   border-bottom: none;
@@ -383,7 +409,6 @@ page {
   color: var(--gold);
 }
 
-/* 列表卡片右上角关闭/删除（×） */
 .card--closable,
 .wish-card,
 .plan-card {
@@ -409,5 +434,5 @@ page {
 .card-close-hit:active,
 .card-close-hit--press {
   color: var(--rose);
-  background: rgba(255, 107, 157, 0.12);
+  background: rgba(232, 145, 164, 0.12);
 }

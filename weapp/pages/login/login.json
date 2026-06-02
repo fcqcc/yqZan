@@ -1,5 +1,6 @@
 {
   "navigationBarTitleText": "登录",
   "navigationStyle": "custom",
+  "backgroundColor": "#FFF9F5",
   "behaviors": ["../../behaviors/theme-behavior"]
 }

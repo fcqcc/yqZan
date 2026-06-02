@@ -1,182 +1,346 @@
-<!-- pages/backpack/backpack.wxml — 背包 & 图鉴（粉红主题） -->
-<scroll-view class="app-theme-{{uiTheme}} page" scroll-y>
-  <!-- ===== 背包头部 ===== -->
-  <view class="bp-header">
-    <view class="bp-header-bg"></view>
-    <view class="bp-header-title-row">
-      <text class="bp-header-icon">🎒</text>
-      <text class="bp-header-title">背包</text>
+<!-- pages/backpack/backpack.wxml — 背包 & 图鉴（可爱手绘风 · 粉红主题） -->
+<scroll-view class="bp-page app-theme-{{uiTheme}}" scroll-y>
+
+<!-- ===== 顶部装饰头 ===== -->
+<view class="bp-hero">
+  <view class="bp-hero__bg"></view>
+  <view class="bp-hero__row">
+    <text class="bp-hero__icon">🎒</text>
+    <view class="bp-hero__title-block">
+      <text class="bp-hero__title">背包 & 图鉴</text>
+      <text class="bp-hero__sub">每一件都是我们的回忆 · 共 {{totalOwned}}/{{totalAll}} 件</text>
     </view>
-    <text class="bp-header-sub">管理你的道具与收藏</text>
+    <view class="bp-hero__chip">
+      <text class="bp-hero__chip-num">{{crystalBalance}}</text>
+      <text class="bp-hero__chip-label">💎</text>
+    </view>
+  </view>
+  <view class="bp-hero__dots">
     <view class="bp-dot bp-dot--1"></view>
     <view class="bp-dot bp-dot--2"></view>
+    <view class="bp-dot bp-dot--3"></view>
   </view>
+</view>
 
-  <!-- ===== 主 TAB 切换（原型 4 Tab） ===== -->
-  <view class="backpack-tabs">
-    <view class="bp-tab {{tab === 'backpack' ? 'bp-tab--active' : ''}}" bindtap="switchTab" data-tab="backpack">背包</view>
-    <view class="bp-tab {{tab === 'pokedex' ? 'bp-tab--active' : ''}}" bindtap="switchTab" data-tab="pokedex">图鉴</view>
-    <view class="bp-tab {{tab === 'achievements' ? 'bp-tab--active' : ''}}" bindtap="switchTab" data-tab="achievements">成就</view>
-    <view class="bp-tab {{tab === 'crystals' ? 'bp-tab--active' : ''}}" bindtap="switchTab" data-tab="crystals">晶石商店</view>
+<!-- ===== 主 TAB 切换（4 卡片） ===== -->
+<view class="bp-tabs">
+  <view class="bp-tab {{tab === 'backpack' ? 'bp-tab--active' : ''}}" bindtap="switchTab" data-tab="backpack" hover-class="bp-tab--hover">
+    <text class="bp-tab__icon">🎒</text>
+    <text class="bp-tab__label">背包</text>
+    <text class="bp-tab__count">{{backpackCount}}</text>
   </view>
+  <view class="bp-tab {{tab === 'pokedex' ? 'bp-tab--active' : ''}}" bindtap="switchTab" data-tab="pokedex" hover-class="bp-tab--hover">
+    <text class="bp-tab__icon">📖</text>
+    <text class="bp-tab__label">图鉴</text>
+    <text class="bp-tab__count">{{pokedexCount}}</text>
+  </view>
+  <view class="bp-tab {{tab === 'achievements' ? 'bp-tab--active' : ''}}" bindtap="switchTab" data-tab="achievements" hover-class="bp-tab--hover">
+    <text class="bp-tab__icon">🏆</text>
+    <text class="bp-tab__label">成就</text>
+    <text class="bp-tab__count">{{achievementsUnlocked}}/{{achievements.length}}</text>
+  </view>
+  <view class="bp-tab {{tab === 'crystals' ? 'bp-tab--active' : ''}}" bindtap="switchTab" data-tab="crystals" hover-class="bp-tab--hover">
+    <text class="bp-tab__icon">💎</text>
+    <text class="bp-tab__label">晶石</text>
+    <text class="bp-tab__count">{{crystalBalance}}</text>
+  </view>
+</view>
 
-  <!-- ============================ 背包 TAB ============================ -->
-  <block wx:if="{{tab === 'backpack'}}">
-    <!-- 分类子 TAB -->
-    <scroll-view class="cat-scroll" scroll-x show-scrollbar="{{false}}">
-      <view class="cat-bar">
-        <view
-          wx:for="{{categories}}"
-          wx:key="*this"
-          class="cat-item {{backpackTab === item ? 'cat-item--active' : ''}}"
-          bindtap="switchBackpackTab"
-          data-cat="{{item}}"
-        >{{item}}</view>
-      </view>
-    </scroll-view>
-
-    <!-- 空状态 -->
-    <view wx:if="{{filteredItems.length === 0}}" class="empty">
-      <text class="empty-icon">🎒</text>
-      <text>{{backpackTab === '全部' ? '背包空空如也~' : '该分类下没有道具'}}</text>
-      <text class="empty-sub">去扭蛋机抽卡获得各种道具！</text>
-    </view>
-
-    <!-- 卡片网格（原型 4 列） -->
-    <view wx:if="{{filteredItems.length > 0}}" class="bp-grid">
+<!-- ============================ 背包 TAB ============================ -->
+<block wx:if="{{tab === 'backpack'}}">
+  <!-- 分类子 TAB -->
+  <scroll-view class="cat-scroll" scroll-x show-scrollbar="{{false}}">
+    <view class="cat-bar">
       <view
-        wx:for="{{filteredItems}}"
-        wx:key="id"
-        class="bp-item {{item.usable ? 'bp-item--usable' : ''}}"
-        bindtap="onUseItem"
-        data-id="{{item.id}}"
-        data-name="{{item.name}}"
+        wx:for="{{categories}}"
+        wx:key="*this"
+        class="cat-item {{backpackTab === item ? 'cat-item--active' : ''}}"
+        bindtap="switchBackpackTab"
+        data-cat="{{item}}"
+        hover-class="cat-item--hover"
       >
-        <text class="bp-item-icon">{{item.icon || '📦'}}</text>
-        <text class="bp-item-name">{{item.name}}</text>
-        <text class="bp-item-count">×{{item.quantity || 1}}</text>
+        <text wx:if="{{item === '全部'}}">✨</text>
+        <text wx:elif="{{item === '食物'}}">🍰</text>
+        <text wx:elif="{{item === '道具'}}">🎁</text>
+        <text wx:elif="{{item === '装饰'}}">🎀</text>
+        <text wx:else>📦</text>
+        <text class="cat-item__label">{{item}}</text>
       </view>
     </view>
-  </block>
+  </scroll-view>
 
-  <!-- ============================ 图鉴 TAB ============================ -->
-  <block wx:if="{{tab === 'pokedex'}}">
-    <view class="sub-tab-bar">
-      <view
-        class="sub-tab {{pokedexTab === 'pets' ? 'sub-tab--active' : ''}}"
-        bindtap="switchPokedexTab" data-tab="pets"
-      >🐾 宠物</view>
-      <view
-        class="sub-tab {{pokedexTab === 'items' ? 'sub-tab--active' : ''}}"
-        bindtap="switchPokedexTab" data-tab="items"
-      >🎁 道具</view>
+  <!-- 空状态 -->
+  <view wx:if="{{filteredItems.length === 0}}" class="empty-card">
+    <text class="empty-card__icon">🎒</text>
+    <text class="empty-card__title">{{backpackTab === '全部' ? '背包空空如也~' : '该分类下没有道具'}}</text>
+    <text class="empty-card__sub">去扭蛋机抽卡获得各种道具吧！</text>
+    <view class="empty-card__hint">
+      <text class="empty-card__hint-dot">·</text>
+      <text>每日签到可获得免费抽奖券</text>
     </view>
+  </view>
 
-    <block wx:if="{{pokedexTab === 'pets'}}">
-      <view class="section-card">
-        <text class="section-sub">共 {{petsTotal}} 种，已获得 {{petsObtained}} 种</text>
-        <view class="card-grid">
-          <view wx:for="{{petsList}}" wx:key="type" class="item-card {{item.obtained ? '' : 'item-card--locked'}}">
-            <view class="item-card-top">
-              <text class="bestiary-cell-rarity bestiary-rarity-{{item.rarity}}">{{item.rarity}}</text>
-              <text wx:if="{{item.obtained}}" class="pokedex-check">✓</text>
-              <text wx:else class="pokedex-check">🔒</text>
-            </view>
-            <text class="item-card-name">{{item.obtained ? item.name : '???'}}</text>
-          </view>
-        </view>
+  <!-- 道具网格（4 列） -->
+  <view wx:if="{{filteredItems.length > 0}}" class="bp-grid">
+    <view
+      wx:for="{{filteredItems}}"
+      wx:key="id"
+      class="bp-item {{item.usable ? 'bp-item--usable' : ''}} {{item.rarity === 'SSR' ? 'bp-item--ssr' : (item.rarity === 'SR' ? 'bp-item--sr' : '')}}"
+      bindtap="onUseItem"
+      data-id="{{item.id}}"
+      data-name="{{item.name}}"
+      hover-class="bp-item--hover"
+    >
+      <view class="bp-item__top">
+        <text wx:if="{{item.rarity}}" class="bp-item__rarity bp-item__rarity--{{item.rarity}}">{{item.rarity}}</text>
+        <text wx:if="{{item.usable}}" class="bp-item__use-badge">可使用</text>
       </view>
-      <view wx:if="{{evolutionsList.length > 0}}" class="section-card">
-        <text class="section-label">✨ 进化形态</text>
-        <view class="card-grid">
-          <view wx:for="{{evolutionsList}}" wx:key="item_id" class="item-card {{item.obtained ? '' : 'item-card--locked'}}">
-            <view class="item-card-top">
-              <text wx:if="{{item.obtained}}" class="pokedex-check">✓</text>
-              <text wx:else class="pokedex-check">🔒</text>
-            </view>
-            <text class="item-card-name">{{item.obtained ? item.name : '???'}}</text>
-          </view>
-        </view>
+      <view class="bp-item__icon-wrap">
+        <text class="bp-item__icon">{{item.icon || '📦'}}</text>
       </view>
-    </block>
-
-    <block wx:if="{{pokedexTab === 'items'}}">
-      <view class="section-card">
-        <text class="section-sub">共 {{itemsTotal}} 种，已获得 {{itemsObtained}} 种</text>
-        <view class="card-grid">
-          <view wx:for="{{itemsList}}" wx:key="item_id" class="item-card {{item.obtained ? '' : 'item-card--locked'}}">
-            <view class="item-card-top">
-              <text class="bestiary-cell-rarity bestiary-rarity-{{item.rarity}}">{{item.rarity}}</text>
-              <text wx:if="{{item.obtained}}" class="pokedex-check">✓</text>
-              <text wx:else class="pokedex-check">🔒</text>
-            </view>
-            <text class="item-card-name">{{item.obtained ? item.name : '???'}}</text>
-          </view>
-        </view>
-      </view>
-    </block>
-  </block>
-
-  <!-- ============================ 成就 TAB（原型独立 Tab） ============================ -->
-  <block wx:if="{{tab === 'achievements'}}">
-    <scroll-view class="cat-scroll" scroll-x show-scrollbar="{{false}}">
-      <view class="cat-bar">
-        <view
-          wx:for="{{achCategories}}"
-          wx:key="*this"
-          class="cat-item {{achTab === item ? 'cat-item--active' : ''}}"
-          bindtap="switchAchTab"
-          data-cat="{{item}}"
-        >{{item}}</view>
-      </view>
-    </scroll-view>
-    <view class="bp-content">
-      <text class="section-sub">共 {{achievements.length}} 项，已解锁 {{achievementsUnlocked}} 项</text>
-      <view wx:if="{{filteredAch.length === 0}}" class="empty">
-        <text class="empty-icon">🏆</text>
-        <text>该分类暂无成就</text>
-      </view>
-      <view wx:else class="achievement-list">
-        <view wx:for="{{filteredAch}}" wx:key="id" class="achievement-item">
-          <view class="achievement-icon {{item.unlocked ? 'achievement-icon--gold' : 'achievement-icon--locked'}}">
-            {{item.unlocked ? '🏆' : '🔒'}}
-          </view>
-          <view class="achievement-info">
-            <text class="achievement-name">{{item.unlocked ? item.name : (item.hidden ? '???' : item.name)}}</text>
-            <text class="achievement-desc">{{item.unlocked ? item.desc : '达成特定条件解锁'}}</text>
-            <view wx:if="{{!item.unlocked && item.progress != null}}" class="achievement-progress">
-              <view class="progress-mini">
-                <view class="progress-mini-fill" style="width:{{item.progress}}%"></view>
-              </view>
-            </view>
-          </view>
-          <text wx:if="{{item.unlocked}}" class="achievement-reward">{{item.reward_type === 'shards' ? '💎' : '🎟️'}}+{{item.reward_amount}}</text>
-        </view>
+      <text class="bp-item__name">{{item.name}}</text>
+      <view class="bp-item__bottom">
+        <text class="bp-item__count">×{{item.quantity || 1}}</text>
       </view>
     </view>
-  </block>
+  </view>
+</block>
 
-  <!-- ============================ 晶石商店 TAB ============================ -->
-  <block wx:if="{{tab === 'crystals'}}">
-    <view class="crystal-header">
-      <text class="crystal-balance-icon">💎</text>
-      <text class="crystal-balance-num">{{crystalBalance}}</text>
-      <text class="crystal-balance-label">晶石</text>
-    </view>
+<!-- ============================ 图鉴 TAB ============================ -->
+<block wx:if="{{tab === 'pokedex'}}">
+  <view class="sub-tab-bar">
+    <view
+      class="sub-tab {{pokedexTab === 'pets' ? 'sub-tab--active' : ''}}"
+      bindtap="switchPokedexTab" data-tab="pets"
+      hover-class="sub-tab--hover"
+    >🐾 宠物</view>
+    <view
+      class="sub-tab {{pokedexTab === 'items' ? 'sub-tab--active' : ''}}"
+      bindtap="switchPokedexTab" data-tab="items"
+      hover-class="sub-tab--hover"
+    >🎁 道具</view>
+  </view>
+
+  <block wx:if="{{pokedexTab === 'pets'}}">
     <view class="section-card">
-      <text class="section-label">🏪 兑换商店</text>
-      <view wx:if="{{exchangeList.length === 0}}" class="empty">
-        <text class="empty-icon">📦</text>
-        <text>正在加载…</text>
+      <view class="section-card__header">
+        <text class="section-card__title">🐾 宠物图鉴</text>
+        <view class="section-card__stats">
+          <text class="section-card__stat-num">{{petsObtained}}</text>
+          <text class="section-card__stat-slash">/</text>
+          <text class="section-card__stat-total">{{petsTotal}}</text>
+          <text class="section-card__stat-label">已收集</text>
+        </view>
       </view>
-      <view wx:else class="exchange-grid">
-        <view wx:for="{{exchangeList}}" wx:key="item_id" class="exchange-item {{crystalBalance < item.cost ? 'exchange-item--locked' : ''}}"
-              bindtap="onExchange" data-item_id="{{item.item_id}}" data-name="{{item.name}}" data-cost="{{item.cost}}">
-          <text class="exchange-item-name">{{item.name}}</text>
-          <text class="exchange-item-cost">💎 {{item.cost}}</text>
+      <view class="section-card__progress">
+        <view class="section-card__progress-bar">
+          <view class="section-card__progress-fill" style="width: {{petsTotal > 0 ? (petsObtained / petsTotal * 100) : 0}}%"></view>
+        </view>
+      </view>
+      <view class="card-grid">
+        <view wx:for="{{petsList}}" wx:key="type" class="item-card {{item.obtained ? '' : 'item-card--locked'}}">
+          <view class="item-card__top">
+            <text class="bestiary-cell-rarity bestiary-rarity-{{item.rarity}}">{{item.rarity}}</text>
+            <text wx:if="{{item.obtained}}" class="pokedex-check pokedex-check--ok">✓</text>
+            <text wx:else class="pokedex-check">🔒</text>
+          </view>
+          <view class="item-card__icon-wrap">
+            <text wx:if="{{item.obtained}}" class="item-card__icon">{{item.icon || '🐾'}}</text>
+            <text wx:else class="item-card__icon item-card__icon--locked">❓</text>
+          </view>
+          <text class="item-card__name">{{item.obtained ? item.name : '???'}}</text>
         </view>
       </view>
     </view>
-    <view class="crystal-hint">重复抽到宠物自动转化为晶石，可在本店兑换道具</view>
+
+    <view wx:if="{{evolutionsList.length > 0}}" class="section-card">
+      <view class="section-card__header">
+        <text class="section-card__title">✨ 进化形态</text>
+        <text class="section-card__sub">特殊进化 · 别错过</text>
+      </view>
+      <view class="card-grid">
+        <view wx:for="{{evolutionsList}}" wx:key="item_id" class="item-card item-card--evo {{item.obtained ? '' : 'item-card--locked'}}">
+          <view class="item-card__top">
+            <text wx:if="{{item.obtained}}" class="pokedex-check pokedex-check--ok">✓</text>
+            <text wx:else class="pokedex-check">🔒</text>
+            <text class="item-card__evo-tag">进化</text>
+          </view>
+          <view class="item-card__icon-wrap">
+            <text wx:if="{{item.obtained}}" class="item-card__icon">{{item.icon || '✨'}}</text>
+            <text wx:else class="item-card__icon item-card__icon--locked">❓</text>
+          </view>
+          <text class="item-card__name">{{item.obtained ? item.name : '???'}}</text>
+        </view>
+      </view>
+    </view>
   </block>
+
+  <block wx:if="{{pokedexTab === 'items'}}">
+    <view class="section-card">
+      <view class="section-card__header">
+        <text class="section-card__title">🎁 道具图鉴</text>
+        <view class="section-card__stats">
+          <text class="section-card__stat-num">{{itemsObtained}}</text>
+          <text class="section-card__stat-slash">/</text>
+          <text class="section-card__stat-total">{{itemsTotal}}</text>
+          <text class="section-card__stat-label">已收集</text>
+        </view>
+      </view>
+      <view class="section-card__progress">
+        <view class="section-card__progress-bar">
+          <view class="section-card__progress-fill" style="width: {{itemsTotal > 0 ? (itemsObtained / itemsTotal * 100) : 0}}%"></view>
+        </view>
+      </view>
+      <view class="card-grid">
+        <view wx:for="{{itemsList}}" wx:key="item_id" class="item-card {{item.obtained ? '' : 'item-card--locked'}}">
+          <view class="item-card__top">
+            <text class="bestiary-cell-rarity bestiary-rarity-{{item.rarity}}">{{item.rarity}}</text>
+            <text wx:if="{{item.obtained}}" class="pokedex-check pokedex-check--ok">✓</text>
+            <text wx:else class="pokedex-check">🔒</text>
+          </view>
+          <view class="item-card__icon-wrap">
+            <text wx:if="{{item.obtained}}" class="item-card__icon">{{item.icon || '📦'}}</text>
+            <text wx:else class="item-card__icon item-card__icon--locked">❓</text>
+          </view>
+          <text class="item-card__name">{{item.obtained ? item.name : '???'}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+</block>
+
+<!-- ============================ 成就 TAB ============================ -->
+<block wx:if="{{tab === 'achievements'}}">
+  <scroll-view class="cat-scroll" scroll-x show-scrollbar="{{false}}">
+    <view class="cat-bar">
+      <view
+        wx:for="{{achCategories}}"
+        wx:key="*this"
+        class="cat-item {{achTab === item ? 'cat-item--active' : ''}}"
+        bindtap="switchAchTab"
+        data-cat="{{item}}"
+        hover-class="cat-item--hover"
+      >{{item}}</view>
+    </view>
+  </scroll-view>
+
+  <view class="section-card">
+    <view class="section-card__header">
+      <text class="section-card__title">🏆 成就墙</text>
+      <view class="section-card__stats">
+        <text class="section-card__stat-num">{{achievementsUnlocked}}</text>
+        <text class="section-card__stat-slash">/</text>
+        <text class="section-card__stat-total">{{achievements.length}}</text>
+        <text class="section-card__stat-label">已解锁</text>
+      </view>
+    </view>
+    <view class="section-card__progress">
+      <view class="section-card__progress-bar">
+        <view class="section-card__progress-fill" style="width: {{achievements.length > 0 ? (achievementsUnlocked / achievements.length * 100) : 0}}%"></view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{filteredAch.length === 0}}" class="empty-card">
+    <text class="empty-card__icon">🏆</text>
+    <text class="empty-card__title">该分类暂无成就</text>
+    <text class="empty-card__sub">完成更多任务来解锁成就吧~</text>
+  </view>
+
+  <view wx:else class="ach-list">
+    <view
+      wx:for="{{filteredAch}}"
+      wx:key="id"
+      class="ach-item {{item.unlocked ? 'ach-item--unlocked' : 'ach-item--locked'}}"
+      hover-class="ach-item--hover"
+    >
+      <view class="ach-item__icon {{item.unlocked ? 'ach-item__icon--gold' : 'ach-item__icon--gray'}}">
+        <text wx:if="{{item.unlocked}}">🏆</text>
+        <text wx:else>🔒</text>
+      </view>
+      <view class="ach-item__body">
+        <view class="ach-item__row">
+          <text class="ach-item__name">{{item.unlocked ? item.name : (item.hidden ? '???' : item.name)}}</text>
+          <text wx:if="{{item.unlocked}}" class="ach-item__reward">
+            <text wx:if="{{item.reward_type === 'shards'}}">💎</text>
+            <text wx:else>🎟️</text>
+            +{{item.reward_amount}}
+          </text>
+        </view>
+        <text class="ach-item__desc">{{item.unlocked ? item.desc : '达成特定条件解锁'}}</text>
+        <view wx:if="{{!item.unlocked && item.progress != null}}" class="ach-item__progress">
+          <view class="ach-item__progress-bar">
+            <view class="ach-item__progress-fill" style="width:{{item.progress}}%"></view>
+          </view>
+          <text class="ach-item__progress-num">{{item.progress}}%</text>
+        </view>
+      </view>
+      <view wx:if="{{item.unlocked}}" class="ach-item__check">✓</view>
+    </view>
+  </view>
+</block>
+
+<!-- ============================ 晶石商店 TAB ============================ -->
+<block wx:if="{{tab === 'crystals'}}">
+  <view class="crystal-card">
+    <view class="crystal-card__bg"></view>
+    <view class="crystal-card__row">
+      <text class="crystal-card__icon">💎</text>
+      <view class="crystal-card__info">
+        <text class="crystal-card__num">{{crystalBalance}}</text>
+        <text class="crystal-card__label">我的晶石</text>
+      </view>
+      <view class="crystal-card__btn" bindtap="onCrystalHelp" hover-class="crystal-card__btn--hover">
+        <text>如何获取?</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-card">
+    <view class="section-card__header">
+      <text class="section-card__title">🏪 兑换商店</text>
+      <text class="section-card__sub">晶石可换各种实用道具</text>
+    </view>
+
+    <view wx:if="{{exchangeList.length === 0}}" class="empty-card">
+      <text class="empty-card__icon">📦</text>
+      <text class="empty-card__title">商店正在补货…</text>
+      <text class="empty-card__sub">稍后再来看看吧~</text>
+    </view>
+
+    <view wx:else class="exchange-grid">
+      <view
+        wx:for="{{exchangeList}}"
+        wx:key="item_id"
+        class="exchange-item {{crystalBalance < item.cost ? 'exchange-item--locked' : ''}}"
+        bindtap="onExchange"
+        data-item_id="{{item.item_id}}"
+        data-name="{{item.name}}"
+        data-cost="{{item.cost}}"
+        hover-class="exchange-item--hover"
+      >
+        <view class="exchange-item__icon-wrap">
+          <text class="exchange-item__icon">{{item.icon || '🎁'}}</text>
+        </view>
+        <text class="exchange-item__name">{{item.name}}</text>
+        <view class="exchange-item__cost {{crystalBalance < item.cost ? 'exchange-item__cost--insufficient' : ''}}">
+          <text class="exchange-item__cost-icon">💎</text>
+          <text class="exchange-item__cost-num">{{item.cost}}</text>
+        </view>
+        <view wx:if="{{crystalBalance < item.cost}}" class="exchange-item__lock">🔒</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="crystal-hint-card">
+    <text class="crystal-hint-card__icon">💡</text>
+    <view class="crystal-hint-card__body">
+      <text class="crystal-hint-card__title">关于晶石</text>
+      <text class="crystal-hint-card__text">重复抽到宠物会自动转化为晶石，可在本店兑换各种道具与抽卡券。</text>
+    </view>
+  </view>
+</block>
+
+<!-- 底部留白 -->
+<view class="bp-footer"></view>
 </scroll-view>

@@ -32,6 +32,12 @@ Page({
     progressActive: '#FF6B9D',
     progressBg: 'rgba(255, 107, 157, 0.14)',
     themeName: '蜜桃苏打',
+    statusBarHeight: 20,
+    navBarHeight: 44,
+  },
+
+  onLoad() {
+    this.setData(theme.getNavLayout())
   },
 
   onShow() {

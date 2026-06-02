@@ -1,4 +1,4 @@
-/* pages/anniversaries/anniversaries.wxss — 原型风格 */
+/* pages/anniversaries/anniversaries.wxss */
 .anni-actions {
   display: flex;
   gap: 10px;
@@ -68,20 +68,21 @@
 
 .anni-item {
   background: white;
-  border-radius: 16px;
+  border-radius: 16px 8px 16px 8px;
   padding: 14px;
   margin-bottom: 10px;
   display: flex;
   align-items: center;
   gap: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 3px 3px 0 rgba(232, 145, 164, 0.1);
+  border: 2px dashed #F5C6D0;
   position: relative;
 }
 
 .anni-item--today {
-  border: 2px solid var(--primary, #ff6b9d);
-  background: linear-gradient(135deg, #fff5f2, #ffe8f0);
-  box-shadow: 0 4px 16px rgba(255, 107, 157, 0.12);
+  border: 2px dashed #E891A4;
+  background: linear-gradient(135deg, #FFF5FB, #FFE8F2);
+  box-shadow: 3px 3px 0 rgba(232, 145, 164, 0.15);
 }
 
 .anni-icon {

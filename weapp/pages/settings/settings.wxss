@@ -13,11 +13,11 @@ page { height: 100%; }
 
 /* ===== 头部 ===== */
 .profile-header {
-  background: linear-gradient(180deg, #ff8fab 0%, #ff6b9d 50%, #d4a0f0 100%);
-  padding: 28px 20px;
+  background: linear-gradient(135deg, #E891A4 0%, #FADCE6 100%);
+  padding: 0 20px 28px;
   color: white;
   text-align: center;
-  box-shadow: 0 8px 24px rgba(255, 107, 157, 0.2);
+  border-radius: 0 0 30px 15px;
 }
 
 .profile-avatars {
@@ -93,9 +93,10 @@ page { height: 100%; }
 .bind-card {
   margin: 12px;
   background: white;
-  border-radius: 16px;
+  border-radius: 18px 8px 18px 8px;
   padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 2px dashed #F5C6D0;
+  box-shadow: 3px 3px 0 rgba(232, 145, 164, 0.1);
 }
 
 .bind-title {
@@ -111,20 +112,22 @@ page { height: 100%; }
 }
 
 .bind-input {
-  border: 1px solid #ffdce8;
-  border-radius: 12px;
+  border: 2px dashed #F5C6D0;
+  border-radius: 14px 6px 14px 6px;
   padding: 10px 14px;
   margin-bottom: 10px;
   font-size: 14px;
+  background: #fffafb;
 }
 
 .bind-btn {
-  background: var(--primary, #ff6b9d);
+  background: #E891A4;
   color: white;
   border: none;
-  border-radius: 20px;
+  border-radius: 14px 4px 14px 4px;
   font-size: 14px;
   font-weight: 600;
+  box-shadow: 2px 2px 0 rgba(212, 112, 138, 0.3);
 }
 
 .bind-btn::after { border: none; }
@@ -136,17 +139,17 @@ page { height: 100%; }
 
 .menu-group {
   background: white;
-  border-radius: 16px;
+  border-radius: 18px 8px 18px 8px;
   overflow: hidden;
   margin-bottom: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 2px dashed #F5C6D0;
 }
 
 .menu-item {
   display: flex;
   align-items: center;
   padding: 14px 16px;
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 2px dotted #f0e8ec;
 }
 
 .menu-item-last {
@@ -154,20 +157,21 @@ page { height: 100%; }
 }
 
 .menu-item-hover {
-  background: rgba(255, 107, 157, 0.06);
+  background: rgba(232, 145, 164, 0.06);
 }
 
 .menu-icon {
-  width: 34px;
-  height: 34px;
-  background: var(--primary-pale, #ffe8f0);
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  background: #FFF0F5;
+  border-radius: 10px 4px 10px 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 17px;
   margin-right: 12px;
   flex-shrink: 0;
+  border: 2px dashed #F5C6D0;
 }
 
 .menu-text {
@@ -182,17 +186,17 @@ page { height: 100%; }
 }
 
 .menu-badge {
-  background: var(--primary, #ff6b9d);
+  background: #E891A4;
   color: white;
   font-size: 10px;
-  padding: 2px 6px;
-  border-radius: 8px;
+  padding: 2px 8px;
+  border-radius: 8px 3px 8px 3px;
   margin-right: 8px;
 }
 
 .menu-value {
-  color: var(--primary, #ff6b9d);
-  font-weight: 600;
+  color: #D4708A;
+  font-weight: 700;
   font-size: 13px;
   margin-right: 8px;
 }

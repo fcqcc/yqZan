@@ -1,5 +1,5 @@
 <!-- pages/plans/plans.wxml — 存钱计划（原型风格） -->
-<view class="app-theme-{{uiTheme}} plans-wrap">
+<view class="app-root app-theme-{{uiTheme}} plans-wrap">
   <scroll-view class="page page--scroll" scroll-y>
     <!-- 顶部：累计已存 + 新建计划 -->
     <view class="plans-header">

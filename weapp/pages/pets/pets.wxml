@@ -1,5 +1,5 @@
 <!-- pages/pets/pets.wxml — 宠物管理（粉红主题） -->
-<scroll-view class="app-theme-{{uiTheme}} page" scroll-y>
+<scroll-view class="app-root app-theme-{{uiTheme}} page" scroll-y>
   <!-- ===== 当前活跃宠物（大号展示） ===== -->
   <view class="active-card {{petHappyClass}} {{activePet.evolution_ready ? 'evolution-glow' : ''}}" wx:if="{{activePet}}" bindtap="onPetTap">
     <view class="active-emoji">

@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "存钱计划",
+  "navigationBarBackgroundColor": "#E891A4",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#FFF9F5",
   "behaviors": ["../../behaviors/theme-behavior", "../../behaviors/guest-intercept"]
 }

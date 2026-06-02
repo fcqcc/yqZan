@@ -1,8 +1,11 @@
-/* 全站主题「蜜桃苏打」— 年轻情侣向 · 珊瑚蜜桃 + 淡紫 */
+/* 全站主题 — 可爱手绘风（默认） */
 @import 'theme-handdrawn.wxss';
 
 page {
-  background: linear-gradient(165deg, #fff5f2 0%, #fff0eb 42%, #ffe8f0 100%) !important;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(232, 145, 164, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(168, 212, 230, 0.12) 0%, transparent 50%),
+    linear-gradient(180deg, #FFF9F5 0%, #FFE8EE 100%) !important;
   background-attachment: fixed;
   min-height: 100%;
 }
@@ -11,107 +14,65 @@ page {
   min-height: 100vh;
   width: 100%;
   box-sizing: border-box;
-  color: var(--text);
+  color: var(--text, #5D4E60);
 }
 
-.app-root.app-theme-bloom {
-  --text: #3a2e35;
-  --text-secondary: #8a7078;
-  --text-light: #b8a4ac;
-  --rose: #ff6b9d;
-  --rose-light: #ff8fab;
-  --rose-pale: #ffe8f0;
-  --rose-deep: #e84d85;
-  --peach: #ffb5a0;
-  --peach-pale: #fff0eb;
-  --lilac: #c9a0f5;
-  --lilac-pale: #f0e8ff;
-  --mint: #7ed4b8;
-  --pink: #ff8fab;
-  --pink-dark: #ff6b9d;
-  --cream: #fff5f2;
-  --gold: #ffb5a0;
-  --gold-light: #ffe8f0;
-  --purple: #c9a0f5;
-  --purple-light: #f0e8ff;
-  --pink-glass: rgba(255, 140, 180, 0.35);
-  --white: #ffffff;
-  --card-bg: #ffffff;
-  --card-border: 1px solid #ffdce8;
-  --shadow-sm: 0 2px 10px rgba(255, 107, 157, 0.1);
-  --shadow-md: 0 8px 24px rgba(255, 140, 180, 0.14), 0 2px 8px rgba(255, 107, 157, 0.08);
-  --shadow-lg: 0 14px 36px rgba(255, 140, 180, 0.16), 0 4px 12px rgba(255, 107, 157, 0.1);
-  --save-ring-track: rgba(255, 107, 157, 0.2);
-  --progress-bar-bg: rgba(255, 107, 157, 0.14);
-  --tag-bg: rgba(255, 140, 180, 0.4);
-  --empty-color: #b8a4ac;
-  --glass-bg: #fffafb;
-  --glass-border: #ffdce8;
-  --glass-shadow: 0 12rpx 32rpx rgba(255, 140, 180, 0.12), 0 4rpx 12rpx rgba(255, 107, 157, 0.06);
-  --settings-label: #8a7078;
-  --settings-code: #e84d85;
-  --level-badge-bg: rgba(255, 140, 180, 0.35);
-  --divider: rgba(255, 107, 157, 0.14);
-  --menu-hover: rgba(255, 107, 157, 0.08);
-  --chevron: rgba(58, 46, 53, 0.28);
-  --avatar-ph-text: #e84d85;
-  --avatar-slot-border: rgba(255, 107, 157, 0.4);
-  --avatar-slot-bg: #fff0f5;
-  --unbind-color: #ff6b9d;
-  --unbind-bg: #ffe8f0;
-  --logout-color: #8a7078;
-  --logout-bg: #fff5f2;
-  --chip-off-bg: #fffafb;
-  --chip-off-border: rgba(255, 107, 157, 0.22);
-  --chip-on-bg: rgba(255, 107, 157, 0.12);
-  --chip-on-border: rgba(255, 107, 157, 0.38);
-  --chip-on-text: #e84d85;
-  --accent: #ff6b9d;
-  --accent-partner: #ff8fab;
-  --accent-soft: rgba(255, 107, 157, 0.12);
-  --primary: #ff6b9d;
-  --primary-light: #ff8fab;
-  --primary-pale: #ffe8f0;
-  --gradient-header: linear-gradient(180deg, #ff8fab 0%, #ff6b9d 50%, #d4a0f0 100%);
-  --avatar-ph-bg: linear-gradient(145deg, #ffffff, #ffe8f0);
-  --unbind-shadow: 0 8rpx 20rpx rgba(255, 107, 157, 0.2);
-  --login-page-bg: linear-gradient(180deg, rgba(58, 30, 48, 0.12) 0%, rgba(58, 30, 48, 0.28) 100%), linear-gradient(155deg, #f06b8f 0%, #e84d85 45%, #9b6fd4 100%);
-  --login-card-bg: #ffffff;
-  --login-accent: #ff6b9d;
-  --login-muted: #8a7078;
-  background: linear-gradient(165deg, #fff5f2 0%, #fff0eb 42%, #ffe8f0 100%);
+/* 手绘风（默认） */
+.app-root.app-theme-handdrawn,
+.app-theme-handdrawn {
+  --text: #5D4E60;
+  --text-secondary: #8B7A8E;
+  --text-light: #B8A9BB;
+  --rose: #E891A4;
+  --rose-light: #FADCE6;
+  --rose-pale: #FFF0F5;
+  --rose-deep: #D4708A;
+  --primary: #E891A4;
+  --primary-light: #FADCE6;
+  --primary-pale: #FFF0F5;
+  --cream: #FFF9F5;
+  --gradient-header: linear-gradient(135deg, #E891A4 0%, #D4708A 50%, #E891A4 100%);
+  --login-page-bg: linear-gradient(180deg, #FFFFFF 0%, #FFF0F5 100%);
+  --login-accent: #D4708A;
+  --login-muted: #8B7A8E;
+  background: transparent;
 }
 
 .app-root .login-page {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background: var(--login-page-bg);
-  padding: 20px;
+  padding: 40px 24px;
   box-sizing: border-box;
 }
 
-.app-root .login-card {
-  background: var(--login-card-bg);
-  border-radius: 14px;
-  padding: 32px 24px;
-  width: 100%;
-  max-width: 340px;
-  text-align: center;
-  box-sizing: border-box;
-  border: 1px solid #ffdce8;
-  box-shadow: 0 16px 40px rgba(255, 107, 157, 0.18);
+.app-root .login-title {
+  color: #4A3548;
 }
 
-.app-root .app-name {
-  color: var(--login-accent);
+.app-root .app-desc,
+.app-root .login-subtitle {
+  color: #5D4E60;
 }
 
-.app-root .switch {
-  color: var(--login-accent);
+.app-root .login-footer {
+  color: #6B5A6E;
 }
 
-.app-root .app-desc {
-  color: var(--login-muted);
+/* 蜜桃苏打（备选，设置页可切换） */
+.app-root.app-theme-bloom {
+  --text: #3a2e35;
+  --text-secondary: #8a7078;
+  --rose: #ff6b9d;
+  --rose-light: #ff8fab;
+  --rose-pale: #ffe8f0;
+  --rose-deep: #e84d85;
+  --primary: #ff6b9d;
+  --primary-light: #ff8fab;
+  --gradient-header: linear-gradient(180deg, #ff8fab 0%, #ff6b9d 50%, #d4a0f0 100%);
+  --login-page-bg: linear-gradient(155deg, #f06b8f 0%, #e84d85 45%, #9b6fd4 100%);
+  background: linear-gradient(165deg, #fff5f2 0%, #fff0eb 42%, #ffe8f0 100%);
 }

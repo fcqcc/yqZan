@@ -8,8 +8,8 @@ const THEMES = {
   },
   handdrawn: {
     name: '可爱手绘',
-    navBg: '#E891A4',
-    navFront: '#ffffff',
+    navBg: '#FFFFFF',
+    navFront: '#000000',
   },
 }
 
@@ -30,12 +30,30 @@ function writeTheme(name) {
   } catch (e) {}
 }
 
+const CUSTOM_NAV_ROUTES = new Set([
+  'pages/login/login',
+  'pages/home/home',
+  'pages/settings/settings',
+])
+
+function getNavLayout() {
+  const sys = wx.getSystemInfoSync()
+  const menu = wx.getMenuButtonBoundingClientRect()
+  const statusBarHeight = sys.statusBarHeight || 20
+  const navBarHeight = menu.height + (menu.top - statusBarHeight) * 2
+  return { statusBarHeight, navBarHeight }
+}
+
 function applyNavigationBar(themeName) {
+  const pages = getCurrentPages()
+  const route = pages.length ? pages[pages.length - 1].route : ''
+  if (CUSTOM_NAV_ROUTES.has(route)) return
+
   const t = THEMES[themeName || readTheme()]
   wx.setNavigationBarColor({
     frontColor: t.navFront,
     backgroundColor: t.navBg,
-    animation: { duration: 200, timingFunc: 'easeIn' }
+    animation: { duration: 200, timingFunc: 'easeIn' },
   })
 }
 
@@ -60,6 +78,7 @@ module.exports = {
   readTheme,
   writeTheme,
   applyNavigationBar,
+  getNavLayout,
   progressColors,
   getThemeList,
 }

@@ -1,5 +1,5 @@
 <!-- pages/draw/draw.wxml — 今日签 -->
-<scroll-view class="app-theme-{{uiTheme}} page" scroll-y>
+<scroll-view class="app-root app-theme-{{uiTheme}} page" scroll-y>
   <!-- ===== 渐变头部 ===== -->
   <view class="draw-header">
     <view class="draw-header-bg"></view>

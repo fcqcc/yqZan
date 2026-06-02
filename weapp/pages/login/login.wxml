@@ -49,25 +49,6 @@
       <view class="login-title">一起攒</view>
       <view class="login-subtitle">情侣存钱 · 共同成长</view>
 
-      <!-- 功能预览区：让审核人员和用户先了解功能再登录 -->
-      <view class="login-features">
-        <view class="login-feature">
-          <view class="login-feature-icon">💰</view>
-          <text class="login-feature-title">共同存钱</text>
-          <text class="login-feature-desc">一起设定目标，记录每一笔存入</text>
-        </view>
-        <view class="login-feature">
-          <view class="login-feature-icon">🐾</view>
-          <text class="login-feature-title">宠物养成</text>
-          <text class="login-feature-desc">喂食、散步、玩耍，共同成长</text>
-        </view>
-        <view class="login-feature">
-          <view class="login-feature-icon">🔥</view>
-          <text class="login-feature-title">每日签到</text>
-          <text class="login-feature-desc">连续签到，累积火花与积分</text>
-        </view>
-      </view>
-
       <button class="login-btn login-btn-primary" bindtap="handleWxLogin" loading="{{loading}}">
         <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:currentColor;vertical-align:middle;margin-right:4px;"><path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
         微信一键登录

@@ -1,6 +1,7 @@
 // pages/home/home.js
 const api = require('../../utils/api')
 const nav = require('../../utils/nav')
+const theme = require('../../utils/theme')
 
 function fmtMoney(n) {
   if (n >= 100000000) return '¥' + (n/100000000).toFixed(1) + '亿'
@@ -98,10 +99,12 @@ Page({
     checkingIn: false, // 签到防重复
     isGuest: false,     // 游客模式（由 guest-intercept behavior 自动设置）
     uiTheme: getApp().globalData.uiTheme || 'handdrawn',
+    statusBarHeight: 20,
+    navBarHeight: 44,
   },
 
   onLoad() {
-    // 游客模式由 behavior 自动检测，无需额外逻辑
+    this.setData(theme.getNavLayout())
   },
 
   onShow() {
@@ -119,13 +122,6 @@ Page({
       this.loadPetData()
       return
     }
-    const setHomeNav = () => wx.setNavigationBarColor({
-      frontColor: '#ffffff',
-      backgroundColor: '#FF8FAB',
-      animation: { duration: 200, timingFunc: 'easeIn' }
-    })
-    setHomeNav()
-    setTimeout(setHomeNav, 60)
     this.setData({
       userInfo,
       myInitial: (userInfo.nickname || '我').slice(0, 1),

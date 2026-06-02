@@ -17,9 +17,9 @@
   overflow: hidden;
   margin: 10px 12px 8px;
   padding: 24px 20px 20px;
-  background: linear-gradient(180deg, #ff8fab 0%, #ff6b9d 50%, #d4a0f0 100%);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 8px 24px rgba(255, 107, 157, 0.25);
+  background: linear-gradient(135deg, #E891A4 0%, #FADCE6 100%);
+  border-radius: 20px 8px 20px 8px;
+  border: 2px dashed rgba(255, 255, 255, 0.4);
   text-align: center;
 }
 .pets-detail-header-bg {

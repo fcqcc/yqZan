@@ -106,14 +106,23 @@
 .app-theme-handdrawn .guest-card-btn,
 .app-theme-handdrawn .wish-fab,
 .app-theme-handdrawn .result-actions .btn,
-.app-theme-handdrawn .login-btn-primary,
-.app-theme-handdrawn .login-btn-secondary,
 .app-theme-handdrawn .privacy-btn-agree,
 .app-theme-handdrawn .plan-action-btn,
 .app-theme-handdrawn .checkin-mini-btn {
   border-radius: 25px 10px 25px 10px !important;
   box-shadow: 3px 3px 0 rgba(212, 112, 138, 0.3) !important;
   border: none !important;
+  transition: transform 0.12s ease !important;
+}
+.app-theme-handdrawn .login-btn-primary {
+  border-radius: 25px 10px 25px 10px !important;
+  box-shadow: 4px 4px 0 rgba(212, 112, 138, 0.4) !important;
+  border: none !important;
+  transition: transform 0.12s ease !important;
+}
+.app-theme-handdrawn .login-btn-secondary {
+  border-radius: 25px 10px 25px 10px !important;
+  box-shadow: 3px 3px 0 rgba(232, 145, 164, 0.2) !important;
   transition: transform 0.12s ease !important;
 }
 .app-theme-handdrawn .btn-primary:active,
@@ -123,12 +132,11 @@
   box-shadow: 1px 1px 0 rgba(212, 112, 138, 0.3) !important;
 }
 
-.app-theme-handdrawn .btn-outline,
-.app-theme-handdrawn .login-btn-secondary {
-  border: 2px dashed var(--hd-border) !important;
+.app-theme-handdrawn .btn-outline {
+  border: 2px solid var(--hd-primary) !important;
   border-radius: 25px 10px 25px 10px !important;
-  background: #fffafb !important;
-  color: var(--hd-text) !important;
+  background: #fff !important;
+  color: #D4708A !important;
   box-shadow: 2px 2px 0 rgba(232, 145, 164, 0.12) !important;
 }
 
@@ -155,25 +163,31 @@
   width: 85% !important;
   max-width: 300px !important;
   background: #fff !important;
-  color: var(--hd-primary) !important;
-  border: 2px dashed var(--hd-border) !important;
+  color: #D4708A !important;
+  border: 2px solid #E891A4 !important;
   padding: 14px 0 !important;
   font-size: 15px !important;
-  box-shadow: 3px 3px 0 rgba(232, 145, 164, 0.3) !important;
+  box-shadow: 3px 3px 0 rgba(232, 145, 164, 0.2) !important;
 }
 
-/* ===== 登录页标题 ===== */
+/* ===== 登录页标题与背景 ===== */
+.app-theme-handdrawn .login-page {
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFF0F5 100%) !important;
+}
 .app-theme-handdrawn .login-title {
   font-size: 36px !important;
   font-weight: 800 !important;
-  color: var(--hd-primary-dark) !important;
+  color: #4A3548 !important;
   letter-spacing: 2px !important;
   margin-bottom: 10px !important;
 }
 .app-theme-handdrawn .login-subtitle {
-  color: var(--hd-text-secondary) !important;
+  color: #5D4E60 !important;
   font-size: 14px !important;
   margin-bottom: 40px !important;
+}
+.app-theme-handdrawn .login-footer {
+  color: #6B5A6E !important;
 }
 
 /* ===== 输入框 ===== */
@@ -196,9 +210,8 @@
 .app-theme-handdrawn .bp-header,
 .app-theme-handdrawn .level-header,
 .app-theme-handdrawn .profile-header,
-.app-theme-handdrawn .home-header,
-.app-theme-handdrawn .login-page {
-  background: linear-gradient(135deg, #E891A4 0%, #D4708A 50%, #E891A4 100%) !important;
+.app-theme-handdrawn .home-header {
+  background: linear-gradient(135deg, #E891A4 0%, #FADCE6 100%) !important;
 }
 
 /* ===== 首页头部统计卡片 ===== */
