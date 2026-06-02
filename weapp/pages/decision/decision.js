@@ -2,7 +2,7 @@
 const TUBE_TEMPLATES = {
   preset: [
     { id: 'eat', name: '今天吃什么', icon: '🍜', color: 'pink',
-      options: ['火锅', '烧烤', '日料', '西餐', '奶茶', '麻辣烫', '炸鸡', '粤菜'] },
+      options: ['火锅', '烧烤', '日料', '西餐', '冒菜', '麻辣烫', '炸鸡', '漂亮饭','小吃'] },
     { id: 'play', name: '去哪儿玩', icon: '🎡', color: 'blue',
       options: ['电影院', '公园', '商场', 'KTV', '展览', '露营', '游乐场', '密室'] },
     { id: 'weekend', name: '周末计划', icon: '📅', color: 'purple',

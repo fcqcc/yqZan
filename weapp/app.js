@@ -4,7 +4,7 @@ const theme = require('./utils/theme')
 
 App({
   globalData: {
-    baseUrl: 'http://127.0.0.1:5000',
+    baseUrl: 'https://yqzan.cn',
     token: '',
     userInfo: null,
     uiTheme: 'handdrawn'

@@ -1,8 +1,8 @@
 /* app.wxss - 全局样式 */
 @font-face {
   font-family: 'ZCOOL KuaiLe';
-  src: url('http://127.0.0.1:5000/assets/fonts/ZCOOL_KuaiLe.woff2') format('woff2');
+  src: url('https://yqzan.cn/assets/fonts/ZCOOL_KuaiLe.woff2') format('woff2');
 }
-/* 注：上线时 url 需改为 https://yqzan.cn/assets/fonts/ZCOOL_KuaiLe.woff2 */
+/* 上线时 url 已改为 https://yqzan.cn/assets/fonts/ */
 @import "utils/common.wxss";
 @import "styles/theme-global.wxss";

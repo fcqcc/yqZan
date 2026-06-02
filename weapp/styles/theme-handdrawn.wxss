@@ -316,10 +316,8 @@
 /* ===== 分隔线 ===== */
 .app-theme-handdrawn .vault-stats,
 .app-theme-handdrawn .vault-stat__sep,
-.app-theme-handdrawn .plan-footer,
 .app-theme-handdrawn .wish-foot,
 .app-theme-handdrawn .sheet-title,
-.app-theme-handdrawn .plan-header,
 .app-theme-handdrawn .sec-head {
   border-color: var(--hd-line-dot) !important;
   border-style: dotted !important;
