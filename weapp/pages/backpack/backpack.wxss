@@ -336,19 +336,19 @@
   box-shadow: 6rpx 6rpx 0 rgba(232, 145, 164, 0.15);
 }
 .empty-card__icon {
-  font-size: 88rpx;
+  font-size: var(--text-meta-size);
   display: block;
   margin-bottom: 8rpx;
   filter: grayscale(0.3);
   opacity: 0.7;
 }
 .empty-card__title {
-  font-size: 30rpx;
+  font-size: var(--text-meta-size);
   color: var(--text-primary);
-  font-weight: 600;
+  font-weight: var(--text-meta-weight);
 }
 .empty-card__sub {
-  font-size: 24rpx;
+  font-size: var(--text-meta-size);
   color: var(--text-secondary);
   text-align: center;
   line-height: 1.5;
@@ -366,7 +366,7 @@
   border: 1rpx dashed var(--primary);
 }
 .empty-card__hint-dot {
-  font-weight: 700;
+  font-weight: var(--text-meta-weight);
 }
 
 /* ========== Section 卡片（图鉴/成就/商店通用） ========== */

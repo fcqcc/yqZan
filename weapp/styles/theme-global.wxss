@@ -35,6 +35,33 @@ page {
   --login-page-bg: linear-gradient(180deg, #FFFFFF 0%, #FFF0F5 100%);
   --login-accent: #D4708A;
   --login-muted: #8B7A8E;
+
+  /* ===== 字体现范 ===== */
+  /* 字族 */
+  --font-deco: 'ZCOOL KuaiLe', cursive;
+  --font-body: 'Noto Sans SC', -apple-system, sans-serif;
+
+  /* 字号 & 字重 */
+  --text-h1-size: 34rpx;
+  --text-h1-weight: 700;
+  --text-h2-size: 32rpx;
+  --text-h2-weight: 700;
+  --text-h3-size: 30rpx;
+  --text-h3-weight: 700;
+  --text-body-size: 28rpx;
+  --text-body-weight: 500;
+  --text-meta-size: 24rpx;
+  --text-meta-weight: 500;
+  --text-tag-size: 20rpx;
+  --text-tag-weight: 600;
+  --text-hero-xl: 100rpx;
+  --text-hero-lg: 64rpx;
+  --text-hero-md: 48rpx;
+  --text-hero-sm: 36rpx;
+
+  /* 标签页栏字号 */
+  --text-tab-size: 20rpx;
+
   background: transparent;
 }
 

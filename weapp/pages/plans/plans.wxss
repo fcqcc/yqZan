@@ -28,8 +28,8 @@
   border-radius: 50%;
 }
 .page-title {
-  font-size: 17px;
-  font-weight: 700;
+  font-size: var(--text-h1-size);
+  font-weight: var(--text-h1-weight);
   color: white;
   flex: 1;
   text-align: center;
@@ -77,17 +77,17 @@
   transform: rotate(-15deg);
 }
 .plan-summary__label {
-  font-size: 12px;
+  font-size: var(--text-meta-size);
   opacity: 0.9;
-  font-weight: 500;
+  font-weight: var(--text-meta-weight);
   margin-bottom: 4px;
   position: relative;
   z-index: 1;
 }
 .plan-summary__total {
-  font-family: 'ZCOOL KuaiLe', cursive;
-  font-size: 50px;
-  font-weight: 700;
+  font-family: var(--font-deco);
+  font-size: var(--text-h3-size);
+  font-weight: var(--text-h3-weight);
   text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
   line-height: 1;
   letter-spacing: 2px;
@@ -109,13 +109,13 @@
   backdrop-filter: blur(4px);
 }
 .plan-summary__item-num {
-  font-family: 'ZCOOL KuaiLe', cursive;
-  font-size: 18px;
-  font-weight: 700;
+  font-family: var(--font-deco);
+  font-size: var(--text-h3-size);
+  font-weight: var(--text-h3-weight);
   line-height: 1.1;
 }
 .plan-summary__item-label {
-  font-size: 10px;
+  font-size: var(--text-meta-size);
   opacity: 0.9;
 }
 
@@ -135,16 +135,16 @@
   margin-bottom: 12px;
 }
 .plan-trend__title {
-  font-family: 'ZCOOL KuaiLe', cursive;
-  font-size: 16px;
+  font-family: var(--font-deco);
+  font-size: var(--text-h2-size);
   color: var(--text-primary);
-  font-weight: 700;
+  font-weight: var(--text-h2-weight);
 }
 .plan-trend__num {
-  font-family: 'ZCOOL KuaiLe', cursive;
-  font-size: 18px;
+  font-family: var(--font-deco);
+  font-size: var(--text-h3-size);
   color: var(--primary-dark);
-  font-weight: 700;
+  font-weight: var(--text-h3-weight);
 }
 .plan-trend__bars {
   display: flex;
@@ -175,8 +175,8 @@
 /* ===== 计划列表标题 ===== */
 .plan-section-title {
   padding: 16px 20px 8px;
-  font-family: 'ZCOOL KuaiLe', cursive;
-  font-size: 16px;
+  font-family: var(--font-deco);
+  font-size: var(--text-h2-size);
   color: var(--text-primary);
   font-weight: 700;
   display: flex;
@@ -184,8 +184,8 @@
   gap: 6px;
 }
 .plan-section-title__count {
-  font-family: 'Noto Sans SC', sans-serif;
-  font-size: 10px;
+  font-family: var(--font-deco);
+  font-size: var(--text-h2-size);
   color: var(--text-secondary);
   background: var(--primary-pale);
   padding: 2px 8px;
@@ -235,22 +235,22 @@
 
 .plan-card__title-block { flex: 1; }
 .plan-card__name {
-  font-family: 'ZCOOL KuaiLe', cursive;
-  font-size: 20px;
+  font-family: var(--font-deco);
+  font-size: var(--text-h2-size);
   color: var(--text-primary);
-  font-weight: 700;
+  font-weight: var(--text-h2-weight);
   line-height: 1.1;
 }
 .plan-card__sub {
-  font-size: 11px;
+  font-size: var(--text-body-size);
   color: var(--text-secondary);
   margin-top: 2px;
 }
 .plan-card__status {
   padding: 5px 12px;
   border-radius: 14px 4px 14px 4px;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: var(--text-tag-size);
+  font-weight: var(--text-tag-weight);
   border: 1.5px dashed;
   font-family: 'ZCOOL KuaiLe', cursive;
   letter-spacing: 1px;
@@ -266,10 +266,10 @@
   margin-bottom: 10px;
 }
 .plan-card__current {
-  font-family: 'ZCOOL KuaiLe', cursive;
-  font-size: 32px;
+  font-family: var(--font-deco);
+  font-size: var(--text-h3-size);
   color: var(--text-primary);
-  font-weight: 700;
+  font-weight: var(--text-h3-weight);
   line-height: 1;
 }
 .plan-card__target {
@@ -279,8 +279,8 @@
 }
 .plan-card__pct {
   margin-left: auto;
-  font-family: 'ZCOOL KuaiLe', cursive;
-  font-size: 18px;
+  font-family: var(--font-deco);
+  font-size: var(--text-h3-size);
   color: var(--primary-dark);
   font-weight: 700;
 }
@@ -315,9 +315,9 @@
   border-top: 1.5px dotted #F0E8EC;
 }
 .plan-card__date {
-  font-size: 10px;
+  font-size: var(--text-meta-size);
   color: var(--text-light);
-  font-family: 'ZCOOL KuaiLe', cursive;
+  font-family: var(--font-body);
   letter-spacing: 0.5px;
 }
 .plan-card__btn {
@@ -435,7 +435,7 @@
 }
 
 .deliver-time {
-  font-size: 11px;
+  font-size: var(--text-meta-size);
   color: var(--text-light);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
@@ -450,7 +450,7 @@
 }
 
 .field-hint {
-  font-size: 12px;
+  font-size: var(--text-meta-size);
   color: var(--text-light);
   line-height: 1.5;
 }

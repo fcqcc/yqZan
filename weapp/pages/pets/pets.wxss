@@ -154,8 +154,8 @@
 }
 .btn-evo {
   padding: 6px 10px;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
   color: #fff;
   background: linear-gradient(135deg, #ff6b35, #ff8f00);
   border-radius: 12px 4px 12px 4px;
@@ -301,8 +301,8 @@
 
 /* ===== 空状态 ===== */
 .empty { text-align: center; padding: 40px 16px; color: var(--text-light); font-size: 14px; }
-.empty-icon { font-size: 40px; display: block; margin-bottom: 8px; }
-.empty-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; display: block; }
+.empty-icon { font-size: var(--text-meta-size); display: block; margin-bottom: 8px; };
+.empty-sub { font-size: var(--text-meta-size); color: var(--text-muted); margin-top: 4px; display: block; };
 
 /* ===== 稀有度徽章 ===== */
 .rarity-badge {

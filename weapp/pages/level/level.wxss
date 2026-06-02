@@ -172,5 +172,5 @@
   text-align: center;
   padding: 20px;
   color: var(--text-light, #999);
-  font-size: 13px;
+  font-size: var(--text-meta-size);
 }

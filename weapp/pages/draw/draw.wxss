@@ -258,7 +258,7 @@ page { background: #FFF9F5; }
   text-align: center;
   padding: 30px 16px 40px;
 }
-.empty-icon { font-size: 40px; display: block; margin-bottom: 8px; }
-.empty-section text { display: block; font-size: 14px; color: #b8a4ac; margin-bottom: 14px; }
+.empty-icon { font-size: var(--text-meta-size); display: block; margin-bottom: 8px; };
+.empty-section text { display: block; font-size: var(--text-meta-size); color: #b8a4ac; margin-bottom: 14px; };
 
 .scroll-bottom-spacer { height: 30px; }

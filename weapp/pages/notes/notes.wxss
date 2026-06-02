@@ -58,8 +58,8 @@
 /* ===== 标题 ===== */
 .msg-section-title {
   padding: 16px 20px 8px;
-  font-family: 'ZCOOL KuaiLe', cursive;
-  font-size: 16px;
+  font-family: var(--font-deco);
+  font-size: var(--text-h2-size);
   color: var(--text-primary);
   font-weight: 700;
   display: flex;
@@ -67,8 +67,8 @@
   gap: 6px;
 }
 .msg-section-title__count {
-  font-family: 'Noto Sans SC', sans-serif;
-  font-size: 10px;
+  font-family: var(--font-deco);
+  font-size: var(--text-h2-size);
   color: var(--text-secondary);
   background: var(--primary-pale);
   padding: 2px 8px;
@@ -179,20 +179,20 @@
   border: 1.5px dashed currentColor;
 }
 .msg-card__avatar-name {
-  font-size: 12px;
+  font-size: var(--text-meta-size);
   color: var(--text-secondary);
-  font-weight: 600;
+  font-weight: var(--text-meta-weight);
 }
 .msg-card__time {
-  font-size: 10px;
+  font-size: var(--text-meta-size);
   color: var(--text-light);
-  font-family: 'ZCOOL KuaiLe', cursive;
+  font-family: var(--font-body);
 }
 .msg-card__text {
-  font-size: 15px;
+  font-size: var(--text-body-size);
   color: var(--text-primary);
   line-height: 1.5;
-  font-weight: 500;
+  font-weight: var(--text-body-weight);
   word-wrap: break-word;
 }
 .msg-card__actions {
@@ -227,5 +227,5 @@
   text-align: center;
   padding: 40px 20px;
   color: var(--text-light);
-  font-size: 13px;
+  font-size: var(--text-meta-size);
 }
