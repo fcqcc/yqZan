@@ -1,0 +1,351 @@
+<!-- pages/decision/decision.wxml — 情侣抽签小助手（可爱手绘风） -->
+<view class="dc-page app-theme-{{uiTheme}}">
+
+  <!-- ========================== 首页：决策台 ========================== -->
+  <block wx:if="{{currentView === 'home'}}">
+    <scroll-view scroll-y class="dc-scroll">
+
+      <!-- 顶部 Hero -->
+      <view class="dc-hero">
+        <view class="dc-hero__bg"></view>
+        <view class="dc-hero__row">
+          <text class="dc-hero__icon">🎯</text>
+          <view class="dc-hero__title-block">
+            <text class="dc-hero__title">抽签小助手</text>
+            <text class="dc-hero__sub">选择困难? 让天意帮你决定~</text>
+          </view>
+          <view class="dc-hero__chip" bindtap="onClearHistory" hover-class="dc-hero__chip--hover">
+            <text class="dc-hero__chip-num">{{history.length}}</text>
+            <text class="dc-hero__chip-label">记录</text>
+          </view>
+        </view>
+        <view class="dc-hero__dots">
+          <view class="dc-dot dc-dot--1"></view>
+          <view class="dc-dot dc-dot--2"></view>
+          <view class="dc-dot dc-dot--3"></view>
+        </view>
+      </view>
+
+      <!-- 快捷签筒（预设 4 个） -->
+      <view class="dc-section">
+        <view class="dc-section__header">
+          <text class="dc-section__title">✨ 快捷抽签</text>
+          <text class="dc-section__more">预设 · 点一下就用</text>
+        </view>
+        <scroll-view scroll-x show-scrollbar="{{false}}" class="dc-quick-scroll">
+          <view class="dc-quick-bar">
+            <view
+              wx:for="{{quickTubes}}"
+              wx:key="id"
+              class="dc-quick dc-quick--{{item.color}}"
+              bindtap="onPickTube"
+              data-id="{{item.id}}"
+              hover-class="dc-quick--hover"
+            >
+              <text class="dc-quick__icon">{{item.icon}}</text>
+              <text class="dc-quick__name">{{item.name}}</text>
+              <text class="dc-quick__count">{{item.options.length}} 个选项</text>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+
+      <!-- 我的签筒 -->
+      <view class="dc-section">
+        <view class="dc-section__header">
+          <text class="dc-section__title">🎪 我的签筒</text>
+          <text class="dc-section__more">共 {{customTubes.length}} 个</text>
+        </view>
+
+        <view class="dc-grid">
+          <view
+            wx:for="{{customTubes}}"
+            wx:key="id"
+            class="dc-tube dc-tube--{{item.color}}"
+            bindtap="onPickTube"
+            data-id="{{item.id}}"
+            data-source="custom"
+            hover-class="dc-tube--hover"
+          >
+            <view class="dc-tube__top">
+              <text class="dc-tube__icon">{{item.icon}}</text>
+              <view
+                wx:if="{{!item.isPreset}}"
+                class="dc-tube__del"
+                catchtap="onDeleteTube"
+                data-id="{{item.id}}"
+                hover-class="dc-tube__del--hover"
+              >×</view>
+            </view>
+            <text class="dc-tube__name">{{item.name}}</text>
+            <text class="dc-tube__count">{{item.options.length}} 个选项</text>
+          </view>
+
+          <!-- 新建签筒 -->
+          <view class="dc-tube dc-tube--add" bindtap="onNewTube" hover-class="dc-tube--hover">
+            <text class="dc-tube__add-icon">+</text>
+            <text class="dc-tube__name">新建签筒</text>
+            <text class="dc-tube__count">自定义选项</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 最近抽签 -->
+      <view wx:if="{{history.length > 0}}" class="dc-section">
+        <view class="dc-section__header">
+          <text class="dc-section__title">📜 最近抽签</text>
+          <text class="dc-section__more dc-section__more--link" bindtap="onClearHistory">清空</text>
+        </view>
+        <view class="dc-history">
+          <view
+            wx:for="{{history}}"
+            wx:key="id"
+            class="dc-history__item"
+            data-index="{{index}}"
+            bindtap="onRemoveHistory"
+            hover-class="dc-history__item--hover"
+          >
+            <text class="dc-history__dot">·</text>
+            <view class="dc-history__body">
+              <text class="dc-history__tube">{{item.tubeName}}</text>
+              <text class="dc-history__sep">·</text>
+              <text class="dc-history__result">{{item.option}}</text>
+            </view>
+            <text class="dc-history__time">{{item.timeLabel}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="dc-footer"></view>
+    </scroll-view>
+  </block>
+
+  <!-- ========================== 抽签台 ========================== -->
+  <block wx:if="{{currentView === 'draw'}}">
+    <view class="dc-draw">
+      <!-- 顶部导航 -->
+      <view class="dc-draw__nav">
+        <view class="dc-back" bindtap="onBackToHome" hover-class="dc-back--hover">
+          <text>‹</text>
+        </view>
+        <view class="dc-draw__title-block">
+          <text class="dc-draw__icon" wx:if="{{currentTube}}">{{currentTube.icon}}</text>
+          <text class="dc-draw__title" wx:if="{{currentTube}}">{{currentTube.name}}</text>
+        </view>
+        <view class="dc-draw__edit"
+              wx:if="{{currentTube && !currentTube.isPreset}}"
+              bindtap="onEditTube"
+              hover-class="dc-draw__edit--hover">
+          <text>编辑</text>
+        </view>
+        <view wx:else class="dc-draw__edit dc-draw__edit--placeholder"></view>
+      </view>
+
+      <!-- 签筒区域 -->
+      <view class="dc-tubebox">
+        <view class="dc-tubebox__bg"></view>
+
+        <!-- 签 (sticks) -->
+        <view class="dc-sticks">
+          <view
+            wx:for="{{currentSticks}}"
+            wx:key="id"
+            class="dc-stick dc-stick--{{item.color}} {{item.shooting ? 'dc-stick--shooting' : ''}}"
+            style="transform: translateX({{item.x}}rpx) rotate({{item.rot}}deg); {{item.shooting ? '--shoot-translate: ' + item.shootY + 'rpx; --shoot-rotate: ' + item.shootRot + 'deg;' : ''}}"
+          >
+            <view class="dc-stick__top">{{item.shooting ? (currentResult || '?') : (item.shownLabel || '')}}</view>
+            <view class="dc-stick__body"></view>
+          </view>
+        </view>
+
+        <!-- 筒身 -->
+        <view class="dc-tube-body {{isDrawing ? 'dc-tube-body--shaking' : ''}}">
+          <view class="dc-tube-body__rim"></view>
+          <view class="dc-tube-body__label">
+            <text wx:if="{{!isDrawing && !currentResult}}">{{currentTube && currentTube.options.length}} 支签</text>
+            <text wx:elif="{{isDrawing}}">天意选择中...</text>
+            <text wx:elif="{{currentResult}}">已揭晓</text>
+          </view>
+          <view class="dc-tube-body__decoration">
+            <text class="dc-tube-body__deco1">福</text>
+            <text class="dc-tube-body__deco2">运</text>
+          </view>
+        </view>
+
+        <!-- 漂浮装饰 -->
+        <view class="dc-tubebox__float dc-tubebox__float--1">✨</view>
+        <view class="dc-tubebox__float dc-tubebox__float--2">⭐</view>
+        <view class="dc-tubebox__float dc-tubebox__float--3">💫</view>
+      </view>
+
+      <!-- 选项预览 -->
+      <view class="dc-options">
+        <view class="dc-options__label">签筒里都有：</view>
+        <view class="dc-options__list">
+          <text
+            wx:for="{{currentTube.options}}"
+            wx:key="*this"
+            class="dc-options__chip {{item === currentResult ? 'dc-options__chip--hit' : ''}}"
+          >{{item}}</text>
+        </view>
+      </view>
+
+      <!-- 抽签按钮 -->
+      <view class="dc-draw__btn-wrap">
+        <view
+          class="dc-draw__btn {{isDrawing ? 'dc-draw__btn--drawing' : ''}}"
+          bindtap="onStartDraw"
+          hover-class="dc-draw__btn--hover"
+        >
+          <text wx:if="{{!isDrawing && !currentResult}}">🎲 开始抽签</text>
+          <text wx:elif="{{isDrawing}}">抽签中...</text>
+          <text wx:else>🎲 再抽一次</text>
+        </view>
+        <text class="dc-draw__hint">点击按钮 · 让天意揭晓答案</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- ========================== 自定义签筒 ========================== -->
+  <block wx:if="{{currentView === 'custom'}}">
+    <view class="dc-custom">
+      <view class="dc-draw__nav">
+        <view class="dc-back" bindtap="onCancelCustom" hover-class="dc-back--hover">
+          <text>‹</text>
+        </view>
+        <text class="dc-custom__title">{{editingId ? '编辑签筒' : '新建签筒'}}</text>
+        <view class="dc-draw__edit" wx:if="{{customDraft.name && customDraft.options.length >= 2}}"
+              bindtap="onSaveCustom" hover-class="dc-draw__edit--hover">
+          <text>保存</text>
+        </view>
+        <view wx:else class="dc-draw__edit dc-draw__edit--placeholder"></view>
+      </view>
+
+      <scroll-view scroll-y class="dc-custom__scroll">
+        <!-- 预览 -->
+        <view class="dc-custom__preview dc-custom__preview--{{customDraft.color}}">
+          <text class="dc-custom__preview-icon">{{customDraft.icon || '🎯'}}</text>
+          <text class="dc-custom__preview-name">{{customDraft.name || '签筒名字'}}</text>
+          <text class="dc-custom__preview-count">{{customDraft.options.length}} 个选项</text>
+        </view>
+
+        <!-- 名字 -->
+        <view class="dc-form">
+          <text class="dc-form__label">📝 签筒名字</text>
+          <input
+            class="dc-form__input"
+            value="{{customDraft.name}}"
+            bindinput="onCustomNameInput"
+            placeholder="比如：今天吃什么"
+            placeholder-style="color: #B8A9BB;"
+            maxlength="20"
+          />
+        </view>
+
+        <!-- 颜色 -->
+        <view class="dc-form">
+          <text class="dc-form__label">🎨 主题色</text>
+          <view class="dc-color-bar">
+            <view
+              wx:for="{{colorChoices}}"
+              wx:key="*this"
+              class="dc-color-item dc-color-item--{{item}} {{customDraft.color === item ? 'dc-color-item--active' : ''}}"
+              bindtap="onPickColor"
+              data-color="{{item}}"
+              hover-class="dc-color-item--hover"
+            ></view>
+          </view>
+        </view>
+
+        <!-- 图标 -->
+        <view class="dc-form">
+          <text class="dc-form__label">😊 选择图标</text>
+          <view class="dc-icon-grid">
+            <view
+              wx:for="{{iconChoices}}"
+              wx:key="*this"
+              class="dc-icon-item {{customDraft.icon === item ? 'dc-icon-item--active' : ''}}"
+              bindtap="onPickIcon"
+              data-icon="{{item}}"
+              hover-class="dc-icon-item--hover"
+            >{{item}}</view>
+          </view>
+        </view>
+
+        <!-- 选项 -->
+        <view class="dc-form">
+          <text class="dc-form__label">📋 抽签选项 ({{customDraft.options.length}})</text>
+          <text class="dc-form__sub">至少 2 个 · 最多 20 个</text>
+          <view class="dc-opt-list">
+            <view
+              wx:for="{{customDraft.options}}"
+              wx:key="*this"
+              class="dc-opt-row"
+            >
+              <view class="dc-opt-row__num">{{index + 1}}</view>
+              <input
+                class="dc-opt-row__input"
+                value="{{item}}"
+                bindinput="onOptionInput"
+                data-index="{{index}}"
+                placeholder="输入选项"
+                placeholder-style="color: #B8A9BB;"
+                maxlength="30"
+              />
+              <view
+                class="dc-opt-row__del"
+                catchtap="onRemoveOption"
+                data-index="{{index}}"
+                hover-class="dc-opt-row__del--hover"
+              >×</view>
+            </view>
+          </view>
+          <view
+            wx:if="{{customDraft.options.length < 20}}"
+            class="dc-opt-add"
+            bindtap="onAddOption"
+            hover-class="dc-opt-add--hover"
+          >
+            <text class="dc-opt-add__icon">+</text>
+            <text>添加选项</text>
+          </view>
+        </view>
+
+        <view class="dc-footer"></view>
+      </scroll-view>
+    </view>
+  </block>
+
+  <!-- ========================== 结果弹层 ========================== -->
+  <view wx:if="{{showResult}}" class="dc-result-mask" bindtap="onCloseResult">
+    <view class="dc-result" catchtap="onStopProp">
+      <!-- 撒花 -->
+      <view class="dc-result__confetti">
+        <text wx:for="{{confettiList}}" wx:key="*this"
+              class="dc-result__confetti-item"
+              style="left: {{item.x}}%; animation-delay: {{item.delay}}s; --color: {{item.color}};"
+        >{{item.shape}}</text>
+      </view>
+
+      <text class="dc-result__crown">👑</text>
+      <text class="dc-result__banner">天意已定</text>
+
+      <view class="dc-result__icon-wrap">
+        <text class="dc-result__icon">{{resultEmoji}}</text>
+      </view>
+
+      <text class="dc-result__text">{{currentResult}}</text>
+      <text class="dc-result__sub">{{resultSubText}}</text>
+
+      <view class="dc-result__actions">
+        <view class="dc-result__btn dc-result__btn--secondary" bindtap="onCloseResult" hover-class="dc-result__btn--hover">
+          <text>返回</text>
+        </view>
+        <view class="dc-result__btn dc-result__btn--primary" bindtap="onRedraw" hover-class="dc-result__btn--hover">
+          <text>再抽一次</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+</view>

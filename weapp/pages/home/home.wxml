@@ -60,6 +60,16 @@
       </view>
     </view>
 
+    <!-- 抽签小助手 -->
+    <view class="section-header">
+      <text class="section-title">🎯 抽签小助手</text>
+      <text class="section-more" bindtap="go" data-url="/pages/decision/decision">去抽签 ›</text>
+    </view>
+    <view class="plan-card plan-card--decision" bindtap="go" data-url="/pages/decision/decision" hover-class="quick-action--press">
+      <text class="plan-title">选择困难？让天意帮你决定</text>
+      <text class="plan-empty-hint">6个预设签筒 · 自定义你的专属签筒</text>
+    </view>
+
     <!-- 签到 -->
     <view class="checkin-mini {{checkinAnim}}" bindtap="onCheckinTap">
       <view class="checkin-mini-left">

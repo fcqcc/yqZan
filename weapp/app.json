@@ -10,7 +10,8 @@
     "pages/backpack/backpack",
     "pages/level/level",
     "pages/notes/notes",
-    "pages/settings/settings"
+    "pages/settings/settings",
+    "pages/decision/decision"
   ],
   "window": {
     "navigationBarTitleText": "一起攒",
