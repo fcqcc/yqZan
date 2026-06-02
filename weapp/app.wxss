@@ -3,6 +3,6 @@
   font-family: 'ZCOOL KuaiLe';
   src: url('https://yqzan.cn/assets/fonts/ZCOOL_KuaiLe.woff2') format('woff2');
 }
-/* 上线时 url 已改为 https://yqzan.cn/assets/fonts/ */
+/* 线上模式 — 字体从 yqzan.cn 加载 */
 @import "utils/common.wxss";
 @import "styles/theme-global.wxss";
