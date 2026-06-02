@@ -1,18 +1,18 @@
 // pages/decision/decision.js — 情侣抽签小助手
 const TUBE_TEMPLATES = {
   preset: [
+    { id: 'eat', name: '今天吃什么', icon: '🍜', color: 'pink',
+      options: ['火锅', '烧烤', '日料', '西餐', '奶茶', '麻辣烫', '炸鸡', '粤菜'] },
+    { id: 'play', name: '去哪儿玩', icon: '🎡', color: 'blue',
+      options: ['电影院', '公园', '商场', 'KTV', '展览', '露营', '游乐场', '密室'] },
+    { id: 'weekend', name: '周末计划', icon: '📅', color: 'purple',
+      options: ['在家躺', '户外游', '逛街', '看展', '运动健身', '学习充电', '约朋友', '周边游'] },
     { id: 'fight', name: '吵架了怎么办', icon: '💔', color: 'red',
       options: ['主动道歉认错', '给彼此冷静空间', '认真沟通讲道理', '哄对方开心', '送个小惊喜', '写信表达心意'] },
-    { id: 'date', name: '约会去哪儿', icon: '💑', color: 'pink',
-      options: ['户外自然风', '室内文艺范', '美食探店', '在家温馨过', '刺激新体验', '浪漫仪式感'] },
-    { id: 'decide', name: '谁说了算', icon: '⚖️', color: 'purple',
-      options: ['听你的', '听我的', '猜拳决定', '轮流做主', '一起商量', '各自保留'] },
-    { id: 'anniversary', name: '纪念日怎么过', icon: '🎊', color: 'orange',
+    { id: 'anni', name: '纪念日怎么过', icon: '🎊', color: 'orange',
       options: ['出去吃大餐', '在家DIY', '互赠礼物', '短途旅行', '重温初遇地', '给对方惊喜'] },
     { id: 'stale', name: '感情变淡了', icon: '🔥', color: 'yellow',
       options: ['安排一次约会', '深度谈心', '一起做件新鲜事', '制造小惊喜', '回忆美好过去', '计划共同未来'] },
-    { id: 'conflict', name: '有矛盾分歧', icon: '🤝', color: 'green',
-      options: ['各退一步', '我来妥协', 'TA先让步', '求同存异', '找朋友调解', '冷静后再谈'] },
   ],
   custom: [
     { id: 'c1', name: '周末怎么过', icon: '🌤️', color: 'green',

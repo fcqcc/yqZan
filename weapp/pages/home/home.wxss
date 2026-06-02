@@ -1165,3 +1165,66 @@ page {
 .pet-interact-dot--used {
   opacity: 0.25;
 }
+
+/* ===== 首页抽签卡片（突出样式） ===== */
+.dc-home-card {
+  margin: 0 14px 12px;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, #FADCE6 0%, #FFF0F5 100%);
+  border: 2px dashed #E891A4;
+  border-radius: 18px 8px 20px 10px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 3px 3px 0 rgba(232, 145, 164, 0.18);
+}
+.dc-home-card__bg {
+  position: absolute;
+  top: -20px; right: -20px;
+  width: 100px; height: 100px;
+  background: radial-gradient(circle, rgba(232, 145, 164, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.dc-home-card__row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+.dc-home-card__emoji {
+  font-size: 40px;
+  filter: drop-shadow(2px 2px 0 rgba(212, 112, 138, 0.25));
+  transform: rotate(-8deg);
+  flex-shrink: 0;
+}
+.dc-home-card__text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.dc-home-card__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #5D4E60;
+}
+.dc-home-card__sub {
+  font-size: 11px;
+  color: #8B7A8E;
+}
+.dc-home-card__arrow {
+  font-size: 24px;
+  color: #D4708A;
+  font-weight: 700;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+.dc-home-card--press {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 rgba(232, 145, 164, 0.18);
+}

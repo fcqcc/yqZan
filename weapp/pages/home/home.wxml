@@ -65,9 +65,16 @@
       <text class="section-title">🎯 抽签小助手</text>
       <text class="section-more" bindtap="go" data-url="/pages/decision/decision">去抽签 ›</text>
     </view>
-    <view class="plan-card plan-card--decision" bindtap="go" data-url="/pages/decision/decision" hover-class="quick-action--press">
-      <text class="plan-title">选择困难？让天意帮你决定</text>
-      <text class="plan-empty-hint">6个预设签筒 · 自定义你的专属签筒</text>
+    <view class="dc-home-card" bindtap="go" data-url="/pages/decision/decision" hover-class="dc-home-card--press">
+      <view class="dc-home-card__bg"></view>
+      <view class="dc-home-card__row">
+        <text class="dc-home-card__emoji">🎲</text>
+        <view class="dc-home-card__text">
+          <text class="dc-home-card__title">选择困难？让天意帮你决定</text>
+          <text class="dc-home-card__sub">吵架了 · 吃什么 · 去哪玩 · 纪念日 · 感情降温</text>
+        </view>
+      </view>
+      <view class="dc-home-card__arrow">›</view>
     </view>
 
     <!-- 签到 -->
