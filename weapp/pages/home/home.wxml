@@ -40,60 +40,7 @@
       </view>
     </view>
 
-    <!-- 快捷入口 -->
-    <view class="quick-actions">
-      <view class="quick-action" bindtap="goTab" data-url="/pages/plans/plans" hover-class="quick-action--press">
-        <view class="quick-action__icon quick-action__icon--rose"><cp-icon name="wallet" size="44" /></view>
-        <text class="quick-action__label">存钱</text>
-      </view>
-      <view class="quick-action" bindtap="go" data-url="/pages/gacha/gacha" hover-class="quick-action--press">
-        <view class="quick-action__icon quick-action__icon--gold"><cp-icon name="gift" size="44" /></view>
-        <text class="quick-action__label">抽卡</text>
-      </view>
-      <view class="quick-action" bindtap="go" data-url="/pages/anniversaries/anniversaries" hover-class="quick-action--press">
-        <view class="quick-action__icon quick-action__icon--lavender"><cp-icon name="calendar" size="44" /></view>
-        <text class="quick-action__label">纪念日</text>
-      </view>
-      <view class="quick-action" bindtap="go" data-url="/pages/notes/notes" hover-class="quick-action--press">
-        <view class="quick-action__icon quick-action__icon--sky"><cp-icon name="envelope" size="44" /></view>
-        <text class="quick-action__label">留言</text>
-      </view>
-    </view>
-
-    <!-- 抽签小助手 -->
-    <view class="section-header">
-      <text class="section-title">🎯 抽签小助手</text>
-      <text class="section-more" bindtap="go" data-url="/pages/decision/decision">去抽签 ›</text>
-    </view>
-    <view class="dc-home-card" bindtap="go" data-url="/pages/decision/decision" hover-class="dc-home-card--press">
-      <view class="dc-home-card__bg"></view>
-      <view class="dc-home-card__row">
-        <text class="dc-home-card__emoji">🎲</text>
-        <view class="dc-home-card__text">
-          <text class="dc-home-card__title">选择困难？让天意帮你决定</text>
-          <text class="dc-home-card__sub">吵架了 · 吃什么 · 去哪玩 · 纪念日 · 感情降温</text>
-        </view>
-      </view>
-      <view class="dc-home-card__arrow">›</view>
-    </view>
-
-    <!-- 签到 -->
-    <view class="checkin-mini {{checkinAnim}}" bindtap="onCheckinTap">
-      <view class="checkin-mini-left">
-        <view class="checkin-mini-icon">
-          <cp-icon name="{{checkedInToday ? 'sparkles' : 'clock'}}" size="32" />
-        </view>
-        <view>
-          <text class="checkin-mini-text">{{checkedInToday ? '今日已签到' : '完成今日签到'}}</text>
-          <text class="checkin-mini-sub">连续 {{sparkCount}} 天 · 每日 +5 积分</text>
-        </view>
-      </view>
-      <view class="checkin-mini-btn {{checkedInToday ? 'checkin-mini-btn--done' : ''}}">
-        {{checkedInToday ? '已签到' : '签到'}}
-      </view>
-    </view>
-
-    <!-- 存钱计划 -->
+    <!-- ===== 核心业务：存钱计划 ===== -->
     <view class="section-header">
       <text class="section-title">存钱计划</text>
       <text class="section-more" bindtap="goTab" data-url="/pages/plans/plans">查看全部 ›</text>
@@ -126,7 +73,43 @@
       <text class="plan-empty-hint">设定一个小目标，从今天开始</text>
     </view>
 
-    <!-- 纪念日 -->
+    <!-- ===== 核心导航：快捷入口 ===== -->
+    <view class="quick-actions">
+      <view class="quick-action" bindtap="goTab" data-url="/pages/plans/plans" hover-class="quick-action--press">
+        <view class="quick-action__icon quick-action__icon--rose"><cp-icon name="wallet" size="44" /></view>
+        <text class="quick-action__label">存钱</text>
+      </view>
+      <view class="quick-action" bindtap="go" data-url="/pages/anniversaries/anniversaries" hover-class="quick-action--press">
+        <view class="quick-action__icon quick-action__icon--lavender"><cp-icon name="calendar" size="44" /></view>
+        <text class="quick-action__label">纪念日</text>
+      </view>
+      <view class="quick-action" bindtap="go" data-url="/pages/gacha/gacha" hover-class="quick-action--press">
+        <view class="quick-action__icon quick-action__icon--gold"><cp-icon name="gift" size="44" /></view>
+        <text class="quick-action__label">抽卡</text>
+      </view>
+      <view class="quick-action" bindtap="go" data-url="/pages/notes/notes" hover-class="quick-action--press">
+        <view class="quick-action__icon quick-action__icon--sky"><cp-icon name="envelope" size="44" /></view>
+        <text class="quick-action__label">留言</text>
+      </view>
+    </view>
+
+    <!-- ===== 每日签到 ===== -->
+    <view class="checkin-mini {{checkinAnim}}" bindtap="onCheckinTap">
+      <view class="checkin-mini-left">
+        <view class="checkin-mini-icon">
+          <cp-icon name="{{checkedInToday ? 'sparkles' : 'clock'}}" size="32" />
+        </view>
+        <view>
+          <text class="checkin-mini-text">{{checkedInToday ? '今日已签到' : '完成今日签到'}}</text>
+          <text class="checkin-mini-sub">连续 {{sparkCount}} 天 · 每日 +5 积分</text>
+        </view>
+      </view>
+      <view class="checkin-mini-btn {{checkedInToday ? 'checkin-mini-btn--done' : ''}}">
+        {{checkedInToday ? '已签到' : '签到'}}
+      </view>
+    </view>
+
+    <!-- ===== 纪念日 ===== -->
     <view wx:if="{{nearestAnni || todayAnni}}" class="anniversary-section">
       <view class="section-header section-header--compact">
         <text class="section-title">即将到来</text>
@@ -147,7 +130,82 @@
       </view>
     </view>
 
-    <!-- 卡片任务 -->
+    <!-- ===== 宠物 ===== -->
+    <view class="pet-area">
+      <view class="section-header section-header--compact">
+        <text class="section-title">我们的宠物</text>
+        <text wx:if="{{pet}}" class="section-more" bindtap="goPetPage">宠物管理 ›</text>
+        <text wx:else class="section-more" bindtap="go" data-url="/pages/gacha/gacha">去抽卡 ›</text>
+      </view>
+
+      <view wx:if="{{pet}}" class="pet-card">
+        <view class="pet-bg"></view>
+        <view class="pet-avatar {{petAnimationClass}} {{petActionClass}} {{petFeedClass}}" catchtap="onPetTap">
+          <text wx:if="{{showActionEmoji}}" class="pet-action-emoji {{actionEmojiClass}}">{{actionEmoji}}</text>
+          <image wx:if="{{petImageUrl}}" class="pet-avatar-img" src="{{petImageUrl}}" mode="aspectFit"></image>
+          <text wx:else class="pet-avatar-emoji">{{petEmoji}}</text>
+        </view>
+        <text class="pet-name">{{petName}}</text>
+        <text class="pet-level">{{petRarity}} · Lv.{{petLevel}}</text>
+        <view class="pet-interact-badge" wx:if="{{petId}}">
+          <text>今日互动</text>
+          <view class="pet-interact-dot {{todayInteractTotal >= 1 ? '' : 'pet-interact-dot--used'}}"></view>
+          <view class="pet-interact-dot {{todayInteractTotal >= 2 ? '' : 'pet-interact-dot--used'}}"></view>
+          <view class="pet-interact-dot {{todayInteractTotal >= 3 ? '' : 'pet-interact-dot--used'}}"></view>
+          <text>{{todayInteractTotal}}/3</text>
+        </view>
+        <view class="pet-intimacy">
+          <view class="intimacy-bar">
+            <view class="intimacy-fill" style="width:{{intimacyPct}}%"></view>
+          </view>
+          <text class="intimacy-text">{{intimacyPct}}/100</text>
+        </view>
+        <view class="pet-actions">
+          <view class="pet-action" bindtap="onFeed">
+            <view class="pet-action-icon"><text>喂</text></view>
+            <text class="pet-action-label">喂食</text>
+          </view>
+          <view class="pet-action" bindtap="onStroke">
+            <view class="pet-action-icon"><text>摸</text></view>
+            <text class="pet-action-label">抚摸</text>
+          </view>
+          <view class="pet-action" bindtap="onWalk">
+            <view class="pet-action-icon"><text>散</text></view>
+            <text class="pet-action-label">散步</text>
+          </view>
+          <view class="pet-action" bindtap="onPlay">
+            <view class="pet-action-icon"><text>玩</text></view>
+            <text class="pet-action-label">玩耍</text>
+          </view>
+        </view>
+      </view>
+
+      <view wx:else class="pet-card pet-card--empty" bindtap="go" data-url="/pages/gacha/gacha">
+        <view class="pet-bg"></view>
+        <cp-icon name="sparkles" size="56" />
+        <text class="pet-empty-title">还没有宠物伙伴</text>
+        <text class="pet-empty-hint">抽卡获得专属萌宠，一起攒钱成长</text>
+      </view>
+    </view>
+
+    <!-- ===== 趣味：抽签小助手 ===== -->
+    <view class="section-header">
+      <text class="section-title">🎯 抽签小助手</text>
+      <text class="section-more" bindtap="go" data-url="/pages/decision/decision">去抽签 ›</text>
+    </view>
+    <view class="dc-home-card" bindtap="go" data-url="/pages/decision/decision" hover-class="dc-home-card--press">
+      <view class="dc-home-card__bg"></view>
+      <view class="dc-home-card__row">
+        <text class="dc-home-card__emoji">🎲</text>
+        <view class="dc-home-card__text">
+          <text class="dc-home-card__title">选择困难？让天意帮你决定</text>
+          <text class="dc-home-card__sub">吵架了 · 吃什么 · 去哪玩 · 纪念日 · 感情降温</text>
+        </view>
+      </view>
+      <view class="dc-home-card__arrow">›</view>
+    </view>
+
+    <!-- ===== 卡片任务（辅助） ===== -->
     <view wx:if="{{cardTasksAsAssigner.length > 0}}" class="block block--tasks">
       <view class="section-header section-header--compact">
         <text class="section-title">我发起的任务</text>
@@ -222,64 +280,6 @@
             <button class="ct-btn ct-btn-complete" bindtap="onCardComplete" data-id="{{item.id}}">已完成</button>
           </view>
         </view>
-      </view>
-    </view>
-
-    <!-- 宠物 -->
-    <view class="pet-area">
-      <view class="section-header section-header--compact">
-        <text class="section-title">我们的宠物</text>
-        <text wx:if="{{pet}}" class="section-more" bindtap="goPetPage">宠物管理 ›</text>
-        <text wx:else class="section-more" bindtap="go" data-url="/pages/gacha/gacha">去抽卡 ›</text>
-      </view>
-
-      <view wx:if="{{pet}}" class="pet-card">
-        <view class="pet-bg"></view>
-        <view class="pet-avatar {{petAnimationClass}} {{petActionClass}} {{petFeedClass}}" catchtap="onPetTap">
-          <text wx:if="{{showActionEmoji}}" class="pet-action-emoji {{actionEmojiClass}}">{{actionEmoji}}</text>
-          <image wx:if="{{petImageUrl}}" class="pet-avatar-img" src="{{petImageUrl}}" mode="aspectFit"></image>
-          <text wx:else class="pet-avatar-emoji">{{petEmoji}}</text>
-        </view>
-        <text class="pet-name">{{petName}}</text>
-        <text class="pet-level">{{petRarity}} · Lv.{{petLevel}}</text>
-        <view class="pet-interact-badge" wx:if="{{petId}}">
-          <text>今日互动</text>
-          <view class="pet-interact-dot {{todayInteractTotal >= 1 ? '' : 'pet-interact-dot--used'}}"></view>
-          <view class="pet-interact-dot {{todayInteractTotal >= 2 ? '' : 'pet-interact-dot--used'}}"></view>
-          <view class="pet-interact-dot {{todayInteractTotal >= 3 ? '' : 'pet-interact-dot--used'}}"></view>
-          <text>{{todayInteractTotal}}/3</text>
-        </view>
-        <view class="pet-intimacy">
-          <view class="intimacy-bar">
-            <view class="intimacy-fill" style="width:{{intimacyPct}}%"></view>
-          </view>
-          <text class="intimacy-text">{{intimacyPct}}/100</text>
-        </view>
-        <view class="pet-actions">
-          <view class="pet-action" bindtap="onFeed">
-            <view class="pet-action-icon"><text>喂</text></view>
-            <text class="pet-action-label">喂食</text>
-          </view>
-          <view class="pet-action" bindtap="onStroke">
-            <view class="pet-action-icon"><text>摸</text></view>
-            <text class="pet-action-label">抚摸</text>
-          </view>
-          <view class="pet-action" bindtap="onWalk">
-            <view class="pet-action-icon"><text>散</text></view>
-            <text class="pet-action-label">散步</text>
-          </view>
-          <view class="pet-action" bindtap="onPlay">
-            <view class="pet-action-icon"><text>玩</text></view>
-            <text class="pet-action-label">玩耍</text>
-          </view>
-        </view>
-      </view>
-
-      <view wx:else class="pet-card pet-card--empty" bindtap="go" data-url="/pages/gacha/gacha">
-        <view class="pet-bg"></view>
-        <cp-icon name="sparkles" size="56" />
-        <text class="pet-empty-title">还没有宠物伙伴</text>
-        <text class="pet-empty-hint">抽卡获得专属萌宠，一起攒钱成长</text>
       </view>
     </view>
 
