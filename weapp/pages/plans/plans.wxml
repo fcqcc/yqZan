@@ -1,5 +1,11 @@
 <view class="app-root app-theme-{{uiTheme}} plans-wrap">
   <scroll-view class="page page--scroll" scroll-y>
+    <!-- ===== 页面Header ===== -->
+    <view class="page-header">
+      <text class="page-title">存钱计划</text>
+      <view class="header-action" bindtap="toggleForm">+ 新建</view>
+    </view>
+
     <!-- ===== 总存汇总卡 ===== -->
     <view class="plan-summary">
       <view class="plan-summary__label">累计已存</view>

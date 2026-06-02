@@ -1,4 +1,10 @@
 <scroll-view class="app-root app-theme-{{uiTheme}} page" scroll-y>
+  <!-- ===== 页面Header ===== -->
+  <view class="page-header">
+    <text class="page-title">纪念日</text>
+    <view class="header-action" bindtap="importHolidays">📆 导入</view>
+  </view>
+
   <!-- ===== 顶部统计英雄区 ===== -->
   <view class="anniv-hero">
     <view class="anniv-hero__row">

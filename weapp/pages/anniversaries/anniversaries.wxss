@@ -1,6 +1,44 @@
 /* pages/anniversaries/anniversaries.wxss — 原型重设计 */
 .page { height: 100vh; background: var(--bg); position: relative; }
 
+/* ===== 页面Header ===== */
+.page-header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: -30px; right: -20px;
+  width: 120px; height: 120px;
+  background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.page-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: white;
+  flex: 1;
+  text-align: center;
+  font-family: 'ZCOOL KuaiLe', cursive;
+  letter-spacing: 2px;
+  text-shadow: 1.5px 1.5px 0 rgba(212, 112, 138, 0.4);
+}
+.header-action {
+  background: rgba(255,255,255,0.95);
+  color: var(--primary-dark);
+  padding: 6px 14px;
+  border-radius: 14px 4px 14px 4px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 2px 2px 0 rgba(212, 112, 138, 0.25);
+  border: 1.5px dashed var(--primary);
+}
+
 /* ===== 顶部统计英雄区 ===== */
 .anniv-hero {
   padding: 20px 16px 14px;
