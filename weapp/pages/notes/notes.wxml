@@ -1,24 +1,108 @@
-<!-- pages/notes/notes.wxml — 留言板（原型风格） -->
 <scroll-view class="app-root app-theme-{{uiTheme}} page" scroll-y>
-  <view class="notes-input-header">
-    <input class="notes-input" placeholder="写点什么..." model:value="{{content}}" maxlength="200" confirm-type="send" bindconfirm="send" />
-    <view class="notes-submit" bindtap="send">📌</view>
+  <!-- ===== 输入栏 ===== -->
+  <view class="msg-input-bar">
+    <input class="msg-input" placeholder="写点什么给 ta..." model:value="{{content}}" maxlength="200" confirm-type="send" bindconfirm="send" />
+    <view class="msg-sticker-btn" catchtap="toggleSticker">📌</view>
   </view>
 
-  <view class="notes-list">
-    <view wx:for="{{notes}}" wx:key="id" class="note-item {{item.isMine ? '' : 'note-item--partner'}}">
-      <text wx:if="{{item.isMine}}" class="note-del" catchtap="del" data-id="{{item.id}}">✕</text>
-      <view class="note-content">{{item.content}}</view>
-      <view class="note-meta">
-        <text>{{item.isMine ? '我' : 'Ta'}} · {{item.dateShort}}</text>
-        <view class="note-actions">
-          <text class="note-action {{item.liked ? 'note-action--liked' : ''}}" catchtap="like" data-id="{{item.id}}">
-            ❤️ {{item.likes || 0}}
-          </text>
+  <!-- ===== 表情面板 ===== -->
+  <view wx:if="{{showSticker}}" class="msg-sticker-popup">
+    <view wx:for="{{stickers}}" wx:key="*this" class="msg-sticker" catchtap="onPickSticker" data-sticker="{{item}}">{{item}}</view>
+  </view>
+
+  <!-- ===== 留言列表标题 ===== -->
+  <view class="msg-section-title">
+    <text>💌 留言墙</text>
+    <text class="msg-section-title__count">共 {{notes.length}} 条</text>
+  </view>
+
+  <!-- ===== 留言列表 ===== -->
+  <view class="msg-list">
+    <!-- 日期分隔 -->
+    <view wx:if="{{todayNotes.length > 0}}" class="msg-day">
+      <text class="msg-day__pill">今天</text>
+    </view>
+    <view wx:for="{{todayNotes}}" wx:key="id" class="msg-item">
+      <view class="msg-card msg-card--{{item.colorClass || 'pink'}}">
+        <view class="msg-card__tape"></view>
+        <text class="msg-card__del" catchtap="del" data-id="{{item.id}}">×</text>
+        <view class="msg-card__row">
+          <view class="msg-card__avatar">
+            <view class="msg-card__avatar-icon" style="color: {{item.avatarColor}};">{{item.isMine ? '👧' : '👦'}}</view>
+            <text class="msg-card__avatar-name">{{item.isMine ? '我' : 'Ta'}}</text>
+          </view>
+          <text class="msg-card__time">{{item.timeLabel}}</text>
+        </view>
+        <text class="msg-card__text">{{item.content}}</text>
+        <view class="msg-card__actions">
+          <view class="msg-card__action msg-card__action--{{item.liked ? 'active' : ''}}" catchtap="like" data-id="{{item.id}}">
+            <text class="msg-card__action-icon">{{item.liked ? '❤️' : '🤍'}}</text>
+            <text>{{item.likes || 0}}</text>
+          </view>
+          <view class="msg-card__action">
+            <text class="msg-card__action-icon">💬</text>
+            <text>回复</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{yesterdayNotes.length > 0}}" class="msg-day">
+      <text class="msg-day__pill">昨天 · {{yesterdayDateStr}}</text>
+    </view>
+    <view wx:for="{{yesterdayNotes}}" wx:key="id" class="msg-item">
+      <view class="msg-card msg-card--{{item.colorClass || 'pink'}}">
+        <view class="msg-card__tape"></view>
+        <text class="msg-card__del" catchtap="del" data-id="{{item.id}}">×</text>
+        <view class="msg-card__row">
+          <view class="msg-card__avatar">
+            <view class="msg-card__avatar-icon" style="color: {{item.avatarColor}};">{{item.isMine ? '👧' : '👦'}}</view>
+            <text class="msg-card__avatar-name">{{item.isMine ? '我' : 'Ta'}}</text>
+          </view>
+          <text class="msg-card__time">{{item.timeLabel}}</text>
+        </view>
+        <text class="msg-card__text">{{item.content}}</text>
+        <view class="msg-card__actions">
+          <view class="msg-card__action msg-card__action--{{item.liked ? 'active' : ''}}" catchtap="like" data-id="{{item.id}}">
+            <text class="msg-card__action-icon">{{item.liked ? '❤️' : '🤍'}}</text>
+            <text>{{item.likes || 0}}</text>
+          </view>
+          <view class="msg-card__action">
+            <text class="msg-card__action-icon">💬</text>
+            <text>回复</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{olderNotes.length > 0}}" class="msg-day">
+      <text class="msg-day__pill">更早</text>
+    </view>
+    <view wx:for="{{olderNotes}}" wx:key="id" class="msg-item">
+      <view class="msg-card msg-card--{{item.colorClass || 'pink'}}">
+        <view class="msg-card__tape"></view>
+        <text class="msg-card__del" catchtap="del" data-id="{{item.id}}">×</text>
+        <view class="msg-card__row">
+          <view class="msg-card__avatar">
+            <view class="msg-card__avatar-icon" style="color: {{item.avatarColor}};">{{item.isMine ? '👧' : '👦'}}</view>
+            <text class="msg-card__avatar-name">{{item.isMine ? '我' : 'Ta'}}</text>
+          </view>
+          <text class="msg-card__time">{{item.timeLabel}}</text>
+        </view>
+        <text class="msg-card__text">{{item.content}}</text>
+        <view class="msg-card__actions">
+          <view class="msg-card__action msg-card__action--{{item.liked ? 'active' : ''}}" catchtap="like" data-id="{{item.id}}">
+            <text class="msg-card__action-icon">{{item.liked ? '❤️' : '🤍'}}</text>
+            <text>{{item.likes || 0}}</text>
+          </view>
+          <view class="msg-card__action">
+            <text class="msg-card__action-icon">💬</text>
+            <text>回复</text>
+          </view>
         </view>
       </view>
     </view>
   </view>
 
-  <view wx:if="{{!notes || notes.length === 0}}" class="empty">还没有留言，写第一条吧</view>
+  <view wx:if="{{!notes || notes.length === 0}}" class="empty">还没有留言，写第一条吧 💕</view>
 </scroll-view>

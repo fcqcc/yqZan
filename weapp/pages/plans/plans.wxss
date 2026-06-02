@@ -10,211 +10,358 @@
   box-sizing: border-box;
 }
 
-/* ===== 顶部头部 ===== */
-.plans-header {
-  padding: 20px 16px;
-  background: #fff;
+/* ===== 顶部汇总卡 ===== */
+.plan-summary {
+  margin: 16px;
+  padding: 22px 24px;
+  background: linear-gradient(135deg, var(--primary) 0%, #C8758E 50%, var(--primary-dark) 100%);
+  border-radius: 28px 12px 28px 12px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 6px 6px 0 rgba(212, 112, 138, 0.3);
+  border: 2px dashed white;
+  outline: 2px dashed var(--primary);
+  outline-offset: -6px;
+}
+.plan-summary::before {
+  content: '';
+  position: absolute;
+  top: -50px; right: -50px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.plan-summary::after {
+  content: '💰';
+  position: absolute;
+  bottom: -10px; right: 14px;
+  font-size: 90px;
+  opacity: 0.25;
+  transform: rotate(-15deg);
+}
+.plan-summary__label {
+  font-size: 12px;
+  opacity: 0.9;
+  font-weight: 500;
+  margin-bottom: 4px;
+  position: relative;
+  z-index: 1;
+}
+.plan-summary__total {
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 50px;
+  font-weight: 700;
+  text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+  line-height: 1;
+  letter-spacing: 2px;
+  position: relative;
+  z-index: 1;
+}
+.plan-summary__breakdown {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px dotted #f0e8ec;
+  gap: 14px;
+  margin-top: 14px;
+  position: relative;
+  z-index: 1;
+}
+.plan-summary__item {
+  background: rgba(255,255,255,0.2);
+  padding: 6px 12px;
+  border-radius: 14px 4px 14px 4px;
+  border: 1.5px dashed rgba(255,255,255,0.4);
+  backdrop-filter: blur(4px);
+}
+.plan-summary__item-num {
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.plan-summary__item-label {
+  font-size: 10px;
+  opacity: 0.9;
 }
 
-.plans-header-left {
+/* ===== 月度趋势 ===== */
+.plan-trend {
+  margin: 0 16px 16px;
+  padding: 16px 18px;
+  background: white;
+  border: 2px dashed var(--card-border);
+  border-radius: 22px 10px 22px 10px;
+  box-shadow: 4px 4px 0 rgba(232, 145, 164, 0.15);
+}
+.plan-trend__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+.plan-trend__title {
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 16px;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+.plan-trend__num {
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 18px;
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+.plan-trend__bars {
+  display: flex;
+  gap: 6px;
+  align-items: flex-end;
+  height: 70px;
+}
+.plan-trend__bar {
+  flex: 1;
   display: flex;
   flex-direction: column;
-}
-
-.total-amount-label {
-  font-size: 12px;
-  color: #9d8ca0;
-}
-
-.total-amount-value {
-  font-size: 24px;
-  font-weight: 700;
-  color: #fff;
-}
-
-.add-plan-btn {
-  background: #E891A4;
-  color: #fff;
-  padding: 8px 16px;
-  border-radius: 16px 6px 16px 6px;
-  font-size: 13px;
-  font-weight: 600;
-  display: flex;
   align-items: center;
   gap: 4px;
-  box-shadow: 2px 2px 0 rgba(212, 112, 138, 0.3);
+}
+.plan-trend__bar-fill {
+  width: 100%;
+  background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 100%);
+  border-radius: 8px 8px 0 0;
+  border: 1.5px dashed rgba(255,255,255,0.5);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.3);
+}
+.plan-trend__bar-label {
+  font-size: 9px;
+  color: var(--text-secondary);
+  font-family: 'ZCOOL KuaiLe', cursive;
 }
 
-.plan-list {
-  padding: 0 12px 24px;
+/* ===== 计划列表标题 ===== */
+.plan-section-title {
+  padding: 16px 20px 8px;
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 16px;
+  color: var(--text-primary);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.plan-section-title__count {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 10px;
+  color: var(--text-secondary);
+  background: var(--primary-pale);
+  padding: 2px 8px;
+  border-radius: 8px 2px 8px 2px;
+  border: 1px dashed var(--primary);
+  font-weight: 600;
+  margin-left: auto;
 }
 
-.plan-item {
+/* ===== 计划卡片 ===== */
+.plan-list { padding: 0 16px 30px; }
+.plan-card {
+  margin-bottom: 14px;
   background: white;
-  border-radius: 16px 8px 16px 8px;
-  padding: 16px;
-  margin-bottom: 12px;
-  box-shadow: 3px 3px 0 rgba(232, 145, 164, 0.12);
-  border: 2px dashed #F5C6D0;
+  border: 2px dashed var(--card-border);
+  border-radius: 28px 12px 28px 12px;
+  padding: 16px 18px;
   position: relative;
-}
-
-.plan-item-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  font-size: 18px;
-  color: #ccc;
-  padding: 4px 8px;
-  z-index: 2;
-}
-
-.plan-item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  padding-right: 24px;
-}
-
-.plan-item-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text, #333);
-}
-
-.plan-item-status {
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 8px;
-}
-
-.plan-item-status.active {
-  background: #E8F5E9;
-  color: #7BC67B;
-}
-
-.plan-item-status.completed {
-  background: var(--primary-pale, #FFF0F5);
-  color: var(--primary-dark, #D4708A);
-}
-
-.plan-amount-row {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  margin-bottom: 6px;
-}
-
-.plan-current {
-  font-size: 26px;
-  font-weight: 700;
-  color: #D4708A;
-}
-
-.plan-target {
-  font-size: 14px;
-  color: var(--text-light, #999);
-}
-
-.plan-item-date {
-  font-size: 11px;
-  color: var(--text-light, #999);
-  margin-top: 6px;
-}
-
-.plan-foot-btn-wrap {
-  margin-top: 10px;
-}
-
-/* ===== 弹窗/明细/庆祝特效 ===== */
-
-.plan-expand-panel {
-  margin-top: 8px;
-  border: 1px solid rgba(42, 36, 38, 0.1);
-  border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.65);
+  box-shadow: 5px 5px 0 rgba(232, 145, 164, 0.15);
   overflow: hidden;
 }
+.plan-card--pink { background: linear-gradient(135deg, white 0%, #FFF5FA 100%); }
+.plan-card--orange { background: linear-gradient(135deg, white 0%, #FFF5EE 100%); }
+.plan-card--blue { background: linear-gradient(135deg, white 0%, #F0F8FF 100%); }
+.plan-card--green { background: linear-gradient(135deg, white 0%, #F0FFF0 100%); }
 
-.plan-expand-panel--after-progress {
-  margin-top: 14px;
-}
-
-.plan-expand-bar {
+.plan-card__head {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 8px 0;
-  background: rgba(255, 248, 252, 0.9);
+  gap: 12px;
+  margin-bottom: 14px;
 }
-
-.plan-expand-bar:active .plan-chevron {
-  color: var(--pink-dark);
+.plan-card__icon {
+  width: 56px; height: 56px;
+  background: white;
+  border-radius: 16px 4px 16px 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px;
+  border: 2px dashed var(--card-border);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.08);
+  flex-shrink: 0;
 }
+.plan-card--pink .plan-card__icon { color: #E891A4; background: #FFE8EE; }
+.plan-card--orange .plan-card__icon { color: #FF8E53; background: #FFE8D9; }
+.plan-card--blue .plan-card__icon { color: #7BC4E8; background: #E0F4FF; }
+.plan-card--green .plan-card__icon { color: #7BC67B; background: #E8F5E8; }
 
-.plan-detail--in-panel {
-  margin-top: 0;
-  padding-top: 10px;
-  padding-left: 4px;
-  padding-right: 4px;
-  padding-bottom: 8px;
-  border-top: 1px solid rgba(42, 36, 38, 0.08);
+.plan-card__title-block { flex: 1; }
+.plan-card__name {
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 20px;
+  color: var(--text-primary);
+  font-weight: 700;
+  line-height: 1.1;
 }
-
-.deliver-datetime-row {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.deliver-date-cell,
-.deliver-time-cell {
-  flex: 1;
-  min-width: 0;
-}
-
-.field-tag-optional {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-muted);
-  margin-left: 4px;
-}
-
-.field-sublabel {
-  display: block;
+.plan-card__sub {
   font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 4px;
-  line-height: 1.4;
+  color: var(--text-secondary);
+  margin-top: 2px;
 }
-
-.plan-progress {
-  margin-top: 12px;
+.plan-card__status {
+  padding: 5px 12px;
+  border-radius: 14px 4px 14px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1.5px dashed;
+  font-family: 'ZCOOL KuaiLe', cursive;
+  letter-spacing: 1px;
+  flex-shrink: 0;
 }
+.plan-card__status--active { color: #7BC67B; background: #E8F5E9; border-color: #7BC67B; }
+.plan-card__status--done { color: var(--primary-dark); background: var(--primary-pale); border-color: var(--primary); }
 
-.plan-detail {
-  margin-top: 0;
-  padding-top: 0;
-  border-top: none;
+.plan-card__progress-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 10px;
 }
-
-.plan-detail-loading,
-.plan-detail-empty {
+.plan-card__current {
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 32px;
+  color: var(--text-primary);
+  font-weight: 700;
+  line-height: 1;
+}
+.plan-card__target {
   font-size: 13px;
   color: var(--text-light);
-  padding: 8px 0;
+  font-family: 'ZCOOL KuaiLe', cursive;
+}
+.plan-card__pct {
+  margin-left: auto;
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 18px;
+  color: var(--primary-dark);
+  font-weight: 700;
 }
 
+.plan-card__bar {
+  height: 16px;
+  background: var(--primary-pale);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #F0E0E4;
+  position: relative;
+}
+.plan-card__bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary) 0%, #FFB347 50%, #FFD93D 100%);
+  border-radius: 8px;
+  position: relative;
+}
+.plan-card__bar-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(45deg, transparent 0, transparent 8px, rgba(255,255,255,0.15) 8px, rgba(255,255,255,0.15) 10px);
+}
+
+.plan-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1.5px dotted #F0E8EC;
+}
+.plan-card__date {
+  font-size: 10px;
+  color: var(--text-light);
+  font-family: 'ZCOOL KuaiLe', cursive;
+  letter-spacing: 0.5px;
+}
+.plan-card__btn {
+  background: var(--primary);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 14px 4px 14px 4px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 2px 2px 0 rgba(212, 112, 138, 0.3);
+  font-family: 'ZCOOL KuaiLe', cursive;
+  letter-spacing: 1px;
+}
+.plan-card__btn--done {
+  background: var(--primary-pale);
+  color: var(--primary-dark);
+  border: 1.5px dashed var(--primary);
+  box-shadow: 2px 2px 0 rgba(212, 112, 138, 0.15);
+}
+
+.plan-card__del {
+  position: absolute;
+  top: 8px; right: 10px;
+  font-size: 18px;
+  color: var(--text-light);
+  padding: 4px;
+  z-index: 2;
+  line-height: 1;
+}
+
+.plan-card__expand {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-light);
+  padding: 6px 0;
+}
+.plan-card__chevron {
+  font-family: 'ZCOOL KuaiLe', cursive;
+  letter-spacing: 1px;
+}
+.plan-card__detail {
+  margin-top: 6px;
+  border-top: 1.5px dotted #F0E8EC;
+  padding-top: 8px;
+}
+.plan-card__deliver-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px dotted #F5F0F2;
+}
+.plan-card__deliver-amt {
+  font-size: 13px;
+  color: var(--success);
+  font-weight: 700;
+}
+.plan-card__deliver-note {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-left: 6px;
+}
+.plan-card__deliver-time {
+  font-size: 10px;
+  color: var(--text-light);
+}
+.plan-detail-loading,
+.plan-detail-empty {
+  text-align: center;
+  color: var(--text-light);
+  font-size: 12px;
+  padding: 10px;
+}
+
+/* 以下保持原有不变量 — 弹窗/选择器/动效 */
+
+/* ===== 交付行 ===== */
 .deliver-row {
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
   padding: 10px 0;

@@ -1,91 +1,231 @@
-/* pages/notes/notes.wxss — 原型风格 */
-.notes-input-header {
-  padding: 12px 16px;
-  display: flex;
-  gap: 8px;
-  background: #fff;
-  border-bottom: 2px dotted #f0e8ec;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
+/* pages/notes/notes.wxss — 原型风格（手绘风留言板） */
 
-.notes-input {
-  flex: 1;
-  border: 2px dashed #F5C6D0;
-  border-radius: 14px 6px 14px 6px;
-  padding: 8px 14px;
-  font-size: 14px;
-  background: #fffafb;
-}
-
-.notes-submit {
-  background: #E891A4;
-  color: #fff;
-  border-radius: 12px 4px 12px 4px;
-  width: 36px;
-  height: 36px;
+/* ===== 输入栏 ===== */
+.msg-input-bar {
+  margin: 14px 16px 0;
+  padding: 10px 12px 10px 16px;
+  background: white;
+  border: 2px dashed var(--card-border);
+  border-radius: 26px 10px 26px 10px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  flex-shrink: 0;
+  gap: 10px;
+  box-shadow: 4px 4px 0 rgba(232, 145, 164, 0.15);
+}
+.msg-input {
+  flex: 1;
+  background: var(--primary-pale);
+  border: 1.5px dashed var(--card-border);
+  border-radius: 18px 6px 18px 6px;
+  padding: 10px 16px;
+  font-size: 14px;
+  color: var(--text-primary);
+  min-height: 40px;
+}
+.msg-sticker-btn {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: white;
+  border-radius: 14px 4px 14px 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
   box-shadow: 2px 2px 0 rgba(212, 112, 138, 0.3);
+  border: 1.5px dashed white;
+  flex-shrink: 0;
 }
 
-.notes-list {
-  padding: 12px;
-}
-
-.note-item {
+/* ===== 表情面板 ===== */
+.msg-sticker-popup {
+  margin: 4px 16px 4px;
+  padding: 12px 14px;
   background: white;
-  border-radius: 16px 8px 16px 8px;
-  padding: 14px;
-  margin-bottom: 10px;
-  box-shadow: 3px 3px 0 rgba(232, 145, 164, 0.1);
-  border: 2px dashed #F5C6D0;
+  border: 2px dashed var(--card-border);
+  border-radius: 20px 8px 20px 8px;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+  box-shadow: 4px 4px 0 rgba(232, 145, 164, 0.12);
+}
+.msg-sticker {
+  aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  background: var(--primary-pale);
+  border: 1.2px dashed var(--card-border);
+  border-radius: 12px 3px 12px 3px;
+}
+
+/* ===== 标题 ===== */
+.msg-section-title {
+  padding: 16px 20px 8px;
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 16px;
+  color: var(--text-primary);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.msg-section-title__count {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 10px;
+  color: var(--text-secondary);
+  background: var(--primary-pale);
+  padding: 2px 8px;
+  border-radius: 8px 2px 8px 2px;
+  border: 1px dashed var(--primary);
+  font-weight: 600;
+  margin-left: auto;
+}
+
+/* ===== 日期分隔 ===== */
+.msg-day {
+  text-align: center;
+  margin: 18px 0 14px;
   position: relative;
 }
-
-.note-item--partner {
-  border-left-color: var(--lilac, #c9a0f5);
+.msg-day__pill {
+  display: inline-block;
+  padding: 4px 16px;
+  background: white;
+  border: 1.5px dashed var(--card-border);
+  border-radius: 14px 4px 14px 4px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  position: relative;
+  z-index: 1;
+  box-shadow: 2px 2px 0 rgba(232, 145, 164, 0.1);
 }
 
-.note-del {
+/* ===== 留言列表 ===== */
+.msg-list { padding: 0 16px 30px; }
+.msg-item {
+  margin-bottom: 14px;
+  position: relative;
+  animation: msgFloat 0.3s ease-out backwards;
+}
+@keyframes msgFloat {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+/* ===== 留言卡片 ===== */
+.msg-card {
+  padding: 16px 18px;
+  border-radius: 22px 10px 22px 10px;
+  border: 2px dashed;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.08);
+  position: relative;
+}
+.msg-card--pink {
+  background: linear-gradient(135deg, #FFFAFC 0%, #FFE8EE 100%);
+  border-color: #E891A4;
+  transform: rotate(-0.8deg);
+}
+.msg-card--yellow {
+  background: linear-gradient(135deg, #FFFEF5 0%, #FFF5D9 100%);
+  border-color: #E0B73B;
+  transform: rotate(0.6deg);
+  margin-left: 8px;
+}
+.msg-card--purple {
+  background: linear-gradient(135deg, #FCFAFF 0%, #F0E8FF 100%);
+  border-color: #B19CD9;
+  transform: rotate(-0.4deg);
+}
+.msg-card--blue {
+  background: linear-gradient(135deg, #FAFCFF 0%, #E0F4FF 100%);
+  border-color: #7BC4E8;
+  transform: rotate(0.7deg);
+  margin-left: 4px;
+}
+.msg-card--orange {
+  background: linear-gradient(135deg, #FFFCFA 0%, #FFE8D9 100%);
+  border-color: #FF8E53;
+  transform: rotate(-0.5deg);
+}
+
+/* 透明胶带 */
+.msg-card__tape {
   position: absolute;
-  top: 8px;
-  right: 10px;
-  color: #ccc;
-  font-size: 14px;
+  top: -8px; left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  width: 60px; height: 18px;
+  background: rgba(255,255,255,0.7);
+  border: 1.5px dashed rgba(0,0,0,0.1);
+  backdrop-filter: blur(2px);
 }
+.msg-card--yellow .msg-card__tape { transform: translateX(-50%) rotate(2deg); }
+.msg-card--blue .msg-card__tape { transform: translateX(-50%) rotate(-2deg); }
 
-.note-content {
-  font-size: 14px;
-  margin-bottom: 6px;
-  line-height: 1.5;
-  color: var(--text, #333);
-  padding-right: 20px;
-}
-
-.note-meta {
+.msg-card__row {
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
-  color: var(--text-light, #999);
+  align-items: center;
+  margin-bottom: 8px;
 }
-
-.note-action {
-  color: var(--text-light, #999);
+.msg-card__avatar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-
-.note-action--liked {
-  color: var(--primary, #ff6b9d);
+.msg-card__avatar-icon {
+  width: 26px; height: 26px;
+  background: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  border: 1.5px dashed currentColor;
+}
+.msg-card__avatar-name {
+  font-size: 12px;
+  color: var(--text-secondary);
   font-weight: 600;
+}
+.msg-card__time {
+  font-size: 10px;
+  color: var(--text-light);
+  font-family: 'ZCOOL KuaiLe', cursive;
+}
+.msg-card__text {
+  font-size: 15px;
+  color: var(--text-primary);
+  line-height: 1.5;
+  font-weight: 500;
+  word-wrap: break-word;
+}
+.msg-card__actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1.5px dotted rgba(0,0,0,0.08);
+}
+.msg-card__action {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+.msg-card__action-icon { font-size: 14px; }
+.msg-card__action--active { color: #FF6B6B; }
+.msg-card__del {
+  position: absolute;
+  top: 6px; right: 8px;
+  width: 20px; height: 20px;
+  color: var(--text-light);
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+  z-index: 2;
 }
 
 .empty {
   text-align: center;
   padding: 40px 20px;
-  color: var(--text-light, #999);
+  color: var(--text-light);
   font-size: 13px;
 }

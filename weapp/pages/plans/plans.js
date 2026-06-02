@@ -40,7 +40,9 @@ function buildDays(y, m) {
   return days
 }
 
-function wrapPlan(p) {
+const COLOR_CLASSES = ['pink', 'orange', 'blue', 'green']
+
+function wrapPlan(p, idx) {
   const cur = Number(p.current_amount) || 0
   const tar = Math.max(Number(p.target_amount) || 1, 1)
   const hasEmbed = p != null && Object.prototype.hasOwnProperty.call(p, 'deliveries')
@@ -49,15 +51,28 @@ function wrapPlan(p) {
     ...d,
     _when: formatWhen(d.created_at || d.delivered_at || d.at)
   }))
+  const remain = Math.max(0, tar - cur)
+  // 日期范围
+  let dateRange = ''
+  if (p.created_at) {
+    dateRange = String(p.created_at).slice(0, 10).replace(/-/g, '.')
+    if (p.deadline_date) dateRange += ' - ' + String(p.deadline_date).replace(/-/g, '.')
+  } else if (p.deadline_date) {
+    dateRange = String(p.deadline_date).replace(/-/g, '.')
+  }
   return {
     ...p,
     expanded: false,
     deliveries,
     deliveriesLoaded: hasEmbed,
     deliveriesLoading: false,
-    progressPct: Math.min(100, (cur / tar) * 100),
+    progressPct: Math.min(100, Math.round((cur / tar) * 100)),
     _curText: fmtNum(cur),
-    _tarText: fmtNum(tar)
+    _tarText: fmtNum(tar),
+    _remainText: fmtNum(remain),
+    _dateRange: dateRange,
+    colorClass: COLOR_CLASSES[idx % COLOR_CLASSES.length],
+    icon: p.icon || (p.done ? '✅' : ['🏝️', '🏠', '🎁', '💰'][idx % 4]),
   }
 }
 
@@ -153,12 +168,60 @@ Page({
     try {
       const raw = await api.getPlans()
       const list = Array.isArray(raw) ? raw : []
-      const plans = list.map(wrapPlan)
+      const plans = list.map((p, i) => wrapPlan(p, i))
       const totalSaved = plans.reduce((s, p) => s + (Number(p.current_amount) || 0), 0)
-      this.setData({ plans, totalSaved })
+      const activeCount = plans.filter(p => !p.done).length
+      const doneCount = plans.filter(p => p.done).length
+
+      // 本月已存
+      const now = new Date()
+      const monthPrefix = `${now.getFullYear()}-${pad2(now.getMonth()+1)}`
+      let monthSaved = 0
+      for (const p of list) {
+        const dels = p.deliveries || []
+        for (const d of dels) {
+          const dDate = String(d.created_at || d.date || '').slice(0, 7)
+          if (dDate === monthPrefix) monthSaved += Number(d.amount || 0)
+        }
+      }
+
+      // 近6月趋势
+      const trendBars = []
+      const months = ['','1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+      let maxMonth = 0
+      const monthlyTotals = []
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+        const prefix = `${d.getFullYear()}-${pad2(d.getMonth()+1)}`
+        let total = 0
+        for (const p of list) {
+          const dels = p.deliveries || []
+          for (const dd of dels) {
+            const ddDate = String(dd.created_at || dd.date || '').slice(0, 7)
+            if (ddDate === prefix) total += Number(dd.amount || 0)
+          }
+        }
+        monthlyTotals.push(total)
+        if (total > maxMonth) maxMonth = total
+      }
+      for (let i = 0; i < 6; i++) {
+        const d = new Date(now.getFullYear(), now.getMonth() - 5 + i, 1)
+        const pct = maxMonth > 0 ? (monthlyTotals[i] / maxMonth) * 100 : 0
+        trendBars.push({
+          label: months[d.getMonth() + 1],
+          height: Math.max(8, pct) + '%',
+          isMax: monthlyTotals[i] === maxMonth,
+        })
+      }
+
+      this.setData({
+        plans, totalSaved, activeCount, doneCount,
+        monthSaved: fmtNum(monthSaved),
+        trendBars,
+      })
       this.checkCongratulate(plans)
     } catch (e) {
-      this.setData({ plans: [], totalSaved: 0 })
+      this.setData({ plans: [], totalSaved: 0, activeCount: 0, doneCount: 0, monthSaved: '0', trendBars: [] })
     }
   },
 

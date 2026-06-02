@@ -1,10 +1,78 @@
 <scroll-view class="app-root app-theme-{{uiTheme}} page" scroll-y>
-  <view class="anni-actions">
-    <button class="btn btn-primary" bindtap="toggleForm">➕ 添加</button>
-    <button class="btn btn-outline" bindtap="importHolidays">📆 导入节日</button>
+  <!-- ===== 顶部统计英雄区 ===== -->
+  <view class="anniv-hero">
+    <view class="anniv-hero__row">
+      <view class="anniv-hero__heart">💕</view>
+      <view class="anniv-hero__body">
+        <text class="anniv-hero__title">我们的纪念日</text>
+        <text class="anniv-hero__sub">已陪伴 {{totalDays}} 天 · {{anniversaries.length}} 个特别的日子</text>
+      </view>
+      <view class="anniv-hero__days">
+        {{totalDays}}<br/><text class="anniv-hero__days-unit">天</text>
+      </view>
+    </view>
   </view>
 
-  <!-- 添加表单 -->
+  <!-- ===== 分类标签 ===== -->
+  <view class="anniv-tabs">
+    <view
+      class="anniv-tab {{activeCategory === '' ? 'anniv-tab--active' : ''}}"
+      data-cat=""
+      bindtap="onCategoryTap"
+    >💕 全部 <text class="anniv-tab__count">{{anniversaries.length}}</text></view>
+    <view
+      wx:for="{{categories}}"
+      wx:key="key"
+      class="anniv-tab {{activeCategory === item.key ? 'anniv-tab--active' : ''}}"
+      data-cat="{{item.key}}"
+      bindtap="onCategoryTap"
+    >{{item.emoji}} {{item.label}} <text class="anniv-tab__count">{{item.count}}</text></view>
+  </view>
+
+  <!-- ===== 即将到来 ===== -->
+  <view wx:if="{{nextAnniv}}" class="anniv-soon">
+    <view class="anniv-soon__icon">{{nextAnniv.icon || '💕'}}</view>
+    <view class="anniv-soon__body">
+      <text class="anniv-soon__title">下一个：{{nextAnniv.title}}</text>
+      <text class="anniv-soon__sub">{{nextAnniv.date_val}} · 准备好惊喜了吗?</text>
+    </view>
+    <view class="anniv-soon__days">
+      {{nextAnniv.days}}<text class="anniv-hero__days-unit"> 天</text>
+    </view>
+  </view>
+
+  <!-- ===== 纪念日列表 ===== -->
+  <view class="anniv-list">
+    <view
+      wx:for="{{filteredAnniversaries}}"
+      wx:key="id"
+      class="anniv-item anniv-item--{{item.colorClass || 'pink'}}"
+    >
+      <view class="anniv-item__art">{{item.icon || '💑'}}</view>
+      <view class="anniv-item__body">
+        <view class="anniv-item__row">
+          <text class="anniv-item__name">{{item.title}}</text>
+          <text class="anniv-item__tag" style="color: white; background: var(--{{item.colorClass || 'pink'}});">{{item.category || '纪念'}}</text>
+        </view>
+        <view class="anniv-item__date">{{item.date_val}} · {{item.recurring ? '每年' : '一次'}}</view>
+      </view>
+      <view class="anniv-item__countdown">
+        <text class="anniv-item__days {{item.isToday ? '' : (item.days <= 30 ? 'anniv-item__days--soon' : (item.days > 365 ? 'anniv-item__days--past' : ''))}}">{{item.isToday ? '🎉' : item.days}}</text>
+        <text class="anniv-item__days-unit">{{item.isToday ? '今天' : '天后'}}</text>
+      </view>
+      <text class="anniv-item__del" catchtap="del" data-id="{{item.id}}" data-title="{{item.title}}">×</text>
+    </view>
+  </view>
+
+  <!-- ===== 空状态 ===== -->
+  <view wx:if="{{filteredAnniversaries.length === 0}}" class="empty">还没有纪念日</view>
+
+  <!-- ===== FAB 浮动添加按钮 ===== -->
+  <view class="fab" bindtap="toggleForm">
+    <text>+</text>
+  </view>
+
+  <!-- ===== 添加表单弹窗 ===== -->
   <view wx:if="{{showForm}}" class="overlay" catchtap="toggleForm">
     <view class="sheet sheet--drawer" catchtap="catchTap">
       <view class="sheet-title">添加纪念日</view>
@@ -25,7 +93,7 @@
     </view>
   </view>
 
-  <!-- 日期选择器 -->
+  <!-- ===== 日期选择器 ===== -->
   <view wx:if="{{showDatePicker}}" class="overlay overlay--picker-bottom" catchtap="closeDatePicker">
     <view class="date-picker-sheet" catchtap="catchTap">
       <view class="date-picker-bar">
@@ -53,7 +121,7 @@
     </view>
   </view>
 
-  <!-- 节日勾选弹窗 -->
+  <!-- ===== 节日导入弹窗 ===== -->
   <view wx:if="{{showHolidayPicker}}" class="overlay">
     <view class="overlay-dismiss" bindtap="closeHolidayPicker" />
     <view class="holiday-picker" catchtap="catchTap">
@@ -83,23 +151,4 @@
       </view>
     </view>
   </view>
-
-  <!-- 列表 -->
-  <view class="anni-list">
-    <view wx:for="{{anniversaries}}" wx:key="id" class="anni-item {{item.isToday ? 'anni-item--today' : ''}}">
-      <text class="anni-icon">{{item.isToday ? '🎉' : '💑'}}</text>
-      <view class="anni-info">
-        <text class="anni-name">{{item.title}}{{item.isToday ? ' 🎉' : ''}}</text>
-        <text class="anni-date-text">{{item.date_val}}</text>
-      </view>
-      <view class="anni-days-wrap">
-        <text wx:if="{{item.isToday}}" class="anni-today-tag">今天</text>
-        <text wx:else class="anni-days-count">{{item.days}}<text class="anni-days-unit">天</text></text>
-      </view>
-      <text class="del-btn" catchtap="del" data-id="{{item.id}}" data-title="{{item.title}}">✕</text>
-    </view>
-    <view class="add-anni-btn" bindtap="toggleForm">+ 新建纪念日 / 导入节日</view>
-  </view>
-
-  <view wx:if="{{!anniversaries.length}}" class="empty">还没有纪念日</view>
 </scroll-view>
