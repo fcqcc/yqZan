@@ -70,7 +70,6 @@
         <view class="plan-card__footer">
           <text class="plan-card__date">{{item._dateRange}}</text>
           <view wx:if="{{!item.done}}" class="plan-card__btn btn-ripple" catchtap="openDeliver" data-id="{{item.id}}">+ 记一笔</view>
-          <view wx:else class="plan-card__btn plan-card__btn--done" catchtap="toggleExpand" data-index="{{index}}">查看明细</view>
         </view>
 
         <!-- 删除按钮 -->

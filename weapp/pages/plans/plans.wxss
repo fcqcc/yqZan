@@ -331,12 +331,6 @@
   font-family: 'ZCOOL KuaiLe', cursive;
   letter-spacing: 1px;
 }
-.plan-card__btn--done {
-  background: var(--primary-pale);
-  color: var(--primary-dark);
-  border: 1.5px dashed var(--primary);
-  box-shadow: 2px 2px 0 rgba(212, 112, 138, 0.15);
-}
 
 .plan-card__del {
   position: absolute;
