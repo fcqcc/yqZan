@@ -1,0 +1,290 @@
+<!-- pages/calendar/calendar.wxml — 存钱日历（可爱手绘风） -->
+<view class="cal-page app-theme-{{uiTheme}}">
+
+  <!-- ============== 顶部 Hero ============== -->
+  <view class="cal-hero">
+    <view class="cal-hero__bg"></view>
+    <view class="cal-hero__row">
+      <view class="cal-nav-btn" bindtap="onPrevMonth" hover-class="cal-nav-btn--hover">
+        <text>‹</text>
+      </view>
+      <view class="cal-hero__title-block" bindtap="onPickMonth" hover-class="cal-hero__title-block--hover">
+        <text class="cal-hero__month">{{currentMonthText}}</text>
+        <text class="cal-hero__year">{{currentYear}}年 · {{weekdayFirstText}}</text>
+      </view>
+      <view class="cal-nav-btn" bindtap="onNextMonth" hover-class="cal-nav-btn--hover">
+        <text>›</text>
+      </view>
+    </view>
+
+    <!-- 月度统计 -->
+    <view class="cal-hero__stats">
+      <view class="cal-stat">
+        <text class="cal-stat__value">¥{{monthTotal}}</text>
+        <text class="cal-stat__label">本月已存</text>
+      </view>
+      <view class="cal-stat cal-stat--middle">
+        <text class="cal-stat__value">{{monthSavingsCount}}</text>
+        <text class="cal-stat__label">存钱天数</text>
+      </view>
+      <view class="cal-stat">
+        <text class="cal-stat__value">{{monthAnnivCount}}</text>
+        <text class="cal-stat__label">纪念日</text>
+      </view>
+    </view>
+
+    <!-- 装饰圆点 -->
+    <view class="cal-hero__dots">
+      <view class="cal-dot cal-dot--1"></view>
+      <view class="cal-dot cal-dot--2"></view>
+      <view class="cal-dot cal-dot--3"></view>
+    </view>
+  </view>
+
+  <!-- 回到今天按钮（非当前月显示） -->
+  <view wx:if="{{!isCurrentMonth}}" class="cal-today-fab">
+    <view class="cal-today-fab__btn" bindtap="onGoToday" hover-class="cal-today-fab__btn--hover">
+      <text>📍 回到今天</text>
+    </view>
+  </view>
+
+  <!-- ============== 星期表头 ============== -->
+  <view class="cal-weekday">
+    <view
+      wx:for="{{weekdays}}"
+      wx:key="*this"
+      class="cal-weekday__cell {{item.isWeekend ? 'cal-weekday__cell--weekend' : ''}}"
+    >{{item.label}}</view>
+  </view>
+
+  <!-- ============== 日历网格 ============== -->
+  <view class="cal-grid-wrap">
+    <view class="cal-grid">
+      <view
+        wx:for="{{calendarDays}}"
+        wx:key="date"
+        class="cal-cell
+          {{item.isCurrentMonth ? '' : 'cal-cell--other'}}
+          {{item.isToday ? 'cal-cell--today' : ''}}
+          {{item.date === selectedDate ? 'cal-cell--selected' : ''}}
+          {{item.isFuture ? 'cal-cell--future' : ''}}
+          {{item.hasAnniv ? 'cal-cell--has-anniv' : ''}}
+          {{item.hasSavings ? 'cal-cell--has-save' : ''}}"
+        data-date="{{item.date}}"
+        bindtap="onSelectDate"
+        hover-class="cal-cell--hover"
+      >
+        <!-- 选中/今天的内部小角标 -->
+        <view wx:if="{{item.isToday}}" class="cal-cell__today-dot"></view>
+
+        <text class="cal-cell__day">{{item.day}}</text>
+
+        <!-- 标记行（最多 2 个：纪念日 + 存钱） -->
+        <view class="cal-cell__markers">
+          <text
+            wx:if="{{item.hasAnniv}}"
+            class="cal-cell__marker cal-cell__marker--anniv"
+            style="background: {{item.firstAnnivColor}};"
+          >{{item.firstAnnivIcon}}</text>
+          <text
+            wx:if="{{item.hasSavings}}"
+            class="cal-cell__marker cal-cell__marker--save"
+          >¥</text>
+        </view>
+
+        <!-- 选中/今天的总金额小角标 -->
+        <text wx:if="{{item.date === selectedDate && item.savingsTotal > 0}}" class="cal-cell__amount">+{{item.savingsTotal}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ============== 图例 ============== -->
+  <view class="cal-legend">
+    <view class="cal-legend__item">
+      <view class="cal-legend__dot cal-legend__dot--today"></view>
+      <text>今天</text>
+    </view>
+    <view class="cal-legend__item">
+      <view class="cal-legend__dot cal-legend__dot--save">¥</view>
+      <text>存钱日</text>
+    </view>
+    <view class="cal-legend__item">
+      <view class="cal-legend__dot cal-legend__dot--anniv" style="background: #FF6B6B;">♥</view>
+      <text>纪念日</text>
+    </view>
+  </view>
+
+  <!-- ============== 选中日详情 ============== -->
+  <view class="cal-detail">
+    <view class="cal-detail__header">
+      <view class="cal-detail__date-block">
+        <text class="cal-detail__day-big">{{selectedDay}}</text>
+        <view class="cal-detail__date-info">
+          <text class="cal-detail__weekday">{{selectedWeekday}}</text>
+          <text class="cal-detail__date">{{selectedDateLabel}}</text>
+        </view>
+      </view>
+      <text wx:if="{{selectedIsToday}}" class="cal-detail__today-tag">今天</text>
+      <text wx:else class="cal-detail__relative">{{selectedRelative}}</text>
+    </view>
+
+    <!-- 纪念日区块 -->
+    <view wx:if="{{selectedAnnivs.length > 0}}" class="cal-detail__section">
+      <view class="cal-detail__section-title">
+        <text>🎉 纪念日</text>
+        <text class="cal-detail__count">{{selectedAnnivs.length}}</text>
+      </view>
+      <view class="cal-anniv-list">
+        <view
+          wx:for="{{selectedAnnivs}}"
+          wx:key="id"
+          class="cal-anniv"
+          data-id="{{item.id}}"
+          bindtap="onTapAnniv"
+          hover-class="cal-anniv--hover"
+        >
+          <view class="cal-anniv__icon" style="background: {{item.color}};">{{item.icon}}</view>
+          <view class="cal-anniv__body">
+            <text class="cal-anniv__name">{{item.name}}</text>
+            <text class="cal-anniv__meta">{{item.metaText}}</text>
+          </view>
+          <view class="cal-anniv__days">
+            <text class="cal-anniv__days-num" style="color: {{item.daysColor}};">{{item.daysNum}}</text>
+            <text class="cal-anniv__days-unit">{{item.daysUnit}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 存钱记录区块 -->
+    <view wx:if="{{selectedSavings.length > 0}}" class="cal-detail__section">
+      <view class="cal-detail__section-title">
+        <text>💰 存钱记录</text>
+        <text class="cal-detail__count">{{selectedSavings.length}} 笔 · ¥{{selectedTotal}}</text>
+      </view>
+      <view class="cal-save-list">
+        <view
+          wx:for="{{selectedSavings}}"
+          wx:key="id"
+          class="cal-save"
+        >
+          <view class="cal-save__icon">{{item.planIcon || '💰'}}</view>
+          <view class="cal-save__body">
+            <view class="cal-save__row">
+              <text wx:if="{{item.planName}}" class="cal-save__plan">{{item.planName}}</text>
+              <text class="cal-save__amount">+¥{{item.amount}}</text>
+            </view>
+            <text wx:if="{{item.note}}" class="cal-save__note">{{item.note}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:if="{{selectedAnnivs.length === 0 && selectedSavings.length === 0}}" class="cal-detail__empty">
+      <text class="cal-detail__empty-icon">📅</text>
+      <text class="cal-detail__empty-text">这一天还没有任何记录</text>
+      <text class="cal-detail__empty-sub">点击下方按钮记一笔吧~</text>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="cal-detail__actions">
+      <view
+        class="cal-detail__btn cal-detail__btn--secondary"
+        bindtap="onAddAnniv"
+        hover-class="cal-detail__btn--hover"
+      >
+        <text>🎉 加纪念日</text>
+      </view>
+      <view
+        class="cal-detail__btn cal-detail__btn--primary"
+        bindtap="onOpenAdd"
+        hover-class="cal-detail__btn--hover"
+      >
+        <text>💰 记一笔</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部留白 -->
+  <view class="cal-footer"></view>
+
+  <!-- ============== 记一笔弹层 ============== -->
+  <view wx:if="{{showAdd}}" class="cal-modal-mask" bindtap="onCloseAdd">
+    <view class="cal-modal" catchtap="onStopProp">
+      <view class="cal-modal__title">
+        <text>💰 记一笔</text>
+        <text class="cal-modal__date">{{addDateLabel}}</text>
+      </view>
+
+      <!-- 金额输入（大字号） -->
+      <view class="cal-modal__amount-row">
+        <text class="cal-modal__currency">¥</text>
+        <input
+          type="digit"
+          class="cal-modal__amount-input"
+          value="{{addDraft.amount}}"
+          bindinput="onAmountInput"
+          placeholder="0"
+          placeholder-style="color: #B8A9BB;"
+        />
+      </view>
+
+      <!-- 快捷金额 -->
+      <view class="cal-modal__quick">
+        <view
+          wx:for="{{quickAmounts}}"
+          wx:key="*this"
+          class="cal-modal__quick-item {{addDraft.amount == item ? 'cal-modal__quick-item--active' : ''}}"
+          data-amount="{{item}}"
+          bindtap="onPickQuickAmount"
+          hover-class="cal-modal__quick-item--hover"
+        >¥{{item}}</view>
+      </view>
+
+      <!-- 计划选择 -->
+      <view class="cal-modal__field">
+        <text class="cal-modal__label">📋 关联计划</text>
+        <scroll-view scroll-x show-scrollbar="{{false}}" class="cal-modal__plans-scroll">
+          <view class="cal-modal__plans">
+            <view
+              wx:for="{{plans}}"
+              wx:key="id"
+              class="cal-modal__plan {{addDraft.planId === item.id ? 'cal-modal__plan--active' : ''}}"
+              data-id="{{item.id}}"
+              bindtap="onPickPlan"
+              hover-class="cal-modal__plan--hover"
+            >
+              <text class="cal-modal__plan-icon">{{item.icon}}</text>
+              <text class="cal-modal__plan-name">{{item.name}}</text>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+
+      <!-- 备注 -->
+      <view class="cal-modal__field">
+        <text class="cal-modal__label">💭 想说点什么（可选）</text>
+        <input
+          class="cal-modal__input"
+          value="{{addDraft.note}}"
+          bindinput="onNoteInput"
+          placeholder="今天心情不错，多存点~"
+          placeholder-style="color: #B8A9BB;"
+          maxlength="50"
+        />
+      </view>
+
+      <!-- 操作 -->
+      <view class="cal-modal__actions">
+        <view class="cal-modal__btn cal-modal__btn--cancel" bindtap="onCloseAdd" hover-class="cal-modal__btn--hover">
+          <text>取消</text>
+        </view>
+        <view class="cal-modal__btn cal-modal__btn--save" bindtap="onSaveRecord" hover-class="cal-modal__btn--hover">
+          <text>✨ 保存</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+</view>

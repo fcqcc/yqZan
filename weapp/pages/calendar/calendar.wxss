@@ -1,0 +1,818 @@
+/* pages/calendar/calendar.wxss — 存钱日历（可爱手绘风） */
+
+/* ========== 设计变量 ========== */
+.cal-page {
+  --primary: #E891A4;
+  --primary-dark: #D4708A;
+  --primary-light: #FADCE6;
+  --primary-pale: #FFF0F5;
+  --accent: #FFD93D;
+  --text-primary: #5D4E60;
+  --text-secondary: #8B7A8E;
+  --text-light: #B8A9BB;
+  --bg-cream: #FFF9F5;
+  --bg-pink: #FFE8EE;
+  --success: #7BC67B;
+  --card-border: #F5C6D0;
+
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 15% 8%, rgba(232, 145, 164, 0.18) 0%, transparent 45%),
+    radial-gradient(circle at 85% 75%, rgba(255, 217, 61, 0.15) 0%, transparent 50%),
+    linear-gradient(180deg, var(--bg-cream) 0%, var(--bg-pink) 100%);
+  padding-bottom: 60rpx;
+  font-family: 'Noto Sans SC', -apple-system, sans-serif;
+}
+
+/* ========== Hero ========== */
+.cal-hero {
+  position: relative;
+  padding: 36rpx 32rpx 28rpx;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  border-radius: 0 0 60rpx 30rpx;
+  overflow: hidden;
+  box-shadow: 0 8rpx 0 rgba(212, 112, 138, 0.15);
+}
+.cal-hero__bg {
+  position: absolute;
+  top: -40rpx; right: -40rpx;
+  width: 240rpx; height: 240rpx;
+  background: radial-gradient(circle, rgba(255,255,255,0.35) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.cal-hero__row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  position: relative;
+  z-index: 1;
+}
+.cal-nav-btn {
+  width: 64rpx;
+  height: 64rpx;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2rpx dashed var(--primary);
+  border-radius: 22rpx 8rpx 22rpx 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  color: var(--primary-dark);
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 3rpx 3rpx 0 rgba(212, 112, 138, 0.25);
+}
+.cal-nav-btn--hover {
+  transform: translate(-1rpx, -1rpx);
+  box-shadow: 4rpx 4rpx 0 rgba(212, 112, 138, 0.3);
+}
+.cal-hero__title-block {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rpx;
+}
+.cal-hero__title-block--hover { opacity: 0.8; }
+.cal-hero__month {
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 56rpx;
+  color: white;
+  font-weight: 700;
+  letter-spacing: 4rpx;
+  text-shadow: 4rpx 4rpx 0 rgba(212, 112, 138, 0.3);
+  line-height: 1.1;
+}
+.cal-hero__year {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+.cal-hero__stats {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 24rpx;
+  position: relative;
+  z-index: 1;
+}
+.cal-stat {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.22);
+  border: 2rpx dashed rgba(255, 255, 255, 0.35);
+  border-radius: 22rpx 8rpx 22rpx 8rpx;
+  padding: 16rpx 12rpx 14rpx;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2rpx;
+  backdrop-filter: blur(4rpx);
+}
+.cal-stat--middle {
+  background: rgba(255, 255, 255, 0.32);
+  transform: translateY(-4rpx);
+}
+.cal-stat__value {
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 32rpx;
+  color: white;
+  font-weight: 700;
+  text-shadow: 2rpx 2rpx 0 rgba(212, 112, 138, 0.3);
+  line-height: 1.1;
+}
+.cal-stat__label {
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 500;
+}
+.cal-hero__dots { position: absolute; inset: 0; pointer-events: none; }
+.cal-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+}
+.cal-dot--1 { width: 14rpx; height: 14rpx; top: 26rpx; right: 90rpx; }
+.cal-dot--2 { width: 10rpx; height: 10rpx; top: 80rpx; right: 200rpx; background: var(--accent); opacity: 0.7; }
+.cal-dot--3 { width: 12rpx; height: 12rpx; bottom: 80rpx; left: 60rpx; background: var(--accent); opacity: 0.6; }
+
+/* ========== 回到今天 ========== */
+.cal-today-fab {
+  display: flex;
+  justify-content: center;
+  margin: 20rpx 24rpx 0;
+}
+.cal-today-fab__btn {
+  padding: 12rpx 24rpx;
+  background: white;
+  border: 2rpx dashed var(--primary);
+  border-radius: 24rpx 8rpx 24rpx 8rpx;
+  font-size: 22rpx;
+  color: var(--primary-dark);
+  font-weight: 600;
+  box-shadow: 3rpx 3rpx 0 rgba(212, 112, 138, 0.2);
+}
+.cal-today-fab__btn--hover {
+  transform: translate(-1rpx, -1rpx);
+  box-shadow: 4rpx 4rpx 0 rgba(212, 112, 138, 0.25);
+}
+
+/* ========== 星期表头 ========== */
+.cal-weekday {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 24rpx 24rpx 12rpx;
+  gap: 8rpx;
+}
+.cal-weekday__cell {
+  text-align: center;
+  font-size: 22rpx;
+  color: var(--text-secondary);
+  font-weight: 600;
+  padding: 8rpx 0;
+  font-family: 'ZCOOL KuaiLe', cursive;
+  letter-spacing: 2rpx;
+}
+.cal-weekday__cell--weekend {
+  color: var(--primary);
+}
+
+/* ========== 日历网格 ========== */
+.cal-grid-wrap {
+  padding: 0 24rpx;
+}
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8rpx;
+  background: white;
+  border: 2rpx dashed var(--card-border);
+  border-radius: 28rpx 12rpx 28rpx 12rpx;
+  padding: 14rpx;
+  box-shadow: 6rpx 6rpx 0 rgba(232, 145, 164, 0.15);
+}
+
+.cal-cell {
+  aspect-ratio: 1 / 1.1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8rpx 4rpx 6rpx;
+  border-radius: 16rpx 6rpx 16rpx 6rpx;
+  background: white;
+  position: relative;
+  border: 1.5rpx dashed transparent;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+.cal-cell--other { opacity: 0.4; }
+.cal-cell--other .cal-cell__day { color: var(--text-light); }
+
+.cal-cell--future .cal-cell__day { color: var(--text-secondary); }
+
+.cal-cell--hover {
+  transform: translate(-1rpx, -1rpx);
+  background: var(--primary-pale);
+}
+
+.cal-cell--today {
+  background: linear-gradient(135deg, #FFE8EE 0%, #FFF6D9 100%);
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1rpx white, 0 0 0 2rpx var(--primary);
+}
+.cal-cell--today .cal-cell__day {
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+.cal-cell__today-dot {
+  position: absolute;
+  top: 4rpx;
+  right: 4rpx;
+  width: 10rpx;
+  height: 10rpx;
+  background: var(--primary);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2rpx white;
+}
+
+.cal-cell--selected {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border-color: var(--primary-dark);
+  transform: translate(-2rpx, -2rpx);
+  box-shadow: 4rpx 4rpx 0 rgba(212, 112, 138, 0.4);
+}
+.cal-cell--selected .cal-cell__day {
+  color: white;
+  font-weight: 700;
+  text-shadow: 1rpx 1rpx 0 rgba(0,0,0,0.2);
+}
+.cal-cell--selected .cal-cell__marker--anniv {
+  background: white !important;
+  color: var(--primary-dark);
+  border: 1rpx solid white;
+}
+.cal-cell--selected .cal-cell__marker--save {
+  background: white !important;
+  color: var(--primary-dark);
+}
+.cal-cell--selected .cal-cell__amount { color: var(--accent); }
+
+.cal-cell__day {
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 28rpx;
+  color: var(--text-primary);
+  font-weight: 500;
+  line-height: 1;
+}
+
+.cal-cell__markers {
+  display: flex;
+  gap: 3rpx;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rpx;
+  min-height: 20rpx;
+}
+.cal-cell__marker {
+  font-size: 16rpx;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22rpx;
+  height: 22rpx;
+  border-radius: 50%;
+  color: white;
+  font-weight: 700;
+  border: 1.5rpx solid white;
+  box-shadow: 0 1rpx 2rpx rgba(0,0,0,0.15);
+}
+.cal-cell__marker--anniv {
+  font-size: 14rpx;
+}
+.cal-cell__marker--save {
+  background: linear-gradient(135deg, var(--success) 0%, #5BA85B 100%);
+  font-size: 14rpx;
+  font-family: 'ZCOOL KuaiLe', cursive;
+}
+
+.cal-cell__amount {
+  position: absolute;
+  bottom: 2rpx;
+  right: 4rpx;
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 16rpx;
+  color: var(--primary-dark);
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0 4rpx;
+  border-radius: 6rpx 2rpx 6rpx 2rpx;
+}
+
+/* ========== 图例 ========== */
+.cal-legend {
+  display: flex;
+  gap: 20rpx;
+  padding: 18rpx 32rpx 8rpx;
+  justify-content: center;
+}
+.cal-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 22rpx;
+  color: var(--text-secondary);
+}
+.cal-legend__dot {
+  width: 28rpx;
+  height: 28rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16rpx;
+  color: white;
+  font-weight: 700;
+  font-family: 'ZCOOL KuaiLe', cursive;
+  border: 1.5rpx solid white;
+  box-shadow: 0 1rpx 2rpx rgba(0,0,0,0.1);
+}
+.cal-legend__dot--today {
+  background: var(--primary);
+  font-size: 12rpx;
+}
+.cal-legend__dot--save {
+  background: var(--success);
+}
+.cal-legend__dot--anniv {
+  background: #FF6B6B;
+}
+
+/* ========== 详情面板 ========== */
+.cal-detail {
+  margin: 16rpx 24rpx 0;
+  background: white;
+  border: 2rpx dashed var(--card-border);
+  border-radius: 28rpx 12rpx 28rpx 12rpx;
+  padding: 24rpx 24rpx 24rpx;
+  box-shadow: 6rpx 6rpx 0 rgba(232, 145, 164, 0.15);
+}
+.cal-detail__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 18rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 2rpx dotted #F0E8EC;
+}
+.cal-detail__date-block {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+.cal-detail__day-big {
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 64rpx;
+  color: var(--primary-dark);
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 3rpx 3rpx 0 rgba(232, 145, 164, 0.2);
+}
+.cal-detail__date-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2rpx;
+}
+.cal-detail__weekday {
+  font-size: 26rpx;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+.cal-detail__date {
+  font-size: 22rpx;
+  color: var(--text-secondary);
+}
+.cal-detail__today-tag {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: white;
+  font-size: 20rpx;
+  font-weight: 700;
+  padding: 6rpx 16rpx;
+  border-radius: 14rpx 4rpx 14rpx 4rpx;
+  border: 1.5rpx solid white;
+  box-shadow: 2rpx 2rpx 0 rgba(212, 112, 138, 0.3);
+}
+.cal-detail__relative {
+  font-size: 22rpx;
+  color: var(--text-light);
+  font-family: 'ZCOOL KuaiLe', cursive;
+}
+
+.cal-detail__section {
+  margin-bottom: 20rpx;
+}
+.cal-detail__section:last-child {
+  margin-bottom: 0;
+}
+.cal-detail__section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 26rpx;
+  color: var(--text-primary);
+  font-weight: 700;
+  margin-bottom: 12rpx;
+  padding: 0 4rpx;
+}
+.cal-detail__count {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 20rpx;
+  color: var(--text-secondary);
+  background: var(--primary-pale);
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx 4rpx 12rpx 4rpx;
+  border: 1rpx dashed var(--primary);
+  font-weight: 600;
+}
+
+/* 纪念日项 */
+.cal-anniv-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+.cal-anniv {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  padding: 16rpx 18rpx;
+  background: linear-gradient(135deg, #FFF5FB 0%, #FFE8F2 100%);
+  border: 1.5rpx dashed #FFC1D6;
+  border-radius: 20rpx 8rpx 20rpx 8rpx;
+  transition: transform 0.12s ease;
+}
+.cal-anniv--hover {
+  transform: translate(-1rpx, -1rpx);
+}
+.cal-anniv__icon {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 16rpx 4rpx 16rpx 4rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  border: 2rpx dashed rgba(255,255,255,0.6);
+  flex-shrink: 0;
+  box-shadow: 2rpx 2rpx 0 rgba(0,0,0,0.1);
+}
+.cal-anniv__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rpx;
+  min-width: 0;
+}
+.cal-anniv__name {
+  font-size: 26rpx;
+  color: var(--text-primary);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cal-anniv__meta {
+  font-size: 20rpx;
+  color: var(--text-secondary);
+}
+.cal-anniv__days {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0 8rpx;
+}
+.cal-anniv__days-num {
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 32rpx;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.cal-anniv__days-unit {
+  font-size: 18rpx;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* 存钱项 */
+.cal-save-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+.cal-save {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  padding: 14rpx 18rpx;
+  background: linear-gradient(135deg, #F0FFF0 0%, #E8F8E8 100%);
+  border: 1.5rpx dashed #B8E0B8;
+  border-radius: 18rpx 6rpx 18rpx 6rpx;
+}
+.cal-save__icon {
+  width: 50rpx;
+  height: 50rpx;
+  background: white;
+  border-radius: 14rpx 4rpx 14rpx 4rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  border: 1.5rpx dashed #B8E0B8;
+  flex-shrink: 0;
+}
+.cal-save__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rpx;
+  min-width: 0;
+}
+.cal-save__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8rpx;
+}
+.cal-save__plan {
+  font-size: 22rpx;
+  color: var(--text-secondary);
+  background: white;
+  padding: 2rpx 10rpx;
+  border-radius: 8rpx 3rpx 8rpx 3rpx;
+  border: 1rpx dashed #B8E0B8;
+  flex-shrink: 0;
+}
+.cal-save__amount {
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 30rpx;
+  color: var(--success);
+  font-weight: 700;
+}
+.cal-save__note {
+  font-size: 22rpx;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 空状态 */
+.cal-detail__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+  padding: 30rpx 0 10rpx;
+}
+.cal-detail__empty-icon {
+  font-size: 64rpx;
+  filter: grayscale(0.3);
+  opacity: 0.6;
+}
+.cal-detail__empty-text {
+  font-size: 26rpx;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.cal-detail__empty-sub {
+  font-size: 22rpx;
+  color: var(--text-light);
+}
+
+/* 操作按钮 */
+.cal-detail__actions {
+  margin-top: 20rpx;
+  display: flex;
+  gap: 14rpx;
+}
+.cal-detail__btn {
+  flex: 1;
+  padding: 18rpx 0;
+  border-radius: 22rpx 8rpx 22rpx 8rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  text-align: center;
+  border: 2rpx solid;
+  font-family: 'ZCOOL KuaiLe', cursive;
+  letter-spacing: 2rpx;
+  box-shadow: 3rpx 3rpx 0 rgba(0,0,0,0.1);
+}
+.cal-detail__btn--primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  border-color: var(--primary-dark);
+  text-shadow: 1rpx 1rpx 0 rgba(0,0,0,0.2);
+  box-shadow: 3rpx 3rpx 0 rgba(212, 112, 138, 0.4);
+}
+.cal-detail__btn--secondary {
+  background: white;
+  color: var(--primary-dark);
+  border-color: var(--card-border);
+  box-shadow: 3rpx 3rpx 0 rgba(232, 145, 164, 0.2);
+}
+.cal-detail__btn--hover {
+  transform: translate(-1rpx, -1rpx);
+}
+
+/* ========== 弹层 ========== */
+.cal-modal-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(93, 78, 96, 0.65);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 100;
+  padding: 0;
+  backdrop-filter: blur(8rpx);
+}
+.cal-modal {
+  width: 100%;
+  background: white;
+  border-radius: 36rpx 36rpx 0 0;
+  border: 3rpx dashed var(--primary);
+  border-bottom: none;
+  padding: 28rpx 32rpx calc(28rpx + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+  box-shadow: 0 -12rpx 32rpx rgba(212, 112, 138, 0.3);
+  animation: modalSlideUp 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+@keyframes modalSlideUp {
+  0% { transform: translateY(100%); }
+  100% { transform: translateY(0); }
+}
+.cal-modal__title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 32rpx;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+.cal-modal__date {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 22rpx;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.cal-modal__amount-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8rpx;
+  padding: 24rpx 0;
+  background: var(--primary-pale);
+  border: 2rpx dashed var(--card-border);
+  border-radius: 22rpx 8rpx 22rpx 8rpx;
+}
+.cal-modal__currency {
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 48rpx;
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+.cal-modal__amount-input {
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 64rpx;
+  color: var(--primary-dark);
+  font-weight: 700;
+  text-align: left;
+  min-width: 200rpx;
+  caret-color: var(--primary);
+}
+.cal-modal__quick {
+  display: flex;
+  gap: 10rpx;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.cal-modal__quick-item {
+  padding: 10rpx 22rpx;
+  background: var(--primary-pale);
+  border: 1.5rpx dashed var(--card-border);
+  border-radius: 18rpx 6rpx 18rpx 6rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: 'ZCOOL KuaiLe', cursive;
+}
+.cal-modal__quick-item--active {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: white;
+  border-color: var(--primary-dark);
+  transform: translate(-1rpx, -1rpx);
+  box-shadow: 2rpx 2rpx 0 rgba(212, 112, 138, 0.3);
+}
+.cal-modal__quick-item--hover {
+  background: var(--primary-light);
+}
+
+.cal-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+.cal-modal__label {
+  font-size: 22rpx;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+.cal-modal__input {
+  background: var(--primary-pale);
+  border: 2rpx dashed var(--card-border);
+  border-radius: 18rpx 6rpx 18rpx 6rpx;
+  padding: 18rpx 20rpx;
+  font-size: 26rpx;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.cal-modal__plans-scroll { white-space: nowrap; }
+.cal-modal__plans {
+  display: inline-flex;
+  gap: 10rpx;
+  padding-bottom: 4rpx;
+  padding-right: 20rpx;
+}
+.cal-modal__plan {
+  display: inline-flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 10rpx 18rpx;
+  background: white;
+  border: 2rpx dashed var(--card-border);
+  border-radius: 20rpx 6rpx 20rpx 6rpx;
+  font-size: 24rpx;
+  color: var(--text-primary);
+  font-weight: 500;
+  flex-shrink: 0;
+  box-shadow: 2rpx 2rpx 0 rgba(232, 145, 164, 0.12);
+}
+.cal-modal__plan--active {
+  background: var(--primary-pale);
+  color: var(--primary-dark);
+  border-color: var(--primary);
+  font-weight: 700;
+  transform: translate(-1rpx, -1rpx);
+  box-shadow: 3rpx 3rpx 0 rgba(212, 112, 138, 0.3);
+}
+.cal-modal__plan--hover {
+  background: var(--primary-light);
+}
+.cal-modal__plan-icon {
+  font-size: 28rpx;
+}
+.cal-modal__plan-name {
+  white-space: nowrap;
+}
+
+.cal-modal__actions {
+  display: flex;
+  gap: 14rpx;
+  margin-top: 4rpx;
+}
+.cal-modal__btn {
+  flex: 1;
+  padding: 22rpx 0;
+  border-radius: 24rpx 8rpx 24rpx 8rpx;
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 28rpx;
+  font-weight: 700;
+  text-align: center;
+  border: 2rpx solid;
+  letter-spacing: 2rpx;
+  box-shadow: 4rpx 4rpx 0 rgba(0,0,0,0.1);
+}
+.cal-modal__btn--cancel {
+  background: white;
+  color: var(--text-secondary);
+  border-color: var(--card-border);
+  box-shadow: 3rpx 3rpx 0 rgba(232, 145, 164, 0.2);
+}
+.cal-modal__btn--save {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  border-color: var(--primary-dark);
+  text-shadow: 1rpx 1rpx 0 rgba(0,0,0,0.2);
+  box-shadow: 4rpx 4rpx 0 rgba(212, 112, 138, 0.4);
+}
+.cal-modal__btn--hover {
+  transform: translate(-1rpx, -1rpx);
+}
+
+.cal-footer { height: 40rpx; }
