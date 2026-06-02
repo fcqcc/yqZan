@@ -489,7 +489,7 @@ page {
 }
 
 .intimacy-bar {
-  width: 140px;
+  width: 200px;
   height: 8px;
   background: #f0f0f0;
   border-radius: 4px;
@@ -1019,7 +1019,7 @@ page {
   100% { transform: rotate(0deg); }
 }
 .pet-fan-shake {
-  animation: petFanShake 0.6s ease;
+  animation: petFanShake 0.6s ease !important;
 }
 
 /* 喂食：剧烈抖动 */
@@ -1037,7 +1037,7 @@ page {
   100% { transform: translateX(0); }
 }
 .pet-violent-shake {
-  animation: petViolentShake 0.8s ease;
+  animation: petViolentShake 0.8s ease !important;
 }
 
 /* 散步：左右蹦跳 */
@@ -1051,7 +1051,7 @@ page {
   100% { transform: translateY(0) translateX(0); }
 }
 .pet-walk-anim {
-  animation: petWalkAnim 0.8s ease;
+  animation: petWalkAnim 0.8s ease !important;
 }
 
 /* 玩耍：无规则快速移动 */
@@ -1067,7 +1067,7 @@ page {
   100% { transform: translate(0, 0) rotate(0deg); }
 }
 .pet-wild-move {
-  animation: petWildMove 0.7s ease;
+  animation: petWildMove 0.7s ease !important;
 }
 
 /* 聊天：轻快左右摇晃 */
@@ -1081,7 +1081,7 @@ page {
   100% { transform: rotate(0deg); }
 }
 .pet-talk-anim {
-  animation: petTalkAnim 0.6s ease;
+  animation: petTalkAnim 0.6s ease !important;
 }
 
 /* === 闲时动画（根据形态） === */
@@ -1154,7 +1154,7 @@ page {
   border: 1px dashed var(--primary);
   position: relative;
   z-index: 1;
-  margin-top: 6px;
+  margin-bottom: 6px;
 }
 .pet-interact-dot {
   width: 6px;
