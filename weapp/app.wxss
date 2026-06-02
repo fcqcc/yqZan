@@ -1,3 +1,7 @@
 /* app.wxss - 全局样式 */
+@font-face {
+  font-family: 'ZCOOL KuaiLe';
+  src: url('./fonts/ZCOOL_KuaiLe.woff2') format('woff2');
+}
 @import "utils/common.wxss";
 @import "styles/theme-global.wxss";
