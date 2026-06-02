@@ -63,13 +63,7 @@
       <view
         wx:for="{{calendarDays}}"
         wx:key="date"
-        class="cal-cell
-          {{item.isCurrentMonth ? '' : 'cal-cell--other'}}
-          {{item.isToday ? 'cal-cell--today' : ''}}
-          {{item.date === selectedDate ? 'cal-cell--selected' : ''}}
-          {{item.isFuture ? 'cal-cell--future' : ''}}
-          {{item.hasAnniv ? 'cal-cell--has-anniv' : ''}}
-          {{item.hasSavings ? 'cal-cell--has-save' : ''}}"
+        class="cal-cell {{item.isCurrentMonth ? '' : 'cal-cell--other'}} {{item.isToday ? 'cal-cell--today' : ''}} {{item.date === selectedDate ? 'cal-cell--selected' : ''}} {{item.isFuture ? 'cal-cell--future' : ''}} {{item.hasAnniv ? 'cal-cell--has-anniv' : ''}} {{item.hasSavings ? 'cal-cell--has-save' : ''}}"
         data-date="{{item.date}}"
         bindtap="onSelectDate"
         hover-class="cal-cell--hover"
@@ -180,8 +174,21 @@
       </view>
     </view>
 
+    <!-- 留言区块 -->
+    <view wx:if="{{selectedNotes.length > 0}}" class="cal-detail__section">
+      <view class="cal-detail__section-title">
+        <text>💬 留言</text>
+        <text class="cal-detail__count">{{selectedNotes.length}} 条</text>
+      </view>
+      <view class="cal-note-list">
+        <view wx:for="{{selectedNotes}}" wx:key="id" class="cal-note">
+          <text class="cal-note__bubble {{item.isMine ? 'cal-note__bubble--mine' : ''}}">{{item.content}}</text>
+        </view>
+      </view>
+    </view>
+
     <!-- 空状态 -->
-    <view wx:if="{{selectedAnnivs.length === 0 && selectedSavings.length === 0}}" class="cal-detail__empty">
+    <view wx:if="{{selectedAnnivs.length === 0 && selectedSavings.length === 0 && selectedNotes.length === 0}}" class="cal-detail__empty">
       <text class="cal-detail__empty-icon">📅</text>
       <text class="cal-detail__empty-text">这一天还没有任何记录</text>
       <text class="cal-detail__empty-sub">点击下方按钮记一笔吧~</text>
@@ -208,6 +215,47 @@
 
   <!-- 底部留白 -->
   <view class="cal-footer"></view>
+
+  <!-- ============== 加纪念日弹窗 ============== -->
+  <view wx:if="{{showAddAnniv}}" class="cal-modal-mask" bindtap="onCloseAddAnniv">
+    <view class="cal-modal" catchtap="onStopProp">
+      <view class="cal-modal__title">
+        <text>🎉 添加纪念日</text>
+        <text class="cal-modal__date">{{selectedDateLabel}}</text>
+      </view>
+
+      <!-- 纪念日名称输入 -->
+      <view class="cal-modal__field">
+        <text class="cal-modal__label">💝 纪念日名称</text>
+        <input
+          class="cal-modal__input"
+          value="{{addAnnivTitle}}"
+          bindinput="onAddAnnivTitleInput"
+          placeholder="如：在一起纪念日"
+          placeholder-style="color: #B8A9BB;"
+          maxlength="30"
+        />
+      </view>
+
+      <!-- 操作 -->
+      <view class="cal-modal__actions">
+        <view class="cal-modal__btn cal-modal__btn--cancel" bindtap="onCloseAddAnniv" hover-class="cal-modal__btn--hover">
+          <text>取消</text>
+        </view>
+        <view class="cal-modal__btn cal-modal__btn--save" bindtap="onSaveAddAnniv" hover-class="cal-modal__btn--hover">
+          <text>✨ 添加</text>
+        </view>
+      </view>
+
+      <view class="cal-modal__divider">
+        <text>———— 或者 ————</text>
+      </view>
+
+      <view class="cal-modal__link-btn" bindtap="onGoAnnivMgmt" hover-class="cal-modal__link-btn--hover">
+        <text>📋 去纪念日管理页（批量管理）</text>
+      </view>
+    </view>
+  </view>
 
   <!-- ============== 记一笔弹层 ============== -->
   <view wx:if="{{showAdd}}" class="cal-modal-mask" bindtap="onCloseAdd">
@@ -243,7 +291,7 @@
       </view>
 
       <!-- 计划选择 -->
-      <view class="cal-modal__field">
+      <view wx:if="{{plans.length > 0}}" class="cal-modal__field">
         <text class="cal-modal__label">📋 关联计划</text>
         <scroll-view scroll-x show-scrollbar="{{false}}" class="cal-modal__plans-scroll">
           <view class="cal-modal__plans">
@@ -260,6 +308,13 @@
             </view>
           </view>
         </scroll-view>
+      </view>
+      <!-- 没计划时引导创建 -->
+      <view wx:else class="cal-modal__field">
+        <text class="cal-modal__label">📋 还没有存钱计划</text>
+        <view class="cal-modal__create-btn" bindtap="goCreatePlan" hover-class="cal-modal__create-btn--hover">
+          <text>➕ 去创建存钱计划</text>
+        </view>
       </view>
 
       <!-- 备注 -->

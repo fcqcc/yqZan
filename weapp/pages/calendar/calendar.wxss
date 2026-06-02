@@ -591,6 +591,40 @@
   color: var(--text-light);
 }
 
+/* 留言气泡 */
+.cal-note-list { display: flex; flex-direction: column; gap: 6px; }
+.cal-note { }
+.cal-note__bubble {
+  display: inline-block;
+  font-size: 13px;
+  color: var(--text);
+  background: #FFF0F5;
+  border-radius: 12px 4px 12px 4px;
+  padding: 6px 10px;
+  line-height: 1.4;
+  border: 1px dashed #F5C6D0;
+}
+.cal-note__bubble--mine {
+  background: #F5EEFF;
+  border-color: #D4B8E8;
+}
+
+/* 创建计划按钮 */
+.cal-modal__create-btn {
+  background: var(--primary-pale);
+  border: 2px dashed var(--primary-light);
+  border-radius: 12px 4px 12px 4px;
+  padding: 10px 16px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+.cal-modal__create-btn--hover {
+  background: var(--primary-light);
+  transform: translate(1px, 1px);
+}
+
 /* 操作按钮 */
 .cal-detail__actions {
   margin-top: 20rpx;
@@ -813,6 +847,39 @@
 }
 .cal-modal__btn--hover {
   transform: translate(-1rpx, -1rpx);
+}
+
+/* ××× / 分割线 */
+.cal-modal__divider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 4rpx 0;
+}
+.cal-modal__divider text {
+  font-size: 22rpx;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+/* ××× / 链接按钮 */
+.cal-modal__link-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6rpx;
+  padding: 20rpx 0;
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  font-weight: 600;
+  background: #F9F5F7;
+  border: 2rpx dashed #E8DEE2;
+  border-radius: 22rpx 8rpx 22rpx 8rpx;
+  transition: all 0.12s ease;
+}
+.cal-modal__link-btn--hover {
+  background: var(--primary-pale);
+  transform: translate(1rpx, 1rpx);
 }
 
 .cal-footer { height: 40rpx; }

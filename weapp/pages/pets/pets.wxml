@@ -1,57 +1,60 @@
-<!-- pages/pets/pets.wxml — 宠物管理（粉红主题） -->
+<!-- pages/pets/pets.wxml — 宠物管理（紧凑排版） -->
 <scroll-view class="app-root app-theme-{{uiTheme}} page" scroll-y>
-  <!-- ===== 当前活跃宠物（大号展示） ===== -->
+  <!-- ===== 当前活跃宠物 ===== -->
   <view class="active-card {{petHappyClass}} {{activePet.evolution_ready ? 'evolution-glow' : ''}}" wx:if="{{activePet}}" bindtap="onPetTap">
-    <view class="active-emoji">
-      <image wx:if="{{activePet.image_url}}" class="pet-image-lg {{activePet.evolution_ready ? 'evolution-flash' : ''}}" src="{{activePet.full_image_url}}" mode="aspectFit"></image>
-      <text wx:else>{{activePet.emoji}}</text>
-    </view>
-    <view class="active-info">
-      <view class="active-name-row">
-        <text class="active-name">{{activePet.form_label || activePet.pet_type}}</text>
-        <text class="rarity-badge rarity-{{activePet.rarity}}">{{activePet.rarity}}</text>
+    <view class="active-top">
+      <view class="active-emoji">
+        <image wx:if="{{activePet.image_url}}" class="pet-image-lg {{activePet.evolution_ready ? 'evolution-flash' : ''}}" src="{{activePet.full_image_url}}" mode="aspectFit"></image>
+        <text wx:else>{{activePet.emoji}}</text>
       </view>
-      <text class="active-form">{{activePet.form_label}}</text>
+      <view class="active-info">
+        <view class="active-name-row">
+          <text class="active-name">{{activePet.form_label || activePet.pet_type}}</text>
+          <text class="rarity-badge rarity-{{activePet.rarity}}">{{activePet.rarity}}</text>
+        </view>
+        <view class="active-stage">{{intimacyStageName}}</view>
+      </view>
     </view>
+
+    <!-- 两栏进度（亲密度+经验） -->
     <view class="active-stats">
-      <view class="active-intimacy">
-        <view class="intimacy-label">亲密度</view>
-        <view class="intimacy-bar">
-          <view class="intimacy-fill" style="width:{{intimacyPct}}%"></view>
-        </view>
-        <text class="intimacy-text">{{activePet.intimacy}} / 100</text>
+      <view class="active-stat">
+        <text class="as-label">亲密度</text>
+        <view class="as-bar"><view class="as-fill as-fill--pink" style="width:{{intimacyPct}}%"></view></view>
+        <text class="as-val">{{activePet.intimacy}}/100</text>
       </view>
-      <view class="active-exp" wx:if="{{activePet}}">
-        <view class="exp-label">
-          <text>Lv.{{activePet.level}}/{{activePet.max_level}}</text>
-          <text wx:if="{{!activePet.evolution_ready}}" class="exp-num">EXP {{activePet.exp}}/{{activePet.exp_needed}}</text>
-          <text wx:else class="exp-ready">✨可进化</text>
-        </view>
-        <view class="exp-bar" wx:if="{{!activePet.evolution_ready}}">
-          <view class="exp-fill" style="width:{{activePet.exp_needed > 0 ? (activePet.exp / activePet.exp_needed * 100) : 0}}%"></view>
-        </view>
+      <view class="active-stat">
+        <text class="as-label">Lv.{{activePet.level}}/{{activePet.max_level}}</text>
+        <view class="as-bar"><view class="as-fill as-fill--purple" style="width:{{activePet.exp_needed > 0 ? (activePet.exp / activePet.exp_needed * 100) : 0}}%"></view></view>
+        <text class="as-val" wx:if="{{!activePet.evolution_ready}}">EXP {{activePet.exp}}/{{activePet.exp_needed}}</text>
+        <text class="as-val as-val--evo" wx:else>✨可进化</text>
       </view>
     </view>
-    <!-- 技能说明 -->
-    <view class="active-skills">
-      <view class="skill-item" wx:if="{{activePet.passive_skill}}">
-        <text class="skill-icon">🎯</text>
-        <view class="skill-info">
-          <text class="skill-name">{{activePet.passive_skill}}</text>
-          <text class="skill-desc">{{activePet.passive_skill_desc || '每天首次登录时触发冒险，带回收益'}}</text>
-        </view>
-      </view>
-      <view class="skill-item">
-        <text class="skill-icon">💕</text>
-        <view class="skill-info">
-          <text class="skill-name">{{intimacyStageName}}</text>
-          <text class="skill-desc">{{intimacyStageDesc}}</text>
-        </view>
-      </view>
+
+    <!-- 被动技能小标签 -->
+    <view class="active-skill-tag" wx:if="{{activePet.passive_skill}}" bindtap="onSkillTap" hover-class="active-skill-tag--hover">
+      <text>🎯 {{activePet.passive_skill}}</text>
+      <text class="active-skill-tag__arrow">›</text>
     </view>
+
+    <!-- 互动次数 -->
+    <view class="active-interact" wx:if="{{activePet}}">
+      <text class="ai-label">今日互动</text>
+      <view class="ai-dots">
+        <view class="ai-dot {{todayInteractTotal >= 1 ? 'ai-dot--used' : ''}}"></view>
+        <view class="ai-dot {{todayInteractTotal >= 2 ? 'ai-dot--used' : ''}}"></view>
+        <view class="ai-dot {{todayInteractTotal >= 3 ? 'ai-dot--used' : ''}}"></view>
+      </view>
+      <text class="ai-count">{{todayInteractTotal}}/3</text>
+    </view>
+
+    <!-- 互动按钮行 -->
     <view class="active-actions">
-      <button class="btn btn-sm btn-primary" wx:if="{{canItemEvolve}}" bindtap="onEvolve">✨ 道具进化</button>
-      <button class="btn btn-sm btn-primary evolution-btn" wx:if="{{canLevelEvolve}}" bindtap="onLevelEvolve">🌟 等级进化</button>
+      <button class="btn-interact" bindtap="onFeed" hover-class="btn-interact--hover">🍼 喂食</button>
+      <button class="btn-interact" bindtap="onPlay" hover-class="btn-interact--hover">🎾 玩耍</button>
+      <button class="btn-interact" bindtap="onWalkPet" hover-class="btn-interact--hover">🚶 走动</button>
+      <button class="btn-evo" wx:if="{{canItemEvolve}}" bindtap="onEvolve">✨进化</button>
+      <button class="btn-evo" wx:if="{{canLevelEvolve}}" bindtap="onLevelEvolve">🌟进化</button>
     </view>
   </view>
 

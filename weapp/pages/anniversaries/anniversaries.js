@@ -20,6 +20,15 @@ Page({
     uiTheme: getApp().globalData.uiTheme || 'handdrawn',
   },
 
+  onLoad(options) {
+    // 从日历页传入 date 参数时自动填充表单
+    if (options && options.date) {
+      this.setData({ dateVal: options.date })
+      // 自动弹出添加表单
+      this.setData({ showForm: true })
+    }
+  },
+
   onShow() {
     this.setData({ uiTheme: getApp().globalData.uiTheme || 'handdrawn' })
     this.load()

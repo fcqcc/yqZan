@@ -69,77 +69,117 @@
   50% { opacity: 1; transform: scale(1.2); }
 }
 
-/* ===== 当前活跃宠物卡片 ===== */
+/* ===== 当前活跃宠物卡片（紧凑） ===== */
 .active-card {
-  margin: 12px 12px 8px;
+  margin: 10px 12px 8px;
   background: linear-gradient(135deg, #ffffff 0%, #fffafb 55%, #ffe8f0 100%);
-  border-radius: var(--radius-lg);
-  padding: 24px 20px 20px;
-  box-shadow: 0 8px 24px rgba(255, 107, 157, 0.12);
+  border-radius: 20px 8px 20px 8px;
+  padding: 18px 16px 14px;
+  box-shadow: 0 6px 18px rgba(255, 107, 157, 0.1);
   border: 1.5px solid #f0c0d0;
-  text-align: center;
 }
-.active-emoji { font-size: 64px; display: block; margin-bottom: 6px; }
-.pet-image-lg { width: 160px; height: 160px; display: block; margin: 0 auto; }
-.active-info { margin-bottom: 12px; }
-.active-name-row { display: flex; align-items: center; justify-content: center; gap: 8px; }
-.active-name { font-size: 18px; font-weight: 800; color: var(--text); display: block; }
-.active-form { font-size: 13px; color: var(--text-secondary); display: block; margin-top: 2px; }
-
-/* 亲密度进度条 */
-.active-intimacy { margin-bottom: 14px; }
-.intimacy-label { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; }
-.intimacy-bar {
-  height: 8px;
-  background: rgba(255, 107, 157, 0.15);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 3px;
-}
-.intimacy-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--pink), var(--pink-dark));
-  border-radius: 4px;
-  transition: width 0.5s ease;
-}
-.intimacy-text { font-size: 11px; color: var(--text-muted); }
-
-.active-actions { display: flex; gap: 10px; justify-content: center; }
-
-/* 两栏统计（亲密度+经验并列） */
-.active-stats {
+.active-top {
   display: flex;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-.active-stats .active-intimacy,
-.active-stats .active-exp {
-  flex: 1;
-  min-width: 0;
-}
-.active-stats .active-exp { margin-top: 0; }
-.active-stats .intimacy-label,
-.active-stats .exp-label { font-size: 10px; margin-bottom: 3px; }
-
-/* 技能说明区 */
-.active-skills {
-  margin: 0 0 14px;
-  display: flex; flex-direction: column; gap: 8px;
-}
-.skill-item {
-  display: flex;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
   gap: 8px;
+  margin-bottom: 12px;
+}
+.active-emoji { text-align: center; }
+.pet-image-lg { width: 140px; height: 140px; border-radius: 16px; display: block; }
+.active-info { text-align: center; }
+.active-name-row { display: flex; align-items: center; justify-content: center; gap: 6px; }
+.active-name { font-size: 18px; font-weight: 800; color: var(--text); }
+.active-form { font-size: 13px; color: var(--text-secondary); display: block; margin-top: 2px; }
+.active-stage { font-size: 12px; color: var(--primary); display: inline-block; margin-top: 3px; background: var(--primary-pale); padding: 2px 10px; border-radius: 8px; }
+
+/* 两栏进度条 */
+.active-stats { display: flex; gap: 10px; margin-bottom: 8px; }
+.active-stat { flex: 1; }
+.as-label { font-size: 10px; color: var(--text-secondary); display: block; margin-bottom: 2px; }
+.as-bar { height: 6px; border-radius: 3px; overflow: hidden; margin-bottom: 2px; }
+.active-stat:first-child .as-bar { border: 1.5px solid #D4708A; }
+.active-stat:last-child .as-bar { border: 1.5px solid #7c4dff; }
+.as-bar .as-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+.as-fill--pink { background: linear-gradient(90deg, #E891A4, #D4708A); }
+.as-fill--purple { background: linear-gradient(90deg, #7c4dff, #b388ff); }
+.as-val { font-size: 10px; color: var(--text-secondary); }
+.as-val--evo { color: #ff6b35; font-weight: 700; animation: expPulse 1s ease-in-out infinite; }
+
+/* 被动技能 */
+.active-skill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-secondary);
   background: rgba(255,255,255,0.7);
   border: 1px solid rgba(214,92,138,0.12);
-  border-radius: 8px;
-  padding: 8px 10px;
-  text-align: left;
+  border-radius: 6px;
+  padding: 3px 8px;
+  margin-bottom: 10px;
 }
-.skill-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-.skill-info { flex: 1; }
-.skill-name { font-size: 12px; font-weight: 700; color: var(--text); display: block; }
-.skill-desc { font-size: 11px; color: var(--text-secondary); display: block; margin-top: 1px; line-height: 1.4; }
+.active-skill-tag--hover {
+  background: var(--primary-pale);
+  border-color: var(--primary-light);
+}
+.active-skill-tag__arrow {
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+/* 互动按钮行 */
+.active-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.btn-interact {
+  flex: 1;
+  min-width: 60px;
+  background: var(--primary-pale);
+  border: 2px dashed var(--primary-light);
+  border-radius: 12px 4px 12px 4px;
+  padding: 6px 4px;
+  font-size: 12px;
+  color: var(--primary-dark);
+  box-shadow: 2px 2px 0 rgba(232,145,164,0.15);
+  line-height: 1.3;
+  text-align: center;
+}
+.btn-interact--hover {
+  background: var(--primary-light);
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(232,145,164,0.15);
+}
+.btn-evo {
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #ff6b35, #ff8f00);
+  border-radius: 12px 4px 12px 4px;
+  border: none;
+  animation: evoBtnPulse 1.5s ease-in-out infinite;
+}
+
+/* 今日互动次数 */
+.active-interact {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.ai-dots { display: flex; gap: 4px; }
+.ai-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--text-light);
+}
+.ai-dot--used { background: var(--primary); }
+.ai-count { font-weight: 600; color: var(--primary-dark); }
 
 /* ===== 形态切换 ===== */
 .section-card {

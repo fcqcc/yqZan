@@ -27,6 +27,7 @@ Page({
     petCatalog: null,  // 后端获取的宠物配置
     petHappyClass: '',  // 互动动画class
     lastInteractTime: 0,  // 防抖时间戳
+    todayInteractTotal: 0,
     showEvoEffect: false,  // 进化粒子特效
     uiTheme: getApp().globalData.uiTheme || 'handdrawn',
   },
@@ -109,7 +110,11 @@ Page({
         else if (lvl === 'love') { stageName = '挚爱💕'; stageDesc = '心意相通，默契无间！' }
       }
 
-      this.setData({ pets, activePet, intimacyPct, forms, canEvolve, canItemEvolve, canLevelEvolve, inventory: items, intimacyStageName: stageName, intimacyStageDesc: stageDesc })
+      this.setData({
+        pets, activePet, intimacyPct, forms, canEvolve, canItemEvolve, canLevelEvolve,
+        inventory: items, intimacyStageName: stageName, intimacyStageDesc: stageDesc,
+        todayInteractTotal: activePet ? (activePet.today_interact_count || 0) : 0,
+      })
     } catch (e) { console.error('load pets error:', e) }
   },
 
@@ -193,6 +198,38 @@ Page({
     }
   },
 
+  /** 玩耍宠物 */
+  async onPlay() {
+    const pet = this.data.activePet
+    if (!pet) return
+    this.setData({ petHappyClass: 'pet-happy' })
+    setTimeout(() => this.setData({ petHappyClass: '' }), 700)
+    try {
+      await api.petPet(pet.id)
+      wx.showToast({ title: '🎾 玩得很开心！', icon: 'none' })
+      this.load()
+    } catch (e) {
+      const msg = e._statusCode === 429 ? (e.detail || '今天已经玩过了') : (e.detail || e.errMsg || '玩耍失败')
+      wx.showToast({ title: msg, icon: 'none' })
+    }
+  },
+
+  /** 走动宠物 */
+  async onWalkPet() {
+    const pet = this.data.activePet
+    if (!pet) return
+    this.setData({ petHappyClass: 'pet-walk-anim' })
+    setTimeout(() => this.setData({ petHappyClass: '' }), 800)
+    try {
+      await api.walkPet(pet.id)
+      wx.showToast({ title: '🚶 散步归来~', icon: 'none' })
+      this.load()
+    } catch (e) {
+      const msg = e._statusCode === 429 ? (e.detail || '今天已经走过了') : (e.detail || e.errMsg || '走动失败')
+      wx.showToast({ title: msg, icon: 'none' })
+    }
+  },
+
   /** 进化宠物 + 粒子特效 */
   async onEvolve() {
     const pet = this.data.activePet
@@ -232,6 +269,18 @@ Page({
       }
     })
   },
+  /** 点击技能标签 → 展示技能效果描述 */
+  onSkillTap() {
+    const pet = this.data.activePet
+    if (!pet || !pet.passive_skill) return
+    wx.showModal({
+      title: `🎯 ${pet.passive_skill}`,
+      content: pet.passive_skill_desc || '每天首次登录时触发冒险，带回收益',
+      confirmText: '知道了',
+      showCancel: false,
+    })
+  },
+
   /** 点击宠物卡片→随机互动特效（纯前端，不调后端） */
   onPetTap() {
     const pet = this.data.activePet

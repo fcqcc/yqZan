@@ -65,11 +65,11 @@
           </view>
         </view>
 
-        <!-- <view class="menu-group">
+        <view class="menu-group">
           <view class="menu-item" bindtap="go" data-url="/pages/pets/pets" hover-class="menu-item-hover">
             <view class="menu-icon">🐾</view>
-            <text class="menu-text">宠物</text>
-            <text class="menu-sub">{{petCount || 0}}只</text>
+            <text class="menu-text">宠物管理</text>
+            <text class="menu-value">{{petCount || 0}}只</text>
             <text class="menu-arrow">›</text>
           </view>
           <view class="menu-item" bindtap="go" data-url="/pages/anniversaries/anniversaries" hover-class="menu-item-hover">
@@ -82,7 +82,7 @@
             <text class="menu-text">留言板</text>
             <text class="menu-arrow">›</text>
           </view>
-        </view> -->
+        </view>
 
         <view class="menu-group menu-group--settings">
           <!-- <view class="menu-item" bindtap="onSwitchTheme" hover-class="menu-item-hover">

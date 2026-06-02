@@ -40,14 +40,10 @@
       </view>
     </view>
 
-    <!-- ===== 核心业务：存钱计划 ===== -->
-    <view class="section-header">
-      <text class="section-title">存钱计划</text>
-      <text class="section-more" bindtap="goTab" data-url="/pages/plans/plans">查看全部 ›</text>
-    </view>
-
+    <!-- ===== 存钱计划（无标题头，卡片内标注） ===== -->
     <block wx:if="{{featuredPlan}}">
-      <view class="plan-card">
+      <view class="plan-card plan-card--tagged">
+        <view class="plan-card__tag">存钱计划</view>
         <view class="plan-header">
           <text class="plan-title">{{featuredPlan.title}}</text>
           <text class="plan-tag">{{featuredPlan.done ? '已完成' : '进行中'}}</text>
@@ -68,54 +64,59 @@
       </view>
     </block>
     <view wx:else class="plan-card plan-card--empty" bindtap="goTab" data-url="/pages/plans/plans">
+      <view class="plan-card__tag">存钱计划</view>
       <cp-icon name="target" size="48" />
       <text class="plan-empty-title">还没有存钱计划</text>
       <text class="plan-empty-hint">设定一个小目标，从今天开始</text>
     </view>
 
-    <!-- ===== 核心导航：快捷入口 ===== -->
-    <view class="quick-actions">
-      <view class="quick-action" bindtap="goTab" data-url="/pages/plans/plans" hover-class="quick-action--press">
-        <view class="quick-action__icon quick-action__icon--rose"><cp-icon name="wallet" size="44" /></view>
-        <text class="quick-action__label">存钱</text>
-      </view>
-      <view class="quick-action" bindtap="go" data-url="/pages/anniversaries/anniversaries" hover-class="quick-action--press">
-        <view class="quick-action__icon quick-action__icon--lavender"><cp-icon name="calendar" size="44" /></view>
-        <text class="quick-action__label">纪念日</text>
-      </view>
-      <view class="quick-action" bindtap="go" data-url="/pages/gacha/gacha" hover-class="quick-action--press">
-        <view class="quick-action__icon quick-action__icon--gold"><cp-icon name="gift" size="44" /></view>
-        <text class="quick-action__label">抽卡</text>
-      </view>
-      <view class="quick-action" bindtap="go" data-url="/pages/notes/notes" hover-class="quick-action--press">
-        <view class="quick-action__icon quick-action__icon--sky"><cp-icon name="envelope" size="44" /></view>
-        <text class="quick-action__label">留言</text>
+    <!-- ===== 焦点栏（核心功能入口） ===== -->
+    <view class="focus-bar">
+      <view class="focus-bar__grid">
+        <view class="focus-bar__item" bindtap="goTab" data-url="/pages/plans/plans" hover-class="focus-bar__item--press">
+          <view class="focus-bar__icon focus-bar__icon--rose">
+            <text class="focus-bar__emoji">💰</text>
+          </view>
+          <text class="focus-bar__label">存钱</text>
+        </view>
+        <view class="focus-bar__item" bindtap="go" data-url="/pages/anniversaries/anniversaries" hover-class="focus-bar__item--press">
+          <view class="focus-bar__icon focus-bar__icon--lavender">
+            <text class="focus-bar__emoji">💕</text>
+          </view>
+          <text class="focus-bar__label">纪念日</text>
+        </view>
+        <view class="focus-bar__item" bindtap="go" data-url="/pages/gacha/gacha" hover-class="focus-bar__item--press">
+          <view class="focus-bar__icon focus-bar__icon--gold">
+            <text class="focus-bar__emoji">🎁</text>
+          </view>
+          <text class="focus-bar__label">抽卡</text>
+        </view>
+        <view class="focus-bar__item" bindtap="go" data-url="/pages/decision/decision" hover-class="focus-bar__item--press">
+          <view class="focus-bar__icon focus-bar__icon--coral">
+            <text class="focus-bar__emoji">🎲</text>
+          </view>
+          <text class="focus-bar__label">抽签</text>
+        </view>
+        <view class="focus-bar__item" bindtap="go" data-url="/pages/calendar/calendar" hover-class="focus-bar__item--press">
+          <view class="focus-bar__icon focus-bar__icon--sky">
+            <text class="focus-bar__emoji">📆</text>
+          </view>
+          <text class="focus-bar__label">日历</text>
+        </view>
+        <view class="focus-bar__item" bindtap="go" data-url="/pages/notes/notes" hover-class="focus-bar__item--press">
+          <view class="focus-bar__icon focus-bar__icon--green">
+            <text class="focus-bar__emoji">💌</text>
+          </view>
+          <text class="focus-bar__label">留言</text>
+        </view>
       </view>
     </view>
 
-    <!-- ===== 每日签到 ===== -->
-    <view class="checkin-mini {{checkinAnim}}" bindtap="onCheckinTap">
-      <view class="checkin-mini-left">
-        <view class="checkin-mini-icon">
-          <cp-icon name="{{checkedInToday ? 'sparkles' : 'clock'}}" size="32" />
-        </view>
-        <view>
-          <text class="checkin-mini-text">{{checkedInToday ? '今日已签到' : '完成今日签到'}}</text>
-          <text class="checkin-mini-sub">连续 {{sparkCount}} 天 · 每日 +5 积分</text>
-        </view>
-      </view>
-      <view class="checkin-mini-btn {{checkedInToday ? 'checkin-mini-btn--done' : ''}}">
-        {{checkedInToday ? '已签到' : '签到'}}
-      </view>
-    </view>
+    <!-- ===== 每日签到（自动，仅显示徽章） ===== -->
 
-    <!-- ===== 纪念日 ===== -->
-    <view wx:if="{{nearestAnni || todayAnni}}" class="anniversary-section">
-      <view class="section-header section-header--compact">
-        <text class="section-title">即将到来</text>
-        <text class="section-more" bindtap="go" data-url="/pages/anniversaries/anniversaries">全部 ›</text>
-      </view>
-      <view class="anniversary-card" bindtap="go" data-url="/pages/anniversaries/anniversaries">
+    <!-- ===== 纪念日提醒 ===== -->
+    <view wx:if="{{nearestAnni || todayAnni}}" class="anniversary-section" bindtap="go" data-url="/pages/anniversaries/anniversaries">
+      <view class="anniversary-card">
         <view class="anniversary-icon">
           <cp-icon name="heart" size="40" color="#fff" />
         </view>
@@ -123,106 +124,23 @@
           <text class="anniversary-name">{{todayAnni ? todayAnni.title : nearestAnni.title}}</text>
           <text class="anniversary-date">{{todayAnni ? '值得庆祝的一天' : nearestAnni.date}}</text>
         </view>
-        <view class="anniversary-days">
-          <text class="anniversary-days__num">{{todayAnni ? 0 : nearestAnni.days}}</text>
+        <view class="anniversary-days" wx:if="{{!todayAnni}}">
+          <text class="anniversary-days__pre">还剩</text>
+          <text class="anniversary-days__num">{{nearestAnni.days}}</text>
           <text class="anniversary-days__unit">天</text>
         </view>
+        <view class="anniversary-days" wx:else>
+          <text class="anniversary-days__num">🎉</text>
+        </view>
       </view>
     </view>
 
-    <!-- ===== 宠物 ===== -->
-    <view class="pet-area">
-      <view class="section-header section-header--compact">
-        <text class="section-title">我们的宠物</text>
-        <text wx:if="{{pet}}" class="section-more" bindtap="goPetPage">宠物管理 ›</text>
-        <text wx:else class="section-more" bindtap="go" data-url="/pages/gacha/gacha">去抽卡 ›</text>
-      </view>
-
-      <view wx:if="{{pet}}" class="pet-card">
-        <view class="pet-bg"></view>
-        <view class="pet-avatar {{petAnimationClass}} {{petActionClass}} {{petFeedClass}}" catchtap="onPetTap">
-          <text wx:if="{{showActionEmoji}}" class="pet-action-emoji {{actionEmojiClass}}">{{actionEmoji}}</text>
-          <image wx:if="{{petImageUrl}}" class="pet-avatar-img" src="{{petImageUrl}}" mode="aspectFit"></image>
-          <text wx:else class="pet-avatar-emoji">{{petEmoji}}</text>
-        </view>
-        <text class="pet-name">{{petName}}</text>
-        <text class="pet-level">{{petRarity}} · Lv.{{petLevel}}</text>
-        <view class="pet-interact-badge" wx:if="{{petId}}">
-          <text>今日互动</text>
-          <view class="pet-interact-dot {{todayInteractTotal >= 1 ? '' : 'pet-interact-dot--used'}}"></view>
-          <view class="pet-interact-dot {{todayInteractTotal >= 2 ? '' : 'pet-interact-dot--used'}}"></view>
-          <view class="pet-interact-dot {{todayInteractTotal >= 3 ? '' : 'pet-interact-dot--used'}}"></view>
-          <text>{{todayInteractTotal}}/3</text>
-        </view>
-        <view class="pet-intimacy">
-          <view class="intimacy-bar">
-            <view class="intimacy-fill" style="width:{{intimacyPct}}%"></view>
-          </view>
-          <text class="intimacy-text">{{intimacyPct}}/100</text>
-        </view>
-        <view class="pet-actions">
-          <view class="pet-action" bindtap="onFeed">
-            <view class="pet-action-icon"><text>喂</text></view>
-            <text class="pet-action-label">喂食</text>
-          </view>
-          <view class="pet-action" bindtap="onStroke">
-            <view class="pet-action-icon"><text>摸</text></view>
-            <text class="pet-action-label">抚摸</text>
-          </view>
-          <view class="pet-action" bindtap="onWalk">
-            <view class="pet-action-icon"><text>散</text></view>
-            <text class="pet-action-label">散步</text>
-          </view>
-          <view class="pet-action" bindtap="onPlay">
-            <view class="pet-action-icon"><text>玩</text></view>
-            <text class="pet-action-label">玩耍</text>
-          </view>
-        </view>
-      </view>
-
-      <view wx:else class="pet-card pet-card--empty" bindtap="go" data-url="/pages/gacha/gacha">
-        <view class="pet-bg"></view>
-        <cp-icon name="sparkles" size="56" />
-        <text class="pet-empty-title">还没有宠物伙伴</text>
-        <text class="pet-empty-hint">抽卡获得专属萌宠，一起攒钱成长</text>
-      </view>
+    <!-- ===== 浮动宠物 ===== -->
+    <view wx:if="{{pet}}" class="pet-float {{petFloatAnim}}" style="left: {{petFloatX}}px; top: {{petFloatY}}px;" bindtap="onPetFloatTap">
+      <image wx:if="{{petImageUrl}}" class="pet-float__img" src="{{petImageUrl}}" mode="aspectFit"></image>
+      <text wx:else class="pet-float__emoji">{{petEmoji}}</text>
     </view>
 
-    <!-- ===== 趣味：抽签小助手 ===== -->
-    <view class="section-header">
-      <text class="section-title">🎯 抽签小助手</text>
-      <text class="section-more" bindtap="go" data-url="/pages/decision/decision">去抽签 ›</text>
-    </view>
-    <view class="dc-home-card" bindtap="go" data-url="/pages/decision/decision" hover-class="dc-home-card--press">
-      <view class="dc-home-card__bg"></view>
-      <view class="dc-home-card__row">
-        <text class="dc-home-card__emoji">🎲</text>
-        <view class="dc-home-card__text">
-          <text class="dc-home-card__title">选择困难？让天意帮你决定</text>
-          <text class="dc-home-card__sub">吵架了 · 吃什么 · 去哪玩 · 纪念日 · 感情降温</text>
-        </view>
-      </view>
-      <view class="dc-home-card__arrow">›</view>
-    </view>
-
-    <!-- ===== 存钱日历 ===== -->
-    <view class="section-header">
-      <text class="section-title">📅 存钱日历</text>
-      <text class="section-more" bindtap="go" data-url="/pages/calendar/calendar">查看日历 ›</text>
-    </view>
-    <view class="dc-home-card" bindtap="go" data-url="/pages/calendar/calendar" hover-class="dc-home-card--press">
-      <view class="dc-home-card__bg"></view>
-      <view class="dc-home-card__row">
-        <text class="dc-home-card__emoji">📆</text>
-        <view class="dc-home-card__text">
-          <text class="dc-home-card__title">一目了然，存钱+纪念日全记录</text>
-          <text class="dc-home-card__sub">查看每日存钱明细 · 纪念日提醒</text>
-        </view>
-      </view>
-      <view class="dc-home-card__arrow">›</view>
-    </view>
-
-    <!-- ===== 卡片任务（辅助） ===== -->
     <view wx:if="{{cardTasksAsAssigner.length > 0}}" class="block block--tasks">
       <view class="section-header section-header--compact">
         <text class="section-title">我发起的任务</text>

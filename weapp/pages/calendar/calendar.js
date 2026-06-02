@@ -1,33 +1,5 @@
-// pages/calendar/calendar.js — 存钱日历
-const STORAGE_KEYS = {
-  anniversaries: 'cal_anniversaries',
-  savings: 'cal_savings',
-};
-
-const ANNIV_PRESET = [
-  { id: 'a1', name: '恋爱纪念日', icon: '💕', color: '#E891A4', date: '2023-06-18', recurring: true },
-  { id: 'a2', name: '小可爱生日', icon: '🎂', color: '#FF8E53', date: '1995-08-20', recurring: true, isBirthday: true },
-  { id: 'a3', name: '小帅比生日', icon: '🎁', color: '#B19CD9', date: '1994-12-03', recurring: true, isBirthday: true },
-  { id: 'a4', name: '第一次接吻', icon: '💋', color: '#FF6B6B', date: '2023-07-22', recurring: true },
-  { id: 'a5', name: '一起去旅行', icon: '✈️', color: '#7BC4E8', date: '2024-01-01', recurring: true },
-];
-
-const SAVINGS_PRESET = [
-  { id: 's1', date: todayStr(-3), amount: 50,  planId: 'p1', planName: '蜜月旅行', planIcon: '🏝️', note: '工资到账，存起来~' },
-  { id: 's2', date: todayStr(-3), amount: 20,  planId: 'p1', planName: '蜜月旅行', planIcon: '🏝️', note: '零钱攒的' },
-  { id: 's3', date: todayStr(-1), amount: 100, planId: 'p2', planName: '购房首付', planIcon: '🏠', note: 'bonus 拿了一笔' },
-  { id: 's4', date: todayStr(-7), amount: 200, planId: 'p1', planName: '蜜月旅行', planIcon: '🏝️', note: '' },
-  { id: 's5', date: todayStr(-10), amount: 30, planId: 'p3', planName: '日常基金', planIcon: '☕', note: '奶茶钱省下来' },
-  { id: 's6', date: todayStr(-14), amount: 500, planId: 'p2', planName: '购房首付', planIcon: '🏠', note: '年终奖' },
-  { id: 's7', date: todayStr(0), amount: 88, planId: 'p1', planName: '蜜月旅行', planIcon: '🏝️', note: '今天也加油!' },
-];
-
-const PLANS = [
-  { id: 'p1', name: '蜜月旅行', icon: '🏝️' },
-  { id: 'p2', name: '购房首付', icon: '🏠' },
-  { id: 'p3', name: '日常基金', icon: '☕' },
-  { id: 'p4', name: '生日礼物', icon: '🎁' },
-];
+// pages/calendar/calendar.js — 日历（对接后端数据）
+const api = require('../../utils/api')
 
 const WEEKDAYS = [
   { label: '日', isWeekend: true },
@@ -42,22 +14,15 @@ const WEEKDAY_LABELS_FULL = ['星期日', '星期一', '星期二', '星期三',
 const QUICK_AMOUNTS = [10, 20, 50, 100, 200, 500];
 
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function todayStr(offset = 0) {
-  const d = new Date();
-  d.setDate(d.getDate() + offset);
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-}
 function dateStr(d) { return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
-function daysBetween(d1, d2) {
-  return Math.round((d2 - d1) / 86400000);
-}
+function daysBetween(d1, d2) { return Math.round((d2 - d1) / 86400000); }
 
 Page({
   data: {
     uiTheme: getApp().globalData.uiTheme || 'handdrawn',
     weekdays: WEEKDAYS,
     currentYear: 0,
-    currentMonth: 0,           // 1-12
+    currentMonth: 0,
     currentMonthText: '',
     weekdayFirstText: '',
     isCurrentMonth: true,
@@ -70,19 +35,21 @@ Page({
     selectedIsToday: false,
     selectedAnnivs: [],
     selectedSavings: [],
+    selectedNotes: [],
     selectedTotal: '0',
     monthTotal: '0',
     monthSavingsCount: 0,
     monthAnnivCount: 0,
-    // 弹层
     showAdd: false,
     addDateLabel: '',
     addDraft: { amount: '', planId: '', note: '' },
-    plans: PLANS,
+    plans: [],
     quickAmounts: QUICK_AMOUNTS,
-    // 内部数据
+    showAddAnniv: false,
+    addAnnivTitle: '',
     _anniversaries: [],
     _savings: [],
+    _notes: [],
   },
 
   onLoad() {
@@ -96,22 +63,74 @@ Page({
   onShow() {
     this.setData({ uiTheme: getApp().globalData.uiTheme || 'handdrawn' });
     this.loadData();
-    this.refreshCalendar();
-    this.refreshSelected();
   },
 
-  loadData() {
-    let annivs = wx.getStorageSync(STORAGE_KEYS.anniversaries);
-    if (!annivs) {
-      annivs = ANNIV_PRESET;
-      wx.setStorageSync(STORAGE_KEYS.anniversaries, annivs);
-    }
-    let savings = wx.getStorageSync(STORAGE_KEYS.savings);
-    if (!savings) {
-      savings = SAVINGS_PRESET;
-      wx.setStorageSync(STORAGE_KEYS.savings, savings);
-    }
-    this.setData({ _anniversaries: annivs, _savings: savings });
+  async loadData() {
+    try {
+      const [annivs, plansRes, notesRes] = await Promise.all([
+        api.getAnniversaries().catch(() => []),
+        api.getPlans().catch(() => []),
+        api.getNotes().catch(() => []),
+      ]);
+
+      // 纪念日
+      const _anniversaries = Array.isArray(annivs) ? annivs.map(a => ({
+        id: a.id,
+        name: a.title,
+        icon: a.icon || '💕',
+        color: a.color || '#E891A4',
+        date: a.date_val,
+        recurring: a.recurring !== false,
+        isBirthday: a.is_birthday || false,
+      })) : [];
+
+      // 存钱计划列表（仅进行中）
+      const plansRaw = Array.isArray(plansRes) ? plansRes : (plansRes && plansRes.plans ? plansRes.plans : [])
+      const _plans = plansRaw.filter(p => !p.done).map(p => ({
+        id: p.id,
+        name: p.title,
+        icon: p.icon || '💰',
+      }));
+
+      // 存钱明细：从每个计划的 deliveries 字段提取
+      let _savings = [];
+      for (const plan of plansRaw) {
+        const dels = plan.deliveries || []
+        dels.forEach(d => {
+          let dDate = ''
+          if (d.created_at) dDate = String(d.created_at).slice(0, 10)
+          else if (d.date) dDate = d.date
+          if (!dDate) return
+          _savings.push({
+            id: 'd_' + d.id,
+            date: dDate,
+            amount: Number(d.amount || 0),
+            planId: plan.id,
+            planName: plan.title,
+            planIcon: plan.icon || '💰',
+            note: d.note || '',
+          })
+        })
+      }
+
+      // 留言
+      const _notes = Array.isArray(notesRes) ? notesRes.map(n => ({
+        id: n.id,
+        content: n.content,
+        date: n.created_at ? String(n.created_at).slice(0, 10) : '',
+        userId: n.user_id,
+        isMine: n.user_id === (getApp().globalData.userInfo || {}).id,
+      })).filter(n => n.date) : [];
+
+      this.setData({
+        _anniversaries,
+        _savings,
+        _notes,
+        plans: _plans,
+      });
+      this.refreshCalendar();
+      this.refreshSelected();
+    } catch(e) { console.error('loadData error', e) }
   },
 
   setCurrentMonth(year, month) {
@@ -262,6 +281,7 @@ Page({
       .filter(s => s.date === selectedDate)
       .sort((a, b) => (b.id || 0) - (a.id || 0));
     const total = savings.reduce((sum, s) => sum + Number(s.amount || 0), 0);
+    const notes = this.data._notes.filter(n => n.date === selectedDate);
 
     this.setData({
       selectedDay: d,
@@ -271,6 +291,7 @@ Page({
       selectedIsToday: isToday,
       selectedAnnivs: annivs,
       selectedSavings: savings,
+      selectedNotes: notes,
       selectedTotal: total.toLocaleString('zh-CN'),
     });
   },
@@ -394,32 +415,61 @@ Page({
       wx.showToast({ title: '请输入金额', icon: 'none' });
       return;
     }
-    const plan = this.data.plans.find(p => p.id === planId);
-    const record = {
-      id: 's' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
-      date: this.data.selectedDate,
-      amount: amt,
-      planId: plan ? plan.id : '',
-      planName: plan ? plan.name : '',
-      planIcon: plan ? plan.icon : '💰',
-      note: note || '',
-    };
-    const savings = [record, ...this.data._savings];
-    wx.setStorageSync(STORAGE_KEYS.savings, savings);
-    this.setData({ _savings: savings, showAdd: false });
-    this.refreshCalendar();
-    this.refreshSelected();
-    this.refreshMonthStats();
-    wx.showToast({ title: '✨ 记录成功', icon: 'success' });
+    if (!planId) {
+      wx.showToast({ title: '请选择关联计划', icon: 'none' });
+      return;
+    }
+    api.deliverPlan(planId, amt, note || '')
+      .then(() => {
+        wx.showToast({ title: '✨ 记录成功', icon: 'success' });
+        this.setData({ showAdd: false });
+        this.loadData();
+      })
+      .catch(() => wx.showToast({ title: '记录失败', icon: 'none' }));
   },
 
-  // ============== 纪念日（占位实现） ==============
+  // ============== 纪念日 ==============
   onAddAnniv() {
-    wx.showModal({
-      title: '添加纪念日',
-      content: '纪念日管理模块：可设置每年循环（如生日）或单次纪念（如婚礼）。\n完整功能：调用 wx.navigateTo 跳转独立的纪念日管理页。',
-      showCancel: false,
-      confirmText: '好的',
+    this.setData({
+      showAddAnniv: true,
+      addAnnivTitle: '',
     });
+  },
+
+  onCloseAddAnniv() {
+    this.setData({ showAddAnniv: false, addAnnivTitle: '' });
+  },
+
+  onAddAnnivTitleInput(e) {
+    this.setData({ addAnnivTitle: e.detail.value });
+  },
+
+  async onSaveAddAnniv() {
+    const title = this.data.addAnnivTitle.trim();
+    if (!title) {
+      wx.showToast({ title: '请输入纪念日名称', icon: 'none' });
+      return;
+    }
+    try {
+      await api.createAnniversary({
+        title,
+        date_val: this.data.selectedDate,
+      });
+      wx.showToast({ title: '🎉 添加成功', icon: 'success' });
+      this.setData({ showAddAnniv: false, addAnnivTitle: '' });
+      this.loadData();
+    } catch (e) {
+      wx.showToast({ title: '添加失败', icon: 'none' });
+    }
+  },
+
+  onGoAnnivMgmt() {
+    this.setData({ showAddAnniv: false });
+    wx.navigateTo({ url: '/pages/anniversaries/anniversaries' });
+  },
+
+  goCreatePlan() {
+    this.setData({ showAdd: false });
+    wx.navigateTo({ url: '/pages/plans/plans' });
   },
 });

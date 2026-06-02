@@ -267,7 +267,9 @@
 }
 .dc-tube__icon {
   font-size: 64rpx;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   filter: drop-shadow(3rpx 3rpx 0 rgba(0,0,0,0.1));
 }
 .dc-tube__del {
@@ -870,10 +872,11 @@
 }
 .dc-form__input {
   width: 100%;
+  height: 70rpx;
   background: var(--primary-pale);
   border: 2rpx dashed var(--card-border);
   border-radius: 18rpx 6rpx 18rpx 6rpx;
-  padding: 18rpx 20rpx;
+  padding: 10rpx 20rpx;
   font-size: 26rpx;
   color: var(--text-primary);
   font-weight: 500;

@@ -66,6 +66,10 @@ Page({
     petEvolutionReady: false,
     petDescription: '刚刚孵化的小家伙，需要你的关爱才能长大……',
     petId: null,
+    petCollapsed: false,
+    petFloatX: 0,
+    petFloatY: 0,
+    petWalkTimer: null,
     tickets: 0,
     showPetModal: false,
     sparkCount: 0,
@@ -148,6 +152,10 @@ Page({
     this.checkFirstTimeGuide()
   },
 
+  onHide() {
+    this.stopPetWalking()
+  },
+
   checkFirstTimeGuide() {
     const guideDone = wx.getStorageSync('guide_done')
     if (guideDone) return
@@ -225,6 +233,8 @@ Page({
         gift_count: snapshot.gift_count || 0,
         together_days: snapshot.together_days || 0
       })
+      // 构建纪念日滚动条
+      this.buildAnniTicker()
       // 计算是否有"今天之外"的下一个纪念日
       this.setOtherAnniFlag()
       // 检测升级弹窗
@@ -252,6 +262,19 @@ Page({
     const now = new Date()
     const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`
     return anniversaries.find(a => a && a.date_val === todayStr) || null
+  },
+
+  buildAnniTicker() {
+    const { nearestAnni, todayAnni, together_days } = this.data
+    let ticker = null
+    if (todayAnni) {
+      ticker = { isToday: true, text: `🎉 今天是「${todayAnni.title}」！` }
+    } else if (nearestAnni) {
+      ticker = { isToday: false, text: `💕 距离「${nearestAnni.title}」还有 ${nearestAnni.days} 天` }
+    } else if (together_days) {
+      ticker = { isToday: false, text: `💕 已在一起 ${together_days} 天` }
+    }
+    this.setData({ anniTicker: ticker })
   },
 
   setOtherAnniFlag() {
@@ -407,6 +430,7 @@ Page({
       intimacyDeg: Math.round(1.8 * Math.min(100, Math.round(intimacy))),
       expDeg: pet.exp_needed > 0 ? Math.round(1.8 * Math.min(100, (pet.exp || 0) / pet.exp_needed * 100)) : 0,
     })
+    this.startPetWalking()
   },
 
   showPetModal() {
@@ -420,6 +444,34 @@ Page({
   goPetPage() {
     this.setData({ showPetModal: false })
     nav.openPage('/pages/pets/pets')
+  },
+
+  startPetWalking() {
+    const timer = this.data.petWalkTimer
+    if (timer) { clearInterval(timer) }
+    const maxX = 280, maxY = 400
+    const id = setInterval(() => {
+      const x = 10 + Math.random() * maxX
+      const y = 100 + Math.random() * maxY
+      this.setData({ petFloatX: x, petFloatY: y })
+    }, 3000 + Math.random() * 2000)
+    this.setData({ petWalkTimer: id })
+  },
+
+  onPetFloatTap() {
+    const now = Date.now()
+    if (this.data._lastFloatTap && now - this.data._lastFloatTap < 800) return
+    this.setData({ _lastFloatTap: now, petFloatAnim: 'pet-float-shake' })
+    setTimeout(() => this.setData({ petFloatAnim: '' }), 600)
+  },
+
+  stopPetWalking() {
+    const timer = this.data.petWalkTimer
+    if (timer) { clearInterval(timer); this.setData({ petWalkTimer: null }) }
+  },
+
+  onTogglePet() {
+    this.setData({ petCollapsed: !this.data.petCollapsed })
   },
 
   /** 展示互动反馈emoji（漂浮动画） */
