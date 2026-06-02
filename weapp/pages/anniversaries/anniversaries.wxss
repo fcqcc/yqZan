@@ -376,7 +376,7 @@
 .holiday-emoji { font-size: 22px; width: 30px; text-align: center; }
 .holiday-info { flex: 1; }
 .holiday-title { font-size: 14px; font-weight: 600; color: #333; display: block; }
-.holiday-date { font-size: var(--text-body-size); color: #999; display: block; margin-top: 1px; };
+.holiday-date { font-size: var(--text-body-size); color: #999; display: block; margin-top: 1px; }
 .holiday-tag {
   font-size: 10px;
   color: #999;

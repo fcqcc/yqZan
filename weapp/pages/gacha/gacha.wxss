@@ -240,8 +240,8 @@
   opacity: 0.45 !important;
   transform: none !important;
 }
-.btn-label { font-size: var(--text-body-size); letter-spacing: 1px; };
-.btn-cost { font-size: var(--text-body-size); font-weight: var(--text-body-weight); opacity: 0.85; };
+.btn-label { font-size: var(--text-body-size); letter-spacing: 1px; }
+.btn-cost { font-size: var(--text-body-size); font-weight: var(--text-body-weight); opacity: 0.85; }
 
 /* ===== 4. 十连结果列表 ===== */
 .ten-list {

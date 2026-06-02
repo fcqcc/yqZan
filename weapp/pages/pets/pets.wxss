@@ -301,8 +301,8 @@
 
 /* ===== 空状态 ===== */
 .empty { text-align: center; padding: 40px 16px; color: var(--text-light); font-size: 14px; }
-.empty-icon { font-size: var(--text-meta-size); display: block; margin-bottom: 8px; };
-.empty-sub { font-size: var(--text-meta-size); color: var(--text-muted); margin-top: 4px; display: block; };
+.empty-icon { font-size: var(--text-meta-size); display: block; margin-bottom: 8px; }
+.empty-sub { font-size: var(--text-meta-size); color: var(--text-muted); margin-top: 4px; display: block; }
 
 /* ===== 稀有度徽章 ===== */
 .rarity-badge {
