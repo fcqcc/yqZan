@@ -31,8 +31,8 @@ Page({
 
   /** 加载封面背景图（用本地图片，避免网络白名单和扫描问题） */
   loadBgImage() {
-    // 本地图片路径，打包进小程序，无需网络
-    this.setData({ bgImageUrl: '../../assets/images/login-bg.jpg', bgLoaded: true })
+    // 本地图片绝对路径（/ = 项目根目录），打包进小程序，无需网络
+    this.setData({ bgImageUrl: '/assets/images/login-bg.jpg', bgLoaded: true })
   },
 
   /** 点击「微信一键登录」→ 先弹出合并条款，同意后才调微信登录 */
