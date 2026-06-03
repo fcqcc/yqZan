@@ -1,23 +1,23 @@
 <!-- pages/login/login.wxml -->
 <view class="app-root app-theme-{{uiTheme}}">
 
-  <!-- ===== 登录背景（网络图片，fixed定位+动画） ===== -->
-  <image wx:if="{{bgLoaded}}" class="login-bg" src="{{bgImageUrl}}" mode="aspectFill" binderror="onBgError" />
-  <view wx:if="{{bgLoaded}}" class="login-bg-overlay"></view>
+  <!-- 登录背景（本地图片，无position、正常流占位） -->
+  <image class="login-bg" src="/assets/images/login-bg.jpg" mode="aspectFill" />
+
+  <view class="login-bg-overlay"></view>
 
   <!-- 水波纹 -->
   <view wx:for="{{ripples}}" wx:key="id" class="ripple" style="left:{{item.x}}px;top:{{item.y}}px;"></view>
 
-  <!-- ===== 登录内容 ===== -->
-  <view class="login-page {{bgLoaded ? 'login-page--with-bg' : ''}}" bindtap="{{bgLoaded ? 'onBgTap' : ''}}">
+  <!-- 登录内容（负边距拉到图片位置叠上去） -->
+  <view class="login-page login-page--with-bg" bindtap="onBgTap">
     <block wx:if="{{!step}}">
       <view class="login-logo">
         <svg class="login-logo-svg" viewBox="0 0 100 100" style="width:100px;height:100px;">
-          <circle cx="50" cy="50" r="45" fill="{{bgLoaded ? 'rgba(255,255,255,0.3)' : '#FADCE6'}}" stroke="{{bgLoaded ? 'rgba(255,255,255,0.6)' : '#E891A4'}}" stroke-width="3" stroke-dasharray="5,3"/>
-          <path d="M50 25 C35 25 25 40 25 50 C25 65 40 75 50 85 C60 75 75 65 75 50 C75 40 65 25 50 25" fill="{{bgLoaded ? 'rgba(255,255,255,0.8)' : '#E891A4'}}"/>
-          <circle cx="40" cy="45" r="5" fill="{{bgLoaded ? '#fff' : '#333'}}"/>
-          <circle cx="60" cy="45" r="5" fill="{{bgLoaded ? '#fff' : '#333'}}"/>
-          <path d="M40 60 Q50 70 60 60" stroke="{{bgLoaded ? '#fff' : '#333'}}" stroke-width="3" fill="none"/>
+          <circle cx="50" cy="50" r="45" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.6)" stroke-width="3" stroke-dasharray="5,3"/>
+          <path d="M50 25 C35 25 25 40 25 50 C25 65 40 75 50 85 C60 75 75 65 75 50 C75 40 65 25 50 25" fill="rgba(255,255,255,0.8)"/>
+          <circle cx="40" cy="45" r="5" fill="#fff"/><circle cx="60" cy="45" r="5" fill="#fff"/>
+          <path d="M40 60 Q50 70 60 60" stroke="#fff" stroke-width="3" fill="none"/>
         </svg>
       </view>
       <view class="login-title">一起攒</view>
