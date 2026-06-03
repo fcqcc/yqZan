@@ -11,8 +11,6 @@
 .login-bg-overlay {
   height: 100vh;
   margin-top: -100vh;
-  position: relative;
-  z-index: 1;
   background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.4) 100%);
   pointer-events: none;
 }
@@ -37,8 +35,6 @@
 .login-page {
   height: 100vh;
   margin-top: -100vh;
-  position: relative;
-  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
