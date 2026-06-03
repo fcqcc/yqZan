@@ -133,6 +133,46 @@
   line-height: 1.5;
 }
 
+/* 协议勾选框 */
+.login-terms {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 16px;
+  max-width: 280px;
+}
+.login-terms-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #E891A4;
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #fff;
+  background: #fff;
+  margin-top: 1px;
+}
+.login-terms-checkbox--checked {
+  background: #E891A4;
+  border-color: #D4708A;
+}
+.login-terms-text {
+  font-size: 12px;
+  color: #6B5A6E;
+  line-height: 1.6;
+}
+.login-terms-link {
+  color: #C45A78;
+  text-decoration: underline;
+  font-weight: 600;
+}
+.login-btn-disabled {
+  opacity: 0.5;
+}
+
 .nickname-input {
   width: 280px;
   margin-bottom: 16px;
@@ -176,19 +216,3 @@
 .privacy-desc { font-size: 13px; color: #8B7A8E; display: block; margin-bottom: 20px; line-height: 1.5; }
 .privacy-links { display: flex; justify-content: center; gap: 16px; margin-bottom: 24px; }
 .privacy-link { font-size: 13px; color: #C45A78; text-decoration: underline; font-weight: 600; }
-.privacy-actions { display: flex; flex-direction: column; gap: 10px; }
-.privacy-btn {
-  border: none; border-radius: 25px 10px 25px 10px; padding: 12px 0; font-size: 15px; font-weight: 600;
-  width: 100%; line-height: 1.4;
-}
-.privacy-btn::after { border: none; }
-.privacy-btn-agree {
-  background: linear-gradient(135deg, #E891A4 0%, #D4708A 100%);
-  color: #fff;
-  box-shadow: 3px 3px 0 rgba(212, 112, 138, 0.3);
-}
-.privacy-btn-disagree {
-  background: #FFF9F5;
-  color: #5D4E60;
-  border: 2px solid #E8D8DE !important;
-}

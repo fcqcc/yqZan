@@ -23,11 +23,11 @@ module.exports = Behavior({
   },
 
   methods: {
-    /** 通用拦截：弹出登录确认弹窗，询问采集个人信息 */
+    /** 通用拦截：提示登录 */
     onGuestAction() {
       wx.showModal({
-        title: '登录确认',
-        content: '登录后我们将采集您的微信昵称和头像用于个人资料展示。是否前往登录？',
+        title: '提示',
+        content: '此功能需要登录后使用，是否前往登录？',
         confirmText: '前往登录',
         cancelText: '暂不',
         success: (res) => {

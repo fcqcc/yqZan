@@ -9,7 +9,7 @@ Page({
     nicknameLoading: false,
     error: '',
     afterLoginGoBind: false,
-    showLoginTerms: false,  // 合并的条款弹窗（隐私 + 登录同意）
+    termsChecked: false,
     uiTheme: getApp().globalData.uiTheme || 'handdrawn',
   },
 
@@ -22,39 +22,27 @@ Page({
     }
   },
 
-  /** 点击「微信一键登录」→ 先弹出合并条款，同意后才调微信登录 */
+  /** 切换协议勾选状态 */
+  onToggleTerms() {
+    this.setData({ termsChecked: !this.data.termsChecked })
+  },
+
+  /** 点击「微信一键登录」*/
   async handleWxLogin() {
-    const loginTermsAgreed = wx.getStorageSync('login_terms_agreed')
-    if (!loginTermsAgreed) {
-      this.setData({ showLoginTerms: true })
-      return
-    }
+    if (!this.data.termsChecked) return
     await this.doWxLogin()
   },
 
-  /** 合并条款弹窗：同意 → 执行登录，同时标记隐私已同意 */
-  onAgreeLoginTerms() {
-    wx.setStorageSync('login_terms_agreed', true)
-    wx.setStorageSync('privacy_agreed', true)
-    this.setData({ showLoginTerms: false })
-    this.doWxLogin()
-  },
-
-  onDisagreeLoginTerms() {
-    this.setData({ showLoginTerms: false })
-    wx.showToast({ title: '需要同意条款才能使用微信登录', icon: 'none' })
-  },
-
-  onViewLoginPrivacyPolicy() {
+  onViewPrivacyPolicy() {
     wx.showModal({
       title: '隐私政策',
-      content: '本应用收集您的微信昵称和头像用于展示个人资料，收集您的微信openid用于识别身份。我们不会将您的个人信息分享给第三方。您同意后可以随时在设置中撤回授权。',
+      content: '本应用（「一起攒」）收集您的微信昵称和头像用于展示个人资料，收集您的微信openid用于识别身份。我们不会将您的个人信息分享给第三方。您同意后可以随时在设置中撤回授权。',
       showCancel: false,
       confirmText: '我知道了'
     })
   },
 
-  onViewLoginUserAgreement() {
+  onViewUserAgreement() {
     wx.showModal({
       title: '用户服务协议',
       content: '欢迎使用「一起攒」小程序。本应用仅面向已确定恋爱关系的情侣用户，提供共同存钱计划管理和宠物养成互动功能。使用本应用即表示您同意遵守相关法律法规。',
@@ -132,53 +120,5 @@ Page({
     }
     this.setData({ afterLoginGoBind: true })
     wx.showToast({ title: '请先完成微信登录', icon: 'none' })
-  },
-
-  /** 审核体验入口：连续点击标题5次触发 */
-  onTitleTap() {
-    const cnt = (this.data._titleTapCount || 0) + 1
-    this.setData({ _titleTapCount: cnt })
-    if (cnt >= 5) {
-      this.setData({ _titleTapCount: 0 })
-      this.doReviewLogin()
-    }
-  },
-
-  /** 审核体验模式：跳过微信登录，使用模拟账号 */
-  async doReviewLogin() {
-    this.setData({ loading: true, error: '' })
-    try {
-      // 生成模拟 token 和用户信息
-      const mockUser = {
-        id: 99999,
-        nickname: '审核员',
-        has_nickname: true,
-        invite_code: 'REVIEW',
-        couple_id: null,
-        created_at: new Date().toISOString()
-      }
-      // 用后端真实登录接口获取 token（后端 mock 模式已启用）
-      const loginRes = await wx.login()
-      let res
-      if (loginRes && loginRes.code) {
-        res = await api.wxLogin(loginRes.code)
-      }
-      const token = res && res.access_token ? res.access_token : 'mock_review_token_' + Date.now()
-      const user = (res && (res.user || res)) || mockUser
-
-      wx.setStorageSync('token', token)
-      getApp().globalData.token = token
-      wx.setStorageSync('userInfo', user)
-      getApp().globalData.userInfo = user
-      wx.setStorageSync('privacy_agreed', true)
-      wx.setStorageSync('login_terms_agreed', true)
-
-      wx.reLaunch({ url: '/pages/home/home' })
-    } catch (e) {
-      this.setData({
-        error: (e && (e.detail || e.message)) || '体验模式登录失败',
-        loading: false
-      })
-    }
   },
 })

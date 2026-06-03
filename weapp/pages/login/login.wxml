@@ -1,39 +1,5 @@
 <!-- pages/login/login.wxml -->
 <view class="app-root app-theme-{{uiTheme}}">
-  <!-- 隐私政策弹窗（首次打开必现，用户需主动同意） -->
-  <view wx:if="{{showPrivacy}}" class="privacy-overlay">
-    <view class="privacy-card">
-      <view class="privacy-icon">🔒</view>
-      <text class="privacy-title">欢迎使用「一起攒」</text>
-      <text class="privacy-desc">请仔细阅读以下协议，确认后开始使用</text>
-      <view class="privacy-links">
-        <text class="privacy-link" bindtap="onViewUserAgreement">《用户服务协议》</text>
-        <text class="privacy-link" bindtap="onViewPrivacyPolicy">《隐私政策》</text>
-      </view>
-      <view class="privacy-actions">
-        <button class="privacy-btn privacy-btn-agree" bindtap="onAgreePrivacy">同意并继续</button>
-        <button class="privacy-btn privacy-btn-disagree" bindtap="onDisagreePrivacy">不同意</button>
-      </view>
-    </view>
-  </view>
-
-  <!-- 登录条款弹窗（合并隐私+采集同意） -->
-  <view wx:if="{{showLoginTerms}}" class="privacy-overlay">
-    <view class="privacy-card">
-      <view class="privacy-icon">🔒</view>
-      <text class="privacy-title">登录即表示同意</text>
-      <text class="privacy-desc">继续登录即表示您已阅读并同意以下条款</text>
-      <view class="privacy-links">
-        <text class="privacy-link" bindtap="onViewLoginUserAgreement">《用户服务协议》</text>
-        <text class="privacy-link" bindtap="onViewLoginPrivacyPolicy">《隐私政策》</text>
-      </view>
-      <view class="privacy-actions">
-        <button class="privacy-btn privacy-btn-agree" bindtap="onAgreeLoginTerms">同意并登录</button>
-        <button class="privacy-btn privacy-btn-disagree" bindtap="onDisagreeLoginTerms">不同意</button>
-      </view>
-    </view>
-  </view>
-
   <view class="login-page">
     <!-- 背景图片（容器absolute，image无position） -->
     <view class="login-bg-wrap">
@@ -58,13 +24,25 @@
         <view class="login-title anim-item">一起攒</view>
         <view class="login-subtitle anim-item">情侣存钱 · 共同成长</view>
 
-        <button class="login-btn login-btn-primary anim-item" bindtap="handleWxLogin" loading="{{loading}}">
+        <!-- 协议勾选框 -->
+        <view class="login-terms anim-item">
+          <view class="login-terms-checkbox {{termsChecked ? 'login-terms-checkbox--checked' : ''}}" bindtap="onToggleTerms" data-checked="{{termsChecked}}">
+            <text wx:if="{{termsChecked}}">✓</text>
+          </view>
+          <text class="login-terms-text">
+            我已阅读并同意
+            <text class="login-terms-link" bindtap="onViewUserAgreement">《用户服务协议》</text>
+            和
+            <text class="login-terms-link" bindtap="onViewPrivacyPolicy">《隐私政策》</text>
+          </text>
+        </view>
+
+        <button class="login-btn login-btn-primary anim-item {{!termsChecked ? 'login-btn-disabled' : ''}}" bindtap="handleWxLogin" loading="{{loading}}" disabled="{{!termsChecked}}">
           微信一键登录
         </button>
         <button class="login-btn login-btn-secondary anim-item" bindtap="goBindPartner">
           已有账号？绑定伴侣
         </button>
-        <view class="login-footer anim-item">登录即表示同意《用户服务协议》和《隐私政策》</view>
       </view>
     </block>
 
