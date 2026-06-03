@@ -29,6 +29,15 @@ page {
   height: 32px;
 }
 
+/* ===== 底部装饰图 ===== */
+.home-bottom-bg {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 24px;
+  opacity: 0.85;
+}
+
 /* ===== 头部 ===== */
 .home-header {
   background: linear-gradient(135deg, #E891A4 0%, #FADCE6 100%);

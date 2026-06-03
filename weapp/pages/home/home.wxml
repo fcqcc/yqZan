@@ -218,6 +218,9 @@
       </view>
     </view>
 
+    <!-- ===== 底部装饰图 ===== -->
+    <image class="home-bottom-bg" src="/assets/images/home-bottom-bg.png" mode="widthFix" />
+
     <view class="home-bottom-spacer"></view>
   </scroll-view>
 

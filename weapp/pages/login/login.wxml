@@ -1,12 +1,5 @@
 <!-- pages/login/login.wxml -->
 <view class="app-root app-theme-{{uiTheme}}">
-
-  <!-- 登录背景（<image> + position:absolute 方案） -->
-  <view wx:if="{{bgLoaded}}" class="login-bg-wrap">
-    <image class="login-bg" src="{{bgImageUrl}}" mode="aspectFill" />
-  </view>
-  <view wx:if="{{bgLoaded}}" class="login-bg-overlay"></view>
-
   <!-- 隐私政策弹窗（首次打开必现，用户需主动同意） -->
   <view wx:if="{{showPrivacy}}" class="privacy-overlay">
     <view class="privacy-card">
@@ -41,7 +34,7 @@
     </view>
   </view>
 
-  <view class="login-page {{bgLoaded ? 'login-page--with-bg' : ''}}">
+  <view class="login-page">
     <!-- 未登录：展示欢迎 + 微信登录按钮 -->
     <block wx:if="{{!step}}">
       <view class="login-logo">
