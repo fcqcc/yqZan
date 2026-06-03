@@ -11,16 +11,31 @@ Page({
     afterLoginGoBind: false,
     showLoginTerms: false,  // 合并的条款弹窗（隐私 + 登录同意）
     uiTheme: getApp().globalData.uiTheme || 'handdrawn',
-    ripples: [],          // 水波纹列表
+    ripples: [],
+    bgLoaded: false,
+    bgFailed: false,
+    bgImageUrl: '',
   },
 
   onShow() {
     this.setData({ uiTheme: getApp().globalData.uiTheme || 'handdrawn' })
-    // 已经有 token → 正常进入首页
     const token = wx.getStorageSync('token')
     if (token) {
       wx.reLaunch({ url: '/pages/home/home' })
     }
+    if (!this.data.bgLoaded && !this.data.bgFailed) {
+      this.loadBgImage()
+    }
+  },
+
+  loadBgImage() {
+    const baseUrl = getApp().globalData.baseUrl || 'https://yqzan.cn'
+    const url = baseUrl + '/assets/images/login-bg.jpg'
+    this.setData({ bgImageUrl: url, bgLoaded: true })
+  },
+
+  onBgError() {
+    this.setData({ bgLoaded: false, bgFailed: true })
   },
 
   /** 背景点击 → 水波纹特效 */
