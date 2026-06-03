@@ -34,7 +34,11 @@
     </view>
   </view>
 
-  <view class="login-page">
+  <!-- 登录背景（慢速平移动画） -->
+  <image wx:if="{{bgLoaded}}" class="login-bg" src="{{bgImageUrl}}" mode="aspectFill" />
+  <view wx:if="{{bgLoaded}}" class="login-bg-overlay"></view>
+
+  <view class="login-page {{bgLoaded ? 'login-page--with-bg' : ''}}">
     <!-- 未登录：展示欢迎 + 微信登录按钮 -->
     <block wx:if="{{!step}}">
       <view class="login-logo">

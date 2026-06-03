@@ -11,6 +11,9 @@ Page({
     afterLoginGoBind: false,
     showLoginTerms: false,  // 合并的条款弹窗（隐私 + 登录同意）
     uiTheme: getApp().globalData.uiTheme || 'handdrawn',
+    bgLoaded: false,    // 封面背景是否加载成功
+    bgFailed: false,    // 封面背景加载失败
+    bgImageUrl: '',     // 封面背景地址
   },
 
   onShow() {
@@ -20,6 +23,26 @@ Page({
     if (token) {
       wx.reLaunch({ url: '/pages/home/home' })
     }
+    // 加载封面背景（只尝试一次，不重复请求）
+    if (!this.data.bgLoaded && !this.data.bgFailed) {
+      this.loadBgImage()
+    }
+  },
+
+  /** 尝试加载封面背景图，失败则回退渐变背景 */
+  loadBgImage() {
+    const baseUrl = getApp().globalData.baseUrl || 'https://yqzan.cn'
+    const url = baseUrl + '/assets/images/login-bg.png'
+    this.setData({ bgImageUrl: url })
+    wx.getImageInfo({
+      src: url,
+      success: () => {
+        this.setData({ bgLoaded: true })
+      },
+      fail: () => {
+        this.setData({ bgFailed: true })
+      }
+    })
   },
 
   /** 点击「微信一键登录」→ 先弹出合并条款，同意后才调微信登录 */
