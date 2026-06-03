@@ -1,7 +1,6 @@
 <!-- pages/login/login.wxml -->
 <view class="app-root app-theme-{{uiTheme}}">
-
-  <!-- 隐私政策弹窗 -->
+  <!-- 隐私政策弹窗（首次打开必现，用户需主动同意） -->
   <view wx:if="{{showPrivacy}}" class="privacy-overlay">
     <view class="privacy-card">
       <view class="privacy-icon">🔒</view>
@@ -18,7 +17,7 @@
     </view>
   </view>
 
-  <!-- 登录条款弹窗 -->
+  <!-- 登录条款弹窗（合并隐私+采集同意） -->
   <view wx:if="{{showLoginTerms}}" class="privacy-overlay">
     <view class="privacy-card">
       <view class="privacy-icon">🔒</view>
@@ -35,30 +34,43 @@
     </view>
   </view>
 
-  <!-- 登录页背景（内联style背景图，绝对安全方案） -->
-  <view class="login-page login-page--with-bg" style="background-image:url(https://yqzan.cn/assets/images/login-bg.jpg);background-size:cover;background-position:center;">
+  <view class="login-page">
+    <!-- 未登录：展示欢迎 + 微信登录按钮 -->
     <block wx:if="{{!step}}">
       <view class="login-logo">
         <svg class="login-logo-svg" viewBox="0 0 100 100" style="width:100px;height:100px;">
-          <circle cx="50" cy="50" r="45" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.6)" stroke-width="3"/>
-          <path d="M50 25 C35 25 25 40 25 50 C25 65 40 75 50 85 C60 75 75 65 75 50 C75 40 65 25 50 25" fill="rgba(255,255,255,0.8)"/>
-          <circle cx="40" cy="45" r="5" fill="#fff"/><circle cx="60" cy="45" r="5" fill="#fff"/>
-          <path d="M40 60 Q50 70 60 60" stroke="#fff" stroke-width="3" fill="none"/>
+          <circle cx="50" cy="50" r="45" fill="#FADCE6" stroke="#E891A4" stroke-width="3" stroke-dasharray="5,3"/>
+          <path d="M50 25 C35 25 25 40 25 50 C25 65 40 75 50 85 C60 75 75 65 75 50 C75 40 65 25 50 25" fill="#E891A4"/>
+          <circle cx="40" cy="45" r="5" fill="#333"/>
+          <circle cx="60" cy="45" r="5" fill="#333"/>
+          <path d="M40 60 Q50 70 60 60" stroke="#333" stroke-width="3" fill="none"/>
         </svg>
       </view>
       <view class="login-title">一起攒</view>
       <view class="login-subtitle">情侣存钱 · 共同成长</view>
-      <button class="login-btn login-btn-primary" bindtap="handleWxLogin" loading="{{loading}}">微信一键登录</button>
-      <button class="login-btn login-btn-secondary" bindtap="goBindPartner">已有账号？绑定伴侣</button>
+
+      <button class="login-btn login-btn-primary" bindtap="handleWxLogin" loading="{{loading}}">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:currentColor;vertical-align:middle;margin-right:4px;"><path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
+        微信一键登录
+      </button>
+      <button class="login-btn login-btn-secondary" bindtap="goBindPartner">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:currentColor;vertical-align:middle;margin-right:4px;"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+        已有账号？绑定伴侣
+      </button>
       <view class="login-footer">登录即表示同意《用户服务协议》和《隐私政策》</view>
     </block>
+
+    <!-- 首次登录：设置昵称 -->
     <block wx:elif="{{step === 'set-nickname'}}">
       <view class="login-logo"></view>
       <view class="login-title">欢迎加入</view>
       <view class="login-subtitle">给自己取个喜欢的昵称吧</view>
       <input class="input nickname-input" placeholder="输入昵称" model:value="{{nickname}}" maxlength="12" />
-      <button class="login-btn login-btn-primary" bindtap="handleSetNickname">开始使用</button>
+      <button class="login-btn login-btn-primary" bindtap="handleSetNickname" loading="{{nicknameLoading}}">
+        开始使用
+      </button>
     </block>
+
     <view wx:if="{{error}}" class="error">{{error}}</view>
   </view>
 </view>

@@ -11,43 +11,15 @@ Page({
     afterLoginGoBind: false,
     showLoginTerms: false,  // 合并的条款弹窗（隐私 + 登录同意）
     uiTheme: getApp().globalData.uiTheme || 'handdrawn',
-    ripples: [],
-    bgLoaded: false,
-    bgFailed: false,
-    bgImageUrl: '',
   },
 
   onShow() {
     this.setData({ uiTheme: getApp().globalData.uiTheme || 'handdrawn' })
+    // 已经有 token → 正常进入首页
     const token = wx.getStorageSync('token')
     if (token) {
       wx.reLaunch({ url: '/pages/home/home' })
     }
-    if (!this.data.bgLoaded && !this.data.bgFailed) {
-      this.loadBgImage()
-    }
-  },
-
-  loadBgImage() {
-    const baseUrl = getApp().globalData.baseUrl || 'https://yqzan.cn'
-    const url = baseUrl + '/assets/images/login-bg.jpg'
-    this.setData({ bgImageUrl: url, bgLoaded: true })
-  },
-
-  onBgError() {
-    this.setData({ bgLoaded: false, bgFailed: true })
-  },
-
-  /** 背景点击 → 水波纹特效 */
-  onBgTap(e) {
-    const touch = e.touches && e.touches[0]
-    if (!touch) return
-    const id = Date.now()
-    const ripples = [...this.data.ripples, { id, x: touch.x, y: touch.y }]
-    this.setData({ ripples })
-    setTimeout(() => {
-      this.setData({ ripples: this.data.ripples.filter(r => r.id !== id) })
-    }, 700)
   },
 
   /** 点击「微信一键登录」→ 先弹出合并条款，同意后才调微信登录 */
