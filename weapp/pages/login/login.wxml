@@ -1,12 +1,12 @@
 <!-- pages/login/login.wxml -->
-<view class="app-root app-theme-{{uiTheme}}" style="position:relative;">
+<view class="app-root app-theme-{{uiTheme}}">
 
-  <!-- ===== 登录背景（静态） ===== -->
-  <view class="login-bg-wrap" bindtap="onBgTap">
-    <image class="login-bg" src="/assets/images/login-bg.jpg" mode="aspectFill" />
-    <view wx:for="{{ripples}}" wx:key="id" class="ripple" style="left:{{item.x}}px;top:{{item.y}}px;"></view>
-  </view>
+  <!-- ===== 登录背景（纯正常流） ===== -->
+  <image class="login-bg" src="/assets/images/login-bg.jpg" mode="aspectFill" bindtap="onBgTap" />
   <view class="login-bg-overlay"></view>
+
+  <!-- 水波纹（固定定位浮在一切之上） -->
+  <view wx:for="{{ripples}}" wx:key="id" class="ripple" style="left:{{item.x}}px;top:{{item.y}}px;"></view>
 
   <!-- ===== 登录内容 ===== -->
   <view class="login-page login-page--with-bg">
