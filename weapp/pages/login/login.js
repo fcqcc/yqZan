@@ -29,21 +29,10 @@ Page({
     }
   },
 
-  /** 尝试加载封面背景图，失败则回退渐变背景 */
+  /** 加载封面背景图（用本地图片，避免网络白名单和扫描问题） */
   loadBgImage() {
-    const baseUrl = getApp().globalData.baseUrl || 'https://yqzan.cn'
-    const url = baseUrl + '/assets/images/login-bg.jpg'
-    this.setData({ bgImageUrl: url, bgLoaded: true })
-  },
-
-  /** 背景图加载成功 */
-  onBgLoadSuccess() {
-    // 已显示，无需额外处理
-  },
-
-  /** 背景图加载失败 → 回退渐变背景 */
-  onBgLoadError() {
-    this.setData({ bgLoaded: false, bgFailed: true })
+    // 本地图片路径，打包进小程序，无需网络
+    this.setData({ bgImageUrl: '../../assets/images/login-bg.jpg', bgLoaded: true })
   },
 
   /** 点击「微信一键登录」→ 先弹出合并条款，同意后才调微信登录 */
