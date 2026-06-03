@@ -1,5 +1,5 @@
-     1|{
-     2|  "navigationBarTitleText": "攒钱等级",
-     3|  "backgroundColor": "#FFF9F5",
-     5|}
-     6|
+{
+  "navigationBarTitleText": "攒钱等级",
+  "backgroundColor": "#FFF9F5",
+  "behaviors": ["../../behaviors/theme-behavior"]
+}

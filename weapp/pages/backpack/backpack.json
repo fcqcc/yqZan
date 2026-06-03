@@ -1,5 +1,5 @@
-     1|{
-     2|  "navigationBarTitleText": "背包 & 图鉴",
-     3|  "backgroundColor": "#FFF9F5",
-     5|}
-     6|
+{
+  "navigationBarTitleText": "背包 & 图鉴",
+  "backgroundColor": "#FFF9F5",
+  "behaviors": ["../../behaviors/theme-behavior"]
+}

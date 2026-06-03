@@ -1,6 +1,6 @@
-     1|{
-     2|  "navigationBarTitleText": "留言板",
-     3|  "backgroundColor": "#FFF9F5",
-     4|  "usingComponents": {},
-     6|}
-     7|
+{
+  "navigationBarTitleText": "留言板",
+  "backgroundColor": "#FFF9F5",
+  "usingComponents": {},
+  "behaviors": ["../../behaviors/theme-behavior"]
+}

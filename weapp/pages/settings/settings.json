@@ -1,9 +1,9 @@
-     1|{
-     2|  "navigationBarTitleText": "我的",
-     3|  "navigationStyle": "custom",
-     4|  "backgroundColor": "#FFF9F5",
-     5|  "usingComponents": {
-     6|    "cp-icon": "/components/cp-icon/cp-icon"
-     7|  },
-     9|}
-    10|
+{
+  "navigationBarTitleText": "我的",
+  "navigationStyle": "custom",
+  "backgroundColor": "#FFF9F5",
+  "usingComponents": {
+    "cp-icon": "/components/cp-icon/cp-icon"
+  },
+  "behaviors": ["../../behaviors/theme-behavior", "../../behaviors/guest-intercept"]
+}
