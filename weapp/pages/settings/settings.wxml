@@ -5,6 +5,9 @@
 
       <!-- 粉色渐变头部 -->
       <view class="profile-header">
+        <!-- 背景装饰图 -->
+        <image class="profile-header__bg" src="/assets/images/home-bottom-bg.png" mode="aspectFill" />
+        <view class="profile-header__overlay"></view>
         <view class="page-nav" style="padding-top: {{statusBarHeight}}px">
           <view class="page-nav__bar" style="height: {{navBarHeight}}px">
             <!-- <text class="page-nav__title">我的</text> -->
