@@ -29,7 +29,10 @@ Page({
 
   /** 点击「微信一键登录」*/
   async handleWxLogin() {
-    if (!this.data.termsChecked) return
+    if (!this.data.termsChecked) {
+      wx.showToast({ title: '请仔细阅读条款，对条款无异议后再进行登录吧', icon: 'none', duration: 2500 })
+      return
+    }
     await this.doWxLogin()
   },
 
