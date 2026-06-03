@@ -1,5 +1,12 @@
 <!-- pages/login/login.wxml -->
 <view class="app-root app-theme-{{uiTheme}}">
+
+  <!-- ===== 登录背景（慢速平移动画） ===== -->
+  <view class="login-bg-wrap">
+    <image class="login-bg" src="/assets/images/login-bg.png" mode="aspectFill" />
+  </view>
+  <view class="login-bg-overlay"></view>
+
   <!-- 隐私政策弹窗（首次打开必现，用户需主动同意） -->
   <view wx:if="{{showPrivacy}}" class="privacy-overlay">
     <view class="privacy-card">
@@ -34,16 +41,16 @@
     </view>
   </view>
 
-  <view class="login-page">
+  <view class="login-page login-page--with-bg">
     <!-- 未登录：展示欢迎 + 微信登录按钮 -->
     <block wx:if="{{!step}}">
       <view class="login-logo">
         <svg class="login-logo-svg" viewBox="0 0 100 100" style="width:100px;height:100px;">
-          <circle cx="50" cy="50" r="45" fill="#FADCE6" stroke="#E891A4" stroke-width="3" stroke-dasharray="5,3"/>
-          <path d="M50 25 C35 25 25 40 25 50 C25 65 40 75 50 85 C60 75 75 65 75 50 C75 40 65 25 50 25" fill="#E891A4"/>
-          <circle cx="40" cy="45" r="5" fill="#333"/>
-          <circle cx="60" cy="45" r="5" fill="#333"/>
-          <path d="M40 60 Q50 70 60 60" stroke="#333" stroke-width="3" fill="none"/>
+          <circle cx="50" cy="50" r="45" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.6)" stroke-width="3" stroke-dasharray="5,3"/>
+          <path d="M50 25 C35 25 25 40 25 50 C25 65 40 75 50 85 C60 75 75 65 75 50 C75 40 65 25 50 25" fill="rgba(255,255,255,0.8)"/>
+          <circle cx="40" cy="45" r="5" fill="#fff"/>
+          <circle cx="60" cy="45" r="5" fill="#fff"/>
+          <path d="M40 60 Q50 70 60 60" stroke="#fff" stroke-width="3" fill="none"/>
         </svg>
       </view>
       <view class="login-title">一起攒</view>
