@@ -35,6 +35,14 @@
   </view>
 
   <view class="login-page">
+    <!-- 背景图片（容器absolute，image无position） -->
+    <view class="login-bg-wrap">
+      <image class="login-bg-img" src="/assets/images/login-bg.jpg" mode="aspectFill" />
+    </view>
+    <!-- 渐变覆盖层 -->
+    <view class="login-overlay"></view>
+    <!-- 页面内容 -->
+    <view class="login-content">
     <!-- 未登录：展示欢迎 + 微信登录按钮 -->
     <block wx:if="{{!step}}">
       <view class="login-logo">
@@ -72,5 +80,6 @@
     </block>
 
     <view wx:if="{{error}}" class="error">{{error}}</view>
+    </view>
   </view>
 </view>
