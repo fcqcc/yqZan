@@ -121,4 +121,9 @@ Page({
     this.setData({ afterLoginGoBind: true })
     wx.showToast({ title: '请先完成微信登录', icon: 'none' })
   },
+
+  /** 暂不登录，返回首页 */
+  goHome() {
+    wx.reLaunch({ url: '/pages/home/home' })
+  },
 })

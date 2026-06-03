@@ -173,6 +173,15 @@
   opacity: 0.5;
 }
 
+/* 暂不登录 */
+.login-skip {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #8B7A8E;
+  text-decoration: underline;
+  padding: 8px 0;
+}
+
 .nickname-input {
   width: 280px;
   margin-bottom: 16px;

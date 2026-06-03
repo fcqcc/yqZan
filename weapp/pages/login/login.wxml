@@ -43,6 +43,7 @@
         <button class="login-btn login-btn-secondary anim-item" bindtap="goBindPartner">
           已有账号？绑定伴侣
         </button>
+        <view class="login-skip anim-item" bindtap="goHome">暂不登录，浏览首页 ›</view>
       </view>
     </block>
 
