@@ -1,5 +1,5 @@
-{
-  "navigationBarTitleText": "宠物管理",
-  "backgroundColor": "#FFF9F5",
-  "behaviors": ["../../behaviors/theme-behavior"]
-}
+     1|{
+     2|  "navigationBarTitleText": "宠物管理",
+     3|  "backgroundColor": "#FFF9F5",
+     5|}
+     6|
