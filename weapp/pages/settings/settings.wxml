@@ -5,6 +5,10 @@
 
       <!-- 粉色渐变头部 -->
       <view class="profile-header">
+        <!-- 底部浮动装饰图（容器absolute，image无position） -->
+        <view class="profile-header__bottom-wrap">
+          <image class="profile-header__bottom-img" src="/assets/images/settings-header-bottom.png" mode="widthFix" />
+        </view>
         <view class="page-nav" style="padding-top: {{statusBarHeight}}px">
           <view class="page-nav__bar" style="height: {{navBarHeight}}px">
             <!-- <text class="page-nav__title">我的</text> -->

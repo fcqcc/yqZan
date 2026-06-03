@@ -13,21 +13,36 @@ page { height: 100%; }
 
 /* ===== 头部 ===== */
 .profile-header {
+  position: relative;
   background: linear-gradient(135deg, #E891A4 0%, #FADCE6 100%);
   padding: 0 20px 28px;
   color: white;
   text-align: center;
   border-radius: 0 0 30px 15px;
+  overflow: hidden;
 }
 
-/* 底部装饰图 */
-.profile-header__bottom {
-  display: block;
+/* 底部浮动装饰图 */
+.profile-header__bottom-wrap {
+  position: absolute;
+  bottom: 0;
+  left: 0;
   width: 100%;
-  height: auto;
-  margin-top: 16px;
-  opacity: 0.8;
+  z-index: 0;
+  overflow: hidden;
+  line-height: 0;
 }
+.profile-header__bottom-img {
+  width: 100%;
+  display: block;
+}
+
+/* 头部内容浮在背景之上 */
+.profile-header > .page-nav,
+.profile-header > .profile-avatars,
+.profile-header > .profile-name,
+.profile-header > .profile-code,
+.profile-header > .profile-stats { position: relative; z-index: 1; }
 
 .profile-avatars {
   display: flex;

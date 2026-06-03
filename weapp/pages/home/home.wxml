@@ -2,7 +2,12 @@
   <scroll-view class="home-scroll" scroll-y show-scrollbar="{{false}}">
 
     <!-- 头部：情侣信息 + 徽章 + 三栏统计 -->
-    <view class="home-header" style="background-image:url(https://yqzan.cn/assets/images/home-header-bg.jpg);background-size:cover;background-position:center top;">
+    <view class="home-header">
+      <!-- 背景装饰图（容器absolute，image本身无position） -->
+      <view class="home-header__bg-wrap">
+        <image class="home-header__bg" src="/assets/images/home-header-bg.jpg" mode="aspectFill" />
+      </view>
+      <view class="home-header__overlay"></view>
       <view class="page-nav" style="padding-top: {{statusBarHeight}}px">
         <view class="page-nav__bar" style="height: {{navBarHeight}}px">
           <!-- <text class="page-nav__title">一起攒</text> -->
