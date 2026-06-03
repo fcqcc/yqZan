@@ -1,8 +1,10 @@
 <!-- pages/login/login.wxml -->
 <view class="app-root app-theme-{{uiTheme}}" style="position:relative;">
 
-  <!-- ===== 登录背景（无position！正常流占位） ===== -->
-  <image class="login-bg" src="/assets/images/login-bg.jpg" mode="aspectFill" />
+  <!-- ===== 登录背景（容器动画，image本身无动画无position） ===== -->
+  <view class="login-bg-wrap">
+    <image class="login-bg" src="/assets/images/login-bg.jpg" mode="aspectFill" />
+  </view>
   <view class="login-bg-overlay"></view>
 
   <!-- ===== 登录内容（absolute叠在图片上） ===== -->
