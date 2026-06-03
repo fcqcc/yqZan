@@ -1,46 +1,13 @@
 <!-- pages/login/login.wxml -->
-<view class="app-root app-theme-{{uiTheme}}">
+<view class="app-root app-theme-{{uiTheme}}" style="position:relative;width:100%;height:100vh;overflow:hidden;">
 
-  <!-- ===== 登录背景（直接<image> + position:fixed） ===== -->
+  <!-- ===== 登录背景 ===== -->
   <image class="login-bg" src="/assets/images/login-bg.png" mode="aspectFill" />
   <view class="login-bg-overlay"></view>
 
-  <!-- 隐私政策弹窗（首次打开必现，用户需主动同意） -->
-  <view wx:if="{{showPrivacy}}" class="privacy-overlay">
-    <view class="privacy-card">
-      <view class="privacy-icon">🔒</view>
-      <text class="privacy-title">欢迎使用「一起攒」</text>
-      <text class="privacy-desc">请仔细阅读以下协议，确认后开始使用</text>
-      <view class="privacy-links">
-        <text class="privacy-link" bindtap="onViewUserAgreement">《用户服务协议》</text>
-        <text class="privacy-link" bindtap="onViewPrivacyPolicy">《隐私政策》</text>
-      </view>
-      <view class="privacy-actions">
-        <button class="privacy-btn privacy-btn-agree" bindtap="onAgreePrivacy">同意并继续</button>
-        <button class="privacy-btn privacy-btn-disagree" bindtap="onDisagreePrivacy">不同意</button>
-      </view>
-    </view>
-  </view>
-
-  <!-- 登录条款弹窗（合并隐私+采集同意） -->
-  <view wx:if="{{showLoginTerms}}" class="privacy-overlay">
-    <view class="privacy-card">
-      <view class="privacy-icon">🔒</view>
-      <text class="privacy-title">登录即表示同意</text>
-      <text class="privacy-desc">继续登录即表示您已阅读并同意以下条款</text>
-      <view class="privacy-links">
-        <text class="privacy-link" bindtap="onViewLoginUserAgreement">《用户服务协议》</text>
-        <text class="privacy-link" bindtap="onViewLoginPrivacyPolicy">《隐私政策》</text>
-      </view>
-      <view class="privacy-actions">
-        <button class="privacy-btn privacy-btn-agree" bindtap="onAgreeLoginTerms">同意并登录</button>
-        <button class="privacy-btn privacy-btn-disagree" bindtap="onDisagreeLoginTerms">不同意</button>
-      </view>
-    </view>
-  </view>
-
+  <!-- ===== 登录内容 ===== -->
   <view class="login-page login-page--with-bg">
-    <!-- 未登录：展示欢迎 + 微信登录按钮 -->
+    <!-- 未登录 -->
     <block wx:if="{{!step}}">
       <view class="login-logo">
         <svg class="login-logo-svg" viewBox="0 0 100 100" style="width:100px;height:100px;">
@@ -77,5 +44,39 @@
     </block>
 
     <view wx:if="{{error}}" class="error">{{error}}</view>
+  </view>
+
+  <!-- 隐私政策弹窗 -->
+  <view wx:if="{{showPrivacy}}" class="privacy-overlay">
+    <view class="privacy-card">
+      <view class="privacy-icon">🔒</view>
+      <text class="privacy-title">欢迎使用「一起攒」</text>
+      <text class="privacy-desc">请仔细阅读以下协议，确认后开始使用</text>
+      <view class="privacy-links">
+        <text class="privacy-link" bindtap="onViewUserAgreement">《用户服务协议》</text>
+        <text class="privacy-link" bindtap="onViewPrivacyPolicy">《隐私政策》</text>
+      </view>
+      <view class="privacy-actions">
+        <button class="privacy-btn privacy-btn-agree" bindtap="onAgreePrivacy">同意并继续</button>
+        <button class="privacy-btn privacy-btn-disagree" bindtap="onDisagreePrivacy">不同意</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 登录条款弹窗 -->
+  <view wx:if="{{showLoginTerms}}" class="privacy-overlay">
+    <view class="privacy-card">
+      <view class="privacy-icon">🔒</view>
+      <text class="privacy-title">登录即表示同意</text>
+      <text class="privacy-desc">继续登录即表示您已阅读并同意以下条款</text>
+      <view class="privacy-links">
+        <text class="privacy-link" bindtap="onViewLoginUserAgreement">《用户服务协议》</text>
+        <text class="privacy-link" bindtap="onViewLoginPrivacyPolicy">《隐私政策》</text>
+      </view>
+      <view class="privacy-actions">
+        <button class="privacy-btn privacy-btn-agree" bindtap="onAgreeLoginTerms">同意并登录</button>
+        <button class="privacy-btn privacy-btn-disagree" bindtap="onDisagreeLoginTerms">不同意</button>
+      </view>
+    </view>
   </view>
 </view>
