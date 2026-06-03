@@ -24,25 +24,27 @@
         <view class="login-title anim-item">一起攒</view>
         <view class="login-subtitle anim-item">情侣存钱 · 共同成长</view>
 
-        <!-- 协议勾选框 -->
-        <view class="login-terms anim-item">
-          <view class="login-terms-checkbox {{termsChecked ? 'login-terms-checkbox--checked' : ''}}" bindtap="onToggleTerms" data-checked="{{termsChecked}}">
-            <text wx:if="{{termsChecked}}">✓</text>
-          </view>
-          <text class="login-terms-text">
-            我已阅读并同意
-            <text class="login-terms-link" bindtap="onViewUserAgreement">《用户服务协议》</text>
-            和
-            <text class="login-terms-link" bindtap="onViewPrivacyPolicy">《隐私政策》</text>
-          </text>
-        </view>
-
         <button class="login-btn login-btn-primary anim-item {{!termsChecked ? 'login-btn-disabled' : ''}}" bindtap="handleWxLogin" loading="{{loading}}" disabled="{{!termsChecked}}">
           微信一键登录
         </button>
         <button class="login-btn login-btn-secondary anim-item" bindtap="goBindPartner">
           已有账号？绑定伴侣
         </button>
+
+        <!-- 协议勾选框 → 放在绑定伴侣和暂不登录之间 -->
+        <view class="login-terms anim-item">
+          <view class="login-terms-checkbox {{termsChecked ? 'login-terms-checkbox--checked' : ''}}" bindtap="onToggleTerms">
+            <text wx:if="{{termsChecked}}">✓</text>
+          </view>
+          <view class="login-terms-text-wrap">
+            <text class="login-terms-label">我已阅读并同意</text>
+            <view class="login-terms-links">
+              <text class="login-terms-link" bindtap="onViewUserAgreement">《用户服务协议》</text>
+              <text class="login-terms-link" bindtap="onViewPrivacyPolicy">《隐私政策》</text>
+            </view>
+          </view>
+        </view>
+
         <view class="login-skip anim-item" bindtap="goHome">暂不登录，浏览首页 ›</view>
       </view>
     </block>

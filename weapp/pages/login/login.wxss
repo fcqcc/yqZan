@@ -138,7 +138,7 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   max-width: 280px;
 }
 .login-terms-checkbox {
@@ -159,15 +159,28 @@
   background: #E891A4;
   border-color: #D4708A;
 }
-.login-terms-text {
+.login-terms-text-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.login-terms-label {
   font-size: 12px;
   color: #6B5A6E;
-  line-height: 1.6;
+  line-height: 1.4;
+}
+.login-terms-links {
+  display: flex;
+  flex-direction: row;
+  gap: 0;
 }
 .login-terms-link {
+  font-size: 12px;
   color: #C45A78;
   text-decoration: underline;
   font-weight: 600;
+  line-height: 1.4;
 }
 .login-btn-disabled {
   opacity: 0.5;
