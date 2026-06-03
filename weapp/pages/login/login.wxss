@@ -1,11 +1,11 @@
 /* pages/login/login.wxss — 可爱手绘风 */
 
-/* ===== 封面背景（容器动画，image本身不渲染） ===== */
+/* ===== 封面背景（静态） ===== */
 .login-bg-wrap {
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  animation: bgPan 22s ease-in-out infinite alternate;
+  position: relative;
 }
 
 .login-bg {
@@ -16,8 +16,7 @@
 
 .login-bg-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: 100%;
   height: 100vh;
   z-index: 1;
@@ -25,16 +24,34 @@
   pointer-events: none;
 }
 
-@keyframes bgPan {
-  0%   { transform: scale(1) translate(0, 0); }
-  100% { transform: scale(1.15) translate(-4%, -2%); }
+/* ===== 水波纹特效 ===== */
+.ripple {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.7);
+  transform: translate(-50%, -50%) scale(0);
+  animation: rippleWave 0.7s ease-out forwards;
+  pointer-events: none;
+  z-index: 5;
 }
 
-/* ===== 登录内容（absolute叠在图片上） ===== */
+@keyframes rippleWave {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(25);
+    opacity: 0;
+  }
+}
+
+/* ===== 登录内容 ===== */
 .login-page {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: 100%;
   min-height: 100vh;
   z-index: 2;
@@ -48,33 +65,25 @@
   background: linear-gradient(180deg, #FFFFFF 0%, #FFF0F5 100%);
 }
 
-.login-page--with-bg {
-  background: transparent !important;
-}
-.login-page--with-bg .login-title { color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-.login-page--with-bg .login-subtitle { color: rgba(255,255,255,0.9); text-shadow: 0 1px 6px rgba(0,0,0,0.4); }
-.login-page--with-bg .login-btn-secondary {
-  background: rgba(255,255,255,0.9);
-  border-color: rgba(255,255,255,0.6) !important;
-  color: #5D4E60;
-}
-.login-page--with-bg .login-footer { color: rgba(255,255,255,0.7); text-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+.login-page--with-bg { background: transparent !important; }
+.login-page--with-bg .login-title { color:#fff; text-shadow:0 2px 10px rgba(0,0,0,0.5); }
+.login-page--with-bg .login-subtitle { color:rgba(255,255,255,0.9); text-shadow:0 1px 6px rgba(0,0,0,0.4); }
+.login-page--with-bg .login-btn-secondary { background:rgba(255,255,255,0.9); border-color:rgba(255,255,255,0.6)!important; color:#5D4E60; }
+.login-page--with-bg .login-footer { color:rgba(255,255,255,0.7); text-shadow:0 1px 4px rgba(0,0,0,0.3); }
 
-/* ===== 标题 & 按钮 ===== */
 .login-title { font-size:36px; color:#4A3548; font-weight:800; margin-bottom:10px; letter-spacing:2px; }
 .login-subtitle { font-size:14px; color:#5D4E60; margin-bottom:40px; }
 .login-btn { width:280px; border:none; border-radius:25px 10px 25px 10px; padding:14px 0; font-size:15px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:14px; line-height:1.4; }
 .login-btn::after { border:none; }
 .login-btn-primary { background:linear-gradient(135deg,#E891A4 0%,#D4708A 100%); color:#fff; box-shadow:4px 4px 0 rgba(212,112,138,0.4); }
 .login-btn-primary:active { transform:translate(2px,2px); box-shadow:2px 2px 0 rgba(212,112,138,0.4); }
-.login-btn-secondary { background:#fff; color:#D4708A; border:2px solid #E891A4 !important; box-shadow:3px 3px 0 rgba(232,145,164,0.2); }
+.login-btn-secondary { background:#fff; color:#D4708A; border:2px solid #E891A4!important; box-shadow:3px 3px 0 rgba(232,145,164,0.2); }
 .login-logo { margin-bottom:20px; }
 .login-logo-svg { display:block; }
 .login-footer { margin-top:30px; font-size:11px; color:#6B5A6E; line-height:1.5; }
 .nickname-input { width:280px; margin-bottom:16px; border:2px dashed #F5C6D0; border-radius:14px 6px 14px 6px; padding:12px 16px; font-size:15px; box-sizing:border-box; background:rgba(255,255,255,0.85); }
 .error { color:#c62828; font-size:12px; margin-top:8px; text-align:center; }
 
-/* ===== 隐私弹窗 ===== */
 .privacy-overlay { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.35); display:flex; align-items:center; justify-content:center; padding:24px; }
 .privacy-card { background:#fff; border-radius:20px 8px 20px 8px; padding:32px 24px 24px; width:100%; max-width:320px; text-align:center; border:2px dashed #F5C6D0; box-shadow:4px 4px 0 rgba(212,112,138,0.2); }
 .privacy-icon { font-size:40px; margin-bottom:12px; }
@@ -86,4 +95,4 @@
 .privacy-btn { border:none; border-radius:25px 10px 25px 10px; padding:12px 0; font-size:15px; font-weight:600; width:100%; line-height:1.4; }
 .privacy-btn::after { border:none; }
 .privacy-btn-agree { background:linear-gradient(135deg,#E891A4 0%,#D4708A 100%); color:#fff; box-shadow:3px 3px 0 rgba(212,112,138,0.3); }
-.privacy-btn-disagree { background:#FFF9F5; color:#5D4E60; border:2px solid #E8D8DE !important; }
+.privacy-btn-disagree { background:#FFF9F5; color:#5D4E60; border:2px solid #E8D8DE!important; }

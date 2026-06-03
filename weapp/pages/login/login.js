@@ -11,6 +11,7 @@ Page({
     afterLoginGoBind: false,
     showLoginTerms: false,  // 合并的条款弹窗（隐私 + 登录同意）
     uiTheme: getApp().globalData.uiTheme || 'handdrawn',
+    ripples: [],          // 水波纹列表
   },
 
   onShow() {
@@ -20,6 +21,18 @@ Page({
     if (token) {
       wx.reLaunch({ url: '/pages/home/home' })
     }
+  },
+
+  /** 背景点击 → 水波纹特效 */
+  onBgTap(e) {
+    const touch = e.touches && e.touches[0]
+    if (!touch) return
+    const id = Date.now()
+    const ripples = [...this.data.ripples, { id, x: touch.x, y: touch.y }]
+    this.setData({ ripples })
+    setTimeout(() => {
+      this.setData({ ripples: this.data.ripples.filter(r => r.id !== id) })
+    }, 700)
   },
 
   /** 点击「微信一键登录」→ 先弹出合并条款，同意后才调微信登录 */
