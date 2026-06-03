@@ -35,8 +35,7 @@
             <text class="profile-stat-label">火花</text>
           </view>
         </view>
-        <!-- 底部装饰图 -->
-        <image class="profile-header__bottom" src="/assets/images/settings-header-bottom.png" mode="widthFix" />
+
       </view>
 
       <!-- 绑定伴侣（未绑定时显示） -->
