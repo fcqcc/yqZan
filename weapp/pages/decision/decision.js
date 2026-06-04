@@ -1,4 +1,5 @@
 // pages/decision/decision.js — 情侣抽签小助手
+const theme = require('../../utils/theme')
 const TUBE_TEMPLATES = {
   preset: [
     { id: 'eat', name: '今天吃什么', icon: '🍜', color: 'pink',
@@ -85,6 +86,7 @@ Page({
   },
 
   onLoad() {
+    this.setData(theme.getNavLayout())
     this.refreshHistory();
   },
 
@@ -385,5 +387,9 @@ Page({
       currentView: this.data.editingId ? 'draw' : 'home',
       editingId: null,
     });
+  },
+
+  goBack() {
+    wx.navigateBack()
   },
 });

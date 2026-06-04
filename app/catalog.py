@@ -24,4 +24,6 @@ ITEM_CATALOG = {
     # 背景
     "sakura":          {"name": "樱花背景🌸",        "icon": "🌸", "type_display": "背景",    "desc": "宠物区樱花背景"},
     "starry":          {"name": "星光背景🌟",        "icon": "🌟", "type_display": "背景",    "desc": "宠物区星光背景"},
+    # 货币
+    "crystal":         {"name": "晶石💎",             "icon": "💎", "type_display": "货币",    "desc": "通用货币，可用于兑换道具和抽卡券"},
 }

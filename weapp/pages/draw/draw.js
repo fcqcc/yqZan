@@ -1,5 +1,6 @@
 // pages/draw/draw.js — 今日签
 const api = require('../../utils/api')
+const theme = require('../../utils/theme')
 
 Page({
   data: {
@@ -24,6 +25,10 @@ Page({
     catFormName: '',
     catFormIcon: '📦',
     uiTheme: getApp().globalData.uiTheme || 'handdrawn',
+  },
+
+  onLoad() {
+    this.setData(theme.getNavLayout())
   },
 
   onShow() {
@@ -192,4 +197,8 @@ Page({
 
   // catch tap to stop propagation
   catchTap() {},
+
+  goBack() {
+    wx.navigateBack()
+  },
 })

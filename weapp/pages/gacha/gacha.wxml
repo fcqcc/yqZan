@@ -1,164 +1,114 @@
-<!-- pages/gacha/gacha.wxml — 扭蛋机抽卡（粉红主题） -->
+<!-- 抽卡页（app_inline 升级版） -->
 <scroll-view class="app-root app-theme-{{uiTheme}} page" scroll-y>
-  <!-- ===== 顶部：扭蛋机标题 + 抽卡券数量 ===== -->
+
+  <!-- ===== 头部banner ===== -->
   <view class="gacha-header">
-    <view class="gacha-header-bg"></view>
+    <image src="/assets/images/gacha_header_bg.png" mode="aspectFill" class="gacha-header-bg" />
     <view class="gacha-header-content">
-      <view class="gacha-header-title-row">
-        <text class="gacha-header-icon">🎰</text>
-        <text class="gacha-header-text">扭蛋机</text>
-      </view>
-      <view class="gacha-ticket-bar">
-        <text class="ticket-icon">🎟️</text>
-        <text class="ticket-count">{{tickets}}</text>
-        <text class="ticket-label">张</text>
-        <text class="shard-divider">|</text>
-        <text class="shard-icon">💎</text>
-        <text class="shard-count">{{shards}}</text>
-        <text class="ticket-label">积分</text>
-        <view class="prob-btn" bindtap="showProb">❓</view>
-      </view>
+      <image src="/assets/images/gacha_title_img.png" mode="widthFix" class="gacha-title-img" />
     </view>
-    <view class="gacha-header-dot gacha-header-dot--1"></view>
-    <view class="gacha-header-dot gacha-header-dot--2"></view>
-    <view class="gacha-header-dot gacha-header-dot--3"></view>
-  </view>
-
-  <!-- ===== 扭蛋机主体（装饰区） ===== -->
-  <view class="machine-area">
-    <view class="machine">
-      <view class="machine-top">
-        <text class="machine-knob">🔮</text>
-      </view>
-      <view class="machine-body">
-        <view class="machine-ball {{animating ? 'ball-shake' : ''}}">
-          <text class="ball-icon">{{animating ? '🌀' : '🎯'}}</text>
-        </view>
-        <view class="machine-dots">
-          <view class="machine-dot"></view>
-          <view class="machine-dot"></view>
-          <view class="machine-dot"></view>
-        </view>
-      </view>
-      <view class="machine-bottom"></view>
+    <view class="gacha-ticket-bar">
+      <text>🎟️</text>
+      <text class="num">{{tickets}}</text>
+      <text>张</text>
+      <text class="divider">|</text>
+      <text>💎</text>
+      <text class="num">{{shards}}</text>
+      <text>积分</text>
+      <view class="prob-btn" bindtap="showProb">❓</view>
     </view>
   </view>
 
-  <!-- ===== 抽卡按钮 ===== -->
-  <view class="btn-section">
-    <view class="gacha-tickets-display">
-      <text class="ticket-icon-lg">🎫</text>
-      <text class="ticket-count-lg">{{tickets}}</text>
-      <text class="ticket-label-lg">张抽奖券可用</text>
+  <!-- ===== 抽奖机 ===== -->
+  <view class="gacha-stage">
+    <view class="gacha-machine {{animating ? 'shaking' : ''}}">
+      <image src="/assets/images/gacha_machine.png" mode="aspectFill" class="machine-img" />
+      <view wx:if="{{showBall}}" class="ball-wrap">
+        <view class="ball-pop"><text class="ball-emoji">{{resultEmoji}}</text></view>
+      </view>
     </view>
-    <view wx:if="{{pityCount > 0}}" class="pity-bar">
-      <text class="pity-text">保底进度：{{pityCount}}/60</text>
-      <view class="pity-track"><view class="pity-fill" style="width:{{pityCount / 60 * 100 > 100 ? 100 : pityCount / 60 * 100}}%"></view></view>
+    <view class="gacha-tickets-badge">
+      <text>🎟️</text>
+      <text class="num">{{tickets}}</text>
+      <text>张可抽</text>
     </view>
-    <label wx:if="{{shards >= 50}}" class="boost-option">
-      <checkbox class="boost-checkbox" checked="{{useBoost}}" bindchange="toggleBoost" />
-      <text class="boost-label">积分加注 💎+50<text style="font-size:10px;color:var(--text-muted)"> SSR概率↑</text></text>
+  </view>
+
+  <!-- ===== 保底进度 ===== -->
+  <view wx:if="{{pityCount > 0}}" class="gacha-pity">
+    <text>🎁 SSR保底</text>
+    <view class="pity-bar"><view class="pity-fill" style="width:{{pityCount / 60 * 100}}%"></view></view>
+    <text>{{pityCount}}/60</text>
+  </view>
+
+  <!-- ===== 概率加成提示 ===== -->
+  <view wx:if="{{pityCount >= 20}}" class="gacha-bonus">
+    <text>{{pityCount >= 40 ? '🔥 40抽 2倍概率' : '🔥 20抽 1.5倍概率'}}</text>
+    <text wx:if="{{pityCount >= 60}}" style="color:#FF6B6B;font-weight:700;">60抽 3倍概率</text>
+  </view>
+
+  <!-- ===== 按钮 ===== -->
+  <view class="gacha-buttons">
+    <button class="gacha-btn single {{drawing ? 'disabled' : ''}}"
+            disabled="{{drawing || tickets < 1}}" bindtap="onDrawSingle">
+      🎰 单抽
+      <small>1张券</small>
+    </button>
+    <button class="gacha-btn ten {{drawing ? 'disabled' : ''}}"
+            disabled="{{drawing || tickets < 10}}" bindtap="onDrawTen">
+      🔥 十连抽
+      <small>10张券</small>
+    </button>
+  </view>
+
+  <!-- ===== 加注选项 ===== -->
+  <view class="gacha-currency">
+    <label class="boost-option">
+      <checkbox checked="{{useBoost}}" bindchange="toggleBoost" style="transform:scale(0.8)" />
+      <text>💎+50加注抽 <text style="color:#FF6B6B;">SSR概率↑</text></text>
     </label>
-    <view class="btn-actions-row">
-      <button class="gacha-btn gacha-btn-single {{drawing ? 'btn-disabled' : ''}}" 
-              disabled="{{drawing || tickets < 1}}" 
-              bindtap="onDrawSingle">🎰 单抽</button>
-      <button class="gacha-btn gacha-btn-ten {{drawing ? 'btn-disabled' : ''}}" 
-              disabled="{{drawing || tickets < 10}}" 
-              bindtap="onDrawTen">🔥 十连抽</button>
-    </view>
-    <view class="gacha-shards">
-      <text>💎 晶石: {{shards}}</text>
-      <text>🎫 100晶石/张</text>
-    </view>
   </view>
 
-  <!-- ===== 卡池信息（原型） ===== -->
-  <view class="gacha-pool">
-    <view class="pool-info">
-      <text class="pool-title">✨ 星愿之轮</text>
-      <view class="pool-rates">
-        <view wx:for="{{probList}}" wx:key="id" wx:if="{{index < 4}}" class="rate-item">
-          <text class="rate-name">{{item.rarity}} {{item.name}}</text>
-          <text class="rate-value">{{item.pct}}%</text>
-        </view>
-      </view>
-    </view>
-    <view class="pity-card">
-      <view class="pity-row">
-        <text class="pity-label">🎁 SSR保底</text>
-        <text class="pity-count">{{pityCount}}/60</text>
-      </view>
-      <view class="pity-progress-bar">
-        <view class="pity-progress-fill" style="width:{{pityCount / 60 * 100 > 100 ? 100 : pityCount / 60 * 100}}%"></view>
-      </view>
-      <text class="pity-hint">20抽触发1.5倍 · 40抽2倍 · 60抽3倍概率</text>
-    </view>
-  </view>
-
-  <!-- ===== 十连结果列表 ===== -->
+  <!-- ===== 抽卡记录 ===== -->
   <view wx:if="{{tenResults.length > 0}}" class="ten-list">
-    <view class="ten-list-title">🎊 抽卡记录</view>
+    <view class="ten-title">🎊 抽卡记录</view>
     <view class="ten-items">
-      <view 
-        wx:for="{{tenResults}}" 
-        wx:key="index" 
-        class="ten-item ten-item-{{item.rarityClass || item.rarity}}"
-        data-index="{{index}}"
-        bindtap="onShowItemDetail"
-      >
-        <view class="ten-item-icon">
+      <view wx:for="{{tenResults}}" wx:key="index" class="ten-i ten-i-{{item.rarityClass || item.rarity}}"
+            data-index="{{index}}" bindtap="onShowItemDetail">
+        <view class="ten-i-icon">
           <text wx:if="{{item.rarity === 'N'}}">⚪</text>
           <text wx:elif="{{item.rarity === 'R'}}">🔵</text>
           <text wx:elif="{{item.rarity === 'SR'}}">🟣</text>
           <text wx:elif="{{item.rarity === 'SSR'}}">🟡</text>
           <text wx:else>💎</text>
         </view>
-        <view class="ten-item-info">
-          <text class="ten-item-name">{{item.name}}</text>
-          <text class="ten-item-rarity">[{{item.rarity}}]</text>
-        </view>
+        <text class="ten-i-name">{{item.name}}</text>
+        <text class="ten-i-rarity">[{{item.rarity}}]</text>
       </view>
     </view>
     <view class="ten-summary">
-      <text class="ten-summary-text">本次获得 
-        <text wx:for="{{summaryList}}" wx:key="type">
-          <text wx:if="{{index > 0}}"> · </text>
-          {{item.label}} ×{{item.count}}
-        </text>
+      <text wx:for="{{summaryList}}" wx:key="type">
+        <text wx:if="{{index > 0}}"> · </text>
+        {{item.label}} ×{{item.count}}
       </text>
     </view>
   </view>
 
-  <!-- ===== 结果弹窗遮罩 ===== -->
-  <view wx:if="{{showResult}}" class="result-overlay {{resultAnimClass}}" 
-        bindtap="onCloseResult" catchtouchmove="preventMove">
-    <!-- SSR / SSR+ 全屏闪烁背景 -->
-    <view wx:if="{{currentResult.rarity === 'SSR' || currentResult.rarity === 'SSR+'}}" 
-          class="ssr-burst">
-      <view class="ssr-ray ray-1"></view>
-      <view class="ssr-ray ray-2"></view>
-      <view class="ssr-ray ray-3"></view>
-      <view class="ssr-ray ray-4"></view>
-      <view class="ssr-ray ray-5"></view>
-      <view class="ssr-ray ray-6"></view>
-      <view class="ssr-ray ray-7"></view>
-      <view class="ssr-ray ray-8"></view>
-    </view>
-
-    <view class="result-card result-card-{{currentResult.rarity}}" catchtap="catchTap">
-      <view class="result-icon">
-        <text wx:if="{{currentResult.rarity === 'N'}}">⚪</text>
-        <text wx:elif="{{currentResult.rarity === 'R'}}">🔵</text>
-        <text wx:elif="{{currentResult.rarity === 'SR'}}">🟣</text>
-        <text wx:elif="{{currentResult.rarity === 'SSR'}}">🟡</text>
-        <text wx:else>💎</text>
+  <!-- ===== 结果弹窗 ===== -->
+  <view wx:if="{{showResult}}" class="result-overlay" catchtouchmove="preventMove">
+    <view wx:if="{{currentResult.rarity === 'SSR' || currentResult.rarity === 'SSR+'}}" class="ssr-flash"></view>
+    <view class="result-card {{currentResult.rarity === 'SSR' ? 'result-card--ssr' : ''}}"
+          catchtap="catchTap">
+      <text class="result-badge">{{currentResult.rarity}}</text>
+      <view class="result-ball">
+        <text style="font-size:80px;display:block;text-align:center;">
+          {{currentResult.rarity === 'N' ? '⚪' : currentResult.rarity === 'R' ? '🔵' : currentResult.rarity === 'SR' ? '🟣' : currentResult.rarity === 'SSR' ? '🟡' : '💎'}}
+        </text>
       </view>
-      <text class="result-rarity result-rarity-{{currentResult.rarityClass || currentResult.rarity}}">{{currentResult.rarity}}{{currentResult.rarity === 'SSR+' ? '+' : ''}}</text>
       <text class="result-name">{{currentResult.name}}</text>
       <text wx:if="{{currentResult.desc}}" class="result-desc">{{currentResult.desc}}</text>
-      <view class="result-btn-area">
-        <button class="btn-result" bindtap="onCloseResult">知道了</button>
+      <view class="result-actions">
+        <button class="result-btn" bindtap="onCloseResult">知道了</button>
       </view>
     </view>
   </view>
@@ -166,7 +116,7 @@
   <!-- ===== 概率详情弹窗 ===== -->
   <view wx:if="{{showProbModal}}" class="modal-overlay" bindtap="hideProb">
     <view class="prob-modal" catchtap="catchTap">
-      <view class="prob-modal-title">🎯 抽卡概率公示</view>
+      <view class="prob-title">🎯 抽卡概率公示</view>
       <view class="prob-list">
         <view wx:for="{{probList}}" wx:key="id" class="prob-row">
           <text class="prob-rarity prob-rarity-{{item.rarity}}">{{item.rarity}}</text>
@@ -174,12 +124,11 @@
           <text class="prob-pct">{{item.pct}}%</text>
         </view>
       </view>
-      <view class="prob-modal-footer">抽卡券通过存钱/打卡免费获取，概率公开透明</view>
+      <text class="prob-foot">抽卡券通过存钱/打卡免费获取，概率公开透明</text>
       <button class="btn btn-primary prob-close" bindtap="hideProb">知道了</button>
     </view>
   </view>
 
-  <!-- ===== 底部合规声明 ===== -->
   <view class="footer-disclaimer">
     <text>抽卡券通过存钱/打卡免费获取，不可兑换现金，仅供娱乐</text>
   </view>

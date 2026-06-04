@@ -1,5 +1,6 @@
 // pages/plans/plans.js
 let api = require('../../utils/api')
+const theme = require('../../utils/theme')
 let appConfig = require('../../utils/config')
 
 function fmtNum(n) {
@@ -142,6 +143,11 @@ Page({
     uiTheme: getApp().globalData.uiTheme || 'handdrawn',
   },
 
+  onLoad() {
+    this.setData(theme.getNavLayout())
+    this.setData({ canGoBack: getCurrentPages().length > 1 })
+  },
+
   onShow() {
     this.setData({ uiTheme: getApp().globalData.uiTheme || 'handdrawn' })
     // 直接判断 token，不依赖 behavior 的时序
@@ -226,6 +232,7 @@ Page({
   },
 
   toggleForm() {
+    if (this.data.isGuest) return this._guestPrompt()
     this.setData({
       showForm: !this.data.showForm,
       title: '',
@@ -579,8 +586,23 @@ Page({
   /** 阻止弹层点击冒泡 */
   catchTap() {},
 
-  /** 游客拦截：直接跳转登录页 */
-  onGuestAction() {
-    wx.reLaunch({ url: '/pages/login/login' })
+  goBack() {
+    wx.navigateBack()
+  },
+
+  /** 游客引导弹窗 */
+  _guestPrompt() {
+    wx.showModal({
+      title: '💕 登录体验完整功能',
+      content: '登录后可以和TA一起：共同存钱、宠物养成、纪念日提醒、每日签到',
+      confirmText: '去登录',
+      confirmColor: '#D4708A',
+      cancelText: '暂不',
+      success: (res) => {
+        if (res.confirm) {
+          wx.reLaunch({ url: '/pages/login/login' })
+        }
+      }
+    })
   },
 })

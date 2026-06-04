@@ -51,7 +51,7 @@ GACHA_POOL = [
     ("consumable", "switch_card",    "切换卡🔄",   "N", 14),
     ("consumable", "intimacy_candy", "亲密糖果🍬", "N", 12),
     ("consumable", "spark_card",     "火花卡🔥",   "R", 5),
-    ("consumable", "declare_card",   "我不要😤",   "R", 3),
+    ("consumable", "decline_card",   "我不要😤",   "R", 3),
     ("consumable", "chore_dishes",   "家务你来做之洗碗🧹", "R", 2.5),
     ("consumable", "chore_mop",      "家务你来做之拖地🧹", "R", 2.5),
     ("consumable", "chore_cook",     "家务你来做之做饭🍳", "R", 2),

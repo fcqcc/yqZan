@@ -7,6 +7,8 @@ Page({
     shards: 0,
     drawing: false,
     animating: false,
+    showBall: false,
+    resultEmoji: '',
     showResult: false,
     currentResult: {},
     resultAnimClass: '',
@@ -132,7 +134,7 @@ Page({
     }
   },
 
-  /** 显示抽卡结果弹窗 */
+  /** 显示抽卡结果弹窗（带扭蛋弹出动画） */
   showResult(item) {
     const rarity = (item.rarity || 'N').toUpperCase()
     let animClass = 'resultAnimN'
@@ -141,11 +143,21 @@ Page({
     else if (rarity === 'SSR') animClass = 'resultAnimSSR'
     else if (rarity === 'SSR+') animClass = 'resultAnimSSRP'
 
+    // 弹出扭蛋动画
+    const emojiMap = { 'N': '⚪', 'R': '🔵', 'SR': '🟣', 'SSR': '🟡', 'SSR+': '🌟' }
     this.setData({
-      showResult: true,
-      currentResult: { ...item, rarity, rarityClass: rarity === 'SSR+' ? 'SSRP' : rarity },
-      resultAnimClass: animClass
+      showBall: true,
+      resultEmoji: emojiMap[rarity] || '🎯'
     })
+    // 延迟显示结果
+    setTimeout(() => {
+      this.setData({
+        showResult: true,
+        showBall: false,
+        currentResult: { ...item, rarity, rarityClass: rarity === 'SSR+' ? 'SSRP' : rarity },
+        resultAnimClass: animClass
+      })
+    }, 1200)
   },
 
   /** 关闭结果弹窗 */

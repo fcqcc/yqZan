@@ -115,6 +115,7 @@ const feedPet = (petId) => request('/api/pets/' + petId + '/feed', 'POST')
 const petPet = (petId) => request('/api/pets/' + petId + '/pet', 'POST')
 const walkPet = (petId) => request('/api/pets/' + petId + '/walk', 'POST')
 const evolvePet = (petId, itemId) => request('/api/pets/' + petId + '/evolve', 'POST', { item_id: itemId })
+const talkPet = (petId) => request('/api/pets/' + petId + '/talk', 'POST')
 const getDailyAdventure = () => request('/api/pets/daily-adventure')
 const getPetCatalog = () => request('/api/pets/catalog')
 const getGachaPool = () => request('/api/gacha/pool')
@@ -162,7 +163,7 @@ module.exports = {
    getCardTemplates, getCardSnapshot, generateCard, getCards,
    getTasks, getTaskEvents, createTask, acceptTaskEvent, verifyTask, deleteTask,
    congratulatePlan,
-  getActivePet, getPets, switchPet, switchPetForm, feedPet, petPet, walkPet, evolvePet, getDailyAdventure,
+  getActivePet, getPets, switchPet, switchPetForm, feedPet, petPet, walkPet, evolvePet, talkPet, getDailyAdventure,
   getPetCatalog, getGachaPool,
   getLevelUnlocks,
   getTickets, drawSingle, drawTen, buyTickets,

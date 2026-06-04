@@ -1,5 +1,7 @@
 <!-- pages/pets/pets.wxml — 宠物管理（紧凑排版） -->
 <scroll-view class="app-root app-theme-{{uiTheme}} page" scroll-y>
+  <!-- ===== 宠物对话气泡 ===== -->
+  <view wx:if="{{petTalkBubble}}" class="pet-talk-bubble pets-talk">{{petTalkBubble}}</view>
   <!-- ===== 当前活跃宠物 ===== -->
   <view class="active-card {{petHappyClass}} {{activePet.evolution_ready ? 'evolution-glow' : ''}}" wx:if="{{activePet}}" bindtap="onPetTap">
     <view class="active-top">

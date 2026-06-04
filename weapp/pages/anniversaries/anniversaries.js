@@ -1,5 +1,6 @@
 // pages/anniversaries/anniversaries.js
 const api = require('../../utils/api')
+const theme = require('../../utils/theme')
 
 function pad2(n) { return (n < 10 ? '0' : '') + n }
 function daysInMonth(y, m) { return new Date(y, m, 0).getDate() }
@@ -43,6 +44,7 @@ Page({
   },
 
   onLoad(options) {
+    this.setData(theme.getNavLayout())
     if (options && options.date) {
       this.setData({ dateVal: options.date, showForm: true })
     }
@@ -267,5 +269,9 @@ Page({
 
   closeHolidayPicker() {
     this.setData({ showHolidayPicker: false })
+  },
+
+  goBack() {
+    wx.navigateBack()
   },
 })

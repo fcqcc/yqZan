@@ -9,20 +9,20 @@
   --hd-primary-pale: #FFF0F5;
   --hd-accent: #FFD93D;
   --hd-success: #7BC67B;
-  --hd-text: #5D4E60;
-  --hd-text-secondary: #8B7A8E;
-  --hd-text-light: #B8A9BB;
-  --hd-bg-cream: #FFF9F5;
-  --hd-bg-pink: #FFE8EE;
-  --hd-card-bg: #FFFFFF;
-  --hd-border: #F5C6D0;
-  --hd-line-dot: #f0e0e4;
+  --hd-text: #4A3548;
+  --hd-text-secondary: #6B5A6E;
+  --hd-text-light: #9B8A9E;
+  --hd-bg-cream: #FDF0F2;
+  --hd-bg-pink: #FDE0E8;
+  --hd-card-bg: #FFFBF9;
+  --hd-border: #E8C0C8;
+  --hd-line-dot: #E0D0D4;
 
   /* 覆盖现有 theme-global 变量 */
-  --text: #5D4E60;
-  --text-secondary: #8B7A8E;
-  --text-light: #B8A9BB;
-  --text-muted: #B8A9BB;
+  --text: #4A3548;
+  --text-secondary: #6B5A6E;
+  --text-light: #9B8A9E;
+  --text-muted: #9B8A9E;
   --rose: #E891A4;
   --rose-light: #FADCE6;
   --rose-pale: #FFF0F5;
@@ -34,24 +34,27 @@
   --primary: #E891A4;
   --primary-light: #FADCE6;
   --primary-pale: #FFF0F5;
-  --ink: #5D4E60;
-  --ink-soft: #8B7A8E;
-  --ink-muted: #B8A9BB;
-  --bg-start: #FFF9F5;
-  --bg-mid: #FFF5F0;
-  --bg-end: #FFE8EE;
-  --surface: #FFFFFF;
-  --card-bg: #FFFFFF;
-  --card-border: 2px dashed #F5C6D0;
-  --line: #f0e0e4;
-  --line-strong: #F5C6D0;
+  --ink: #4A3548;
+  --ink-soft: #6B5A6E;
+  --ink-muted: #9B8A9E;
+  --bg-start: #FDF0F2;
+  --bg-mid: #FCE8EC;
+  --bg-end: #FDE0E6;
+  --surface: #FFFBF9;
+  --card-bg: #FFFBF9;
+  --card-border: 2px dashed #E8C0C8;
+  --line: #E0D0D4;
+  --line-strong: #E8C0C8;
   --header-start: #E891A4;
   --header-mid: #D4708A;
   --header-end: #E891A4;
   --gradient-header: linear-gradient(180deg, #E891A4 0%, #D4708A 50%, #E891A4 100%);
-  --progress-bar-bg: rgba(232, 145, 164, 0.12);
+  --progress-bar-bg: rgba(232, 145, 164, 0.2);
 
-  background: linear-gradient(165deg, #FFF9F5 0%, #FFF5F0 42%, #FFE8EE 100%) !important;
+  background: 
+    radial-gradient(circle at 15% 30%, rgba(232, 145, 164, 0.07) 0%, transparent 45%),
+    radial-gradient(circle at 85% 70%, rgba(255, 217, 61, 0.05) 0%, transparent 40%),
+    linear-gradient(165deg, #FDF0F2 0%, #FCE8EC 42%, #FDE0E6 100%) !important;
 }
 
 /* ===== 所有卡片 ===== */
@@ -85,7 +88,35 @@
 .app-theme-handdrawn .level-card {
   border: 2px dashed var(--hd-border) !important;
   border-radius: 18px 8px 20px 10px !important;
-  box-shadow: 3px 3px 0 rgba(232, 145, 164, 0.15), 0 2px 8px rgba(232, 145, 164, 0.06) !important;
+  background: rgba(255, 251, 249, 0.85) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 2px 8px rgba(232, 145, 164, 0.1), 0 8px 28px rgba(232, 145, 164, 0.06), 6px 6px 0 rgba(232, 145, 164, 0.2) !important;
+  position: relative !important;
+}
+/* 卡片右下角装饰折角 */
+.app-theme-handdrawn .card::after,
+.app-theme-handdrawn .plan-item::after,
+.app-theme-handdrawn .plan-card::after,
+.app-theme-handdrawn .anni-item::after,
+.app-theme-handdrawn .wish-card::after,
+.app-theme-handdrawn .note-item::after,
+.app-theme-handdrawn .section-card::after,
+.app-theme-handdrawn .menu-group::after,
+.app-theme-handdrawn .bind-card::after,
+.app-theme-handdrawn .task-card::after,
+.app-theme-handdrawn .stat-card::after,
+.app-theme-handdrawn .anniversary-card::after,
+.app-theme-handdrawn .level-card::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  width: 24px !important;
+  height: 24px !important;
+  background: linear-gradient(135deg, transparent 50%, rgba(232, 145, 164, 0.08) 50%) !important;
+  border-radius: 0 0 10px 0 !important;
+  pointer-events: none !important;
 }
 
 /* ===== 所有按钮 ===== */
@@ -218,7 +249,9 @@
 .app-theme-handdrawn .stat-card {
   border: 2px dashed rgba(255,255,255,0.3) !important;
   border-radius: 14px 6px 14px 6px !important;
-  background: rgba(255,255,255,0.18) !important;
+  background: rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
   box-shadow: none !important;
 }
 
@@ -353,6 +386,56 @@
 /* ===== 抽签按钮 ===== */
 .app-theme-handdrawn .draw-btn-inner {
   box-shadow: 5px 5px 0 rgba(212, 112, 138, 0.35) !important;
+}
+
+/* ===== 自定义返回按钮 ===== */
+.app-theme-handdrawn .page-header__back,
+.app-theme-handdrawn .draw-header__back,
+.app-theme-handdrawn .dc-hero__back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  margin-right: 2px;
+  line-height: 1;
+}
+.app-theme-handdrawn .page-header__back:active,
+.app-theme-handdrawn .draw-header__back:active,
+.app-theme-handdrawn .dc-hero__back:active {
+  background: rgba(255,255,255,0.35);
+}
+
+/* 页面导航空白区与头部渐变一致（硬编码消除色差） */
+.app-theme-handdrawn .page-nav {
+  background: none !important;
+}
+
+/* 手绘风格分隔线 */
+.app-theme-handdrawn .divider-doodle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 20px;
+  opacity: 0.5;
+}
+.app-theme-handdrawn .divider-doodle::before,
+.app-theme-handdrawn .divider-doodle::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hd-border), transparent);
+}
+.app-theme-handdrawn .divider-doodle__icon {
+  font-size: 12px;
+  color: var(--hd-primary);
 }
 
 /* ===== 结果内容 ===== */

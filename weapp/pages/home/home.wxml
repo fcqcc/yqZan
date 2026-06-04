@@ -1,70 +1,55 @@
 <view class="app-root app-theme-{{uiTheme}} page">
   <scroll-view class="home-scroll" scroll-y show-scrollbar="{{false}}">
 
-    <!-- 头部：情侣信息 + 徽章 + 三栏统计 -->
-    <view class="home-header">
-      <!-- 背景装饰图（容器absolute，image本身无position） -->
-      <view class="home-header__bg-wrap">
-        <image class="home-header__bg" src="/assets/images/home-header-bg.jpg" mode="aspectFill" />
+    <!-- 顶部导航占位 -->
+    <view class="page-nav" style="padding-top: {{statusBarHeight}}px">
+      <view class="page-nav__bar" style="height: {{navBarHeight}}px"></view>
+    </view>
+
+    <!-- 顶部条：头像 + 信息 + 徽章（无统计） -->
+    <view class="top-strip">
+      <view class="top-avatar">{{myInitial}}</view>
+      <view class="top-info">
+        <text class="top-name">{{coupleDisplayName || userInfo.nickname || '小可爱'}}</text>
+        <text class="top-meta" wx:if="{{partner}}">已在一起 {{together_days}} 天</text>
+        <text class="top-meta top-meta--bind" wx:else bindtap="goBind">绑定伴侣，开启双人攒钱</text>
       </view>
-      <view class="home-header__overlay"></view>
-      <view class="page-nav" style="padding-top: {{statusBarHeight}}px">
-        <view class="page-nav__bar" style="height: {{navBarHeight}}px">
-          <!-- <text class="page-nav__title">一起攒</text> -->
-        </view>
-      </view>
-      <view class="couple-info">
-        <view class="avatar avatar--me">{{myInitial}}</view>
-        <view class="couple-info-text">
-          <text class="couple-name">{{coupleDisplayName || userInfo.nickname || '小可爱'}}</text>
-          <text class="couple-days" wx:if="{{partner}}">已在一起 {{together_days}} 天</text>
-          <text class="couple-days couple-days--bind" wx:else bindtap="goBind">绑定伴侣，开启双人攒钱</text>
-        </view>
-      </view>
-      <view class="home-badges">
-        <view class="badge {{sparkStatus === 'gray' ? '' : 'badge--active'}}">
-          <text>火花 {{sparkCount}} 天</text>
-        </view>
-        <view class="badge" bindtap="go" data-url="/pages/level/level">
-          <text>Lv.{{level}}</text>
-        </view>
-      </view>
-      <view class="stats-row">
-        <view class="stat-card">
-          <text class="stat-card__value">{{delivered_text}}</text>
-          <text class="stat-card__label">已存金额</text>
-        </view>
-        <view class="stat-card">
-          <text class="stat-card__value">{{active_plan_count}}</text>
-          <text class="stat-card__label">进行中</text>
-        </view>
-        <view class="stat-card">
-          <text class="stat-card__value">{{level}}</text>
-          <text class="stat-card__label">等级</text>
-        </view>
+      <view class="top-badges">
+        <view class="top-badge top-badge--fire" wx:if="{{sparkCount > 0}}">火花 {{sparkCount}}</view>
+        <view class="top-badge" bindtap="goLevel">Lv.{{level}}</view>
       </view>
     </view>
 
-    <!-- ===== 存钱计划（无标题头，卡片内标注） ===== -->
+    <!-- 英雄区：角色主图 -->
+    <view class="hero-section">
+      <image class="hero-img" src="/assets/images/home_banner_bg.png" mode="aspectFill" />
+      <view class="hero-overlay">
+        <view class="hero-text">
+          <text class="hero-label">我们的小家</text>
+          <text class="hero-amount">{{delivered_text}}<small>已攒</small></text>
+        </view>
+        <view class="hero-cta" catchtap="goTab" data-url="/pages/plans/plans">记一笔</view>
+      </view>
+    </view>
+
+    <!-- ===== 存钱计划（v2 面板风格） ===== -->
     <block wx:if="{{featuredPlan}}">
-      <view class="plan-card plan-card--tagged">
-        <view class="plan-card__tag">存钱计划</view>
-        <view class="plan-header">
-          <text class="plan-title">{{featuredPlan.title}}</text>
-          <text class="plan-tag">{{featuredPlan.done ? '已完成' : '进行中'}}</text>
-        </view>
-        <view class="plan-progress">
-          <view class="progress-bar">
-            <view class="progress-fill" style="width:{{featuredPlan.progressPct}}%"></view>
+      <view class="panel-plan-card">
+        <image src="/assets/images/panel_plan_bg.png" mode="aspectFill" class="panel-plan-bg" />
+        <view class="panel-plan-content">
+          <text class="panel-plan-tag">存钱计划</text>
+          <text class="panel-plan-name">{{featuredPlan.title}}</text>
+          <view class="panel-plan-amounts">
+            <text class="panel-plan-curr">{{featuredPlan._curText}}</text>
+            <text class="panel-plan-tar">/ {{featuredPlan._tarText}}</text>
           </view>
-          <view class="progress-info">
-            <text>{{featuredPlan._curText}} / {{featuredPlan._tarText}}</text>
-            <text>{{featuredPlan.progressPctText}}%</text>
+          <view class="panel-plan-bar">
+            <view class="panel-plan-fill" style="width:{{featuredPlan.progressPct}}%"></view>
           </view>
-        </view>
-        <view class="plan-footer">
-          <text class="plan-date">{{featuredPlan.deadline_date || '未设截止日期'}}</text>
-          <view wx:if="{{!featuredPlan.done}}" class="plan-action-btn" catchtap="goTab" data-url="/pages/plans/plans">记一笔</view>
+          <view class="panel-plan-meta">
+            <text class="panel-plan-date">{{featuredPlan.deadline_date || '未设截止日期'}} · {{featuredPlan.progressPctText}}%</text>
+            <view wx:if="{{!featuredPlan.done}}" class="panel-plan-cta" catchtap="goTab" data-url="/pages/plans/plans">记一笔</view>
+          </view>
         </view>
       </view>
     </block>
@@ -75,73 +60,61 @@
       <text class="plan-empty-hint">设定一个小目标，从今天开始</text>
     </view>
 
-    <!-- ===== 焦点栏（核心功能入口） ===== -->
-    <view class="focus-bar">
-      <view class="focus-bar__grid">
-        <view class="focus-bar__item" bindtap="goTab" data-url="/pages/plans/plans" hover-class="focus-bar__item--press">
-          <view class="focus-bar__icon focus-bar__icon--rose">
-            <text class="focus-bar__emoji">💰</text>
-          </view>
-          <text class="focus-bar__label">存钱</text>
-        </view>
-        <view class="focus-bar__item" bindtap="go" data-url="/pages/anniversaries/anniversaries" hover-class="focus-bar__item--press">
-          <view class="focus-bar__icon focus-bar__icon--lavender">
-            <text class="focus-bar__emoji">💕</text>
-          </view>
-          <text class="focus-bar__label">纪念日</text>
-        </view>
-        <view class="focus-bar__item" bindtap="go" data-url="/pages/gacha/gacha" hover-class="focus-bar__item--press">
-          <view class="focus-bar__icon focus-bar__icon--gold">
-            <text class="focus-bar__emoji">🎁</text>
-          </view>
-          <text class="focus-bar__label">抽卡</text>
-        </view>
-        <view class="focus-bar__item" bindtap="go" data-url="/pages/decision/decision" hover-class="focus-bar__item--press">
-          <view class="focus-bar__icon focus-bar__icon--coral">
-            <text class="focus-bar__emoji">🎲</text>
-          </view>
-          <text class="focus-bar__label">抽签</text>
-        </view>
-        <view class="focus-bar__item" bindtap="go" data-url="/pages/calendar/calendar" hover-class="focus-bar__item--press">
-          <view class="focus-bar__icon focus-bar__icon--sky">
-            <text class="focus-bar__emoji">📆</text>
-          </view>
-          <text class="focus-bar__label">日历</text>
-        </view>
-        <view class="focus-bar__item" bindtap="go" data-url="/pages/notes/notes" hover-class="focus-bar__item--press">
-          <view class="focus-bar__icon focus-bar__icon--green">
-            <text class="focus-bar__emoji">💌</text>
-          </view>
-          <text class="focus-bar__label">留言</text>
-        </view>
+    <!-- 快捷功能：圆形图标（新素材） -->
+    <view class="circle-actions">
+      <view class="circle-action" catchtap="goTab" data-url="/pages/plans/plans">
+        <image class="circle-icon" src="/assets/images/func_savings.png" mode="aspectFill" />
+        <text class="circle-label">存钱</text>
+      </view>
+      <view class="circle-action" catchtap="go" data-url="/pages/anniversaries/anniversaries">
+        <image class="circle-icon" src="/assets/images/func_anniversary.png" mode="aspectFill" />
+        <text class="circle-label">纪念日</text>
+      </view>
+      <view class="circle-action" catchtap="go" data-url="/pages/gacha/gacha">
+        <image class="circle-icon" src="/assets/images/func_card.png" mode="aspectFill" />
+        <text class="circle-label">抽卡</text>
+      </view>
+      <view class="circle-action" catchtap="go" data-url="/pages/decision/decision">
+        <image class="circle-icon" src="/assets/images/func_draw.png" mode="aspectFill" />
+        <text class="circle-label">抽签</text>
+      </view>
+      <view class="circle-action" catchtap="go" data-url="/pages/calendar/calendar">
+        <image class="circle-icon" src="/assets/images/func_calendar.png" mode="aspectFill" />
+        <text class="circle-label">日历</text>
+      </view>
+      <view class="circle-action" catchtap="go" data-url="/pages/notes/notes">
+        <image class="circle-icon" src="/assets/images/func_message.png" mode="aspectFill" />
+        <text class="circle-label">留言</text>
       </view>
     </view>
 
     <!-- ===== 每日签到（自动，仅显示徽章） ===== -->
 
-    <!-- ===== 纪念日提醒 ===== -->
-    <view wx:if="{{nearestAnni || todayAnni}}" class="anniversary-section" bindtap="go" data-url="/pages/anniversaries/anniversaries">
-      <view class="anniversary-card">
-        <view class="anniversary-icon">
-          <cp-icon name="heart" size="40" color="#fff" />
+    <!-- ===== 纪念日提醒（v2 面板风格） ===== -->
+    <view wx:if="{{nearestAnni || todayAnni}}" class="panel-anni-card {{todayAnni ? 'panel-anni--today' : ''}}" bindtap="go" data-url="/pages/anniversaries/anniversaries">
+      <image src="/assets/images/panel_anni_bg.png" mode="aspectFill" class="panel-anni-bg" />
+      <view class="panel-anni-content">
+        <view class="panel-anni-icon">
+          <cp-icon name="heart" size="28" color="#E891A4" />
         </view>
-        <view class="anniversary-info">
-          <text class="anniversary-name">{{todayAnni ? todayAnni.title : nearestAnni.title}}</text>
-          <text class="anniversary-date">{{todayAnni ? '值得庆祝的一天' : nearestAnni.date}}</text>
+        <view class="panel-anni-text">
+          <text class="panel-anni-name">{{todayAnni ? todayAnni.title : nearestAnni.title}}</text>
+          <text class="panel-anni-date">{{todayAnni ? '🎉 就是今天！' : nearestAnni.date}}</text>
         </view>
-        <view class="anniversary-days" wx:if="{{!todayAnni}}">
-          <text class="anniversary-days__pre">还剩</text>
-          <text class="anniversary-days__num">{{nearestAnni.days}}</text>
-          <text class="anniversary-days__unit">天</text>
+        <view wx:if="{{!todayAnni}}" class="panel-anni-days">
+          <text class="panel-anni-days-num">{{nearestAnni.days}}</text>
+          <text class="panel-anni-days-lbl">天后</text>
         </view>
-        <view class="anniversary-days" wx:else>
-          <text class="anniversary-days__num">🎉</text>
+        <view wx:else class="panel-anni-days panel-anni-days--today">
+          <text class="panel-anni-today-icon">🎉</text>
+          <text class="panel-anni-today-lbl">今天</text>
         </view>
       </view>
     </view>
 
-    <!-- ===== 浮动宠物 ===== -->
+    <!-- 浮动宠物 -->
     <view wx:if="{{pet}}" class="pet-float {{petFloatAnim}}" style="left: {{petFloatX}}px; top: {{petFloatY}}px;" bindtap="onPetFloatTap">
+      <view wx:if="{{petTalkBubble}}" class="pet-talk-bubble">{{petTalkBubble}}</view>
       <image wx:if="{{petImageUrl}}" class="pet-float__img" src="{{petImageUrl}}" mode="aspectFit"></image>
       <text wx:else class="pet-float__emoji">{{petEmoji}}</text>
     </view>
@@ -226,6 +199,13 @@
     <view class="home-bottom-spacer"></view>
   </scroll-view>
 
+  <!-- 非遮挡式游客引导横幅 -->
+  <view wx:if="{{isGuest}}" class="guest-cta" bindtap="_guestPrompt">
+    <text class="guest-cta-icon">💕</text>
+    <text class="guest-cta-text">登录后和TA一起存钱养宠物</text>
+    <text class="guest-cta-arrow">›</text>
+  </view>
+
   <!-- 弹窗 -->
   <view wx:if="{{showPetModal}}" class="modal-overlay" bindtap="hidePetModal">
     <view class="pet-modal" catchtap="stopPropagation">
@@ -254,10 +234,16 @@
 
   <view wx:if="{{showLevelUp}}" class="levelup-overlay">
     <view class="levelup-modal">
-      <view class="levelup-ring"></view>
-      <text class="levelup-kicker">LEVEL UP</text>
-      <text class="levelup-lv">Lv.{{levelUpNewLevel}}</text>
-      <text class="levelup-sub">情侣等级提升</text>
+      <image src="/assets/images/gacha_prob_bg.png" mode="aspectFill" class="levelup-bg" />
+      <view class="levelup-overlay-bg"></view>
+      <view class="levelup-content">
+        <view class="levelup-star levelup-star--1">⭐</view>
+        <view class="levelup-star levelup-star--2">✨</view>
+        <view class="levelup-star levelup-star--3">🌟</view>
+        <text class="levelup-kicker">🎉 恭喜升级</text>
+        <text class="levelup-lv">Lv.{{levelUpNewLevel}}</text>
+        <text class="levelup-sub">情侣等级提升</text>
+      </view>
     </view>
   </view>
 
@@ -287,12 +273,16 @@
     </view>
   </view>
 
-  <view wx:if="{{isGuest}}" class="guest-overlay" bindtap="onGuestAction">
-    <view class="guest-card">
-      <view class="guest-card-icon">🔒</view>
-      <text class="guest-card-title">登录后使用全部功能</text>
-      <text class="guest-card-desc">共同存钱、宠物养成、每日签到</text>
-      <button class="guest-card-btn">去登录</button>
+  <!-- 自定义游客弹窗 -->
+  <view wx:if="{{showGuestModal}}" class="modal-overlay" bindtap="closeGuestModal">
+    <view class="guest-modal" catchtap="stopPropagation">
+      <view class="guest-modal-icon">💕</view>
+      <text class="guest-modal-title">登录体验完整功能</text>
+      <text class="guest-modal-desc">登录后可以和TA一起：共同存钱、宠物养成、纪念日提醒、每日签到</text>
+      <view class="guest-modal-actions">
+        <button class="guest-btn guest-btn--primary" bindtap="goLogin">去登录</button>
+        <button class="guest-btn guest-btn--cancel" bindtap="closeGuestModal">暂不</button>
+      </view>
     </view>
   </view>
 </view>

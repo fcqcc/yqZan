@@ -1,13 +1,19 @@
 <view class="app-root app-theme-{{uiTheme}} plans-wrap">
   <scroll-view class="page page--scroll" scroll-y>
-    <!-- ===== 页面Header ===== -->
-    <view class="page-header">
-      <text class="page-title">存钱计划</text>
-      <view class="header-action btn-ripple" bindtap="toggleForm">+ 新建</view>
+    <view class="page-header" style="position: sticky; top: 0; z-index: 100;">
+      <view class="page-nav" style="padding-top: {{statusBarHeight}}px">
+        <view class="page-nav__bar" style="height: {{navBarHeight}}px"></view>
+      </view>
+      <view class="page-header__row">
+        <view class="page-header__back" wx:if="{{canGoBack}}" bindtap="goBack">‹</view>
+        <text class="page-title">存钱计划</text>
+        <view class="header-action btn-ripple" bindtap="toggleForm">+ 新建</view>
+      </view>
     </view>
 
     <!-- ===== 总存汇总卡 ===== -->
     <view class="plan-summary">
+      <image src="/assets/images/plan_bg_record.png" mode="aspectFill" class="plan-summary__bg" />
       <view class="plan-summary__label">累计已存</view>
       <view class="plan-summary__total">¥{{totalSaved}}</view>
       <view class="plan-summary__breakdown">
@@ -48,36 +54,39 @@
 
     <view class="plan-list anim-stagger">
       <view wx:for="{{plans}}" wx:key="id" class="plan-card anim-item plan-card--{{item.colorClass || 'pink'}}">
-        <view class="plan-card__head">
-          <view class="plan-card__icon">{{item.icon || '💰'}}</view>
-          <view class="plan-card__title-block">
-            <text class="plan-card__name">{{item.title}}</text>
-            <text class="plan-card__sub">目标 ¥{{item._tarText}} · {{item.done ? '已完成' : '还差 ' + item._remainText}}</text>
+        <view class="plan-card__main">
+          <image src="/assets/images/panel_plan_bg.png" mode="aspectFill" class="plan-card__bg" />
+          <view class="plan-card__head">
+            <view class="plan-card__icon">{{item.icon || '💰'}}</view>
+            <view class="plan-card__title-block">
+              <text class="plan-card__name">{{item.title}}</text>
+              <text class="plan-card__sub">目标 ¥{{item._tarText}} · {{item.done ? '已完成' : '还差 ' + item._remainText}}</text>
+            </view>
+            <view class="plan-card__status plan-card__status--{{item.done ? 'done' : 'active'}}">{{item.done ? '已完成' : '进行中'}}</view>
           </view>
-          <view class="plan-card__status plan-card__status--{{item.done ? 'done' : 'active'}}">{{item.done ? '已完成' : '进行中'}}</view>
-        </view>
 
-        <view class="plan-card__progress-row">
-          <text class="plan-card__current">¥{{item._curText}}</text>
-          <text class="plan-card__target">/ ¥{{item._tarText}}</text>
-          <text class="plan-card__pct">{{item.progressPct}}%</text>
-        </view>
+          <view class="plan-card__progress-row">
+            <text class="plan-card__current">¥{{item._curText}}</text>
+            <text class="plan-card__target">/ ¥{{item._tarText}}</text>
+            <text class="plan-card__pct">{{item.progressPct}}%</text>
+          </view>
 
-        <view class="plan-card__bar progress-shine">
-          <view class="plan-card__bar-fill" style="width: {{item.progressPct}}%;"></view>
-        </view>
+          <view class="plan-card__bar progress-shine">
+            <view class="plan-card__bar-fill" style="width: {{item.progressPct}}%;"></view>
+          </view>
 
-        <view class="plan-card__footer">
-          <text class="plan-card__date">{{item._dateRange}}</text>
-          <view wx:if="{{!item.done}}" class="plan-card__btn btn-ripple" catchtap="openDeliver" data-id="{{item.id}}">+ 记一笔</view>
-        </view>
+          <view class="plan-card__footer">
+            <text class="plan-card__date">{{item._dateRange}}</text>
+            <view wx:if="{{!item.done}}" class="plan-card__btn btn-ripple" catchtap="openDeliver" data-id="{{item.id}}">+ 记一笔</view>
+          </view>
 
-        <!-- 删除按钮 -->
-        <text class="plan-card__del" catchtap="del" data-id="{{item.id}}">×</text>
+          <!-- 删除按钮 -->
+          <text class="plan-card__del" catchtap="del" data-id="{{item.id}}">×</text>
 
-        <!-- 展开明细 -->
-        <view class="plan-card__expand" catchtap="toggleExpand" data-index="{{index}}">
-          <text class="plan-card__chevron">{{item.expanded ? '▲' : '▼'}} 明细</text>
+          <!-- 展开明细 -->
+          <view class="plan-card__expand" catchtap="toggleExpand" data-index="{{index}}">
+            <text class="plan-card__chevron">{{item.expanded ? '▲' : '▼'}} 明细</text>
+          </view>
         </view>
         <view wx:if="{{item.expanded}}" class="plan-card__detail">
           <view wx:if="{{item.deliveriesLoading}}" class="plan-detail-loading">加载中…</view>

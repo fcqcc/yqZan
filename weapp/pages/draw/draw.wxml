@@ -1,10 +1,13 @@
 <!-- pages/draw/draw.wxml — 今日签 -->
 <scroll-view class="app-root app-theme-{{uiTheme}} page" scroll-y>
-  <!-- ===== 渐变头部 ===== -->
-  <view class="draw-header">
+  <view class="draw-header" style="position: sticky; top: 0; z-index: 100;">
     <view class="draw-header-bg"></view>
+    <view class="page-nav" style="padding-top: {{statusBarHeight}}px">
+      <view class="page-nav__bar" style="height: {{navBarHeight}}px"></view>
+    </view>
     <view class="draw-header-content">
       <view class="draw-header-row">
+        <view class="draw-header__back" bindtap="goBack">‹</view>
         <text class="draw-header-icon">🔮</text>
         <text class="draw-header-title">今日签</text>
       </view>
@@ -24,13 +27,13 @@
         bindtap="onSelectCat"
         data-id="{{item.id}}"
       >
-        <text class="cat-chip-icon">{{item.icon}}</text>
+        <view class="cat-chip-icon"><text>{{item.icon}}</text></view>
         <text class="cat-chip-name">{{item.name}}</text>
         <text class="cat-chip-count">{{item.item_count}}</text>
       </view>
       <!-- 添加分类按钮 -->
       <view class="cat-chip cat-chip--add" bindtap="onShowAddCat">
-        <text class="cat-chip-icon">+</text>
+        <view class="cat-chip-icon"><text>+</text></view>
       </view>
     </view>
   </scroll-view>
@@ -44,7 +47,7 @@
     >
       <view class="draw-btn-glow"></view>
       <view class="draw-btn-inner">
-        <text class="draw-btn-icon">{{drawing ? '🌀' : (selectedCatIcon || '🎯')}}</text>
+        <view class="draw-btn-icon"><text>{{drawing ? '🌀' : (selectedCatIcon || '🎯')}}</text></view>
         <text class="draw-btn-text">{{drawing ? '抽签中...' : '抽一签'}}</text>
       </view>
     </view>
@@ -63,7 +66,7 @@
   <view wx:if="{{showResult}}" class="result-overlay" bindtap="onHideResult">
     <view class="result-card" catchtap="catchTap">
       <view class="result-icon-wrap">
-        <text class="result-big-icon">{{resultCatIcon}}</text>
+        <view class="result-big-icon"><text>{{resultCatIcon}}</text></view>
       </view>
       <text class="result-label">{{resultCatName}} · 抽中了</text>
       <text class="result-content">{{resultContent}}</text>

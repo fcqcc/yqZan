@@ -1,10 +1,15 @@
 <scroll-view class="app-root app-theme-{{uiTheme}} page" scroll-y>
-  <!-- ===== 页面Header ===== -->
-  <view class="page-header">
-    <text class="page-title">纪念日</text>
-    <view class="header-action" bindtap="importHolidays">📆 导入</view>
+  <view class="page-header" style="position: sticky; top: 0; z-index: 100;">
+    <view class="page-nav" style="padding-top: {{statusBarHeight}}px">
+      <view class="page-nav__bar" style="height: {{navBarHeight}}px"></view>
+    </view>
+    <view class="page-header__row">
+      <view class="page-header__back" bindtap="goBack">‹</view>
+      <text class="page-title">纪念日</text>
+      <view class="header-action" bindtap="importHolidays">📆 导入</view>
+    </view>
   </view>
-
+  <!-- ===== 顶部统计英雄区 ===== -->
   <!-- ===== 顶部统计英雄区 ===== -->
   <view class="anniv-hero">
     <view class="anniv-hero__row">
@@ -52,8 +57,10 @@
     <view
       wx:for="{{filteredAnniversaries}}"
       wx:key="id"
-      class="anniv-item anim-item anniv-item--{{item.colorClass || 'pink'}}"
+      class="anniv-item anim-item anniv-item--{{item.colorClass || 'pink'}} {{item.isToday ? 'anniv-item--today' : ''}}"
     >
+      <image src="/assets/images/panel_anni_bg.png" mode="aspectFill" class="anniv-item__bg" />
+      <view wx:if="{{item.isToday}}" class="anniv-item__today-badge">🎉 今天</view>
       <view class="anniv-item__art">{{item.icon || '💑'}}</view>
       <view class="anniv-item__body">
         <view class="anniv-item__row">

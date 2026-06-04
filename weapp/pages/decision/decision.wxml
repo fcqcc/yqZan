@@ -4,11 +4,13 @@
   <!-- ========================== 首页：决策台 ========================== -->
   <block wx:if="{{currentView === 'home'}}">
     <scroll-view scroll-y class="dc-scroll">
-
-      <!-- 顶部 Hero -->
-      <view class="dc-hero">
+      <view class="dc-hero" style="position: sticky; top: 0; z-index: 100;">
         <view class="dc-hero__bg"></view>
+        <view class="page-nav" style="padding-top: {{statusBarHeight}}px">
+          <view class="page-nav__bar" style="height: {{navBarHeight}}px"></view>
+        </view>
         <view class="dc-hero__row">
+          <view class="dc-hero__back" bindtap="goBack">‹</view>
           <text class="dc-hero__icon">🎯</text>
           <view class="dc-hero__title-block">
             <text class="dc-hero__title">抽签小助手</text>
@@ -42,7 +44,7 @@
               data-id="{{item.id}}"
               hover-class="dc-quick--hover"
             >
-              <text class="dc-quick__icon">{{item.icon}}</text>
+              <view class="dc-quick__icon"><text>{{item.icon}}</text></view>
               <text class="dc-quick__name">{{item.name}}</text>
               <text class="dc-quick__count">{{item.options.length}} 个选项</text>
             </view>

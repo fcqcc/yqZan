@@ -76,6 +76,7 @@ Page({
     sparkStatus: 'active',
     maxSpark: 0,
     streakDays: 0,
+    petTalkBubble: '',
     // 卡片任务
     cardTasksAsAssigner: [],
     cardTasksAsAssignee: [],
@@ -84,6 +85,7 @@ Page({
     levelUpNewLevel: 1,
     // 冒险弹窗
     showAdventure: false,
+    showGuestModal: false,
     adventureData: null,
     petActionClass: '',       // 当前互动动画class
     petFeedClass: '',
@@ -116,7 +118,14 @@ Page({
     // 直接判断 token，不依赖 behavior 的时序
     const token = wx.getStorageSync('token')
     if (!token) {
-      this.setData({ isGuest: true })
+      this.setData({
+        isGuest: true,
+        userInfo: { nickname: '游客' },
+        myInitial: '👤',
+        coupleDisplayName: '一起攒',
+        todayInteractRemaining: 3,
+        todayInteractTotal: 0,
+      })
       return
     }
     const userInfo = wx.getStorageSync('userInfo')
@@ -331,12 +340,33 @@ Page({
   },
 
   go(e) {
+    if (this.data.isGuest) return this._guestPrompt()
     nav.openPage(e.currentTarget.dataset.url)
   },
   goTab(e) {
+    if (this.data.isGuest) return this._guestPrompt()
     nav.openPage(e.currentTarget.dataset.url)
   },
-  goBind() { nav.openPage('/pages/settings/settings') },
+  goBind() {
+    if (this.data.isGuest) return this._guestPrompt()
+    nav.openPage('/pages/settings/settings')
+  },
+  goLevel() {
+    if (this.data.isGuest) return this._guestPrompt()
+    nav.openPage('/pages/level/level')
+  },
+
+  /** 游客引导弹窗 */
+  _guestPrompt() {
+    this.setData({ showGuestModal: true })
+  },
+  closeGuestModal() {
+    this.setData({ showGuestModal: false })
+  },
+  goLogin() {
+    this.setData({ showGuestModal: false })
+    wx.reLaunch({ url: '/pages/login/login' })
+  },
 
   onCheckinTap() {
     if (this.data.checkedInToday || this.data.checkingIn) return
@@ -463,6 +493,19 @@ Page({
     if (this.data._lastFloatTap && now - this.data._lastFloatTap < 800) return
     this.setData({ _lastFloatTap: now, petFloatAnim: 'pet-float-shake' })
     setTimeout(() => this.setData({ petFloatAnim: '' }), 600)
+    // 触发宠物对话
+    const petId = this.data.petId || (this.data.pet && this.data.pet.id)
+    if (!petId) return
+    api.talkPet(petId).then(res => {
+      if (res && res.talk) {
+        this.setData({ petTalkBubble: res.talk })
+        // 3.5秒后自动消失
+        this._talkTimer && clearTimeout(this._talkTimer)
+        this._talkTimer = setTimeout(() => {
+          this.setData({ petTalkBubble: '' })
+        }, 3500)
+      }
+    }).catch(() => {})
   },
 
   stopPetWalking() {

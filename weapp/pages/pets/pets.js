@@ -30,6 +30,7 @@ Page({
     todayInteractTotal: 0,
     showEvoEffect: false,  // 进化粒子特效
     uiTheme: getApp().globalData.uiTheme || 'handdrawn',
+    petTalkBubble: '',
   },
 
   onShow() {
@@ -291,6 +292,16 @@ Page({
     const anim = anims[Math.floor(Math.random() * anims.length)]
     this.setData({ petHappyClass: anim, lastInteractTime: now })
     setTimeout(() => { this.setData({ petHappyClass: '' }) }, 700)
+    // 触发对话
+    api.talkPet(pet.id).then(res => {
+      if (res && res.talk) {
+        this.setData({ petTalkBubble: res.talk })
+        this._talkTimer && clearTimeout(this._talkTimer)
+        this._talkTimer = setTimeout(() => {
+          this.setData({ petTalkBubble: '' })
+        }, 3500)
+      }
+    }).catch(() => {})
   },
 
   /** 等级进化（每5级手动确认）+ 粒子特效 */

@@ -41,7 +41,7 @@
 /* ========== 顶部 Hero（首页） ========== */
 .dc-hero {
   position: relative;
-  padding: 36rpx 32rpx 28rpx;
+  padding: 0 32rpx 28rpx;
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
   border-radius: 0 0 60rpx 30rpx;
   overflow: hidden;
@@ -170,7 +170,7 @@
   padding: 24rpx 20rpx 22rpx;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 6rpx;
   box-shadow: 5rpx 5rpx 0 rgba(232, 145, 164, 0.18);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -196,19 +196,24 @@
 .dc-quick--red { color: var(--c-red); }
 .dc-quick__icon {
   font-size: 56rpx;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60rpx;
+  height: 60rpx;
   filter: drop-shadow(2rpx 2rpx 0 rgba(0,0,0,0.08));
 }
 .dc-quick__name {
-  font-family: 'ZCOOL KuaiLe', cursive;
-  font-size: 28rpx;
+  font-size: 24rpx;
   color: var(--text-primary);
   margin-top: 4rpx;
   font-weight: 700;
+  text-align: center;
 }
 .dc-quick__count {
-  font-size: 20rpx;
+  font-size: 18rpx;
   color: var(--text-secondary);
+  font-family: 'ZCOOL KuaiLe', cursive;
 }
 .dc-quick--hover {
   transform: translate(-2rpx, -2rpx);
