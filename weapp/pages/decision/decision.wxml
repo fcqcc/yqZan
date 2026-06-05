@@ -143,11 +143,10 @@
         <view wx:else class="dc-draw__edit dc-draw__edit--placeholder"></view>
       </view>
 
-      <!-- 签筒标题卡（新加） -->
-      <view class="dc-draw__header" wx:if="{{currentTube}}">
-        <text class="dc-draw__header-icon">{{currentTube.icon}}</text>
-        <text class="dc-draw__header-name">{{currentTube.name}}</text>
-        <text class="dc-draw__header-count">{{currentTube.options.length}} 支签 · 抽一签试试手气</text>
+      <!-- 签筒标题（和其他模块一致的站位风格） -->
+      <view class="dc-draw__header">
+        <text class="dc-draw__header-icon">{{currentTube.icon || '🎲'}}</text>
+        <text class="dc-draw__header-name">{{currentTube.name || '抽签小助手'}}</text>
       </view>
 
       <!-- 签筒区域 -->
