@@ -9,9 +9,9 @@
       <view class="draw-header-row">
         <view class="draw-header__back" bindtap="goBack">‹</view>
         <text class="draw-header-icon">🔮</text>
-        <text class="draw-header-title">今日签</text>
+        <text class="draw-header-title">抽签小助手</text>
       </view>
-      <text class="draw-header-sub">不知道干什么？抽一签就知道啦</text>
+      <text class="draw-header-sub">纠结的时候抽一签就知道啦</text>
     </view>
     <view class="draw-header-dot draw-header-dot--1"></view>
     <view class="draw-header-dot draw-header-dot--2"></view>
@@ -43,7 +43,7 @@
     <!-- 抽签筒标题 -->
     <view class="draw-jar-label" wx:if="{{!selectedCatId}}">
       <text class="draw-jar-icon">🎯</text>
-      <text class="draw-jar-title">抽取今日签</text>
+      <text class="draw-jar-title">试试手气</text>
     </view>
     <view class="draw-jar-label" wx:elif="{{selectedCatName}}">
       <text class="draw-jar-icon">{{selectedCatIcon}}</text>
