@@ -11,7 +11,7 @@
   --text-secondary: #B09880;
   --text-light: #C8B8A8;
   --bg-cream: #FFF5E6;
-  --bg-pink: #FFE8EE;
+  --bg-pink: #FFEED5;
   --success: #7BC67B;
   --card-border: #F5D6B0;
   --wood-light: #E8C9A0;
@@ -472,6 +472,32 @@
 }
 
 /* ========== 签筒区域 ========== */
+
+/* ========== 签筒标题卡 ========== */
+.dc-draw__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+  padding: 16rpx 24rpx 4rpx;
+  text-align: center;
+}
+.dc-draw__header-icon {
+  font-size: 48rpx;
+}
+.dc-draw__header-name {
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 38rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-shadow: 2rpx 2rpx 0 rgba(233, 127, 74, 0.15);
+}
+.dc-draw__header-count {
+  font-size: 22rpx;
+  color: var(--text-light);
+  margin-top: 2rpx;
+}
+
 .dc-tubebox {
   position: relative;
   height: 700rpx;
@@ -809,7 +835,7 @@
   overflow: hidden;
   box-shadow: 6rpx 6rpx 0 rgba(233, 127, 74, 0.15);
 }
-.dc-custom__preview--pink { background: linear-gradient(135deg, var(--primary-pale) 0%, #FFE8EE 100%); }
+.dc-custom__preview--pink { background: linear-gradient(135deg, var(--primary-pale) 0%, #FFEED5 100%); }
 .dc-custom__preview--purple { background: linear-gradient(135deg, #F0E8FF 0%, #E8DFFA 100%); }
 .dc-custom__preview--orange { background: linear-gradient(135deg, #FFF1E8 0%, #FFE0CC 100%); }
 .dc-custom__preview--blue { background: linear-gradient(135deg, #E8F5FF 0%, #CCE5F5 100%); }
@@ -1027,7 +1053,7 @@
 .dc-result-mask {
   position: fixed;
   inset: 0;
-  background: rgba(93, 78, 96, 0.65);
+  background: rgba(90, 62, 43, 0.65);
   display: flex;
   align-items: center;
   justify-content: center;
