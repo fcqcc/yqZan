@@ -126,6 +126,9 @@
   <block wx:if="{{currentView === 'draw'}}">
     <view class="dc-draw">
       <!-- 顶部导航 -->
+      <view class="page-nav" style="padding-top: {{statusBarHeight}}px">
+        <view class="page-nav__bar" style="height: {{navBarHeight}}px"></view>
+      </view>
       <view class="dc-draw__nav">
         <view class="dc-back" bindtap="onBackToHome" hover-class="dc-back--hover">
           <text>‹</text>
@@ -221,6 +224,9 @@
   <!-- ========================== 自定义签筒 ========================== -->
   <block wx:if="{{currentView === 'custom'}}">
     <view class="dc-custom">
+      <view class="page-nav" style="padding-top: {{statusBarHeight}}px">
+        <view class="page-nav__bar" style="height: {{navBarHeight}}px"></view>
+      </view>
       <view class="dc-draw__nav">
         <view class="dc-back" bindtap="onCancelCustom" hover-class="dc-back--hover">
           <text>‹</text>
