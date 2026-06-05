@@ -474,29 +474,23 @@
 
 /* ========== 签筒区域 ========== */
 
-/* ========== 签筒标题卡 ========== */
-.dc-draw__header {
+/* ========== 签筒标题（和抽签页一致） ========== */
+.draw-jar-label {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 6rpx;
-  padding: 16rpx 24rpx 4rpx;
-  text-align: center;
+  justify-content: center;
+  gap: 10rpx;
+  padding: 8rpx 0 4rpx;
 }
-.dc-draw__header-icon {
-  font-size: 48rpx;
+.draw-jar-icon {
+  font-size: 36rpx;
 }
-.dc-draw__header-name {
-  font-family: 'ZCOOL KuaiLe', cursive;
-  font-size: 38rpx;
+.draw-jar-title {
+  font-size: 34rpx;
   font-weight: 700;
-  color: var(--text-primary);
-  text-shadow: 2rpx 2rpx 0 rgba(233, 127, 74, 0.15);
-}
-.dc-draw__header-count {
-  font-size: 22rpx;
-  color: var(--text-light);
-  margin-top: 2rpx;
+  color: #5A3E2B;
+  font-family: 'ZCOOL KuaiLe', cursive;
+  letter-spacing: 2rpx;
 }
 
 .dc-tubebox {
