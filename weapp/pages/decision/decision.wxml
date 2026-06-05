@@ -151,10 +151,6 @@
         <text class="draw-jar-icon">🎲</text>
         <text class="draw-jar-title">抽签小助手</text>
       </view>
-      <view class="draw-jar-label" wx:elif="{{currentTube}}">
-        <text class="draw-jar-icon">{{currentTube.icon}}</text>
-        <text class="draw-jar-title">{{currentTube.name}}</text>
-      </view>
 
       <!-- 签筒区域 -->
       <view class="dc-tubebox">
