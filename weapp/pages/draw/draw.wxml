@@ -40,6 +40,15 @@
 
   <!-- ===== 抽签区 ===== -->
   <view class="draw-arena">
+    <!-- 抽签筒标题 -->
+    <view class="draw-jar-label" wx:if="{{!selectedCatId}}">
+      <text class="draw-jar-icon">🎯</text>
+      <text class="draw-jar-title">抽取今日签</text>
+    </view>
+    <view class="draw-jar-label" wx:elif="{{selectedCatName}}">
+      <text class="draw-jar-icon">{{selectedCatIcon}}</text>
+      <text class="draw-jar-title">{{selectedCatName}}</text>
+    </view>
     <!-- 抽签按钮 -->
     <view
       class="draw-btn {{drawAnimClass}} {{drawing ? 'draw-btn--spinning' : ''}}"

@@ -2,7 +2,7 @@
 page { background: #FFF5E6; }
 .page {
   min-height: 100vh;
-  background: linear-gradient(180deg, #FFF5E6 0%, #FFE8EE 100%);
+  background: linear-gradient(180deg, #FFF5E6 0%, #FFEED5 100%);
 }
 
 /* ===== 渐变头部 ===== */
@@ -50,15 +50,15 @@ page { background: #FFF5E6; }
   padding: 8px 14px;
   border-radius: 999px;
   background: #FFFDF5;
-  border: 1px solid #ffdce8;
-  box-shadow: 0 2px 8px rgba(255,140,180,0.08);
+  border: 1px solid #F5D6B0;
+  box-shadow: 0 2px 8px rgba(233,127,74,0.08);
   flex-shrink: 0;
 }
 .cat-chip:active { background: #FFF0D8; }
 .cat-chip--active {
   background: linear-gradient(145deg, #E97F4A, #D96B38);
   border-color: transparent;
-  box-shadow: 0 4px 12px rgba(255,107,157,0.25);
+  box-shadow: 0 4px 12px rgba(233,127,74,0.25);
 }
 .cat-chip--active .cat-chip-name { color: #fff; }
 .cat-chip--active .cat-chip-count { background: rgba(255,255,255,0.3); color: #fff; }
@@ -74,10 +74,10 @@ page { background: #FFF5E6; }
 }
 .cat-chip-name { font-size: 13px; font-weight: 600; color: #7A5C4A; }
 .cat-chip-count {
-  font-size: 10px; color: #8a7078; background: rgba(255,107,157,0.1);
+  font-size: 10px; color: #B09880; background: rgba(233,127,74,0.1);
   padding: 1px 7px; border-radius: 999px; font-weight: 600;
 }
-.cat-chip--add { background: transparent; border: 1.5px dashed #ffb8cc; }
+.cat-chip--add { background: transparent; border: 1.5px dashed #E8D0B8; }
 .cat-chip--add .cat-chip-icon { font-size: 18px; color: #E97F4A; font-weight: 600; }
 
 /* ===== 抽签区 ===== */
@@ -101,7 +101,7 @@ page { background: #FFF5E6; }
   position: absolute;
   inset: -8px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,107,157,0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(233,127,74,0.15) 0%, transparent 70%);
   animation: drawPulse 2s ease-in-out infinite;
 }
 @keyframes drawPulse {
@@ -113,8 +113,8 @@ page { background: #FFF5E6; }
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: linear-gradient(145deg, #ff8fab, #E97F4A, #e84d85);
-  box-shadow: 0 8px 32px rgba(255,107,157,0.35), 0 2px 0 rgba(255,255,255,0.35) inset;
+  background: linear-gradient(145deg, #FFD9B3, #E97F4A, #D96B38);
+  box-shadow: 0 8px 32px rgba(233,127,74,0.35), 0 2px 0 rgba(255,255,255,0.35) inset;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -145,12 +145,12 @@ page { background: #FFF5E6; }
 
 .draw-hint {
   font-size: 13px;
-  color: #8a7078;
+  color: #B09880;
   margin-top: 14px;
 }
 .draw-hint-count {
   font-size: 12px;
-  color: #b8a4ac;
+  color: #C8B8A8;
 }
 .draw-current-cat {
   margin-top: 10px;
@@ -160,7 +160,25 @@ page { background: #FFF5E6; }
   padding: 6px 16px;
   background: #FFFDF5;
   border-radius: 999px;
-  border: 1px solid #ffdce8;
+  border: 1px solid #F5D6B0;
+}
+
+/* 抽签筒标题 */
+.draw-jar-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.draw-jar-icon {
+  font-size: 28px;
+}
+.draw-jar-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #5A3E2B;
+  font-family: 'ZCOOL KuaiLe', cursive;
+  letter-spacing: 1px;
 }
 
 /* ===== 结果弹窗 ===== */
@@ -187,7 +205,7 @@ page { background: #FFF5E6; }
   width: 100%;
   max-width: 340px;
   text-align: center;
-  box-shadow: 0 16px 48px rgba(255,107,157,0.2);
+  box-shadow: 0 16px 48px rgba(233,127,74,0.2);
   animation: resultPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 @keyframes resultPopIn {
@@ -212,7 +230,7 @@ page { background: #FFF5E6; }
 }
 .result-label {
   font-size: 13px;
-  color: #8a7078;
+  color: #B09880;
   margin-bottom: 8px;
 }
 .result-content {
@@ -233,9 +251,9 @@ page { background: #FFF5E6; }
   margin: 0 14px 16px;
   background: #FFFDF5;
   border-radius: 18px;
-  border: 1px solid #ffdce8;
+  border: 1px solid #F5D6B0;
   padding: 16px;
-  box-shadow: 0 4px 16px rgba(255,140,180,0.08);
+  box-shadow: 0 4px 16px rgba(233,127,74,0.08);
 }
 .section-head {
   display: flex;
@@ -255,7 +273,7 @@ page { background: #FFF5E6; }
   align-items: center;
   justify-content: space-between;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(255,107,157,0.06);
+  border-bottom: 1px solid rgba(233,127,74,0.06);
 }
 .item-row:last-child { border-bottom: none; }
 .item-content { font-size: 14px; color: #7A5C4A; flex: 1; min-width: 0; }
@@ -263,14 +281,14 @@ page { background: #FFF5E6; }
 .item-tag {
   font-size: 10px; padding: 2px 7px; border-radius: 999px; font-weight: 600;
 }
-.item-tag--custom { background: #f0e8ff; color: #6b4f9a; }
-.item-used { font-size: 11px; color: #b8a4ac; }
+.item-tag--custom { background: #f0e8ff; color: #8B6E5A; }
+.item-used { font-size: 11px; color: #C8B8A8; }
 .item-del {
-  font-size: 16px; color: #b8a4ac; width: 28px; height: 28px;
+  font-size: 16px; color: #C8B8A8; width: 28px; height: 28px;
   display: flex; align-items: center; justify-content: center;
   border-radius: 8px;
 }
-.item-del:active { background: rgba(255,107,157,0.1); color: #E97F4A; }
+.item-del:active { background: rgba(233,127,74,0.1); color: #E97F4A; }
 
 /* ===== 空状态 ===== */
 .empty-section {
@@ -278,6 +296,6 @@ page { background: #FFF5E6; }
   padding: 30px 16px 40px;
 }
 .empty-icon { font-size: var(--text-meta-size); display: block; margin-bottom: 8px; }
-.empty-section text { display: block; font-size: var(--text-meta-size); color: #b8a4ac; margin-bottom: 14px; }
+.empty-section text { display: block; font-size: var(--text-meta-size); color: #C8B8A8; margin-bottom: 14px; }
 
 .scroll-bottom-spacer { height: 30px; }
