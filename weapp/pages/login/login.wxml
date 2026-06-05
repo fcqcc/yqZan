@@ -14,8 +14,8 @@
       <view class="login-stagger anim-stagger">
         <view class="login-logo login-logo-anim anim-item">
           <svg class="login-logo-svg" viewBox="0 0 100 100" style="width:100px;height:100px;">
-            <circle cx="50" cy="50" r="45" fill="#FADCE6" stroke="#E891A4" stroke-width="3" stroke-dasharray="5,3"/>
-            <path d="M50 25 C35 25 25 40 25 50 C25 65 40 75 50 85 C60 75 75 65 75 50 C75 40 65 25 50 25" fill="#E891A4"/>
+            <circle cx="50" cy="50" r="45" fill="#FDE8C8" stroke="#F9A85C" stroke-width="3" stroke-dasharray="5,3"/>
+            <path d="M50 25 C35 25 25 40 25 50 C25 65 40 75 50 85 C60 75 75 65 75 50 C75 40 65 25 50 25" fill="#F9A85C"/>
             <circle cx="40" cy="45" r="5" fill="#333"/>
             <circle cx="60" cy="45" r="5" fill="#333"/>
             <path d="M40 60 Q50 70 60 60" stroke="#333" stroke-width="3" fill="none"/>
@@ -24,7 +24,7 @@
         <view class="login-title anim-item">一起攒</view>
         <view class="login-subtitle anim-item">情侣存钱 · 共同成长</view>
 
-        <button class="login-btn login-btn-primary anim-item {{!termsChecked ? 'login-btn-disabled' : ''}}" bindtap="handleWxLogin" loading="{{loading}}" disabled="{{!termsChecked}}">
+        <button class="login-btn login-btn-primary anim-item {{!termsChecked ? 'login-btn-disabled' : ''}}" bindtap="handleWxLogin" loading="{{loading}}">
           微信一键登录
         </button>
         <button class="login-btn login-btn-secondary anim-item" bindtap="goBindPartner">
@@ -61,6 +61,25 @@
     </block>
 
     <view wx:if="{{error}}" class="error">{{error}}</view>
+    </view>
+
+    <!-- 条款确认弹窗 -->
+    <view wx:if="{{showTermsModal}}" class="terms-modal-overlay" bindtap="onCloseTermsModal" catchtouchmove="preventMove">
+      <view class="terms-modal-card" catchtap="noop">
+        <view class="terms-modal-icon">📋</view>
+        <view class="terms-modal-title">请确认条款</view>
+        <view class="terms-modal-desc">请阅读并确认条款，同意后再登录吧</view>
+
+        <view class="terms-modal-links">
+          <text class="terms-modal-link" bindtap="onViewUserAgreement">《用户服务协议》</text>
+          <text class="terms-modal-link" bindtap="onViewPrivacyPolicy">《隐私政策》</text>
+        </view>
+
+        <view class="terms-modal-actions">
+          <button class="terms-modal-btn terms-modal-btn--cancel" bindtap="onCloseTermsModal">再想想</button>
+          <button class="terms-modal-btn terms-modal-btn--confirm" bindtap="onAgreeTerms">好的</button>
+        </view>
+      </view>
     </view>
   </view>
 </view>

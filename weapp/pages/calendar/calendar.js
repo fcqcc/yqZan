@@ -78,7 +78,7 @@ Page({
         id: a.id,
         name: a.title,
         icon: a.icon || '💕',
-        color: a.color || '#E891A4',
+        color: a.color || '#F9A85C',
         date: a.date_val,
         recurring: a.recurring !== false,
         isBirthday: a.is_birthday || false,
@@ -244,7 +244,7 @@ Page({
     if (diff === 0) {
       daysNum = '今';
       daysUnit = '天!';
-      daysColor = '#E891A4';
+      daysColor = '#F9A85C';
       metaText = '就是今天 🎉';
     } else if (diff > 0) {
       daysNum = String(diff);

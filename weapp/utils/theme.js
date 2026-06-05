@@ -59,7 +59,7 @@ function applyNavigationBar(themeName) {
 
 function progressColors() {
   return {
-    progressActive: '#E891A4',
+    progressActive: '#F9A85C',
     progressBg: 'rgba(232, 145, 164, 0.12)'
   }
 }

@@ -596,7 +596,7 @@ Page({
       title: '💕 登录体验完整功能',
       content: '登录后可以和TA一起：共同存钱、宠物养成、纪念日提醒、每日签到',
       confirmText: '去登录',
-      confirmColor: '#D4708A',
+      confirmColor: '#E8924C',
       cancelText: '暂不',
       success: (res) => {
         if (res.confirm) {

@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 4px 4px 0 rgba(232, 145, 164, 0.15);
+  box-shadow: 4px 4px 0 rgba(249, 168, 92, 0.15);
 }
 .msg-input {
   flex: 1;
@@ -22,16 +22,20 @@
   color: var(--text-primary);
   min-height: 40px;
 }
-.msg-sticker-btn {
+.msg-send-btn {
   width: 44px; height: 44px;
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
   color: white;
   border-radius: 14px 4px 14px 4px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 22px;
-  box-shadow: 2px 2px 0 rgba(212, 112, 138, 0.3);
+  font-size: 18px;
+  box-shadow: 2px 2px 0 rgba(232, 146, 76, 0.3);
   border: 1.5px dashed white;
   flex-shrink: 0;
+  transition: transform 0.15s;
+}
+.msg-send-btn:active {
+  transform: scale(0.88);
 }
 
 /* ===== 表情面板 ===== */
@@ -44,7 +48,7 @@
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   gap: 6px;
-  box-shadow: 4px 4px 0 rgba(232, 145, 164, 0.12);
+  box-shadow: 4px 4px 0 rgba(249, 168, 92, 0.12);
 }
 .msg-sticker {
   aspect-ratio: 1;
@@ -95,7 +99,7 @@
   font-weight: 600;
   position: relative;
   z-index: 1;
-  box-shadow: 2px 2px 0 rgba(232, 145, 164, 0.1);
+  box-shadow: 2px 2px 0 rgba(249, 168, 92, 0.1);
 }
 
 /* ===== 留言列表 ===== */
@@ -120,7 +124,7 @@
 }
 .msg-card--pink {
   background: linear-gradient(135deg, #FFFAFC 0%, #FFE8EE 100%);
-  border-color: #E891A4;
+  border-color: #F9A85C;
   transform: rotate(-0.8deg);
 }
 .msg-card--yellow {

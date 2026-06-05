@@ -135,6 +135,7 @@ Page({
   },
 
   go(e) {
+    if (this.data.isGuest) return this._guestPrompt()
     nav.openPage(e.currentTarget.dataset.url)
   },
 
@@ -309,8 +310,19 @@ Page({
     wx.reLaunch({ url: '/pages/login/login' })
   },
 
-  /** 游客拦截：直接跳转登录页 */
-  onGuestAction() {
-    wx.reLaunch({ url: '/pages/login/login' })
+  /** 游客引导弹窗 */
+  _guestPrompt() {
+    wx.showModal({
+      title: '💕 登录体验完整功能',
+      content: '登录后可以和TA一起：共同存钱、宠物养成、纪念日提醒、每日签到',
+      confirmText: '去登录',
+      confirmColor: '#E8924C',
+      cancelText: '暂不',
+      success: (res) => {
+        if (res.confirm) {
+          wx.reLaunch({ url: '/pages/login/login' })
+        }
+      }
+    })
   },
 })

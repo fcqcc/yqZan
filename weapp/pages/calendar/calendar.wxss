@@ -2,22 +2,22 @@
 
 /* ========== 设计变量 ========== */
 .cal-page {
-  --primary: #E891A4;
-  --primary-dark: #D4708A;
-  --primary-light: #FADCE6;
-  --primary-pale: #FFF0F5;
+  --primary: #F9A85C;
+  --primary-dark: #E8924C;
+  --primary-light: #FDE8C8;
+  --primary-pale: #FFF8E6;
   --accent: #FFD93D;
-  --text-primary: #5D4E60;
-  --text-secondary: #8B7A8E;
-  --text-light: #B8A9BB;
-  --bg-cream: #FFF9F5;
+  --text-primary: #7A5C4A;
+  --text-secondary: #A89080;
+  --text-light: #C8B8A8;
+  --bg-cream: #FFF8E6;
   --bg-pink: #FFE8EE;
   --success: #7BC67B;
-  --card-border: #F5C6D0;
+  --card-border: #F5D6B0;
 
   min-height: 100vh;
   background:
-    radial-gradient(circle at 15% 8%, rgba(232, 145, 164, 0.18) 0%, transparent 45%),
+    radial-gradient(circle at 15% 8%, rgba(249, 168, 92, 0.18) 0%, transparent 45%),
     radial-gradient(circle at 85% 75%, rgba(255, 217, 61, 0.15) 0%, transparent 50%),
     linear-gradient(180deg, var(--bg-cream) 0%, var(--bg-pink) 100%);
   padding-bottom: 60rpx;
@@ -31,7 +31,7 @@
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
   border-radius: 0 0 60rpx 30rpx;
   overflow: hidden;
-  box-shadow: 0 8rpx 0 rgba(212, 112, 138, 0.15);
+  box-shadow: 0 8rpx 0 rgba(232, 146, 76, 0.15);
 }
 .cal-hero__bg {
   position: absolute;
@@ -61,11 +61,11 @@
   color: var(--primary-dark);
   font-weight: 700;
   line-height: 1;
-  box-shadow: 3rpx 3rpx 0 rgba(212, 112, 138, 0.25);
+  box-shadow: 3rpx 3rpx 0 rgba(232, 146, 76, 0.25);
 }
 .cal-nav-btn--hover {
   transform: translate(-1rpx, -1rpx);
-  box-shadow: 4rpx 4rpx 0 rgba(212, 112, 138, 0.3);
+  box-shadow: 4rpx 4rpx 0 rgba(232, 146, 76, 0.3);
 }
 .cal-hero__title-block {
   flex: 1;
@@ -82,7 +82,7 @@
   color: white;
   font-weight: var(--text-h1-weight);
   letter-spacing: 4rpx;
-  text-shadow: 4rpx 4rpx 0 rgba(212, 112, 138, 0.3);
+  text-shadow: 4rpx 4rpx 0 rgba(232, 146, 76, 0.3);
   line-height: 1.1;
 }
 .cal-hero__year {
@@ -118,7 +118,7 @@
   font-size: var(--text-h3-size);
   color: white;
   font-weight: var(--text-h3-weight);
-  text-shadow: 2rpx 2rpx 0 rgba(212, 112, 138, 0.3);
+  text-shadow: 2rpx 2rpx 0 rgba(232, 146, 76, 0.3);
   line-height: 1.1;
 }
 .cal-stat__label {
@@ -150,11 +150,11 @@
   font-size: 22rpx;
   color: var(--primary-dark);
   font-weight: 600;
-  box-shadow: 3rpx 3rpx 0 rgba(212, 112, 138, 0.2);
+  box-shadow: 3rpx 3rpx 0 rgba(232, 146, 76, 0.2);
 }
 .cal-today-fab__btn--hover {
   transform: translate(-1rpx, -1rpx);
-  box-shadow: 4rpx 4rpx 0 rgba(212, 112, 138, 0.25);
+  box-shadow: 4rpx 4rpx 0 rgba(232, 146, 76, 0.25);
 }
 
 /* ========== 星期表头 ========== */
@@ -189,7 +189,7 @@
   border: 2rpx dashed var(--card-border);
   border-radius: 28rpx 12rpx 28rpx 12rpx;
   padding: 14rpx;
-  box-shadow: 6rpx 6rpx 0 rgba(232, 145, 164, 0.15);
+  box-shadow: 6rpx 6rpx 0 rgba(249, 168, 92, 0.15);
 }
 
 .cal-cell {
@@ -239,7 +239,7 @@
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   border-color: var(--primary-dark);
   transform: translate(-2rpx, -2rpx);
-  box-shadow: 4rpx 4rpx 0 rgba(212, 112, 138, 0.4);
+  box-shadow: 4rpx 4rpx 0 rgba(232, 146, 76, 0.4);
 }
 .cal-cell--selected .cal-cell__day {
   color: white;
@@ -355,7 +355,7 @@
   border: 2rpx dashed var(--card-border);
   border-radius: 28rpx 12rpx 28rpx 12rpx;
   padding: 24rpx 24rpx 24rpx;
-  box-shadow: 6rpx 6rpx 0 rgba(232, 145, 164, 0.15);
+  box-shadow: 6rpx 6rpx 0 rgba(249, 168, 92, 0.15);
 }
 .cal-detail__header {
   display: flex;
@@ -363,7 +363,7 @@
   align-items: flex-start;
   margin-bottom: 18rpx;
   padding-bottom: 16rpx;
-  border-bottom: 2rpx dotted #F0E8EC;
+  border-bottom: 2rpx dotted #E8E0D8;
 }
 .cal-detail__date-block {
   display: flex;
@@ -376,7 +376,7 @@
   color: var(--primary-dark);
   font-weight: var(--text-h3-weight);
   line-height: 1;
-  text-shadow: 3rpx 3rpx 0 rgba(232, 145, 164, 0.2);
+  text-shadow: 3rpx 3rpx 0 rgba(249, 168, 92, 0.2);
 }
 .cal-detail__date-info {
   display: flex;
@@ -400,7 +400,7 @@
   padding: 6rpx 16rpx;
   border-radius: 14rpx 4rpx 14rpx 4rpx;
   border: 1.5rpx solid white;
-  box-shadow: 2rpx 2rpx 0 rgba(212, 112, 138, 0.3);
+  box-shadow: 2rpx 2rpx 0 rgba(232, 146, 76, 0.3);
 }
 .cal-detail__relative {
   font-size: var(--text-meta-size);
@@ -598,11 +598,11 @@
   display: inline-block;
   font-size: 13px;
   color: var(--text);
-  background: #FFF0F5;
+  background: #FFF8E6;
   border-radius: 12px 4px 12px 4px;
   padding: 6px 10px;
   line-height: 1.4;
-  border: 1px dashed #F5C6D0;
+  border: 1px dashed #F5D6B0;
 }
 .cal-note__bubble--mine {
   background: #F5EEFF;
@@ -648,13 +648,13 @@
   color: white;
   border-color: var(--primary-dark);
   text-shadow: 1rpx 1rpx 0 rgba(0,0,0,0.2);
-  box-shadow: 3rpx 3rpx 0 rgba(212, 112, 138, 0.4);
+  box-shadow: 3rpx 3rpx 0 rgba(232, 146, 76, 0.4);
 }
 .cal-detail__btn--secondary {
   background: white;
   color: var(--primary-dark);
   border-color: var(--card-border);
-  box-shadow: 3rpx 3rpx 0 rgba(232, 145, 164, 0.2);
+  box-shadow: 3rpx 3rpx 0 rgba(249, 168, 92, 0.2);
 }
 .cal-detail__btn--hover {
   transform: translate(-1rpx, -1rpx);
@@ -682,7 +682,7 @@
   display: flex;
   flex-direction: column;
   gap: 18rpx;
-  box-shadow: 0 -12rpx 32rpx rgba(212, 112, 138, 0.3);
+  box-shadow: 0 -12rpx 32rpx rgba(232, 146, 76, 0.3);
   animation: modalSlideUp 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
 }
 @keyframes modalSlideUp {
@@ -750,7 +750,7 @@
   color: white;
   border-color: var(--primary-dark);
   transform: translate(-1rpx, -1rpx);
-  box-shadow: 2rpx 2rpx 0 rgba(212, 112, 138, 0.3);
+  box-shadow: 2rpx 2rpx 0 rgba(232, 146, 76, 0.3);
 }
 .cal-modal__quick-item--hover {
   background: var(--primary-light);
@@ -795,7 +795,7 @@
   color: var(--text-primary);
   font-weight: 500;
   flex-shrink: 0;
-  box-shadow: 2rpx 2rpx 0 rgba(232, 145, 164, 0.12);
+  box-shadow: 2rpx 2rpx 0 rgba(249, 168, 92, 0.12);
 }
 .cal-modal__plan--active {
   background: var(--primary-pale);
@@ -803,7 +803,7 @@
   border-color: var(--primary);
   font-weight: 700;
   transform: translate(-1rpx, -1rpx);
-  box-shadow: 3rpx 3rpx 0 rgba(212, 112, 138, 0.3);
+  box-shadow: 3rpx 3rpx 0 rgba(232, 146, 76, 0.3);
 }
 .cal-modal__plan--hover {
   background: var(--primary-light);
@@ -836,14 +836,14 @@
   background: white;
   color: var(--text-secondary);
   border-color: var(--card-border);
-  box-shadow: 3rpx 3rpx 0 rgba(232, 145, 164, 0.2);
+  box-shadow: 3rpx 3rpx 0 rgba(249, 168, 92, 0.2);
 }
 .cal-modal__btn--save {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: white;
   border-color: var(--primary-dark);
   text-shadow: 1rpx 1rpx 0 rgba(0,0,0,0.2);
-  box-shadow: 4rpx 4rpx 0 rgba(212, 112, 138, 0.4);
+  box-shadow: 4rpx 4rpx 0 rgba(232, 146, 76, 0.4);
 }
 .cal-modal__btn--hover {
   transform: translate(-1rpx, -1rpx);

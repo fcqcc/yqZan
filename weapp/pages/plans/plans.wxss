@@ -41,7 +41,7 @@
   text-align: center;
   font-family: 'ZCOOL KuaiLe', cursive;
   letter-spacing: 2px;
-  text-shadow: 1.5px 1.5px 0 rgba(212, 112, 138, 0.4);
+  text-shadow: 1.5px 1.5px 0 rgba(232, 146, 76, 0.4);
 }
 .header-action {
   background: rgba(255,255,255,0.95);
@@ -50,7 +50,7 @@
   border-radius: 14px 4px 14px 4px;
   font-size: 12px;
   font-weight: 600;
-  box-shadow: 2px 2px 0 rgba(212, 112, 138, 0.25);
+  box-shadow: 2px 2px 0 rgba(232, 146, 76, 0.25);
   border: 1.5px dashed var(--primary);
 }
 
@@ -58,7 +58,7 @@
 .plan-summary {
   margin: 16px;
   padding: 22px 24px;
-  background: linear-gradient(135deg, #D4708A 0%, #C8758E 50%, #A85A74 100%);
+  background: linear-gradient(135deg, #E8924C 0%, #C8758E 50%, #A85A74 100%);
   border-radius: 28px 12px 28px 12px;
   color: white;
   position: relative;
@@ -132,7 +132,7 @@
   background: white;
   border: 2px dashed var(--card-border);
   border-radius: 22px 10px 22px 10px;
-  box-shadow: 4px 4px 0 rgba(232, 145, 164, 0.15);
+  box-shadow: 4px 4px 0 rgba(249, 168, 92, 0.15);
 }
 .plan-trend__header {
   display: flex;
@@ -208,9 +208,9 @@
   background: transparent;
   border: none;
   border-radius: 20px 12px 20px 12px;
-  padding: 16px 18px;
+  padding: 6px 6px;
   position: relative;
-  box-shadow: 0 8px 24px rgba(232, 145, 164, 0.28);
+  box-shadow: 0 8px 24px rgba(249, 168, 92, 0.28);
   overflow: hidden;
 }
 
@@ -220,7 +220,7 @@
   width: 100%;
   height: 100%;
   z-index: 0;
-  opacity: 0.5;
+  opacity: 0.9;
   border-radius: inherit;
   pointer-events: none;
 }
@@ -228,6 +228,7 @@
   position: relative;
   overflow: hidden;
   border-radius: inherit;
+  padding: 10rpx;
 }
 .plan-card--pink,
 .plan-card--orange,
@@ -255,7 +256,7 @@
 .plan-card--pink .plan-card__icon,
 .plan-card--orange .plan-card__icon,
 .plan-card--blue .plan-card__icon,
-.plan-card--green .plan-card__icon { background: rgba(255,255,255,0.95); color: #E891A4; }
+.plan-card--green .plan-card__icon { background: rgba(255,255,255,0.95); color: #F9A85C; }
 
 .plan-card__title-block { flex: 1; }
 .plan-card__name {

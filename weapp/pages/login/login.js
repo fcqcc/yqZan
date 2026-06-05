@@ -10,6 +10,7 @@ Page({
     error: '',
     afterLoginGoBind: false,
     termsChecked: false,
+    showTermsModal: false,
     uiTheme: getApp().globalData.uiTheme || 'handdrawn',
   },
 
@@ -30,7 +31,7 @@ Page({
   /** 点击「微信一键登录」*/
   async handleWxLogin() {
     if (!this.data.termsChecked) {
-      wx.showToast({ title: '请仔细阅读条款，对条款无异议后再进行登录吧', icon: 'none', duration: 2500 })
+      this.setData({ showTermsModal: true })
       return
     }
     await this.doWxLogin()
@@ -123,6 +124,19 @@ Page({
     }
     this.setData({ afterLoginGoBind: true })
     wx.showToast({ title: '请先完成微信登录', icon: 'none' })
+  },
+
+  /** 条款弹窗相关 */
+  noop() {},
+  preventMove() {},
+
+  onCloseTermsModal() {
+    this.setData({ showTermsModal: false })
+  },
+
+  /** 点击「好的」→ 关闭弹窗，让用户手动勾选 */
+  onAgreeTerms() {
+    this.setData({ showTermsModal: false })
   },
 
   /** 暂不登录，返回首页 */

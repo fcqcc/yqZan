@@ -2,7 +2,7 @@ const api = require('../../utils/api')
 
 const STICKERS = ['😀','😍','🥰','😘','😚','🤗','😋','🥺','😢','😭','😡','😤','🤔','😴','🤤','🥳']
 const CARD_COLORS = ['pink', 'yellow', 'purple', 'blue', 'orange']
-const AVATAR_COLORS = { pink: '#E891A4', yellow: '#C49B00', purple: '#B19CD9', blue: '#7BC4E8', orange: '#FF8E53' }
+const AVATAR_COLORS = { pink: '#F9A85C', yellow: '#C49B00', purple: '#B19CD9', blue: '#7BC4E8', orange: '#FF8E53' }
 
 function pad(n) { return n < 10 ? '0' + n : '' + n }
 
@@ -39,14 +39,23 @@ Page({
     this.load()
   },
 
+  /** 点击输入栏 → 弹出表情面板 */
+  onInputBarTap() {
+    this.setData({ showSticker: true })
+  },
+
+  /** 输入框聚焦 → 弹出表情面板 */
+  onInputFocus() {
+    this.setData({ showSticker: true })
+  },
+
   toggleSticker() {
     this.setData({ showSticker: !this.data.showSticker })
   },
 
   onPickSticker(e) {
     const sticker = e.currentTarget.dataset.sticker
-    const content = this.data.content + sticker
-    this.setData({ content })
+    this.setData({ content: this.data.content + sticker })
   },
 
   async fetchNotes() {

@@ -14,7 +14,7 @@ page { height: 100%; }
 /* ===== 头部 ===== */
 .profile-header {
   position: relative;
-  background: linear-gradient(135deg, #E891A4 0%, #FADCE6 100%);
+  background: linear-gradient(135deg, #F9A85C 0%, #FDE8C8 100%);
   padding: 0 20px 28px;
   color: white;
   text-align: center;
@@ -120,8 +120,8 @@ page { height: 100%; }
   background: white;
   border-radius: 18px 8px 18px 8px;
   padding: 16px;
-  border: 2px dashed #F5C6D0;
-  box-shadow: 3px 3px 0 rgba(232, 145, 164, 0.1);
+  border: 2px dashed #F5D6B0;
+  box-shadow: 3px 3px 0 rgba(249, 168, 92, 0.1);
 }
 
 .bind-title {
@@ -137,22 +137,22 @@ page { height: 100%; }
 }
 
 .bind-input {
-  border: 2px dashed #F5C6D0;
+  border: 2px dashed #F5D6B0;
   border-radius: 14px 6px 14px 6px;
   padding: 10px 14px;
   margin-bottom: 10px;
   font-size: 14px;
-  background: #fffafb;
+  background: #FFFDF8;
 }
 
 .bind-btn {
-  background: #E891A4;
+  background: #F9A85C;
   color: white;
   border: none;
   border-radius: 14px 4px 14px 4px;
   font-size: 14px;
   font-weight: 600;
-  box-shadow: 2px 2px 0 rgba(212, 112, 138, 0.3);
+  box-shadow: 2px 2px 0 rgba(232, 146, 76, 0.3);
 }
 
 .bind-btn::after { border: none; }
@@ -167,14 +167,14 @@ page { height: 100%; }
   border-radius: 18px 8px 18px 8px;
   overflow: hidden;
   margin-bottom: 12px;
-  border: 2px dashed #F5C6D0;
+  border: 2px dashed #F5D6B0;
 }
 
 .menu-item {
   display: flex;
   align-items: center;
   padding: 14px 16px;
-  border-bottom: 2px dotted #f0e8ec;
+  border-bottom: 2px dotted #E8E0D8;
 }
 
 .menu-item-last {
@@ -182,13 +182,13 @@ page { height: 100%; }
 }
 
 .menu-item-hover {
-  background: rgba(232, 145, 164, 0.06);
+  background: rgba(249, 168, 92, 0.06);
 }
 
 .menu-icon {
   width: 36px;
   height: 36px;
-  background: #FFF0F5;
+  background: #FFF8E6;
   border-radius: 10px 4px 10px 4px;
   display: flex;
   align-items: center;
@@ -196,7 +196,7 @@ page { height: 100%; }
   font-size: 17px;
   margin-right: 12px;
   flex-shrink: 0;
-  border: 2px dashed #F5C6D0;
+  border: 2px dashed #F5D6B0;
 }
 
 .menu-text {
@@ -211,7 +211,7 @@ page { height: 100%; }
 }
 
 .menu-badge {
-  background: #E891A4;
+  background: #F9A85C;
   color: white;
   font-size: 10px;
   padding: 2px 8px;
@@ -220,7 +220,7 @@ page { height: 100%; }
 }
 
 .menu-value {
-  color: #D4708A;
+  color: #E8924C;
   font-weight: 700;
   font-size: 13px;
   margin-right: 8px;

@@ -3,9 +3,9 @@
 
 page {
   background:
-    radial-gradient(circle at 20% 80%, rgba(232, 145, 164, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(249, 168, 92, 0.15) 0%, transparent 50%),
     radial-gradient(circle at 80% 20%, rgba(168, 212, 230, 0.12) 0%, transparent 50%),
-    linear-gradient(180deg, #FFF9F5 0%, #FFE8EE 100%) !important;
+    linear-gradient(180deg, #FFF8E6 0%, #FDF0D8 100%) !important;
   background-attachment: fixed;
   min-height: 100%;
 }
@@ -14,27 +14,27 @@ page {
   min-height: 100vh;
   width: 100%;
   box-sizing: border-box;
-  color: var(--text, #5D4E60);
+  color: var(--text, #7A5C4A);
 }
 
 /* 手绘风（默认） */
 .app-root.app-theme-handdrawn,
 .app-theme-handdrawn {
-  --text: #5D4E60;
-  --text-secondary: #8B7A8E;
-  --text-light: #B8A9BB;
-  --rose: #E891A4;
-  --rose-light: #FADCE6;
-  --rose-pale: #FFF0F5;
-  --rose-deep: #D4708A;
-  --primary: #E891A4;
-  --primary-light: #FADCE6;
-  --primary-pale: #FFF0F5;
-  --cream: #FFF9F5;
-  --gradient-header: linear-gradient(135deg, #E891A4 0%, #D4708A 50%, #E891A4 100%);
-  --login-page-bg: linear-gradient(180deg, #FFFFFF 0%, #FFF0F5 100%);
-  --login-accent: #D4708A;
-  --login-muted: #8B7A8E;
+  --text: #7A5C4A;
+  --text-secondary: #A89080;
+  --text-light: #C8B8A8;
+  --rose: #F9A85C;
+  --rose-light: #FDE8C8;
+  --rose-pale: #FFF8E6;
+  --rose-deep: #E8924C;
+  --primary: #F9A85C;
+  --primary-light: #FDE8C8;
+  --primary-pale: #FFF8E6;
+  --cream: #FFF8E6;
+  --gradient-header: linear-gradient(135deg, #F9A85C 0%, #E8924C 50%, #F9A85C 100%);
+  --login-page-bg: linear-gradient(180deg, #FFFFFF 0%, #FFF8E6 100%);
+  --login-accent: #E8924C;
+  --login-muted: #A89080;
 
   /* ===== 字体现范 ===== */
   /* 字族 */
@@ -77,16 +77,16 @@ page {
 }
 
 .app-root .login-title {
-  color: #4A3548;
+  color: #5D3E2A;
 }
 
 .app-root .app-desc,
 .app-root .login-subtitle {
-  color: #5D4E60;
+  color: #7A5C4A;
 }
 
 .app-root .login-footer {
-  color: #6B5A6E;
+  color: #8B6E5A;
 }
 
 /* 蜜桃苏打（备选，设置页可切换） */

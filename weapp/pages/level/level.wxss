@@ -1,6 +1,6 @@
 /* pages/level/level.wxss — 原型风格 */
 .level-header {
-  background: linear-gradient(135deg, #E891A4 0%, #FADCE6 100%);
+  background: linear-gradient(135deg, #F9A85C 0%, #FDE8C8 100%);
   padding: 24px;
   color: white;
   text-align: center;

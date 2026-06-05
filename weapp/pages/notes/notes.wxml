@@ -1,8 +1,8 @@
 <scroll-view class="app-root app-theme-{{uiTheme}} page" scroll-y>
   <!-- ===== 输入栏 ===== -->
-  <view class="msg-input-bar">
-    <input class="msg-input" placeholder="写点什么给 ta..." model:value="{{content}}" maxlength="200" confirm-type="send" bindconfirm="send" />
-    <view class="msg-sticker-btn btn-ripple" catchtap="toggleSticker">📌</view>
+  <view class="msg-input-bar" catchtap="onInputBarTap">
+    <input class="msg-input" placeholder="写点什么给 ta..." model:value="{{content}}" maxlength="200" confirm-type="send" bindconfirm="send" bindfocus="onInputFocus" />
+    <view class="msg-send-btn btn-ripple" catchtap="send">➤</view>
   </view>
 
   <!-- ===== 表情面板 ===== -->

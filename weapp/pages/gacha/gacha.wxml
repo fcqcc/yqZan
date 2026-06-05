@@ -4,9 +4,6 @@
   <!-- ===== 头部banner ===== -->
   <view class="gacha-header">
     <image src="/assets/images/gacha_header_bg.png" mode="aspectFill" class="gacha-header-bg" />
-    <view class="gacha-header-content">
-      <image src="/assets/images/gacha_title_img.png" mode="widthFix" class="gacha-title-img" />
-    </view>
     <view class="gacha-ticket-bar">
       <text>🎟️</text>
       <text class="num">{{tickets}}</text>
