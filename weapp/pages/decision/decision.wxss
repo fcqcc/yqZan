@@ -90,7 +90,7 @@
   display: flex;
   align-items: center;
   gap: 6rpx;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 253, 245, 0.95);
   padding: 10rpx 18rpx;
   border-radius: 28rpx 10rpx 28rpx 10rpx;
   border: 2rpx dashed var(--primary);
@@ -164,7 +164,7 @@
 .dc-quick {
   width: 220rpx;
   flex-shrink: 0;
-  background: white;
+  background: #FFFDF5;
   border: 2rpx dashed var(--card-border);
   border-radius: 28rpx 10rpx 28rpx 10rpx;
   padding: 24rpx 20rpx 22rpx;
@@ -228,7 +228,7 @@
   padding: 0 4rpx;
 }
 .dc-tube {
-  background: white;
+  background: #FFFDF5;
   border: 2rpx dashed var(--card-border);
   border-radius: 26rpx 10rpx 26rpx 10rpx;
   padding: 22rpx 12rpx 18rpx;
@@ -283,7 +283,7 @@
   right: -8rpx;
   width: 36rpx;
   height: 36rpx;
-  background: white;
+  background: #FFFDF5;
   color: var(--text-light);
   border-radius: 50%;
   display: flex;
@@ -291,7 +291,7 @@
   justify-content: center;
   font-size: 28rpx;
   line-height: 1;
-  border: 2rpx dashed #E0E0E0;
+  border: 2rpx dashed #E8E0D0;
   box-shadow: 0 2rpx 0 rgba(0,0,0,0.05);
   font-weight: 700;
 }
@@ -319,7 +319,7 @@
 }
 
 .dc-tube--add {
-  background: white;
+  background: #FFFDF5;
   border: 2rpx dashed var(--primary);
 }
 .dc-tube--add .dc-tube__add-icon {
@@ -339,7 +339,7 @@
 /* ========== 历史记录 ========== */
 .dc-history {
   margin: 0 4rpx;
-  background: white;
+  background: #FFFDF5;
   border: 2rpx dashed var(--card-border);
   border-radius: 24rpx 10rpx 24rpx 10rpx;
   overflow: hidden;
@@ -403,6 +403,7 @@
 /* ========== 抽签台 ========== */
 .dc-draw {
   min-height: 100vh;
+  background: var(--bg-cream);
   display: flex;
   flex-direction: column;
   padding: 0 0 40rpx;
@@ -419,7 +420,7 @@
 .dc-back {
   width: 64rpx;
   height: 64rpx;
-  background: white;
+  background: #FFFDF5;
   border: 2rpx dashed var(--card-border);
   border-radius: 22rpx 8rpx 22rpx 8rpx;
   display: flex;
@@ -452,7 +453,7 @@
 }
 .dc-draw__edit {
   padding: 12rpx 22rpx;
-  background: white;
+  background: #FFFDF5;
   border: 2rpx dashed var(--card-border);
   border-radius: 20rpx 6rpx 20rpx 6rpx;
   font-size: 22rpx;
@@ -1009,7 +1010,7 @@
   background: white;
   color: var(--text-light);
   border-radius: 12rpx 4rpx 12rpx 4rpx;
-  border: 2rpx dashed #E0E0E0;
+  border: 2rpx dashed #E8E0D0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1053,7 +1054,7 @@
 .dc-result-mask {
   position: fixed;
   inset: 0;
-  background: rgba(90, 62, 43, 0.65);
+  background: rgba(90, 62, 43, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1065,7 +1066,7 @@
   position: relative;
   width: 100%;
   max-width: 600rpx;
-  background: white;
+  background: #FFFDF5;
   border: 3rpx dashed var(--primary);
   border-radius: 48rpx 20rpx 48rpx 20rpx;
   padding: 60rpx 40rpx 40rpx;
