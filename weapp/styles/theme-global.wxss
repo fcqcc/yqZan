@@ -3,9 +3,9 @@
 
 page {
   background:
-    radial-gradient(circle at 20% 80%, rgba(249, 168, 92, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(233, 127, 74, 0.15) 0%, transparent 50%),
     radial-gradient(circle at 80% 20%, rgba(168, 212, 230, 0.12) 0%, transparent 50%),
-    linear-gradient(180deg, #FFF8E6 0%, #FDF0D8 100%) !important;
+    linear-gradient(180deg, #FFF5E6 0%, #FFEED5 100%) !important;
   background-attachment: fixed;
   min-height: 100%;
 }
@@ -21,20 +21,20 @@ page {
 .app-root.app-theme-handdrawn,
 .app-theme-handdrawn {
   --text: #7A5C4A;
-  --text-secondary: #A89080;
+  --text-secondary: #B09880;
   --text-light: #C8B8A8;
-  --rose: #F9A85C;
-  --rose-light: #FDE8C8;
-  --rose-pale: #FFF8E6;
-  --rose-deep: #E8924C;
-  --primary: #F9A85C;
-  --primary-light: #FDE8C8;
-  --primary-pale: #FFF8E6;
-  --cream: #FFF8E6;
-  --gradient-header: linear-gradient(135deg, #F9A85C 0%, #E8924C 50%, #F9A85C 100%);
-  --login-page-bg: linear-gradient(180deg, #FFFFFF 0%, #FFF8E6 100%);
-  --login-accent: #E8924C;
-  --login-muted: #A89080;
+  --rose: #E97F4A;
+  --rose-light: #FFD9B3;
+  --rose-pale: #FFF5E6;
+  --rose-deep: #D96B38;
+  --primary: #E97F4A;
+  --primary-light: #FFD9B3;
+  --primary-pale: #FFF5E6;
+  --cream: #FFF5E6;
+  --gradient-header: linear-gradient(135deg, #E97F4A 0%, #D96B38 50%, #E97F4A 100%);
+  --login-page-bg: linear-gradient(180deg, #FFFFFF 0%, #FFF5E6 100%);
+  --login-accent: #D96B38;
+  --login-muted: #B09880;
 
   /* ===== 字体现范 ===== */
   /* 字族 */
@@ -77,7 +77,7 @@ page {
 }
 
 .app-root .login-title {
-  color: #5D3E2A;
+  color: #5A3E2B;
 }
 
 .app-root .app-desc,
@@ -95,11 +95,11 @@ page {
   --text-secondary: #8a7078;
   --rose: #ff6b9d;
   --rose-light: #ff8fab;
-  --rose-pale: #ffe8f0;
+  --rose-pale: #FFF0D8;
   --rose-deep: #e84d85;
   --primary: #ff6b9d;
   --primary-light: #ff8fab;
   --gradient-header: linear-gradient(180deg, #ff8fab 0%, #ff6b9d 50%, #d4a0f0 100%);
   --login-page-bg: linear-gradient(155deg, #f06b8f 0%, #e84d85 45%, #9b6fd4 100%);
-  background: linear-gradient(165deg, #fff5f2 0%, #fff0eb 42%, #ffe8f0 100%);
+  background: linear-gradient(165deg, #FFF5E6 0%, #FFF5E6 42%, #FFF0D8 100%);
 }

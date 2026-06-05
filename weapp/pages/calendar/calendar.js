@@ -78,7 +78,7 @@ Page({
         id: a.id,
         name: a.title,
         icon: a.icon || '💕',
-        color: a.color || '#F9A85C',
+        color: a.color || '#E97F4A',
         date: a.date_val,
         recurring: a.recurring !== false,
         isBirthday: a.is_birthday || false,
@@ -244,7 +244,7 @@ Page({
     if (diff === 0) {
       daysNum = '今';
       daysUnit = '天!';
-      daysColor = '#F9A85C';
+      daysColor = '#E97F4A';
       metaText = '就是今天 🎉';
     } else if (diff > 0) {
       daysNum = String(diff);
@@ -254,7 +254,7 @@ Page({
     } else {
       daysNum = String(-diff);
       daysUnit = '天前';
-      daysColor = '#8B7A8E';
+      daysColor = '#B09880';
       metaText = anniv.recurring ? '每年这天' : '一次纪念';
     }
 

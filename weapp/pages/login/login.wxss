@@ -51,7 +51,7 @@
 
 .login-title {
   font-size: 36px;
-  color: #5D3E2A;
+  color: #5A3E2B;
   font-weight: 800;
   margin-bottom: 10px;
   letter-spacing: 2px;
@@ -96,19 +96,19 @@
 
 .login-logo-svg {
   display: block;
-  filter: drop-shadow(2px 2px 0 rgba(249, 168, 92, 0.2));
+  filter: drop-shadow(2px 2px 0 rgba(233, 127, 74, 0.2));
 }
 
 /* 主按钮柔和脉动 */
 .login-btn-primary {
-  background: linear-gradient(135deg, #F9A85C 0%, #E8924C 100%);
+  background: linear-gradient(135deg, #E97F4A 0%, #D96B38 100%);
   color: #fff;
-  box-shadow: 4px 4px 0 rgba(232, 146, 76, 0.4);
+  box-shadow: 4px 4px 0 rgba(217, 107, 56, 0.4);
   animation: loginBtnPulse 3s ease-in-out infinite;
 }
 @keyframes loginBtnPulse {
-  0%, 100% { box-shadow: 4px 4px 0 rgba(232, 146, 76, 0.4); }
-  50% { box-shadow: 4px 4px 16px rgba(232, 146, 76, 0.35), 4px 4px 0 rgba(232, 146, 76, 0.4); }
+  0%, 100% { box-shadow: 4px 4px 0 rgba(217, 107, 56, 0.4); }
+  50% { box-shadow: 4px 4px 16px rgba(217, 107, 56, 0.35), 4px 4px 0 rgba(217, 107, 56, 0.4); }
 }
 
 /* 交错入场 */
@@ -116,14 +116,14 @@
 
 .login-btn-primary:active {
   transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0 rgba(232, 146, 76, 0.4);
+  box-shadow: 2px 2px 0 rgba(217, 107, 56, 0.4);
 }
 
 .login-btn-secondary {
   background: #fff;
-  color: #E8924C;
-  border: 2px solid #F9A85C !important;
-  box-shadow: 3px 3px 0 rgba(249, 168, 92, 0.2);
+  color: #D96B38;
+  border: 2px solid #E97F4A !important;
+  box-shadow: 3px 3px 0 rgba(233, 127, 74, 0.2);
 }
 
 .login-footer {
@@ -144,7 +144,7 @@
 .login-terms-checkbox {
   width: 18px;
   height: 18px;
-  border: 2px solid #F9A85C;
+  border: 2px solid #E97F4A;
   border-radius: 4px;
   flex-shrink: 0;
   display: flex;
@@ -156,8 +156,8 @@
   margin-top: 1px;
 }
 .login-terms-checkbox--checked {
-  background: #F9A85C;
-  border-color: #E8924C;
+  background: #E97F4A;
+  border-color: #D96B38;
 }
 .login-terms-text-wrap {
   flex: 1;
@@ -177,7 +177,7 @@
 }
 .login-terms-link {
   font-size: 12px;
-  color: #C45A78;
+  color: #C47A58;
   text-decoration: underline;
   font-weight: 600;
   line-height: 1.4;
@@ -190,7 +190,7 @@
 .login-skip {
   margin-top: 4px;
   font-size: 13px;
-  color: #A89080;
+  color: #B09880;
   text-decoration: underline;
   padding: 8px 0;
 }
@@ -203,7 +203,7 @@
   padding: 12px 16px;
   font-size: 15px;
   box-sizing: border-box;
-  background: #FFFDF8;
+  background: #FFFDF5;
 }
 
 .error {
@@ -217,7 +217,7 @@
   position: fixed;
   inset: 0;
   z-index: 200;
-  background: rgba(249, 168, 92, 0.2);
+  background: rgba(233, 127, 74, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -231,20 +231,20 @@
   max-width: 320px;
   text-align: center;
   border: 2px dashed #F5D6B0;
-  box-shadow: 4px 4px 0 rgba(232, 146, 76, 0.2);
+  box-shadow: 4px 4px 0 rgba(217, 107, 56, 0.2);
 }
 .privacy-icon { font-size: 40px; margin-bottom: 12px; }
 .privacy-title { font-size: 18px; font-weight: 700; color: #7A5C4A; display: block; margin-bottom: 8px; }
-.privacy-desc { font-size: 13px; color: #A89080; display: block; margin-bottom: 20px; line-height: 1.5; }
+.privacy-desc { font-size: 13px; color: #B09880; display: block; margin-bottom: 20px; line-height: 1.5; }
 .privacy-links { display: flex; justify-content: center; gap: 16px; margin-bottom: 24px; }
-.privacy-link { font-size: 13px; color: #C45A78; text-decoration: underline; font-weight: 600; }
+.privacy-link { font-size: 13px; color: #C47A58; text-decoration: underline; font-weight: 600; }
 
 /* 条款确认弹窗 */
 .terms-modal-overlay {
   position: fixed;
   inset: 0;
   z-index: 300;
-  background: rgba(249, 168, 92, 0.25);
+  background: rgba(233, 127, 74, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -263,7 +263,7 @@
   max-width: 320px;
   text-align: center;
   border: 2px dashed #F5D6B0;
-  box-shadow: 6px 6px 0 rgba(232, 146, 76, 0.2);
+  box-shadow: 6px 6px 0 rgba(217, 107, 56, 0.2);
   animation: termsCardIn 0.3s ease;
 }
 @keyframes termsCardIn {
@@ -277,13 +277,13 @@
 .terms-modal-title {
   font-size: 18px;
   font-weight: 700;
-  color: #5D3E2A;
+  color: #5A3E2B;
   display: block;
   margin-bottom: 10px;
 }
 .terms-modal-desc {
   font-size: 13px;
-  color: #A89080;
+  color: #B09880;
   display: block;
   margin-bottom: 20px;
   line-height: 1.6;
@@ -296,7 +296,7 @@
 }
 .terms-modal-link {
   font-size: 13px;
-  color: #C45A78;
+  color: #C47A58;
   text-decoration: underline;
   font-weight: 600;
 }
@@ -318,18 +318,18 @@
 }
 .terms-modal-btn--cancel {
   background: #f8f0f2;
-  color: #A89080;
+  color: #B09880;
   border: 1.5px solid #EAD0D6 !important;
 }
 .terms-modal-btn--cancel:active {
   background: #f0e4e8;
 }
 .terms-modal-btn--confirm {
-  background: linear-gradient(135deg, #F9A85C 0%, #E8924C 100%);
+  background: linear-gradient(135deg, #E97F4A 0%, #D96B38 100%);
   color: #fff;
-  box-shadow: 3px 3px 0 rgba(232, 146, 76, 0.35);
+  box-shadow: 3px 3px 0 rgba(217, 107, 56, 0.35);
 }
 .terms-modal-btn--confirm:active {
   transform: translate(1.5px, 1.5px);
-  box-shadow: 1.5px 1.5px 0 rgba(232, 146, 76, 0.35);
+  box-shadow: 1.5px 1.5px 0 rgba(217, 107, 56, 0.35);
 }

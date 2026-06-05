@@ -1,9 +1,9 @@
 {
   "navigationStyle": "custom",
   "navigationBarTitleText": "今日签",
-  "navigationBarBackgroundColor": "#E891A4",
+  "navigationBarBackgroundColor": "#E97F4A",
   "navigationBarTextStyle": "white",
-  "backgroundColor": "#FFF9F5",
+  "backgroundColor": "#FFF5E6",
   "usingComponents": {
     "cp-icon": "/components/cp-icon/cp-icon"
   },

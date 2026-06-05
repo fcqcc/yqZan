@@ -3,58 +3,58 @@
 
 .app-theme-handdrawn {
   /* ── 色板 ── */
-  --hd-primary: #F9A85C;
-  --hd-primary-dark: #E8924C;
-  --hd-primary-light: #FDE8C8;
-  --hd-primary-pale: #FFF8E6;
+  --hd-primary: #E97F4A;
+  --hd-primary-dark: #D96B38;
+  --hd-primary-light: #FFD9B3;
+  --hd-primary-pale: #FFF5E6;
   --hd-accent: #FFD93D;
   --hd-success: #7BC67B;
-  --hd-text: #5D3E2A;
+  --hd-text: #5A3E2B;
   --hd-text-secondary: #8B6E5A;
-  --hd-text-light: #A89080;
-  --hd-bg-cream: #FFF8EC;
-  --hd-bg-pink: #FDF0D8;
-  --hd-card-bg: #FFFDF8;
-  --hd-border: #E8D0B8;
+  --hd-text-light: #B09880;
+  --hd-bg-cream: #FFF5E6;
+  --hd-bg-pink: #FFEED5;
+  --hd-card-bg: #FFFDF5;
+  --hd-border: #D9A378;
   --hd-line-dot: #E0D0C0;
 
   /* 覆盖现有 theme-global 变量 */
-  --text: #5D3E2A;
+  --text: #5A3E2B;
   --text-secondary: #8B6E5A;
-  --text-light: #A89080;
-  --text-muted: #A89080;
-  --rose: #F9A85C;
-  --rose-light: #FDE8C8;
-  --rose-pale: #FFF8E6;
-  --rose-deep: #E8924C;
-  --peach: #F9A85C;
+  --text-light: #B09880;
+  --text-muted: #B09880;
+  --rose: #E97F4A;
+  --rose-light: #FFD9B3;
+  --rose-pale: #FFF5E6;
+  --rose-deep: #D96B38;
+  --peach: #E97F4A;
   --lilac: #D4A0E8;
   --lilac-pale: #F5EDFF;
   --mint: #7BC67B;
-  --primary: #F9A85C;
-  --primary-light: #FDE8C8;
-  --primary-pale: #FFF8E6;
-  --ink: #5D3E2A;
+  --primary: #E97F4A;
+  --primary-light: #FFD9B3;
+  --primary-pale: #FFF5E6;
+  --ink: #5A3E2B;
   --ink-soft: #8B6E5A;
-  --ink-muted: #A89080;
-  --bg-start: #FFF8EC;
-  --bg-mid: #FFF2E0;
-  --bg-end: #FDF0D8;
-  --surface: #FFFDF8;
-  --card-bg: #FFFDF8;
-  --card-border: 2px dashed #E8D0B8;
+  --ink-muted: #B09880;
+  --bg-start: #FFF5E6;
+  --bg-mid: #FFF0D8;
+  --bg-end: #FFEED5;
+  --surface: #FFFDF5;
+  --card-bg: #FFFDF5;
+  --card-border: 2px dashed #D9A378;
   --line: #E0D0C0;
-  --line-strong: #E8D0B8;
-  --header-start: #F9A85C;
-  --header-mid: #E8924C;
-  --header-end: #F9A85C;
-  --gradient-header: linear-gradient(180deg, #F9A85C 0%, #E8924C 50%, #F9A85C 100%);
-  --progress-bar-bg: rgba(249, 168, 92, 0.2);
+  --line-strong: #D9A378;
+  --header-start: #E97F4A;
+  --header-mid: #D96B38;
+  --header-end: #E97F4A;
+  --gradient-header: linear-gradient(180deg, #E97F4A 0%, #D96B38 50%, #E97F4A 100%);
+  --progress-bar-bg: rgba(233, 127, 74, 0.2);
 
   background: 
-    radial-gradient(circle at 15% 30%, rgba(249, 168, 92, 0.07) 0%, transparent 45%),
+    radial-gradient(circle at 15% 30%, rgba(233, 127, 74, 0.07) 0%, transparent 45%),
     radial-gradient(circle at 85% 70%, rgba(255, 217, 61, 0.05) 0%, transparent 40%),
-    linear-gradient(165deg, #FFF8EC 0%, #FFF2E0 42%, #FDF0D8 100%) !important;
+    linear-gradient(165deg, #FFF5E6 0%, #FFF0D8 42%, #FFEED5 100%) !important;
 }
 
 /* ===== 所有卡片 ===== */
@@ -91,7 +91,7 @@
   background: rgba(255, 251, 249, 0.85) !important;
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 2px 8px rgba(249, 168, 92, 0.1), 0 8px 28px rgba(249, 168, 92, 0.06), 6px 6px 0 rgba(249, 168, 92, 0.2) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 2px 8px rgba(233, 127, 74, 0.1), 0 8px 28px rgba(233, 127, 74, 0.06), 6px 6px 0 rgba(233, 127, 74, 0.2) !important;
   position: relative !important;
 }
 /* 卡片右下角装饰折角 */
@@ -114,7 +114,7 @@
   right: 0 !important;
   width: 24px !important;
   height: 24px !important;
-  background: linear-gradient(135deg, transparent 50%, rgba(249, 168, 92, 0.08) 50%) !important;
+  background: linear-gradient(135deg, transparent 50%, rgba(233, 127, 74, 0.08) 50%) !important;
   border-radius: 0 0 10px 0 !important;
   pointer-events: none !important;
 }
@@ -141,39 +141,39 @@
 .app-theme-handdrawn .plan-action-btn,
 .app-theme-handdrawn .checkin-mini-btn {
   border-radius: 25px 10px 25px 10px !important;
-  box-shadow: 3px 3px 0 rgba(232, 146, 76, 0.3) !important;
+  box-shadow: 3px 3px 0 rgba(217, 107, 56, 0.3) !important;
   border: none !important;
   transition: transform 0.12s ease !important;
 }
 .app-theme-handdrawn .login-btn-primary {
   border-radius: 25px 10px 25px 10px !important;
-  box-shadow: 4px 4px 0 rgba(232, 146, 76, 0.4) !important;
+  box-shadow: 4px 4px 0 rgba(217, 107, 56, 0.4) !important;
   border: none !important;
   transition: transform 0.12s ease !important;
 }
 .app-theme-handdrawn .login-btn-secondary {
   border-radius: 25px 10px 25px 10px !important;
-  box-shadow: 3px 3px 0 rgba(249, 168, 92, 0.2) !important;
+  box-shadow: 3px 3px 0 rgba(233, 127, 74, 0.2) !important;
   transition: transform 0.12s ease !important;
 }
 .app-theme-handdrawn .btn-primary:active,
 .app-theme-handdrawn .gacha-btn:active,
 .app-theme-handdrawn .login-btn-primary:active {
   transform: translate(2px, 2px) scale(0.97) !important;
-  box-shadow: 1px 1px 0 rgba(232, 146, 76, 0.3) !important;
+  box-shadow: 1px 1px 0 rgba(217, 107, 56, 0.3) !important;
 }
 
 .app-theme-handdrawn .btn-outline {
   border: 2px solid var(--hd-primary) !important;
   border-radius: 25px 10px 25px 10px !important;
   background: #fff !important;
-  color: #E8924C !important;
-  box-shadow: 2px 2px 0 rgba(249, 168, 92, 0.12) !important;
+  color: #D96B38 !important;
+  box-shadow: 2px 2px 0 rgba(233, 127, 74, 0.12) !important;
 }
 
 .app-theme-handdrawn .btn-danger {
   border-radius: 25px 10px 25px 10px !important;
-  box-shadow: 3px 3px 0 rgba(232, 146, 76, 0.25) !important;
+  box-shadow: 3px 3px 0 rgba(217, 107, 56, 0.25) !important;
 }
 
 /* ===== 登录页按钮（更宽） ===== */
@@ -194,21 +194,21 @@
   width: 85% !important;
   max-width: 300px !important;
   background: #fff !important;
-  color: #E8924C !important;
-  border: 2px solid #F9A85C !important;
+  color: #D96B38 !important;
+  border: 2px solid #E97F4A !important;
   padding: 14px 0 !important;
   font-size: 15px !important;
-  box-shadow: 3px 3px 0 rgba(249, 168, 92, 0.2) !important;
+  box-shadow: 3px 3px 0 rgba(233, 127, 74, 0.2) !important;
 }
 
 /* ===== 登录页标题与背景 ===== */
 .app-theme-handdrawn .login-page {
-  background: linear-gradient(180deg, #FFFFFF 0%, #FFF8E6 100%) !important;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFF5E6 100%) !important;
 }
 .app-theme-handdrawn .login-title {
   font-size: 36px !important;
   font-weight: 800 !important;
-  color: #5D3E2A !important;
+  color: #5A3E2B !important;
   letter-spacing: 2px !important;
   margin-bottom: 10px !important;
 }
@@ -225,11 +225,11 @@
 .app-theme-handdrawn .input {
   border: 2px dashed var(--hd-border) !important;
   border-radius: 14px 6px 14px 6px !important;
-  background: #FFFDF8 !important;
+  background: #FFFDF5 !important;
 }
 .app-theme-handdrawn .input:focus {
   border-color: var(--hd-primary) !important;
-  box-shadow: 0 0 0 3px rgba(249, 168, 92, 0.12) !important;
+  box-shadow: 0 0 0 3px rgba(233, 127, 74, 0.12) !important;
 }
 
 /* ===== 渐变头部 ===== */
@@ -242,7 +242,7 @@
 .app-theme-handdrawn .level-header,
 .app-theme-handdrawn .profile-header,
 .app-theme-handdrawn .home-header {
-  background: linear-gradient(135deg, #F9A85C 0%, #FDE8C8 100%) !important;
+  background: linear-gradient(135deg, #E97F4A 0%, #FFD9B3 100%) !important;
 }
 
 /* ===== 首页头部统计卡片 ===== */
@@ -259,7 +259,7 @@
 .app-theme-handdrawn .dock-icon {
   border: 2px dashed var(--hd-border) !important;
   border-radius: 16px 8px 16px 8px !important;
-  box-shadow: 3px 3px 0 rgba(249, 168, 92, 0.15), 0 2px 8px rgba(249, 168, 92, 0.06) !important;
+  box-shadow: 3px 3px 0 rgba(233, 127, 74, 0.15), 0 2px 8px rgba(233, 127, 74, 0.06) !important;
 }
 
 /* ===== 标签/徽章 ===== */
@@ -293,7 +293,7 @@
 .app-theme-handdrawn .pity-track,
 .app-theme-handdrawn .pet-intimacy-track,
 .app-theme-handdrawn .intimacy-bar {
-  border: 2px solid #E8E0D8 !important;
+  border: 2px solid #E8E0D0 !important;
   border-radius: 8px !important;
   height: 12px !important;
   overflow: hidden !important;
@@ -305,7 +305,7 @@
 .app-theme-handdrawn .intimacy-fill,
 .app-theme-handdrawn .pet-intimacy-fill {
   border-radius: 6px !important;
-  background: linear-gradient(90deg, #F9A85C 0%, #E8924C 50%, #FFD93D 100%) !important;
+  background: linear-gradient(90deg, #E97F4A 0%, #D96B38 50%, #FFD93D 100%) !important;
 }
 
 /* ===== 宠物按钮 ===== */
@@ -313,7 +313,7 @@
 .app-theme-handdrawn .pet-action-icon {
   border: 2px dashed var(--hd-border) !important;
   border-radius: 12px 4px 12px 4px !important;
-  box-shadow: 2px 2px 0 rgba(249, 168, 92, 0.15) !important;
+  box-shadow: 2px 2px 0 rgba(233, 127, 74, 0.15) !important;
   background: var(--hd-primary-pale) !important;
 }
 
@@ -333,7 +333,7 @@
 .app-theme-handdrawn .anni-premium-icon {
   background: var(--hd-primary) !important;
   border-radius: 12px 4px 12px 4px !important;
-  box-shadow: 3px 3px 0 rgba(232, 146, 76, 0.2) !important;
+  box-shadow: 3px 3px 0 rgba(217, 107, 56, 0.2) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -343,7 +343,7 @@
 .app-theme-handdrawn .checkin-mini {
   border: 2px dashed var(--hd-border) !important;
   border-radius: 14px 6px 14px 6px !important;
-  box-shadow: 3px 3px 0 rgba(249, 168, 92, 0.12) !important;
+  box-shadow: 3px 3px 0 rgba(233, 127, 74, 0.12) !important;
 }
 
 /* ===== 分隔线 ===== */
@@ -359,12 +359,12 @@
 /* ===== 头像 ===== */
 .app-theme-handdrawn .avatar-ring,
 .app-theme-handdrawn .profile-avatar-item {
-  border: 3px solid rgba(249, 168, 92, 0.4) !important;
-  background: linear-gradient(145deg, #fff, #FFF8E6) !important;
+  border: 3px solid rgba(233, 127, 74, 0.4) !important;
+  background: linear-gradient(145deg, #fff, #FFF5E6) !important;
 }
 .app-theme-handdrawn .avatar-ring--empty {
-  border: 3px dashed rgba(249, 168, 92, 0.4) !important;
-  background: rgba(249, 168, 92, 0.08) !important;
+  border: 3px dashed rgba(233, 127, 74, 0.4) !important;
+  background: rgba(233, 127, 74, 0.08) !important;
 }
 
 /* ===== 菜单组 ===== */
@@ -385,7 +385,7 @@
 
 /* ===== 抽签按钮 ===== */
 .app-theme-handdrawn .draw-btn-inner {
-  box-shadow: 5px 5px 0 rgba(232, 146, 76, 0.35) !important;
+  box-shadow: 5px 5px 0 rgba(217, 107, 56, 0.35) !important;
 }
 
 /* ===== 自定义返回按钮 ===== */
@@ -487,7 +487,7 @@
 /* ===== 弹窗遮罩 ===== */
 .app-theme-handdrawn .overlay,
 .app-theme-handdrawn .modal-overlay {
-  background: rgba(249, 168, 92, 0.2) !important;
+  background: rgba(233, 127, 74, 0.2) !important;
 }
 
 /* ===== 扭蛋机 ===== */

@@ -95,7 +95,7 @@
       <image src="/assets/images/panel_anni_bg.png" mode="aspectFill" class="panel-anni-bg" />
       <view class="panel-anni-content">
         <view class="panel-anni-icon">
-          <cp-icon name="heart" size="28" color="#F9A85C" />
+          <cp-icon name="heart" size="28" color="#E97F4A" />
         </view>
         <view class="panel-anni-text">
           <text class="panel-anni-name">{{todayAnni ? todayAnni.title : nearestAnni.title}}</text>

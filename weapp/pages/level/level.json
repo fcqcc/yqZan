@@ -1,5 +1,5 @@
 {
   "navigationBarTitleText": "攒钱等级",
-  "backgroundColor": "#FFF9F5",
+  "backgroundColor": "#FFF5E6",
   "behaviors": ["../../behaviors/theme-behavior"]
 }

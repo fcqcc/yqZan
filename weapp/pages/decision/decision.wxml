@@ -239,7 +239,7 @@
             value="{{customDraft.name}}"
             bindinput="onCustomNameInput"
             placeholder="比如：今天吃什么"
-            placeholder-style="color: #B8A9BB;"
+            placeholder-style="color: #C8B8A8;"
             maxlength="20"
           />
         </view>
@@ -291,7 +291,7 @@
                 bindinput="onOptionInput"
                 data-index="{{index}}"
                 placeholder="输入选项"
-                placeholder-style="color: #B8A9BB;"
+                placeholder-style="color: #C8B8A8;"
                 maxlength="30"
               />
               <view

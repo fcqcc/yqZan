@@ -1,5 +1,5 @@
 {
   "navigationBarTitleText": "背包 & 图鉴",
-  "backgroundColor": "#FFF9F5",
+  "backgroundColor": "#FFF5E6",
   "behaviors": ["../../behaviors/theme-behavior"]
 }

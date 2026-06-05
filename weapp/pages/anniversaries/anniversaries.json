@@ -1,6 +1,6 @@
 {
   "navigationStyle": "custom",
   "navigationBarTitleText": "纪念日",
-  "backgroundColor": "#FFF9F5",
+  "backgroundColor": "#FFF5E6",
   "behaviors": ["../../behaviors/theme-behavior"]
 }

@@ -1,7 +1,7 @@
 {
   "navigationBarTitleText": "一起攒",
   "navigationStyle": "custom",
-  "backgroundColor": "#FFF9F5",
+  "backgroundColor": "#FFF5E6",
   "usingComponents": {
     "cp-icon": "/components/cp-icon/cp-icon"
   },

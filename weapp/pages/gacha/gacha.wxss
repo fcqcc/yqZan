@@ -31,7 +31,7 @@
   font-family: 'ZCOOL KuaiLe', cursive;
   font-size: 16px; color: var(--primary-dark); font-weight: 700;
 }
-.gacha-ticket-bar .divider { color: #E8D0B8; margin: 0 3px; }
+.gacha-ticket-bar .divider { color: #D9A378; margin: 0 3px; }
 .prob-btn {
   width: 28px; height: 28px; border-radius: 50%;
   background: var(--primary-pale);
@@ -104,7 +104,7 @@
 
 .gacha-tickets-badge {
   display: inline-flex; align-items: center; gap: 6px;
-  background: linear-gradient(135deg, #FFE5D9, #FDE8C8);
+  background: linear-gradient(135deg, #FFE5D9, #FFD9B3);
   padding: 6px 16px; border-radius: 16px;
   margin-top: 12px; font-size: 13px; font-weight: 600;
   color: var(--text-primary);
@@ -190,7 +190,7 @@
 .gacha-btn::after { border: none; }
 .gacha-btn.disabled { opacity: 0.5; }
 .gacha-btn.single { background: linear-gradient(135deg, #FFB199 0%, #FF8E8E 100%); }
-.gacha-btn.ten { background: linear-gradient(135deg, #FF9A8B 0%, #F9A85C 50%, #E8924C 100%); }
+.gacha-btn.ten { background: linear-gradient(135deg, #FF9A8B 0%, #E97F4A 50%, #D96B38 100%); }
 .gacha-btn small { font-size: 10px; opacity: 0.95; display: block; margin-top: 2px; font-weight: 400; }
 
 /* ===== 加注 ===== */
@@ -250,7 +250,7 @@
   0% { transform: scale(0) rotate(-20deg); opacity: 0; }
   100% { transform: scale(1) rotate(0); opacity: 1; }
 }
-.result-card--ssr { background: linear-gradient(135deg, #FFD89B 0%, #FF9A8B 50%, #F9A85C 100%); }
+.result-card--ssr { background: linear-gradient(135deg, #FFD89B 0%, #FF9A8B 50%, #E97F4A 100%); }
 .result-badge {
   display: inline-block;
   background: linear-gradient(135deg, #FFD93D, #FF8E53); color: white;

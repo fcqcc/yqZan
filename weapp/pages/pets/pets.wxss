@@ -17,7 +17,7 @@
   overflow: hidden;
   margin: 10px 12px 8px;
   padding: 24px 20px 20px;
-  background: linear-gradient(135deg, #F9A85C 0%, #FDE8C8 100%);
+  background: linear-gradient(135deg, #E97F4A 0%, #FFD9B3 100%);
   border-radius: 20px 8px 20px 8px;
   border: 2px dashed rgba(255, 255, 255, 0.4);
   text-align: center;
@@ -72,7 +72,7 @@
 /* ===== 当前活跃宠物卡片（紧凑） ===== */
 .active-card {
   margin: 10px 12px 8px;
-  background: linear-gradient(135deg, #ffffff 0%, #FFFDF8 55%, #ffe8f0 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #FFFDF5 55%, #FFF0D8 100%);
   border-radius: 20px 8px 20px 8px;
   padding: 18px 16px 14px;
   box-shadow: 0 6px 18px rgba(255, 107, 157, 0.1);
@@ -98,10 +98,10 @@
 .active-stat { flex: 1; }
 .as-label { font-size: 10px; color: var(--text-secondary); display: block; margin-bottom: 2px; }
 .as-bar { height: 6px; border-radius: 3px; overflow: hidden; margin-bottom: 2px; }
-.active-stat:first-child .as-bar { border: 1.5px solid #E8924C; }
+.active-stat:first-child .as-bar { border: 1.5px solid #D96B38; }
 .active-stat:last-child .as-bar { border: 1.5px solid #7c4dff; }
 .as-bar .as-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
-.as-fill--pink { background: linear-gradient(90deg, #F9A85C, #E8924C); }
+.as-fill--pink { background: linear-gradient(90deg, #E97F4A, #D96B38); }
 .as-fill--purple { background: linear-gradient(90deg, #7c4dff, #b388ff); }
 .as-val { font-size: 10px; color: var(--text-secondary); }
 .as-val--evo { color: #ff6b35; font-weight: 700; animation: expPulse 1s ease-in-out infinite; }
@@ -199,7 +199,7 @@
   gap: 4px;
   padding: 6px 12px;
   border-radius: var(--radius-pill);
-  background: #FFFDF8;
+  background: #FFFDF5;
   border: 1px solid rgba(255, 107, 157, 0.22);
   font-size: 12px;
   color: var(--text-secondary);
@@ -474,7 +474,7 @@
   transform: translateX(-50%);
   z-index: 100;
   background: rgba(255,255,255,0.95);
-  color: #5D3E2A;
+  color: #5A3E2B;
   font-size: 12px;
   line-height: 1.5;
   padding: 8px 14px;

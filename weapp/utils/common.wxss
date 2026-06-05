@@ -3,30 +3,30 @@
 
 page {
   --text: #7A5C4A;
-  --text-secondary: #A89080;
+  --text-secondary: #B09880;
   --text-light: #C8B8A8;
   --text-muted: #C8B8A8;
-  --rose: #F9A85C;
-  --rose-light: #FDE8C8;
-  --rose-pale: #FFF8E6;
-  --rose-deep: #E8924C;
-  --peach: #F9A85C;
+  --rose: #E97F4A;
+  --rose-light: #FFD9B3;
+  --rose-pale: #FFF5E6;
+  --rose-deep: #D96B38;
+  --peach: #E97F4A;
   --lilac: #D4A0E8;
   --lilac-pale: #F5EDFF;
   --mint: #7BC67B;
-  --pink: #F9A85C;
-  --pink-dark: #E8924C;
-  --primary: #F9A85C;
-  --primary-light: #FDE8C8;
-  --primary-pale: #FFF8E6;
-  --cream: #FFF8E6;
+  --pink: #E97F4A;
+  --pink-dark: #D96B38;
+  --primary: #E97F4A;
+  --primary-light: #FFD9B3;
+  --primary-pale: #FFF5E6;
+  --cream: #FFF5E6;
   --gold: #FFD93D;
   --gold-light: #FFF8E1;
   --purple: #D4A0E8;
   --purple-light: #F5EDFF;
-  --pink-glass: rgba(249, 168, 92, 0.35);
+  --pink-glass: rgba(233, 127, 74, 0.35);
   --white: #ffffff;
-  --gradient-header: linear-gradient(135deg, #F9A85C 0%, #FDE8C8 100%);
+  --gradient-header: linear-gradient(135deg, #E97F4A 0%, #FFD9B3 100%);
   --hd-border: #F5D6B0;
   --hd-line-dot: #f0e0e4;
   --success: #7BC67B;
@@ -42,27 +42,27 @@ page {
 
   --card-bg: #ffffff;
   --card-border: 2px dashed #F5D6B0;
-  --shadow-sm: 3px 3px 0 rgba(249, 168, 92, 0.12);
-  --shadow-md: 3px 3px 0 rgba(249, 168, 92, 0.15), 0 2px 8px rgba(249, 168, 92, 0.06);
-  --shadow-lg: 4px 4px 0 rgba(232, 146, 76, 0.2), 0 4px 12px rgba(249, 168, 92, 0.1);
-  --progress-bar-bg: rgba(249, 168, 92, 0.12);
+  --shadow-sm: 3px 3px 0 rgba(233, 127, 74, 0.12);
+  --shadow-md: 3px 3px 0 rgba(233, 127, 74, 0.15), 0 2px 8px rgba(233, 127, 74, 0.06);
+  --shadow-lg: 4px 4px 0 rgba(217, 107, 56, 0.2), 0 4px 12px rgba(233, 127, 74, 0.1);
+  --progress-bar-bg: rgba(233, 127, 74, 0.12);
 
   --radius-sm: 10px;
   --radius-md: 16px;
   --radius-lg: 20px;
   --radius-pill: 999px;
-  --bg-start: #FFF8E6;
+  --bg-start: #FFF5E6;
   --bg-mid: #FFF5F0;
   --bg-end: #FFE8EE;
   --radius: 16px;
-  --glass-bg: #FFFDF8;
+  --glass-bg: #FFFDF5;
   --glass-border: 2px dashed #F5D6B0;
   --glass-blur: none;
-  --glass-shadow: 3px 3px 0 rgba(249, 168, 92, 0.12);
+  --glass-shadow: 3px 3px 0 rgba(233, 127, 74, 0.12);
   background:
-    radial-gradient(circle at 20% 80%, rgba(249, 168, 92, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(233, 127, 74, 0.15) 0%, transparent 50%),
     radial-gradient(circle at 80% 20%, rgba(168, 212, 230, 0.12) 0%, transparent 50%),
-    linear-gradient(180deg, #FFF8E6 0%, #FFE8EE 100%);
+    linear-gradient(180deg, #FFF5E6 0%, #FFE8EE 100%);
   background-attachment: fixed;
   color: var(--text);
   font-size: 14px;
@@ -105,17 +105,17 @@ page {
 .btn-primary {
   background: linear-gradient(135deg, var(--primary) 0%, var(--rose-deep) 100%);
   color: var(--white);
-  box-shadow: 3px 3px 0 rgba(232, 146, 76, 0.3);
+  box-shadow: 3px 3px 0 rgba(217, 107, 56, 0.3);
 }
 .btn-primary:active {
   transform: translate(2px, 2px) scale(0.97);
-  box-shadow: 1px 1px 0 rgba(232, 146, 76, 0.3);
+  box-shadow: 1px 1px 0 rgba(217, 107, 56, 0.3);
 }
 .btn-outline {
-  background: #FFFDF8;
+  background: #FFFDF5;
   border: 2px dashed var(--hd-border);
   color: var(--text);
-  box-shadow: 2px 2px 0 rgba(249, 168, 92, 0.12);
+  box-shadow: 2px 2px 0 rgba(233, 127, 74, 0.12);
 }
 .btn-outline:active {
   transform: scale(0.96);
@@ -148,7 +148,7 @@ page {
 .btn-note {
   background: linear-gradient(135deg, var(--primary) 0%, var(--rose-deep) 100%);
   color: var(--white);
-  box-shadow: 3px 3px 0 rgba(232, 146, 76, 0.3);
+  box-shadow: 3px 3px 0 rgba(217, 107, 56, 0.3);
 }
 .btn-money:active,
 .btn-wish:active,
@@ -161,7 +161,7 @@ page {
 }
 
 .input {
-  background: #FFFDF8;
+  background: #FFFDF5;
   border: 2px dashed var(--hd-border);
   border-radius: 14px 6px 14px 6px;
   min-height: var(--input-min-height);
@@ -176,7 +176,7 @@ page {
 .input:focus {
   border-color: var(--primary);
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(249, 168, 92, 0.12);
+  box-shadow: 0 0 0 3px rgba(233, 127, 74, 0.12);
 }
 .input::placeholder {
   color: var(--text-secondary);
@@ -227,13 +227,13 @@ page {
 .progress-bar {
   height: 10px;
   background: var(--progress-bar-bg);
-  border: 2px solid #E8E0D8;
+  border: 2px solid #E8E0D0;
   border-radius: 8px;
   overflow: hidden;
 }
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #F9A85C 0%, #E8924C 50%, #FFD93D 100%);
+  background: linear-gradient(90deg, #E97F4A 0%, #D96B38 50%, #FFD93D 100%);
   border-radius: 6px;
   transition: width 0.3s ease;
 }
@@ -330,19 +330,19 @@ page {
   min-height: 0;
   width: 100%;
   align-self: stretch;
-  background: rgba(249, 168, 92, 0.15);
+  background: rgba(233, 127, 74, 0.15);
 }
 .sheet {
   flex-shrink: 0;
   align-self: center;
-  background: #FFFDF8;
+  background: #FFFDF5;
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   padding: 20px 16px 30px;
   width: 100%;
   max-width: 500px;
   box-sizing: border-box;
   border-top: 2px dashed var(--hd-border);
-  box-shadow: 0 -8px 28px rgba(249, 168, 92, 0.14);
+  box-shadow: 0 -8px 28px rgba(233, 127, 74, 0.14);
 }
 .sheet-title {
   font-size: 16px;
@@ -434,7 +434,7 @@ page {
 .card-close-hit:active,
 .card-close-hit--press {
   color: var(--rose);
-  background: rgba(249, 168, 92, 0.12);
+  background: rgba(233, 127, 74, 0.12);
 }
 
 /* ============================================================
@@ -557,7 +557,7 @@ page {
 }
 .card-tap:active {
   transform: scale(0.97) translate(1rpx, 1rpx);
-  box-shadow: 2rpx 2rpx 0 rgba(249, 168, 92, 0.12);
+  box-shadow: 2rpx 2rpx 0 rgba(233, 127, 74, 0.12);
 }
 
 /* ----- 9. 标签切换滑动 ----- */

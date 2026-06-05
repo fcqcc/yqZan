@@ -2,7 +2,7 @@ const api = require('../../utils/api')
 
 const STICKERS = ['😀','😍','🥰','😘','😚','🤗','😋','🥺','😢','😭','😡','😤','🤔','😴','🤤','🥳']
 const CARD_COLORS = ['pink', 'yellow', 'purple', 'blue', 'orange']
-const AVATAR_COLORS = { pink: '#F9A85C', yellow: '#C49B00', purple: '#B19CD9', blue: '#7BC4E8', orange: '#FF8E53' }
+const AVATAR_COLORS = { pink: '#E97F4A', yellow: '#C49B00', purple: '#B19CD9', blue: '#7BC4E8', orange: '#FF8E53' }
 
 function pad(n) { return n < 10 ? '0' + n : '' + n }
 

@@ -50,7 +50,7 @@ function timeLabel(ts) {
 
 function generateConfetti() {
   const shapes = ['✦', '✧', '★', '♡', '❤', '✿', '❀', '●', '◆', '▲'];
-  const colors = ['#F9A85C', '#FFD93D', '#B19CD9', '#FF8E53', '#7BC4E8', '#7BC67B'];
+  const colors = ['#E97F4A', '#FFD93D', '#B19CD9', '#FF8E53', '#7BC4E8', '#7BC67B'];
   return Array.from({ length: 30 }, () => ({
     x: Math.random() * 100,
     delay: Math.random() * 2.5,
