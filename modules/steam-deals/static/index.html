@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="description" content="Steam 好价追踪 — 每日精选 Steam 折扣游戏">
+<title>Steam 好价追踪</title>
+<link rel="manifest" href="/steam/static/manifest.json">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0d1117;
+  --card: #161b22;
+  --card-hover: #1c2333;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-secondary: #8b949e;
+  --accent: #58a6ff;
+  --accent2: #bc8cff;
+  --green: #3fb950;
+  --orange: #d29922;
+  --red: #f85149;
+  --pink: #ff7b9c;
+  --gold: #ffd700;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+.container { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky; top: 0; z-index: 100;
+  backdrop-filter: blur(10px);
+}
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: 960px; margin: 0 auto; padding: 0 16px;
+}
+.header h1 {
+  font-size: 20px; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  cursor: pointer;
+}
+.header .subtitle { font-size: 12px; color: var(--text-secondary); }
+.header-right { display: flex; gap: 10px; align-items: center; }
+.header-right button {
+  background: var(--card); border: 1px solid var(--border);
+  color: var(--text); padding: 8px 16px; border-radius: 8px;
+  cursor: pointer; font-size: 13px; font-family: inherit;
+  transition: all 0.2s;
+}
+.header-right button:hover { background: var(--card-hover); border-color: var(--accent); }
+
+/* Stats Bar */
+.stats {
+  display: flex; gap: 16px; padding: 16px 0;
+  overflow-x: auto; scrollbar-width: none;
+}
+.stat-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 18px; min-width: 120px;
+  flex-shrink: 0;
+}
+.stat-card .num { font-size: 22px; font-weight: 700; }
+.stat-card .label { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+/* Search */
+.search-bar {
+  display: flex; gap: 8px; padding: 12px 0; flex-wrap: wrap;
+}
+.search-bar input {
+  flex: 1; min-width: 180px;
+  background: var(--card); border: 1px solid var(--border);
+  color: var(--text); padding: 10px 14px; border-radius: 10px;
+  font-size: 14px; font-family: inherit; outline: none;
+  transition: border-color 0.2s;
+}
+.search-bar input:focus { border-color: var(--accent); }
+.search-bar select {
+  background: var(--card); border: 1px solid var(--border);
+  color: var(--text); padding: 10px 14px; border-radius: 10px;
+  font-size: 13px; font-family: inherit; outline: none; cursor: pointer;
+  min-width: 80px;
+}
+.filter-pills {
+  display: flex; gap: 6px; padding-bottom: 12px; flex-wrap: wrap;
+}
+.pill {
+  background: var(--card); border: 1px solid var(--border);
+  color: var(--text-secondary); padding: 5px 12px; border-radius: 20px;
+  font-size: 12px; cursor: pointer; transition: all 0.2s;
+  font-family: inherit;
+}
+.pill:hover { border-color: var(--accent); color: var(--text); }
+.pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* Game Grid */
+.game-grid {
+  display: grid; gap: 12px; padding-bottom: 80px;
+}
+.game-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px; cursor: pointer;
+  transition: all 0.2s;
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.game-card:hover { background: var(--card-hover); border-color: var(--accent); transform: translateY(-1px); }
+.game-card .thumb {
+  width: 80px; height: 40px; border-radius: 6px;
+  background: var(--border); flex-shrink: 0;
+  object-fit: cover; overflow: hidden;
+}
+.game-card .info { flex: 1; min-width: 0; }
+.game-card .name {
+  font-size: 15px; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.game-card .meta {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-top: 6px; font-size: 12px; color: var(--text-secondary);
+}
+.game-card .meta span { 
+  background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 4px;
+  white-space: nowrap;
+}
+.game-card .price-area {
+  text-align: right; flex-shrink: 0;
+}
+.game-card .price-old { font-size: 12px; color: var(--text-secondary); text-decoration: line-through; }
+.game-card .price-new { font-size: 18px; font-weight: 700; }
+.game-card .discount-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--red), #ff6b6b);
+  color: #fff; padding: 2px 8px; border-radius: 4px;
+  font-size: 13px; font-weight: 700;
+}
+.game-card .rating-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--green), #2ea043);
+  color: #fff; padding: 2px 6px; border-radius: 4px;
+  font-size: 11px;
+}
+.game-card .historic-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--gold), #ffa500);
+  color: #000; padding: 2px 6px; border-radius: 4px;
+  font-size: 11px; font-weight: 700;
+}
+.worth-index {
+  font-size: 11px; color: var(--accent2); margin-top: 4px;
+}
+
+/* Section Title */
+.section-title {
+  font-size: 17px; font-weight: 700; padding: 20px 0 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* Loading */
+.loading {
+  text-align: center; padding: 60px 0; color: var(--text-secondary);
+}
+.loading .spinner {
+  width: 32px; height: 32px; border: 3px solid var(--border);
+  border-top-color: var(--accent); border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Empty state */
+.empty { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
+.empty .icon { font-size: 48px; margin-bottom: 12px; }
+
+/* Nav tabs */
+.tabs {
+  display: flex; gap: 0; margin: 12px 0;
+  background: var(--card); border-radius: 10px; overflow: hidden;
+  border: 1px solid var(--border);
+}
+.tab {
+  flex: 1; padding: 10px; text-align: center;
+  font-size: 13px; cursor: pointer; transition: all 0.2s;
+  color: var(--text-secondary); font-family: inherit;
+  background: transparent; border: none;
+}
+.tab.active { background: var(--accent); color: #fff; font-weight: 600; }
+.tab:hover:not(.active) { color: var(--text); }
+
+/* Footer */
+.footer {
+  text-align: center; padding: 24px 0; color: var(--text-secondary);
+  font-size: 12px;
+}
+
+/* Install bar */
+.install-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--card); border-top: 1px solid var(--border);
+  padding: 12px 16px; display: none; align-items: center;
+  justify-content: center; gap: 10px; z-index: 200;
+}
+.install-bar.show { display: flex; }
+.install-bar button {
+  background: var(--accent); color: #fff; border: none;
+  padding: 8px 20px; border-radius: 8px; cursor: pointer;
+  font-size: 13px; font-family: inherit; font-weight: 600;
+}
+.install-bar .close-btn {
+  background: transparent; border: none; color: var(--text-secondary);
+  cursor: pointer; font-size: 18px; padding: 4px 8px;
+}
+
+@media (max-width: 600px) {
+  .game-card .thumb { width: 60px; height: 34px; }
+  .game-card .price-new { font-size: 16px; }
+  .stat-card { min-width: 90px; padding: 10px 14px; }
+  .stat-card .num { font-size: 18px; }
+  .header h1 { font-size: 17px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <h1 id="logo">🎮 Steam 好价</h1>
+      <div class="subtitle">每日精选折扣 · 白菜价 · 史低追踪</div>
+    </div>
+    <div class="header-right">
+      <button id="refreshBtn" onclick="loadData()">🔄 刷新</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('home', this)">🔥 今日精选</button>
+    <button class="tab" onclick="switchTab('bargain', this)">🥬 白菜价</button>
+    <button class="tab" onclick="switchTab('search', this)">🔍 搜索</button>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div id="tab-home">
+    <div class="section-title">🏆 今日值得买 Top</div>
+    <div id="topDeals" class="game-grid"><div class="loading"><div class="spinner"></div>加载中...</div></div>
+  </div>
+
+  <div id="tab-bargain" style="display:none">
+    <div class="search-bar">
+      <select id="bargainPrice" onchange="loadBargains()">
+        <option value="10">≤ ¥10</option>
+        <option value="20" selected>≤ ¥20</option>
+        <option value="30">≤ ¥30</option>
+        <option value="50">≤ ¥50</option>
+      </select>
+    </div>
+    <div class="section-title">🥬 白菜价专区</div>
+    <div id="bargainDeals" class="game-grid"><div class="loading"><div class="spinner"></div>加载中...</div></div>
+  </div>
+
+  <div id="tab-search" style="display:none">
+    <div class="search-bar">
+      <input id="searchInput" placeholder="搜索游戏名称..." oninput="debounceSearch()" />
+      <select id="sortBy">
+        <option value="worth">🏆 值得买</option>
+        <option value="discount">🔥 折扣最大</option>
+        <option value="price_asc">💵 价格最低</option>
+        <option value="price_desc">💵 价格最高</option>
+        <option value="rating">⭐ 好评最高</option>
+        <option value="name">📝 名称 A-Z</option>
+      </select>
+    </div>
+    <div class="filter-pills" id="genrePills"></div>
+    <div class="search-bar">
+      <select id="minDisc" onchange="doSearch()">
+        <option value="0">不限折扣</option>
+        <option value="10">≥ 10% off</option>
+        <option value="30">≥ 30% off</option>
+        <option value="50">≥ 50% off</option>
+        <option value="70">≥ 70% off</option>
+        <option value="80">≥ 80% off</option>
+      </select>
+      <select id="maxPrice" onchange="doSearch()">
+        <option value="">不限价格</option>
+        <option value="10">≤ ¥10</option>
+        <option value="20">≤ ¥20</option>
+        <option value="50">≤ ¥50</option>
+        <option value="100">≤ ¥100</option>
+        <option value="200">≤ ¥200</option>
+      </select>
+    </div>
+    <div id="searchResults" class="game-grid">
+      <div class="empty"><div class="icon">🔍</div><div>输入游戏名开始搜索</div></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    数据来源: Steam 官方 API · 每日 06:00 更新
+  </div>
+</div>
+
+<div class="install-bar" id="installBar">
+  <span>📲 安装到桌面，第一时间收到好价推送</span>
+  <button id="installBtn">安装</button>
+  <button class="close-btn" onclick="document.getElementById('installBar').classList.remove('show')">✕</button>
+</div>
+
+<script>
+let allDeals = [];
+
+async function api(path) {
+  try {
+    const r = await fetch(path);
+    return await r.json();
+  } catch(e) { return null; }
+}
+
+async function loadData() {
+  document.getElementById('stats').innerHTML = '';
+  const topData = await api('/steam/api/top?limit=20');
+  if (topData && topData.deals) {
+    allDeals = topData.deals;
+    renderDeals('topDeals', topData.deals);
+    renderStats(topData);
+    loadBargains();
+    loadGenres();
+  } else {
+    document.getElementById('topDeals').innerHTML =
+      '<div class="empty"><div class="icon">😢</div><div>暂无数据，点击刷新重试</div></div>';
+  }
+}
+
+async function loadBargains() {
+  const maxPrice = document.getElementById('bargainPrice').value;
+  const data = await api(`/steam/api/bargains?max_price=${maxPrice}`);
+  if (data && data.deals) renderDeals('bargainDeals', data.deals);
+}
+
+async function loadGenres() {
+  const data = await api('/steam/api/genres');
+  if (data && data.genres) {
+    const container = document.getElementById('genrePills');
+    container.innerHTML = '<button class="pill active" data-genre="" onclick="filterGenre(this)">全部</button>';
+    data.genres.forEach(g => {
+      container.innerHTML += `<button class="pill" data-genre="${g}" onclick="filterGenre(this)">${g}</button>`;
+    });
+  }
+}
+
+function filterGenre(el) {
+  document.querySelectorAll('#genrePills .pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  doSearch();
+}
+
+let searchTimer;
+function debounceSearch() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(doSearch, 300);
+}
+
+async function doSearch() {
+  const q = document.getElementById('searchInput').value;
+  const sortBy = document.getElementById('sortBy').value;
+  const minDisc = document.getElementById('minDisc').value;
+  const maxPrice = document.getElementById('maxPrice').value;
+  const activeGenre = document.querySelector('#genrePills .pill.active');
+  const genre = activeGenre ? activeGenre.dataset.genre : '';
+
+  let url = `/steam/api/search?q=${encodeURIComponent(q)}&sort_by=${sortBy}&min_discount=${minDisc}`;
+  if (maxPrice) url += `&max_price=${maxPrice}`;
+  if (genre) url += `&genre=${encodeURIComponent(genre)}`;
+
+  const data = await api(url);
+  if (data && data.deals) renderDeals('searchResults', data.deals);
+}
+
+function renderDeals(containerId, deals) {
+  const container = document.getElementById(containerId);
+  if (!deals || deals.length === 0) {
+    container.innerHTML = '<div class="empty"><div class="icon">📭</div><div>没有找到匹配的游戏</div></div>';
+    return;
+  }
+
+  container.innerHTML = deals.map(d => {
+    const thumb = d.header_image || '';
+    const rating = d.steam_rating_percent || 0;
+    const genre = d.genre || '';
+    const worth = d.worth_index || 0;
+    const isHistoric = d.is_historic_low;
+    const isBargain = d.is_bargain || (d.final_price <= 10);
+
+    let ratingHtml = '';
+    if (rating >= 90) ratingHtml = `<span class="rating-badge">⭐${rating}%</span>`;
+    else if (rating >= 70) ratingHtml = `<span class="rating-badge" style="background:var(--orange)">${rating}%</span>`;
+
+    return `
+      <div class="game-card" onclick="window.open('https://store.steampowered.com/app/${d.app_id}','_blank')">
+        <img class="thumb" src="${thumb}" alt="${d.name}" loading="lazy"
+             onerror="this.style.display='none'" />
+        <div class="info">
+          <div class="name">${d.name}${d.name_cn ? ' (' + d.name_cn + ')' : ''}</div>
+          <div class="meta">
+            ${genre ? `<span>${genre}</span>` : ''}
+            ${ratingHtml}
+            ${isHistoric ? `<span class="historic-badge">👑 史低</span>` : ''}
+            ${isBargain ? `<span class="historic-badge" style="background:var(--green);color:#fff">🥬 白菜价</span>` : ''}
+          </div>
+          ${worth > 0 ? `<div class="worth-index">🏆 值得买指数 ${worth}</div>` : ''}
+          ${d.short_description ? `<div style="font-size:11px;color:#8b949e;margin-top:4px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${d.short_description}</div>` : ''}
+        </div>
+        <div class="price-area">
+          <div class="discount-badge">-${d.discount_percent}%</div>
+          <div class="price-old">¥${d.original_price.toFixed(0)}</div>
+          <div class="price-new">¥${d.final_price.toFixed(0)}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderStats(data) {
+  const bargains = data.bargain_count !== undefined ? data.bargain_count : allDeals.filter(d => d.final_price <= 10).length;
+  const bigSales = data.big_sale_count !== undefined ? data.big_sale_count : allDeals.filter(d => d.discount_percent >= 70).length;
+  const avgDisc = data.avg_discount_percent !== undefined ? data.avg_discount_percent : 
+    Math.round(allDeals.reduce((s, d) => s + d.discount_percent, 0) / allDeals.length);
+
+  document.getElementById('stats').innerHTML = `
+    <div class="stat-card"><div class="num" style="color:var(--accent)">${data.count || allDeals.length}</div><div class="label">今日折扣</div></div>
+    <div class="stat-card"><div class="num" style="color:var(--green)">${bargains}</div><div class="label">🥬 白菜价</div></div>
+    <div class="stat-card"><div class="num" style="color:var(--red)">${bigSales}</div><div class="label">超低价 (≥70% off)</div></div>
+    <div class="stat-card"><div class="num" style="color:var(--gold)">${avgDisc}%</div><div class="label">平均折扣</div></div>
+  `;
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('[id^="tab-"]').forEach(t => t.style.display = 'none');
+  document.getElementById('tab-' + tab).style.display = 'block';
+  if (tab === 'bargain') loadBargains();
+}
+
+// PWA Install
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBar').classList.add('show');
+});
+document.getElementById('installBtn').addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const result = await deferredPrompt.userChoice;
+    if (result.outcome === 'accepted') document.getElementById('installBar').classList.remove('show');
+    deferredPrompt = null;
+  }
+});
+window.addEventListener('appinstalled', () => {
+  document.getElementById('installBar').classList.remove('show');
+});
+
+loadData();
+</script>
+</body>
+</html>
