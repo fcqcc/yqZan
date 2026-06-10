@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steam 好价 API — 文档 & 定价</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --dim: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --orange: #d2991d;
+    --red: #f85149;
+    --code-bg: #1c2128;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; min-height: 100vh; }
+  .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+
+  h1 { font-size: 2em; margin-bottom: 8px; }
+  h1 span { color: var(--green); }
+  h2 { font-size: 1.4em; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 1.1em; margin: 24px 0 12px; }
+  .subtitle { color: var(--dim); font-size: 1.1em; margin-bottom: 32px; }
+
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+
+  /* 定价 */
+  .pricing { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px; }
+  .plan { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 24px; text-align: center; position: relative; }
+  .plan.popular { border-color: var(--green); }
+  .plan.popular::before { content: '推荐'; position: absolute; top: -10px; right: 16px; background: var(--green); color: #000; padding: 2px 12px; border-radius: 10px; font-size: 0.8em; font-weight: 600; }
+  .plan-name { font-size: 1.1em; font-weight: 600; margin-bottom: 8px; }
+  .plan-price { font-size: 2em; font-weight: 700; color: var(--accent); }
+  .plan-price small { font-size: 0.5em; color: var(--dim); }
+  .plan-limit { color: var(--dim); margin: 12px 0; font-size: 0.9em; }
+  .plan .btn { display: inline-block; margin-top: 12px; padding: 8px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9em; }
+
+  .btn-primary { background: var(--green); color: #000; border: none; }
+  .btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-outline:hover { background: rgba(88,166,255,0.1); }
+
+  /* 端点表格 */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { color: var(--dim); font-size: 0.85em; text-transform: uppercase; }
+  .method { font-weight: 700; font-size: 0.85em; }
+  .method.get { color: var(--green); }
+  .method.post { color: var(--orange); }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; color: var(--accent); }
+  pre { background: var(--code-bg); padding: 16px; border-radius: 8px; overflow-x: auto; margin: 12px 0; font-size: 0.9em; border: 1px solid var(--border); }
+  pre code { background: none; padding: 0; color: var(--text); }
+  .comment { color: var(--dim); }
+
+  /* 注册表单 */
+  .form-row { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+  .form-row input { flex: 1; min-width: 200px; padding: 10px 14px; background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 1em; }
+  .form-row button { padding: 10px 24px; background: var(--green); color: #000; border: none; border-radius: 6px; font-weight: 600; font-size: 1em; cursor: pointer; }
+  .form-row button:hover { opacity: 0.9; }
+  .result { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-top: 12px; display: none; }
+  .result.show { display: block; }
+  .result .key { font-size: 1.1em; font-family: monospace; color: var(--green); word-break: break-all; }
+  .result .warn { color: var(--orange); font-size: 0.85em; margin-top: 8px; }
+
+  @media (max-width: 600px) {
+    .container { padding: 20px 12px; }
+    h1 { font-size: 1.5em; }
+    pre { font-size: 0.8em; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🎮 Steam 好价 <span>API</span></h1>
+<p class="subtitle">实时 Steam 折扣数据 · 每日自动更新 · 支持搜索/筛选/历史查询</p>
+
+<!-- 定价 -->
+<h2>💰 定价方案</h2>
+<div class="pricing">
+  <div class="plan">
+    <div class="plan-name">🆓 免费版</div>
+    <div class="plan-price">¥0<small>/月</small></div>
+    <div class="plan-limit">100 次/月</div>
+    <a href="#register" class="btn btn-primary">免费注册</a>
+  </div>
+  <div class="plan popular">
+    <div class="plan-name">⚡ 基础版</div>
+    <div class="plan-price">¥9.9<small>/月</small></div>
+    <div class="plan-limit">1,000 次/月</div>
+    <a href="#register" class="btn btn-outline">即将上线</a>
+  </div>
+  <div class="plan">
+    <div class="plan-name">🚀 专业版</div>
+    <div class="plan-price">¥29.9<small>/月</small></div>
+    <div class="plan-limit">5,000 次/月</div>
+    <a href="#register" class="btn btn-outline">即将上线</a>
+  </div>
+</div>
+
+<!-- API 端点 -->
+<h2>📡 API 端点</h2>
+<p style="color:var(--dim);margin-bottom:16px">所有数据接口需携带 <code>X-API-Key</code> 请求头</p>
+
+<table>
+  <tr><th>方法</th><th>路径</th><th>说明</th></tr>
+  <tr>
+    <td><span class="method get">GET</span></td>
+    <td><code>/api/today</code></td>
+    <td>获取今日所有折扣游戏</td>
+  </tr>
+  <tr>
+    <td><span class="method get">GET</span></td>
+    <td><code>/api/top?limit=10</code></td>
+    <td>精选 Top N（按超值指数排序）</td>
+  </tr>
+  <tr>
+    <td><span class="method get">GET</span></td>
+    <td><code>/api/bargains?max_price=20</code></td>
+    <td>白菜价专区（¥20 以内好游戏）</td>
+  </tr>
+  <tr>
+    <td><span class="method get">GET</span></td>
+    <td><code>/api/search?q=关键词&min_discount=50&genre=Action&sort_by=discount</code></td>
+    <td>搜索+筛选折扣</td>
+  </tr>
+  <tr>
+    <td><span class="method get">GET</span></td>
+    <td><code>/api/stats</code></td>
+    <td>今日折扣统计概览</td>
+  </tr>
+  <tr>
+    <td><span class="method get">GET</span></td>
+    <td><code>/api/genres</code></td>
+    <td>当前可筛选的游戏类型列表</td>
+  </tr>
+  <tr>
+    <td><span class="method get">GET</span></td>
+    <td><code>/api/export/wechat</code></td>
+    <td>公众号图文内容（结构化 JSON）</td>
+  </tr>
+  <tr>
+    <td><span class="method post">POST</span></td>
+    <td><code>/api/keys/register</code></td>
+    <td>注册免费 API Key</td>
+  </tr>
+  <tr>
+    <td><span class="method get">GET</span></td>
+    <td><code>/api/keys/usage?api_key=sk-xxx</code></td>
+    <td>查询 API Key 用量</td>
+  </tr>
+  <tr>
+    <td><span class="method get">GET</span></td>
+    <td><code>/api/health</code></td>
+    <td>服务健康检查（无需 Key）</td>
+  </tr>
+</table>
+
+<!-- 使用示例 -->
+<h2>🔧 使用示例</h2>
+
+<h3>1. 注册 API Key</h3>
+<pre><code><span class="comment"># 方式一：网页注册（推荐）</span>
+<span class="comment"># 在下方表单输入邮箱 → 点击免费注册</span>
+
+<span class="comment"># 方式二：命令行</span>
+curl -X POST https://yqzan.cn/steam/api/keys/register?email=you@example.com</code></pre>
+
+<h3>2. 获取每日 Top 10 折扣</h3>
+<pre><code>curl -H "X-API-Key: sk-xxxxxxxxxxxxxxxx" \
+  https://yqzan.cn/steam/api/top?limit=10</code></pre>
+
+<h3>3. 搜索特定游戏</h3>
+<pre><code>curl -H "X-API-Key: sk-xxxxxxxxxxxxxxxx" \
+  "https://yqzan.cn/steam/api/search?q=Hades&min_discount=50&sort_by=discount"</code></pre>
+
+<h3>4. 获取今日统计</h3>
+<pre><code>curl -H "X-API-Key: sk-xxxxxxxxxxxxxxxx" \
+  https://yqzan.cn/steam/api/stats</code></pre>
+
+<h3>Python 示例</h3>
+<pre><code>import requests
+
+API_KEY = "sk-xxxxxxxxxxxxxxxx"
+BASE = "https://yqzan.cn/steam"
+
+r = requests.get(f"{BASE}/api/top?limit=10",
+    headers={"X-API-Key": API_KEY})
+
+print(f"剩余调用: {r.headers['X-RateLimit-Remaining']}")
+for deal in r.json()["deals"]:
+    print(f"{deal['name']} -{deal['discount_percent']}% ¥{deal['final_price']}")</code></pre>
+
+<!-- 响应头说明 -->
+<h2>📊 响应头</h2>
+<p style="color:var(--dim)">每次数据接口调用都会返回用量信息：</p>
+<table>
+  <tr><th>响应头</th><th>说明</th></tr>
+  <tr><td><code>X-RateLimit-Limit</code></td><td>本月总配额</td></tr>
+  <tr><td><code>X-RateLimit-Remaining</code></td><td>剩余次数</td></tr>
+  <tr><td><code>X-RateLimit-Used</code></td><td>已用次数</td></tr>
+</table>
+
+<!-- 注册表单 -->
+<h2 id="register">🔑 免费注册 API Key</h2>
+<div class="card">
+  <p style="color:var(--dim);margin-bottom:12px">输入邮箱即可获取免费 API Key（100次/月），无需任何验证。</p>
+  <div class="form-row">
+    <input type="email" id="email" placeholder="your@email.com (选填)">
+    <button onclick="register()">免费注册</button>
+  </div>
+  <div class="result" id="result">
+    <p>✅ 注册成功！这是你的 API Key：</p>
+    <p class="key" id="keyDisplay"></p>
+    <p class="warn">⚠️ 请立即复制保存，此 Key 仅显示一次。</p>
+  </div>
+</div>
+
+<script>
+async function register() {
+  const email = document.getElementById('email').value.trim();
+  const params = email ? `?email=${encodeURIComponent(email)}` : '';
+  try {
+    const r = await fetch(`/steam/api/keys/register${params}`, { method: 'POST' });
+    const data = await r.json();
+    document.getElementById('keyDisplay').textContent = data.api_key;
+    document.getElementById('result').classList.add('show');
+  } catch(e) {
+    alert('注册失败，请稍后重试。');
+  }
+}
+</script>
+
+</div>
+</body>
+</html>
