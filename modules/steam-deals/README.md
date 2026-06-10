@@ -64,21 +64,17 @@ steam-deals/
 ## 给 Agent 的说明
 
 ```yaml
-人设: 29岁程序员奶爸，辞职三年在家带娃
 技术栈: Python + FastAPI + SQLite
-
 启动方式:
-  cd auto-hub/modules/steam-deals
+  cd modules/steam-deals
   pip install -r requirements.txt
   uvicorn app.main:app --host 0.0.0.0 --port 5050
-
 常见问题:
   配了 .env 但推送失败 → 检查 WECHAT_APPID / WECHAT_APPSECRET
   端口 5050 被占用 → ss -tlnp | grep 5050 → kill
   没数据 → 跑一次 python scripts/fetch_daily.py
   不想配推送也能用 → 跳过 .env，网页照样看
-
 安全:
   .env 有 API Key → 不要提交到 Git
-  data/steam_deals.db → 定期备份
+  data/*.db → 定期备份
 ```
