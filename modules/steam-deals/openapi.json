@@ -1,0 +1,273 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Steam Deals Tracker API",
+    "description": "Real-time Steam discount data updated daily. Search, filter, and discover the best game deals on Steam — bargain bin finds, historic lows, and top-rated discounts with Chinese translation support.",
+    "version": "1.1.0",
+    "contact": {
+      "name": "Steam 好价追踪",
+      "url": "https://yqzan.cn/steam/api/docs"
+    },
+    "x-logo": {
+      "url": "https://yqzan.cn/steam/static/favicon.ico"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://yqzan.cn/steam",
+      "description": "Production"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyHeader": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "Register for free at https://yqzan.cn/steam/api/docs"
+      }
+    },
+    "schemas": {
+      "GameDeal": {
+        "type": "object",
+        "properties": {
+          "app_id": { "type": "integer", "example": 730 },
+          "name": { "type": "string", "example": "Counter-Strike 2" },
+          "name_cn": { "type": "string", "example": "反恐精英2" },
+          "original_price": { "type": "number", "example": 0 },
+          "final_price": { "type": "number", "example": 0 },
+          "discount_percent": { "type": "integer", "example": 0 },
+          "steam_rating_percent": { "type": "integer", "example": 88 },
+          "genre": { "type": "string", "example": "Action, FPS" },
+          "header_image": { "type": "string", "example": "https://cdn.cloudflare.steamstatic.com/..." },
+          "short_description": { "type": "string", "example": "The best competitive FPS" },
+          "worth_index": { "type": "number", "example": 79.2 },
+          "is_historic_low": { "type": "integer", "example": 1 },
+          "is_bargain": { "type": "integer", "example": 0 }
+        }
+      },
+      "DealsResponse": {
+        "type": "object",
+        "properties": {
+          "count": { "type": "integer", "example": 27 },
+          "fetched_date": { "type": "string", "example": "2026-06-06" },
+          "deals": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/GameDeal" }
+          }
+        }
+      },
+      "StatsResponse": {
+        "type": "object",
+        "properties": {
+          "fetched_date": { "type": "string" },
+          "total_deals": { "type": "integer" },
+          "bargain_count": { "type": "integer" },
+          "big_sale_count": { "type": "integer" },
+          "avg_discount_percent": { "type": "number" },
+          "top_game": { "$ref": "#/components/schemas/GameDeal" }
+        }
+      },
+      "RegisterResponse": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string", "example": "注册成功" },
+          "api_key": { "type": "string", "example": "sk-a1b2c3d4e5f6..." },
+          "tier": { "type": "string", "example": "free" },
+          "monthly_limit": { "type": "integer", "example": 100 },
+          "docs": { "type": "string", "example": "/api/docs" }
+        }
+      },
+      "UsageResponse": {
+        "type": "object",
+        "properties": {
+          "api_key": { "type": "string" },
+          "tier": { "type": "string" },
+          "used": { "type": "integer" },
+          "limit": { "type": "integer" },
+          "remaining": { "type": "integer" },
+          "reset": { "type": "string" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "detail": { "type": "string" }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/today": {
+      "get": {
+        "summary": "Get all today's deals",
+        "description": "Returns all discounted games fetched today, sorted by worth_index.",
+        "parameters": [
+          {
+            "name": "fetched_date",
+            "in": "query",
+            "schema": { "type": "string", "format": "date" },
+            "description": "Specific date (YYYY-MM-DD). Defaults to today."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/DealsResponse" } } },
+            "headers": {
+              "X-RateLimit-Limit": { "schema": { "type": "string" }, "description": "Monthly quota" },
+              "X-RateLimit-Remaining": { "schema": { "type": "string" }, "description": "Calls remaining" }
+            }
+          },
+          "401": { "description": "Missing API key", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "403": { "description": "Invalid API key", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "429": { "description": "Quota exceeded", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+        }
+      }
+    },
+    "/api/top": {
+      "get": {
+        "summary": "Get top N deals",
+        "description": "Returns the highest worth_index deals for today.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": { "type": "integer", "minimum": 1, "maximum": 50, "default": 10 },
+            "description": "Number of deals to return"
+          },
+          {
+            "name": "fetched_date",
+            "in": "query",
+            "schema": { "type": "string", "format": "date" },
+            "description": "Specific date"
+          }
+        ],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/DealsResponse" } } } },
+          "401": { "description": "Missing API key" },
+          "403": { "description": "Invalid API key" },
+          "429": { "description": "Quota exceeded" }
+        }
+      }
+    },
+    "/api/bargains": {
+      "get": {
+        "summary": "Get bargain bin deals",
+        "description": "Returns games priced at or below max_price, sorted cheapest first.",
+        "parameters": [
+          {
+            "name": "max_price",
+            "in": "query",
+            "schema": { "type": "integer", "minimum": 1, "maximum": 50, "default": 20 },
+            "description": "Maximum price filter (CNY)"
+          },
+          {
+            "name": "fetched_date",
+            "in": "query",
+            "schema": { "type": "string", "format": "date" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/DealsResponse" } } } }
+        }
+      }
+    },
+    "/api/search": {
+      "get": {
+        "summary": "Search and filter deals",
+        "description": "Full-text search with discount, price, genre filters and multiple sort options.",
+        "parameters": [
+          { "name": "q", "in": "query", "schema": { "type": "string" }, "description": "Search keyword (matches game name)" },
+          { "name": "min_discount", "in": "query", "schema": { "type": "integer", "minimum": 0, "maximum": 100, "default": 0 }, "description": "Minimum discount percentage" },
+          { "name": "max_price", "in": "query", "schema": { "type": "number", "minimum": 0 }, "description": "Maximum final price (CNY)" },
+          { "name": "genre", "in": "query", "schema": { "type": "string" }, "description": "Genre filter (e.g. 'Action', 'RPG')" },
+          { "name": "sort_by", "in": "query", "schema": { "type": "string", "enum": ["worth", "discount", "price_asc", "price_desc", "rating", "name"], "default": "worth" }, "description": "Sort order" },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 200, "default": 50 } },
+          { "name": "fetched_date", "in": "query", "schema": { "type": "string", "format": "date" } }
+        ],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/DealsResponse" } } } }
+        }
+      }
+    },
+    "/api/stats": {
+      "get": {
+        "summary": "Get daily statistics",
+        "description": "Summary stats: total deals, bargain count, big sales, average discount, top game.",
+        "parameters": [
+          { "name": "fetched_date", "in": "query", "schema": { "type": "string", "format": "date" } }
+        ],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/StatsResponse" } } } }
+        }
+      }
+    },
+    "/api/genres": {
+      "get": {
+        "summary": "List available genres",
+        "description": "Returns all game genres available in today's deals for filtering.",
+        "parameters": [
+          { "name": "fetched_date", "in": "query", "schema": { "type": "string", "format": "date" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "genres": { "type": "array", "items": { "type": "string" } }, "fetched_date": { "type": "string" } } } } }
+          }
+        }
+      }
+    },
+    "/api/keys/register": {
+      "post": {
+        "summary": "Register for a free API key",
+        "description": "Get a free API key (100 calls/month). No authentication required for this endpoint.",
+        "security": [],
+        "parameters": [
+          { "name": "email", "in": "query", "schema": { "type": "string" }, "description": "Optional email for your key" }
+        ],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/RegisterResponse" } } } }
+        }
+      }
+    },
+    "/api/keys/usage": {
+      "get": {
+        "summary": "Check API key usage",
+        "description": "Query your current monthly usage and remaining quota.",
+        "security": [],
+        "parameters": [
+          { "name": "api_key", "in": "query", "schema": { "type": "string" }, "required": true, "description": "Your API key" }
+        ],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UsageResponse" } } } }
+        }
+      }
+    },
+    "/api/health": {
+      "get": {
+        "summary": "Health check",
+        "description": "Service health status. No authentication required.",
+        "security": [],
+        "responses": {
+          "200": { "description": "OK" }
+        }
+      }
+    }
+  },
+  "tags": [
+    { "name": "Deals", "description": "Steam discount data endpoints" },
+    { "name": "Account", "description": "API key management" }
+  ],
+  "x-rapidapi-pricing": {
+    "freemium": {
+      "calls_per_month": 100,
+      "price": 0
+    }
+  }
+}
