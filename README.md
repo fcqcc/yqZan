@@ -11,7 +11,7 @@
 [![GitHub forks](https://img.shields.io/github/forks/fcqcc/auto-hub?style=social)](https://github.com/fcqcc/auto-hub)
 [![License](https://img.shields.io/github/license/fcqcc/auto-hub)](https://github.com/fcqcc/auto-hub/blob/main/LICENSE)
 
-[🌟 Star](https://github.com/fcqcc/auto-hub) · [🍴 Fork](https://github.com/fcqcc/auto-hub/fork) · [📖 Docs](./docs/architecture.md)
+[🌟 GitHub Star](https://github.com/fcqcc/auto-hub) · [🍴 Fork](https://github.com/fcqcc/auto-hub/fork) · [🏠 Gitee](https://gitee.com/YuDaBaiJia/auto-hub) · [📖 Docs](./docs/architecture.md)
 
 </div>
 
